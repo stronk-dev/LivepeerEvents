@@ -1,0 +1,36 @@
+Setup VPS
+  Install pm2, nodejs, nginx, certbot, certbot-nginx, npm
+  git clone https://github.com/stronk-dev/LivepeerEvents.git /var/www
+  cd /var/www
+  npm install
+  cd /var/www/backend
+  npm install
+  nano /var/www/backend/src/config.js to your liking
+  replace nginx conf with supplied one, certbot will upgrade it to HTTPS
+  systemctl enable --now nginx.service
+  certbot --nginx
+
+Connect Backend
+  cd /var/www/backend
+  pm2 start ecosystem.config.js --env production
+  pm2 save
+  pm2 startup
+
+Monitor Backend
+  pm2 log backend
+  pm2 stop backend
+  pm2 start backend
+
+Run in test environment:
+  Run backend as 'npm run dev'
+  Run frontend as 'npm start'
+
+Update frontend production:
+  cd /var/www
+  git pull
+  npm run build
+
+Update backend production
+  pm2 restart backend
+  pm2 start ecosystem.config.js --env production
+
