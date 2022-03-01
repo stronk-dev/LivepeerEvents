@@ -1,0 +1,47 @@
+import React from "react";
+
+const EventButton = (obj) => {
+  let eventSpecificInfo;
+  if (obj.name == "EarningsClaimed") {
+    eventSpecificInfo = <div className="row">
+      <p>(Round {obj.data.endRound}) Claim: {obj.data.delegator} earned {obj.data.rewards / 1000000000000000000} Eth @ Orchestrator {obj.data.delegate}</p>
+    </div>
+  } else if (obj.name == "Unbond") {
+    eventSpecificInfo = <div className="row">
+      <p>(Round {obj.data.withdrawRound}) Unbond: {obj.data.delegator} unbonded {obj.data.amount / 1000000000000000000} Eth @ Orchestrator {obj.data.delegate}</p>
+    </div>
+  } else if (obj.name == "TransferBond") {
+    eventSpecificInfo = <div className="row">
+      <p>TransferBond: transfered bond worth {obj.data.amount / 1000000000000000000} Eth from {obj.data.oldDelegator} to {obj.data.newDelegator}</p>
+    </div>
+  } else if (obj.name == "Bond") {
+    eventSpecificInfo = <div className="row">
+      <p>Bond: {obj.data.delegator} transfered bond worth {obj.data.bondedAmount / 1000000000000000000} Eth from {obj.data.oldDelegate} to {obj.data.newDelegate}</p>
+    </div>
+  } else if (obj.name == "Rebond") {
+    eventSpecificInfo = <div className="row">
+      <p>Rebond: {obj.data.delegator} @ {obj.data.delegate}</p>
+    </div>
+  } else if (obj.name == "WithdrawFees") {
+    eventSpecificInfo = <div className="row">
+      <p>WithdrawFees: {obj.data.amount / 1000000000000000000} Eth {obj.data.delegator} to {obj.data.recipient}</p>
+    </div>
+  } else {
+    eventSpecificInfo = <div className="row">
+      <p>UNIMPLEMENTED: {obj.event}</p>
+    </div>
+  }
+
+  return (
+    <div className="row">
+      <a href={obj.transactionUrl}>
+        <button className="waveButton">
+          <img alt="" src="livepeer.png" width="30" height="30" />
+          {eventSpecificInfo}
+        </button>
+      </a>
+    </div>
+  )
+}
+
+export default EventButton;

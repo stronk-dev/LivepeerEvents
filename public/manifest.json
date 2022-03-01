@@ -1,0 +1,14 @@
+{
+  "short_name": "LivepeerEvents",
+  "name": "nframe.nl",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#855dfe",
+  "background_color": "#020643"
+}
