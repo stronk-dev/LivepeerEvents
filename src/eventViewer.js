@@ -22,6 +22,10 @@ const EventViewer = (obj) => {
                 eventCache.push(eventObj);
                 return;
               }
+              // Skip WithdrawFees buttons cause they are not interesting for the MVP
+              if (eventObj.name == "WithdrawFees"){
+                return;
+              }
               return <EventButton
                 key={eventObj.transactionUrl + idx}
                 transactionUrl={eventObj.transactionUrl}

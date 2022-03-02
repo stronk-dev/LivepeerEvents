@@ -24,7 +24,7 @@ const EventButton = (obj) => {
     </div>
   } else if (obj.name == "WithdrawFees") {
     eventSpecificInfo = <div className="row">
-      <p>WithdrawFees: {obj.data.amount / 1000000000000000000} Eth {obj.data.delegator} to {obj.data.recipient}</p>
+      <p>{obj.data.recipient} claimed stake</p>
     </div>
   } else if (obj.name == "Reward") {
     eventSpecificInfo = <div className="row" style={{ backgroundColor: 'rgba(0, 179, 221, 0.3)' }}>
