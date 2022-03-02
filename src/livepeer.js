@@ -51,12 +51,12 @@ class Livepeer extends React.Component {
     let ethPriceChange24h = 0;
     if (this.props.livepeer.quotes) {
       if (this.props.livepeer.quotes.LPT) {
-        lptPrice = this.props.livepeer.quotes.LPT.price;
-        lptPriceChange24h = this.props.livepeer.quotes.LPT.percent_change_24h;
+        lptPrice = this.props.livepeer.quotes.LPT.price.toFixed(2);
+        lptPriceChange24h = this.props.livepeer.quotes.LPT.percent_change_24h.toFixed(2);
       }
       if (this.props.livepeer.quotes.ETH) {
-        ethPrice = this.props.livepeer.quotes.ETH.price;
-        ethPriceChange24h = this.props.livepeer.quotes.ETH.percent_change_24h;
+        ethPrice = this.props.livepeer.quotes.ETH.price.toFixed(2);
+        ethPriceChange24h = this.props.livepeer.quotes.ETH.percent_change_24h.toFixed(2);
       }
     }
 
@@ -93,29 +93,29 @@ class Livepeer extends React.Component {
     let withdrawFeeCostL2USD;
     if (l1GasFeeInGwei && ethPrice) {
       if (redeemRewardCostL1) {
-        redeemRewardCostL1USD = redeemRewardCostL1 * ethPrice;
+        redeemRewardCostL1USD = (redeemRewardCostL1 * ethPrice).toFixed(2);
       }
       if (claimTicketCostL1) {
-        claimTicketCostL1USD = claimTicketCostL1 * ethPrice;
+        claimTicketCostL1USD = (claimTicketCostL1 * ethPrice).toFixed(2);
       }
       if (withdrawFeeCostL1) {
-        withdrawFeeCostL1USD = withdrawFeeCostL1 * ethPrice;
+        withdrawFeeCostL1USD = (withdrawFeeCostL1 * ethPrice).toFixed(2);
       }
     }
     if (l2GasFeeInGwei && ethPrice) {
       if (redeemRewardCostL2) {
-        redeemRewardCostL2USD = redeemRewardCostL2 * ethPrice;
+        redeemRewardCostL2USD = (redeemRewardCostL2 * ethPrice).toFixed(2);
       }
       if (claimTicketCostL2) {
-        claimTicketCostL2USD = claimTicketCostL2 * ethPrice;
+        claimTicketCostL2USD = (claimTicketCostL2 * ethPrice).toFixed(2);
       }
       if (withdrawFeeCostL2) {
-        withdrawFeeCostL2USD = withdrawFeeCostL2 * ethPrice;
+        withdrawFeeCostL2USD = (withdrawFeeCostL2 * ethPrice).toFixed(2);
       }
     }
 
     let eventsList = [];
-    if (this.props.livepeer.events){
+    if (this.props.livepeer.events) {
       eventsList = this.props.livepeer.events;
     }
 
@@ -132,12 +132,12 @@ class Livepeer extends React.Component {
               <img alt="" src="livepeer.png" width="100em" height="100em" />
             </button>
           </div>
-          <div className="roundedOpaque" style={{ padding: 0, width: 'unset' }}>
+          <div className="roundedOpaque flexContainer hostinfo scrollWindow" style={{ width: 'unset', justifyContent: 'center', alignContent: 'center', alignItems: 'center', marginBottom: '20px', marginTop: '20px', flexDirection: 'column' }}>
             {eventsList.map((eventObj, idx) => {
               console.log(eventObj);
               // TODO: make something that groups shit as long as the eventObj.transactionUrl is the same
               return <EventButton
-                key={eventObj.transactionUrl+idx}
+                key={eventObj.transactionUrl + idx}
                 transactionUrl={eventObj.transactionUrl}
                 transactionHash={eventObj.transactionHash}
                 name={eventObj.name}
@@ -152,24 +152,46 @@ class Livepeer extends React.Component {
           <div className="main-container">
             <div className="content-wrapper">
               <ScrollContainer className="overflow-container" hideScrollbars={false}>
-                <div className="overflow-content roundedOpaque" style={{ cursor: 'grab' }}>
-                  <h3>Price Info</h3>
-                  <h4>Current LPT price: {lptPrice}</h4>
-                  <h4>Current LPT price change: {lptPriceChange24h}%</h4>
-                  <h4>Current ETH price: {ethPrice}</h4>
-                  <h4>Current ETH price change: {ethPriceChange24h}%</h4>
-                  <h3>Cost Info</h3>
-                  <h5>Last updated @ {blockchainTime}</h5>
-                  <h4>Current layer 1 gas fee in GWEI: {l1GasFeeInGwei}</h4>
-                  <h4>Current layer 1 is at block: {l1Block}</h4>
-                  <h4>Current layer 1 cost to redeem daily reward: {redeemRewardCostL1} eth = ${redeemRewardCostL1USD}</h4>
-                  <h4>Current layer 1 cost to claim a winning ticket: {claimTicketCostL1} eth = ${claimTicketCostL1USD}</h4>
-                  <h4>Current layer 1 cost to withdraw Eth fees: {withdrawFeeCostL1} eth = ${withdrawFeeCostL1USD}</h4>
-                  <h4>Current layer 2 gas fee in GWEI: {l2GasFeeInGwei}</h4>
-                  <h4>Current layer 2 is at block: {l2Block}</h4>
-                  <h4>Current layer 2 cost to redeem daily reward: {redeemRewardCostL2} eth = ${redeemRewardCostL2USD}</h4>
-                  <h4>Current layer 2 cost to claim a winning ticket: {claimTicketCostL2} eth = ${claimTicketCostL2USD}</h4>
-                  <h4>Current layer 2 cost to withdraw Eth fees: {withdrawFeeCostL2} eth = ${withdrawFeeCostL2USD}</h4>
+                <div className="overflow-content metaSidebar" style={{ cursor: 'grab' }}>
+                  <div className="row">
+                    <h3>Price Info</h3>
+                  </div>
+                  <div className="row">
+                    <img alt="" src="livepeer.png" width="30" height="30" />
+                    <p style={{ flex: 1 }}>${lptPrice}</p>
+                    <p style={{ flex: 1 }}>({lptPriceChange24h}%)</p>
+                  </div>
+                  <div className="row">
+                    <img alt="" src="eth.png" width="30" height="30" />
+                    <p style={{ flex: 1 }}>${ethPrice}</p>
+                    <p style={{ flex: 1 }}>({ethPriceChange24h}%)</p>
+                  </div>
+                  <h3>Smart contract prices L2</h3>
+                  <div className="row">
+                    <p style={{ flex: 1 }}>Reward Call:</p>
+                    <p style={{ flex: 1 }}>${redeemRewardCostL2USD}</p>
+                  </div>
+                  <div className="row">
+                    <p style={{ flex: 1 }}>Claim Ticket:</p>
+                    <p style={{ flex: 1 }}>${claimTicketCostL2USD}</p>
+                  </div>
+                  <div className="row">
+                    <p style={{ flex: 1 }}>Withdraw Fees:</p>
+                    <p style={{ flex: 1 }}>${withdrawFeeCostL2USD}</p>
+                  </div>
+                  <h3>Smart contract prices L1</h3>
+                  <div className="row">
+                    <p style={{ flex: 1 }}>Reward Call:</p>
+                    <p style={{ flex: 1 }}>${redeemRewardCostL1USD}</p>
+                  </div>
+                  <div className="row">
+                    <p style={{ flex: 1 }}>Claim Ticket:</p>
+                    <p style={{ flex: 1 }}>${claimTicketCostL1USD}</p>
+                  </div>
+                  <div className="row">
+                    <p style={{ flex: 1 }}>Withdraw Fees:</p>
+                    <p style={{ flex: 1 }}>${withdrawFeeCostL1USD}</p>
+                  </div>
                 </div>
               </ScrollContainer>
             </div>

@@ -126,6 +126,27 @@ svg {
   from { top: 0; } to { top: calc(100vh - 69px); }
 }
 
+.scrollWindow {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: calc(50vw);
+  height: calc((9 / 16 ) * 50vw);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  opacity: 0.95;
+}
+
+.metaSidebar {
+  background-color: rgba(180, 175, 252, 0.80);
+  box-shadow: 9px 13px 18px 8px  rgba(8, 7, 56, 0.692);
+  border-radius: 30px;
+  box-sizing: border-box;
+  backdrop-filter: blur(6px);
+  height: 100%;
+}
+
 .serviceButton {
   width: 100%;
   margin: 0.4em;
@@ -199,6 +220,19 @@ svg {
   padding-bottom: 20px;
   padding-top: 20px;
   margin: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 2;
+}
+
+.strokeSmoll {
+  box-sizing: border-box;
+  height: 100%;
+  paddin: 0;
+  margin: 0;
   width: 100%;
   display: flex;
   align-items: center;
@@ -418,35 +452,12 @@ svg {
   display:block;
 }
 
-.mistvideo {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  width: calc(50vw);
-  height: calc((9 / 16 ) * 50vw);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  opacity: 0.95;
-}
-
 .separator {
   border:none;
   border-top:25px dotted rgba(56, 19, 124, 0.6);
   width: 30vw;
   height: 10px;
   margin: 0;
-}
-
-.mistvideo-controls svg.mist.icon:hover .fill,
-.mistvideo-controls svg.mist.icon:hover .semiFill,
-.mistvideo-volume_container:hover .fill,
-.mistvideo-volume_container:hover .semiFill {
-  fill: rgba(179, 14, 14, 0.875);
-}
-.mistvideo-controls svg.mist.icon:hover .stroke,
-.mistvideo-volume_container:hover .stroke {
-  stroke: rgba(179, 14, 14, 0.875);
 }
 
 .markdown {
@@ -495,6 +506,10 @@ svg {
 
 
 @media (max-aspect-ratio: 1/1) {
+  .scrollWindow {
+    width: calc(100vw - 20px);
+    height: calc((9 / 16 ) * (100vw - 20px));
+  }
   .fullGrafana {
     width: calc(100vw - 2em);
   }
@@ -520,6 +535,13 @@ svg {
     border-radius: 10px;
     box-sizing: border-box;
   }
+  .metaSidebar {
+    background-color: none;
+    width: 100%;
+    box-shadow: none;
+    border-radius: 10px;
+    box-sizing: border-box;
+  }
   .stroke {
     margin-left: 0;
     margin-right: 0;
@@ -531,10 +553,6 @@ svg {
   .showNeverOnMobile {
     visibility: hidden;
     display:none;
-  }
-  .mistvideo {
-    width: calc(100vw - 20px);
-    height: calc((9 / 16 ) * (100vw - 20px));
   }
   .mobileNoPadding {
     padding: 0;
