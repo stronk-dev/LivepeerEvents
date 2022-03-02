@@ -13,6 +13,12 @@ const EventViewer = (obj) => {
         <ScrollContainer className="overflow-container" hideScrollbars={false}>
           <div className="overflow-content" style={{ cursor: 'grab' }}>
             {obj.events.slice(0).reverse().map((eventObj, idx) => {
+              // TODO: once txCounter falls out of a certain range, stop parsing new blocks
+              // Apply the filter first so that the IDX only counts displayed blocks
+              // Skip WithdrawFees buttons cause they are not interesting for the MVP
+              if (eventObj.name == "WithdrawFees"){
+                return;
+              }
               if (currentTx != eventObj.transactionHash) {
                 txCounter++;
                 currentTx = eventObj.transactionHash;
@@ -20,10 +26,6 @@ const EventViewer = (obj) => {
                 eventCache = [];
               } else {
                 eventCache.push(eventObj);
-                return;
-              }
-              // Skip WithdrawFees buttons cause they are not interesting for the MVP
-              if (eventObj.name == "WithdrawFees"){
                 return;
               }
               return <EventButton

@@ -36,7 +36,7 @@ const EventButton = (obj) => {
     </div>
   } else if (obj.name == "TranscoderUpdate") {
     eventSpecificInfo = <div className="row" style={{ backgroundColor: 'rgba(215, 15, 0, 0.3)' }}>
-      <p>O {obj.data.transcoder} changed their rewardCut to {obj.data.rewardCut} and their feeShare to {obj.data.feeShare}</p>
+      <p>O {obj.data.transcoder} changed their rewardCut to {(obj.data.rewardCut / 10000).toFixed(2)} and their feeCut to {(100 - (obj.data.feeShare / 10000)).toFixed(2)}</p>
     </div>
   } else if (obj.name == "TranscoderActivated") {
     eventSpecificInfo = <div className="row" style={{ backgroundColor: 'rgba(0, 255, 1, 0.3)' }}>
