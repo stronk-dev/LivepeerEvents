@@ -80,7 +80,7 @@ p {
 #dvdlogo {
   display: block;
   position: absolute;
-  z-index: 1;
+  z-index: -1;
   -webkit-animation: moveX 10s linear 0s infinite alternate, moveY 17s linear 0s infinite alternate, changeColour 30s, linear, 0s, infinite, normal, none, infinite;
   -moz-animation: moveX 10s linear 0s infinite alternate, moveY 17s linear 0s infinite alternate, changeColour 30s, linear, 0s, infinite, normal, none, infinite;
   -o-animation: moveX 10s linear 0s infinite alternate, moveY 17s linear 0s infinite alternate, changeColour 30s, linear, 0s, infinite, normal, none, infinite;
@@ -143,6 +143,11 @@ svg {
 .metaSidebar {
   display: flex;
   flex-direction: row;
+}
+
+.rowContainer {
+  height: 100%;
+  display: block;
 }
 
 .serviceButton {

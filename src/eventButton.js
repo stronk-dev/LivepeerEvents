@@ -33,14 +33,10 @@ const EventButton = (obj) => {
   }
 
   return (
-    <div className="row">
-      <a href={obj.transactionUrl}>
-        <button className="waveButton">
-          <img alt="" src="livepeer.png" width="30" height="30" />
-          {eventSpecificInfo}
-        </button>
-      </a>
-    </div>
+    <a href={obj.transactionUrl} className="row">
+      <img alt="" src="livepeer.png" width="30" height="30" />
+      {eventSpecificInfo}
+    </a>
   )
 }
 

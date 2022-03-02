@@ -120,85 +120,65 @@ class Livepeer extends React.Component {
     }
 
     return (
-      <div className="rowContainer">
-        <div className="row" style={{ margin: 0, padding: 0, backgroundColor: "rgba(180, 175, 252, 0.80)", boxSizing: "border-box", backdropDilter: "blur(6px)", boxSshadow: "9px 13px 18px 8px  rgba(8, 7, 56, 0.692)" }}>
-          <div className="stroke" style={{ margin: 0, padding: 0 }}>
-            <div className="row" style={{ margin: 0, padding: 0 }}>
-              <button className="homeButton" onClick={() => {
-                this.setState({ redirectToHome: true });
-              }}>
-                <img alt="" src="livepeer.png" width="100em" height="100em" />
-              </button>
+      <div style={{ width: '100%', height: '100%' }}>
+        <div className="row" style={{ margin: 0, padding: 0, backgroundColor: "rgba(180, 175, 252, 0.80)", boxSizing: "border-box", backdropDilter: "blur(6px)", boxSshadow: "9px 13px 18px 8px  rgba(8, 7, 56, 0.692)", position: 'absolute', top: '0px', left: '0px', height: '200px', right: '0px', overflow: 'hidden' }}>
+          <div className="row" style={{ margin: 0, padding: 0 }}>
+            <button className="homeButton" onClick={() => {
+              this.setState({ redirectToHome: true });
+            }}>
+              <img alt="" src="livepeer.png" width="100em" height="100em" />
+            </button>
+          </div>
+          <div className="row metaSidebar" style={{ padding: 0 }}>
+            <div className="stroke" style={{ margin: 0, padding: 0 }}>
+              <div className="row">
+                <h3>Price Info</h3>
+              </div>
+              <div className="row">
+                <img alt="" src="livepeer.png" width="30" height="30" />
+                <p>${lptPrice}</p>
+                <p>({lptPriceChange24h}%)</p>
+              </div>
+              <div className="row">
+                <img alt="" src="eth.png" width="30" height="30" />
+                <p>${ethPrice}</p>
+                <p>({ethPriceChange24h}%)</p>
+              </div>
             </div>
-          </div >
-          <div className="stroke" style={{ padding: 0 }}>
-            <div className="main-container">
-              <div className="content-wrapper">
-                <ScrollContainer className="overflow-container" hideScrollbars={false}>
-                  <div className="overflow-content metaSidebar" style={{ cursor: 'grab' }}>
-                    <div className="stroke" style={{ margin: 0, padding: 0 }}>
-                      <div className="row">
-                        <h3>Price Info</h3>
-                      </div>
-                      <div className="row">
-                        <img alt="" src="livepeer.png" width="30" height="30" />
-                        <p>${lptPrice}</p>
-                        <p>({lptPriceChange24h}%)</p>
-                      </div>
-                      <div className="row">
-                        <img alt="" src="eth.png" width="30" height="30" />
-                        <p>${ethPrice}</p>
-                        <p>({ethPriceChange24h}%)</p>
-                      </div>
-                    </div>
-                    <div className="stroke" style={{ margin: 0, padding: 0 }}>
-                      <h3>Smart contract prices L2</h3>
-                      <div className="row">
-                        <p>Reward Call:</p>
-                        <p>${redeemRewardCostL2USD}</p>
-                      </div>
-                      <div className="row">
-                        <p>Claim Ticket:</p>
-                        <p>${claimTicketCostL2USD}</p>
-                      </div>
-                      <div className="row">
-                        <p>Withdraw Fees:</p>
-                        <p>${withdrawFeeCostL2USD}</p>
-                      </div>
-                    </div>
-                    <div className="stroke" style={{ margin: 0, padding: 0 }}>
-                      <h3>Smart contract prices L1</h3>
-                      <div className="row">
-                        <p>Reward Call:</p>
-                        <p>${redeemRewardCostL1USD}</p>
-                      </div>
-                      <div className="row">
-                        <p>Claim Ticket:</p>
-                        <p>${claimTicketCostL1USD}</p>
-                      </div>
-                      <div className="row">
-                        <p>Withdraw Fees:</p>
-                        <p>${withdrawFeeCostL1USD}</p>
-                      </div>
-                    </div>
-                  </div>
-                </ScrollContainer>
+            <div className="stroke" style={{ margin: 0, padding: 0 }}>
+              <h3>Smart contract prices L2</h3>
+              <div className="row">
+                <p>Reward Call:</p>
+                <p>${redeemRewardCostL2USD}</p>
+              </div>
+              <div className="row">
+                <p>Claim Ticket:</p>
+                <p>${claimTicketCostL2USD}</p>
+              </div>
+              <div className="row">
+                <p>Withdraw Fees:</p>
+                <p>${withdrawFeeCostL2USD}</p>
+              </div>
+            </div>
+            <div className="stroke" style={{ margin: 0, padding: 0 }}>
+              <h3>Smart contract prices L1</h3>
+              <div className="row">
+                <p>Reward Call:</p>
+                <p>${redeemRewardCostL1USD}</p>
+              </div>
+              <div className="row">
+                <p>Claim Ticket:</p>
+                <p>${claimTicketCostL1USD}</p>
+              </div>
+              <div className="row">
+                <p>Withdraw Fees:</p>
+                <p>${withdrawFeeCostL1USD}</p>
               </div>
             </div>
           </div>
-        </div>
-        <div className="stroke" style={{ margin: 0, padding: 0 }}>
-          <div className="stroke" style={{ margin: 0, padding: 0 }}>
-
-          </div>
-          <div className="stroke" style={{ margin: 0, padding: 0 }}>
-            <EventViewer events={eventsList} />
-          </div >
-          <div className="stroke" style={{ padding: 0 }}>
-
-          </div>
-        </div>
-      </div>
+        </div >
+        <EventViewer events={eventsList} />
+      </div >
     );
   }
 }
