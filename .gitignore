@@ -4,3 +4,4 @@ yarn.lock
 log.txt
 build/
 TODO
+backend/src/config.js

@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import {
   getQuotes, getBlockchainData, getEvents
 } from "./actions/livepeer";
-import EventButton from "./eventButton";
+import EventViewer from "./eventViewer";
 
 const mapStateToProps = (state) => {
   return {
@@ -120,81 +120,82 @@ class Livepeer extends React.Component {
     }
 
     return (
-      <div className="flexContainer">
-        <div className="stroke" style={{ margin: 0, padding: 0 }}>
-
+      <div className="rowContainer">
+        <div className="row" style={{ margin: 0, padding: 0, backgroundColor: "rgba(180, 175, 252, 0.80)", boxSizing: "border-box", backdropDilter: "blur(6px)", boxSshadow: "9px 13px 18px 8px  rgba(8, 7, 56, 0.692)" }}>
+          <div className="stroke" style={{ margin: 0, padding: 0 }}>
+            <div className="row" style={{ margin: 0, padding: 0 }}>
+              <button className="homeButton" onClick={() => {
+                this.setState({ redirectToHome: true });
+              }}>
+                <img alt="" src="livepeer.png" width="100em" height="100em" />
+              </button>
+            </div>
+          </div >
+          <div className="stroke" style={{ padding: 0 }}>
+            <div className="main-container">
+              <div className="content-wrapper">
+                <ScrollContainer className="overflow-container" hideScrollbars={false}>
+                  <div className="overflow-content metaSidebar" style={{ cursor: 'grab' }}>
+                    <div className="stroke" style={{ margin: 0, padding: 0 }}>
+                      <div className="row">
+                        <h3>Price Info</h3>
+                      </div>
+                      <div className="row">
+                        <img alt="" src="livepeer.png" width="30" height="30" />
+                        <p>${lptPrice}</p>
+                        <p>({lptPriceChange24h}%)</p>
+                      </div>
+                      <div className="row">
+                        <img alt="" src="eth.png" width="30" height="30" />
+                        <p>${ethPrice}</p>
+                        <p>({ethPriceChange24h}%)</p>
+                      </div>
+                    </div>
+                    <div className="stroke" style={{ margin: 0, padding: 0 }}>
+                      <h3>Smart contract prices L2</h3>
+                      <div className="row">
+                        <p>Reward Call:</p>
+                        <p>${redeemRewardCostL2USD}</p>
+                      </div>
+                      <div className="row">
+                        <p>Claim Ticket:</p>
+                        <p>${claimTicketCostL2USD}</p>
+                      </div>
+                      <div className="row">
+                        <p>Withdraw Fees:</p>
+                        <p>${withdrawFeeCostL2USD}</p>
+                      </div>
+                    </div>
+                    <div className="stroke" style={{ margin: 0, padding: 0 }}>
+                      <h3>Smart contract prices L1</h3>
+                      <div className="row">
+                        <p>Reward Call:</p>
+                        <p>${redeemRewardCostL1USD}</p>
+                      </div>
+                      <div className="row">
+                        <p>Claim Ticket:</p>
+                        <p>${claimTicketCostL1USD}</p>
+                      </div>
+                      <div className="row">
+                        <p>Withdraw Fees:</p>
+                        <p>${withdrawFeeCostL1USD}</p>
+                      </div>
+                    </div>
+                  </div>
+                </ScrollContainer>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="stroke" style={{ margin: 0, padding: 0 }}>
-          <div className="row" style={{ margin: 0, padding: 0 }}>
-            <button className="homeButton" onClick={() => {
-              this.setState({ redirectToHome: true });
-            }}>
-              <img alt="" src="livepeer.png" width="100em" height="100em" />
-            </button>
+          <div className="stroke" style={{ margin: 0, padding: 0 }}>
+
           </div>
-          <div className="roundedOpaque flexContainer hostinfo scrollWindow" style={{ width: 'unset', justifyContent: 'center', alignContent: 'center', alignItems: 'center', marginBottom: '20px', marginTop: '20px', flexDirection: 'column' }}>
-            {eventsList.map((eventObj, idx) => {
-              console.log(eventObj);
-              // TODO: make something that groups shit as long as the eventObj.transactionUrl is the same
-              return <EventButton
-                key={eventObj.transactionUrl + idx}
-                transactionUrl={eventObj.transactionUrl}
-                transactionHash={eventObj.transactionHash}
-                name={eventObj.name}
-                data={eventObj.data}
-                address={eventObj.address}
-              />
-            })}
-          </div>
-        </div >
-        <div className="stroke" style={{ padding: 0 }}>
-          <div className="separator showOnlyOnMobile" />
-          <div className="main-container">
-            <div className="content-wrapper">
-              <ScrollContainer className="overflow-container" hideScrollbars={false}>
-                <div className="overflow-content metaSidebar" style={{ cursor: 'grab' }}>
-                  <div className="row">
-                    <h3>Price Info</h3>
-                  </div>
-                  <div className="row">
-                    <img alt="" src="livepeer.png" width="30" height="30" />
-                    <p style={{ flex: 1 }}>${lptPrice}</p>
-                    <p style={{ flex: 1 }}>({lptPriceChange24h}%)</p>
-                  </div>
-                  <div className="row">
-                    <img alt="" src="eth.png" width="30" height="30" />
-                    <p style={{ flex: 1 }}>${ethPrice}</p>
-                    <p style={{ flex: 1 }}>({ethPriceChange24h}%)</p>
-                  </div>
-                  <h3>Smart contract prices L2</h3>
-                  <div className="row">
-                    <p style={{ flex: 1 }}>Reward Call:</p>
-                    <p style={{ flex: 1 }}>${redeemRewardCostL2USD}</p>
-                  </div>
-                  <div className="row">
-                    <p style={{ flex: 1 }}>Claim Ticket:</p>
-                    <p style={{ flex: 1 }}>${claimTicketCostL2USD}</p>
-                  </div>
-                  <div className="row">
-                    <p style={{ flex: 1 }}>Withdraw Fees:</p>
-                    <p style={{ flex: 1 }}>${withdrawFeeCostL2USD}</p>
-                  </div>
-                  <h3>Smart contract prices L1</h3>
-                  <div className="row">
-                    <p style={{ flex: 1 }}>Reward Call:</p>
-                    <p style={{ flex: 1 }}>${redeemRewardCostL1USD}</p>
-                  </div>
-                  <div className="row">
-                    <p style={{ flex: 1 }}>Claim Ticket:</p>
-                    <p style={{ flex: 1 }}>${claimTicketCostL1USD}</p>
-                  </div>
-                  <div className="row">
-                    <p style={{ flex: 1 }}>Withdraw Fees:</p>
-                    <p style={{ flex: 1 }}>${withdrawFeeCostL1USD}</p>
-                  </div>
-                </div>
-              </ScrollContainer>
-            </div>
+          <div className="stroke" style={{ margin: 0, padding: 0 }}>
+            <EventViewer events={eventsList} />
+          </div >
+          <div className="stroke" style={{ padding: 0 }}>
+
           </div>
         </div>
       </div>

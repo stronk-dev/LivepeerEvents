@@ -50,6 +50,7 @@ p {
   text-shadow: 0.5px 0.5px 0.8px #948dff;
   color: #1a1b26;
   font-size: 1.2em;
+  margin: 0.3em;
 }
 
 /* width */
@@ -136,15 +137,12 @@ svg {
   align-items: center;
   align-content: center;
   opacity: 0.95;
+  flex-direction: column;
 }
 
 .metaSidebar {
-  background-color: rgba(180, 175, 252, 0.80);
-  box-shadow: 9px 13px 18px 8px  rgba(8, 7, 56, 0.692);
-  border-radius: 30px;
-  box-sizing: border-box;
-  backdrop-filter: blur(6px);
-  height: 100%;
+  display: flex;
+  flex-direction: row;
 }
 
 .serviceButton {
@@ -216,7 +214,6 @@ svg {
 
 .stroke {
   box-sizing: border-box;
-  height: 100%;
   padding-bottom: 20px;
   padding-top: 20px;
   margin: 10px;
@@ -334,7 +331,6 @@ svg {
 }
 
 .main-container {
-  height: calc(100vh - 40px);
   display: flex;
   flex-direction: column;
 }
@@ -529,13 +525,6 @@ svg {
     flex-direction: column;
   }
   .roundedOpaque {
-    background-color: none;
-    width: 100%;
-    box-shadow: none;
-    border-radius: 10px;
-    box-sizing: border-box;
-  }
-  .metaSidebar {
     background-color: none;
     width: 100%;
     box-shadow: none;
