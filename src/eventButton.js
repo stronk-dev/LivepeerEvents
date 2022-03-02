@@ -15,8 +15,8 @@ const EventButton = (obj) => {
       <p>TransferBond: transfered bond worth {obj.data.amount / 1000000000000000000} Eth from {obj.data.oldDelegator} to {obj.data.newDelegator}</p>
     </div>
   } else if (obj.name == "Bond") {
-    eventSpecificInfo = <div className="row">
-      <p>Bond: {obj.data.delegator} transfered bond worth {obj.data.bondedAmount / 1000000000000000000} Eth from {obj.data.oldDelegate} to {obj.data.newDelegate}</p>
+    eventSpecificInfo = <div className="row" style={{backgroundColor:'rgba(50,50,50,0.3)'}}>
+      <p>Bond: {obj.data.delegator} delegated {obj.data.bondedAmount / 1000000000000000000} LPT from {obj.data.oldDelegate} to {obj.data.newDelegate}</p>
     </div>
   } else if (obj.name == "Rebond") {
     eventSpecificInfo = <div className="row">
