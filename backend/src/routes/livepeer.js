@@ -5,6 +5,8 @@ const apiRouter = express.Router();
 import {
   API_CMC, API_L1_HTTP, API_L2_HTTP, API_L2_WS
 } from "../config";
+const https = require('https');
+import { request, gql } from 'graphql-request';
 
 // Get ETH price & LPT coin prices
 const CoinMarketCap = require('coinmarketcap-api');
@@ -42,6 +44,54 @@ let claimTicketCostL2 = 0;
 let withdrawFeeCostL1 = 0;
 let withdrawFeeCostL2 = 0;
 
+// Update info from thegraph every 5 minutes
+const timeoutTheGraph = 300000;
+let theGraphGet = 0;
+// Address of O info we are want to display
+const orchQuery = gql`
+    {
+      transcoders(where: {id: "0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e"}) {
+        activationRound
+        deactivationRound
+        active
+        lastRewardRound {
+          id
+          length
+          startBlock
+          endBlock
+          mintableTokens
+          volumeETH
+          volumeUSD
+          totalActiveStake
+          totalSupply
+          participationRate
+          movedStake
+          newStake
+        }
+        rewardCut
+        feeShare
+        pricePerSegment
+        pendingPricePerSegment
+        pendingFeeShare
+        pendingRewardCut
+        totalStake
+        totalVolumeETH
+        totalVolumeUSD
+        serviceURI
+        delegators {
+          id
+          bondedAmount
+          startRound
+        }
+        delegator {
+          id
+          bondedAmount
+          startRound
+        }
+      }
+    }
+  `;
+let orchestratorCache = {};
 
 // Listen to smart contract emitters. Resync with DB every 5 minutes
 const timeoutEvents = 300000;
@@ -221,10 +271,24 @@ apiRouter.get("/getEvents", async (req, res) => {
         transactionUrl: 1,
         name: 1,
         data: 1,
-        _id: 0});
-        eventsGet = now;
+        _id: 0
+      });
+      eventsGet = now;
     }
     res.send(eventsCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getOrchestrator", async (req, res) => {
+  try {
+    const now = new Date().getTime();
+    // Update cmc once their data has expired
+    if (now - theGraphGet > timeoutTheGraph) {
+      orchestratorCache = JSON.stringify(await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", orchQuery));
+    }
+    res.send(orchestratorCache);
   } catch (err) {
     res.status(400).send(err);
   }
