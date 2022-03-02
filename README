@@ -6,7 +6,7 @@ Setup VPS
   cd /var/www/backend
   npm install
   nano /var/www/backend/src/config.js to your liking
-  replace nginx conf with supplied one, certbot will upgrade it to HTTPS
+  replace /etc/nginx/nginx.conf with supplied one, certbot will upgrade it to HTTPS
   systemctl enable --now nginx.service
   certbot --nginx
 

@@ -32,28 +32,12 @@ class Home extends React.Component {
   }
 
   render() {
-    if (this.state.redirectToRunningServices) {
-      return <Navigate push to="/services" />;
-    }
-    else if (this.state.redirectToWavePortal) {
-      return <Navigate push to="/waveportal" />;
-    }
-    if (this.state.redirectToTimelapses) {
-      return <Navigate push to="/timelapse" />;
-    }
-    if (this.state.redirectToTutorialMistOcto) {
-      return <Navigate push to="/guides/mistocto.md" />;
-    }
     if (this.state.redirectToGrafana) {
       return <Navigate push to="/orchestrator" />;
-    }
-    if (this.state.redirectToVideoNFT) {
-      return <Navigate push to="/videonft" />;
     }
     if (this.state.redirectToLPT) {
       return <Navigate push to="/livepeer" />;
     }
-
 
     var totalVisitorCount = 0;
     var activeVisitorCount = 0;
@@ -71,6 +55,13 @@ class Home extends React.Component {
           <div className="stroke roundedOpaque">
             <div className="row">
               <h3> Home </h3>
+            </div>
+            <div className="row">
+              <a href="https://github.com/stronk-dev/LivepeerEvents">
+                <button className="waveButton">
+                  <p>GitHub</p>
+                </button>
+              </a>
             </div>
             <div className="row">
               <button className="waveButton" onClick={() => {
@@ -102,7 +93,7 @@ class Home extends React.Component {
         </div>
         <div className="alwaysOnBottomRight" style={{ margin: 0, padding: 0 }}>
           <h6 className="lightText" style={{ margin: 0, padding: 0 }}>
-            nframe.tech / nframe.nl
+            nframe.nl
           </h6>
         </div>
       </div>
