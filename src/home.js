@@ -59,7 +59,7 @@ class Home extends React.Component {
             <div className="row">
               <a href="https://github.com/stronk-dev/LivepeerEvents">
                 <button className="waveButton">
-                  <p>GitHub</p>
+                  <p>🧱 Source Code 🏠</p>
                 </button>
               </a>
             </div>
@@ -67,14 +67,14 @@ class Home extends React.Component {
               <button className="waveButton" onClick={() => {
                 this.setState({ redirectToGrafana: true });
               }}>
-                <p>Livepeer Transcoder</p>
+                <p>🚀 Orchestrator 🌑</p>
               </button>
             </div>
             <div className="row">
               <button className="waveButton" onClick={() => {
                 this.setState({ redirectToLPT: true });
               }}>
-                <p>Livepeer Blockchain</p>
+                <p>🔎 Blockchain 🕵️</p>
               </button>
             </div>
           </div>
