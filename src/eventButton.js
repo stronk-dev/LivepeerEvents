@@ -26,7 +26,12 @@ const EventButton = (obj) => {
     eventSpecificInfo = <div className="row">
       <p>WithdrawFees: {obj.data.amount / 1000000000000000000} Eth {obj.data.delegator} to {obj.data.recipient}</p>
     </div>
+  } else if (obj.name == "Reward") {
+    eventSpecificInfo = <div className="row">
+      <p>Reward: T {obj.data.transcoder} earned {obj.data.amount / 1000000000000000000} Eth</p>
+    </div>
   } else {
+    console.log(obj);
     eventSpecificInfo = <div className="row">
       <p>UNIMPLEMENTED: {obj.event}</p>
     </div>
