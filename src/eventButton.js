@@ -26,6 +26,10 @@ const EventButton = (obj) => {
     eventSpecificInfo = <div className="row">
       <p>{obj.data.recipient} claimed stake</p>
     </div>
+  } else if (obj.name == "WithdrawStake") {
+    eventSpecificInfo = <div className="row" style={{ backgroundColor: 'rgba(255, 0, 0, 0.3)' }}>
+      <p>{obj.data.delegator} withdrew stake worth {obj.data.bondedAmount / 1000000000000000000} LPT in round {obj.data.withdrawRound}</p>
+    </div>
   } else if (obj.name == "Reward") {
     eventSpecificInfo = <div className="row" style={{ backgroundColor: 'rgba(0, 179, 221, 0.3)' }}>
       <p>O {obj.data.transcoder} called reward for {obj.data.amount / 1000000000000000000} LPT</p>
