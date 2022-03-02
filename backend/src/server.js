@@ -7,12 +7,12 @@ import { userRouter, sessionRouter, livepeerRouter } from './routes/index';
 import {
   PORT, NODE_ENV, MONGO_URI, SESS_NAME, SESS_SECRET, SESS_LIFETIME , MONGO_URI_DEV, MONGO_URI_LOCAL
 } from "./config";
-
+// Env variable which determines which DB to connect to
 const { NODE_ENV: mode } = process.env;
 
 (async () => {
   try {
-    //first connect with DB
+    // Make DB connection
     if (mode == "production"){
       await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useFindAndModify: false});
     }else if (mode == "development"){
@@ -23,17 +23,16 @@ const { NODE_ENV: mode } = process.env;
       await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useFindAndModify: false});
     }
     console.log('MongoDB connected on ' + mode);
-    //web application framework
+    // Web application framework
     const app = express();
-    //disable powered by message, which contains information on
     app.disable('x-powered-by');
-    //parses and validates requests to make things harder for malicious actors 
+    // Parses and validates requests to make things harder for malicious actors 
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
-    //import session module
+    // Import session module
     const MongoStore = connectStore(session);
 
-    //define session data
+    // Declare session data
     app.use(session({
       name: SESS_NAME,
       //TODO: change secret in config file
@@ -54,35 +53,29 @@ const { NODE_ENV: mode } = process.env;
         maxAge: parseInt(SESS_LIFETIME)
       }
     }));
-    //define default router
+
+    // Define endpoint paths
     const apiRouter = express.Router();
-    //which handles any request starting with /api
+    // Catch any requests from /api/* and send it to the appropriate routes
     app.use('/api', apiRouter);
-    //but changes to a different router for different paths
     apiRouter.use('/users', userRouter);
     apiRouter.use('/session', sessionRouter);
     apiRouter.use('/livepeer', livepeerRouter);
 
-    // error handler
+    // Error handler
     app.use(function(err, req, res, next) {
-      
       res.locals.message = err.message;
-      // set locals, only providing error in development
-      //res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-      // add this line to include winston logging
+      // Also log it to the console
       console.log(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-
-      // render the error page
+      // Render the error page
       res.status(err.status || 500);
       res.render('error');
     });
 
-    //actually start server
+    // Start listening on the defined port
     app.listen(PORT, "0.0.0.0", function () {
       console.log(`Listening on port ${PORT}`);
     });
-    //and log any errors to the console
   } catch (err) {
     console.log(err);
   }

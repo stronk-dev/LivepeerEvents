@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 
-
-//database schema for users
 const EventSchema = new mongoose.Schema({
   address: {
     type: String,
@@ -25,7 +23,5 @@ const EventSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-//define variable User, which corresponds with the schema
 const Event = mongoose.model('Event', EventSchema);
-//export for use outside of this file
 export default Event;

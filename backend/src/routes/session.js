@@ -1,7 +1,6 @@
 import express from "express";
 import User from "../models/user";
 import { SESS_NAME } from "../config";
-
 const sessionRouter = express.Router();
 
 sessionRouter.post("", async (req, res) => {
@@ -24,7 +23,6 @@ sessionRouter.post("", async (req, res) => {
   }
 });
 
-//on delete request
 sessionRouter.delete("", ({ session }, res) => {
   try {
     const user = session.user;
@@ -43,7 +41,6 @@ sessionRouter.delete("", ({ session }, res) => {
   }
 });
 
-//on get request
 sessionRouter.get("", ({ session: { user } }, res) => {
   res.send({ user });
 });

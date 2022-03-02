@@ -1,0 +1,17 @@
+INDEX
+  src/
+    abi/              : Contains compiled smart contract data from https://github.com/livepeer/protocol
+    models/           : Database Schema
+      event.js        : Definition of a smart contract event in the database
+      user.js         : Definition of a user in the database
+    routes/           : Define API endpoints
+      index.js        : Combines all defined routes
+      livepeer.js     : Livepeer related API calls, like blockchain information and coin prices
+      session.js      : Session related API calls, like logging in and setting the session cookie
+      user.js         : User related API calls, TBD
+    config.js         : All variables which should be kept off of GitHub, like API keys
+    index.js          : Starts server.js
+    README            : RecursionError: Maximum Recursion Depth Exceeded
+    server.js         : Boilerplate stuff to boot EVERYTHING
+  ecosystem.config.js : In order to use the backend with pm2 to ensure the backend stays running all the time
+  package.json        : External dependencies and define NPM commands
