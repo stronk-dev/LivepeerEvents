@@ -54,7 +54,7 @@ class Home extends React.Component {
         <div className="flexContainer">
           <div className="stroke roundedOpaque">
             <div className="row">
-              <h3> Home </h3>
+              <h3>Home</h3>
             </div>
             <div className="row">
               <a href="https://github.com/stronk-dev/LivepeerEvents">

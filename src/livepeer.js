@@ -146,33 +146,18 @@ class Livepeer extends React.Component {
               </div>
             </div>
             <div className="stroke" style={{ margin: 0, padding: 0 }}>
-              <h3>Smart contract prices L2</h3>
+              <h3>Smart contract prices</h3>
               <div className="row">
                 <p>Reward Call:</p>
-                <p>${redeemRewardCostL2USD}</p>
+                <p>${redeemRewardCostL2USD} (vs ${redeemRewardCostL1USD} on L1)</p>
               </div>
               <div className="row">
                 <p>Claim Ticket:</p>
-                <p>${claimTicketCostL2USD}</p>
+                <p>${claimTicketCostL2USD} (vs ${claimTicketCostL1USD} on L1)</p>
               </div>
               <div className="row">
                 <p>Withdraw Fees:</p>
-                <p>${withdrawFeeCostL2USD}</p>
-              </div>
-            </div>
-            <div className="stroke" style={{ margin: 0, padding: 0 }}>
-              <h3>Smart contract prices L1</h3>
-              <div className="row">
-                <p>Reward Call:</p>
-                <p>${redeemRewardCostL1USD}</p>
-              </div>
-              <div className="row">
-                <p>Claim Ticket:</p>
-                <p>${claimTicketCostL1USD}</p>
-              </div>
-              <div className="row">
-                <p>Withdraw Fees:</p>
-                <p>${withdrawFeeCostL1USD}</p>
+                <p>${withdrawFeeCostL2USD} (vs ${withdrawFeeCostL1USD} on L1)</p>
               </div>
             </div>
           </div>
