@@ -20,8 +20,8 @@ const EventViewer = (obj) => {
           <div className="overflow-content" style={{ cursor: 'grab' }}>
             {obj.events.slice(0).reverse().map((eventObj, idx) => {
               // Filter
-              if (eventObj.name == "WithdrawFees" || eventObj.name == "TransferBond"
-              || eventObj.name == "Rebond" || eventObj.name == "Unbond" || eventObj.name == "EarningsClaimed"){
+              if (eventObj.name === "WithdrawFees" || eventObj.name === "TransferBond"
+              || eventObj.name === "Rebond" || eventObj.name === "Unbond" || eventObj.name === "EarningsClaimed"){
                 return;
               }
               // New transaction found

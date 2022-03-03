@@ -249,8 +249,6 @@ const parseOrchestrator = async function (reqAddr) {
   // First get cached object
   for (var orch of orchestratorCache) {
     if (orch.addr == reqAddr) {
-      console.log("found cached obj");
-      console.log(orch);
       wasCached = true;
       orchestratorObj = orch;
       break;
@@ -259,9 +257,6 @@ const parseOrchestrator = async function (reqAddr) {
   if (wasCached) {
     if (now - orch.lastGet < timeoutTheGraph) {
       needsUpdate = false;
-      console.log("cached obj is up to date");
-    }else{
-      console.log("cached obj needs update");
     }
   }
   if (!wasCached || needsUpdate) {
@@ -306,23 +301,17 @@ const parseOrchestrator = async function (reqAddr) {
     }
   `;
     orchestratorObj = JSON.stringify(await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", orchQuery));
-    console.log("downloaded new obj");
-    console.log(orchestratorObj);
     if (wasCached) {
       for (var orch of orchestratorCache) {
         if (orch.addr == requestedOrchestrator) {
-          console.log("modifying existing obj in cache");
           orch = orchestratorObj;
           break;
         }
       }
     } else {
-      console.log("pushing this obj to cache");
       orchestratorCache.push(orchestratorObj);
     }
   }
-  console.log("returning obj");
-  console.log(orchestratorObj);
   return orchestratorObj;
 }
 
@@ -335,7 +324,6 @@ apiRouter.get("/getOrchestrator", async (req, res) => {
     const reqObj = await parseOrchestrator(reqOrch);
     res.send(reqObj);
   } catch (err) {
-    console.log(err);
     res.status(400).send(err);
   }
 });
@@ -345,7 +333,6 @@ apiRouter.get("/getOrchestrator/:orch", async (req, res) => {
     const reqObj = await parseOrchestrator(req.params.orch);
     res.send(reqObj);
   } catch (err) {
-    console.log(err);
     res.status(400).send(err);
   }
 });

@@ -9,9 +9,9 @@ const stakeColour = "rgba(71, 23, 122, 0.3)";
 const EventButton = (obj) => {
   // Data shared among all events in this transaction
   const thisURL = obj.transactionUrl;
-  const thisTransaction = obj.transactionHash;
+  //const thisTransaction = obj.transactionHash;
   const thisData = obj.events;
-  const thisIndex = obj.idx;
+  //const thisIndex = obj.idx;
   // Abstraction of all events in this transaction
   let transactionName = "";
   let transactionCaller = "";
@@ -28,7 +28,7 @@ const EventButton = (obj) => {
   // Which we will fill in by going over all of the events once
   thisData.map(eventObj => {
     // Bond: contains amount the transaction is about and who is participating
-    if (eventObj.name == "Bond") {
+    if (eventObj.name === "Bond") {
       transactionCaller = eventObj.data.delegator.toLowerCase();
       transactionFrom = eventObj.data.oldDelegate.toLowerCase();
       transactionTo = eventObj.data.newDelegate.toLowerCase();
@@ -37,7 +37,7 @@ const EventButton = (obj) => {
       hasBondTransaction = true;
     }
     // TranscoderActivated: defines transactionName. Defines transactionAmount as X * 7e-18 LPT
-    if (eventObj.name == "TranscoderActivated") {
+    if (eventObj.name === "TranscoderActivated") {
       transactionName = "Activated";
       transactionWhen = eventObj.data.activationRound;
       if (!hasBondTransaction) {
@@ -47,7 +47,7 @@ const EventButton = (obj) => {
       isOnlyBond = false;
     }
     // TranscoderActivated: defines transactionName. Defines transactionAmount as X / 1000000000000000000 LPT
-    if (eventObj.name == "Reward") {
+    if (eventObj.name === "Reward") {
       transactionName = "Reward";
       transactionCaller = eventObj.data.transcoder.toLowerCase();
       transactionAmount = eventObj.data.amount / 1000000000000000000;
@@ -55,7 +55,7 @@ const EventButton = (obj) => {
       isOnlyBond = false;
     }
     // TranscoderUpdate: defines transactionName. Defines transactionAmount as rewardCut and transactionAdditionalAmount as feeCut
-    if (eventObj.name == "TranscoderUpdate") {
+    if (eventObj.name === "TranscoderUpdate") {
       transactionName = "Update";
       transactionCaller = eventObj.data.transcoder.toLowerCase();
       transactionAmount = eventObj.data.rewardCut / 10000;
@@ -64,7 +64,7 @@ const EventButton = (obj) => {
       isOnlyBond = false;
     }
     // WithdrawStake: defines transactionName. Defines transactionAmount as rewardCut and transactionAdditionalAmount as feeCut
-    if (eventObj.name == "WithdrawStake") {
+    if (eventObj.name === "WithdrawStake") {
       transactionName = "Withdraw";
       transactionCaller = eventObj.data.delegator.toLowerCase();
       transactionAmount = eventObj.data.amount / 1000000000000000000;
@@ -81,7 +81,7 @@ const EventButton = (obj) => {
   }
 
   let eventSpecificInfo;
-  if (transactionName == "Reward") {
+  if (transactionName === "Reward") {
     if (transactionAmount - 69 < 1 && transactionAmount - 69 > 0) {
       eventSpecificInfo =
         <div className="rowAlignLeft">
@@ -93,12 +93,12 @@ const EventButton = (obj) => {
           <p>called reward worth {transactionAmount.toFixed(2)} LPT</p>
         </div>
     }
-  } else if (transactionName == "Update") {
+  } else if (transactionName === "Update") {
     eventSpecificInfo =
       <div className="rowAlignLeft">
         <p>changed their reward commission to {transactionAmount.toFixed(2)}% and their fee commission to {transactionAdditionalAmount.toFixed(2)}%</p>
       </div>
-  } else if (transactionName == "Stake") {
+  } else if (transactionName === "Stake") {
     if (transactionFrom == "0x0000000000000000000000000000000000000000") {
       eventSpecificInfo =
         <div className="rowAlignLeft">
@@ -114,12 +114,12 @@ const EventButton = (obj) => {
           <button className="selectOrch" onClick={() => {obj.setOrchFunction(transactionTo)}} >{transactionTo}</button>
         </div>
     }
-  } else if (transactionName == "Withdraw") {
+  } else if (transactionName === "Withdraw") {
     eventSpecificInfo =
       <div className="rowAlignLeft">
         <p> withdrew {(transactionAmount / 1000000000000000000).toFixed(2)} LPT in round {transactionWhen}</p>
       </div>
-  } else if (transactionName == "Activated") {
+  } else if (transactionName === "Activated") {
     if (hasBondTransaction) {
       eventSpecificInfo =
         <div className="rowAlignLeft">

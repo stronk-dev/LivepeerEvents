@@ -59,7 +59,6 @@ p {
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
-  box-shadow: 0px 0px 8px 4px  rgba(8, 7, 56, 0.692);
   border-radius: 10px;
 }
 

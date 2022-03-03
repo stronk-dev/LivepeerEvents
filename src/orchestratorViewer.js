@@ -47,26 +47,20 @@ const Orchestrator = (obj) => {
               {thisID}
             </a>
           </div>
-          <div className="rowAlignLeft">
-            <p>Earned fees {totalVolumeETH} Eth (${totalVolumeUSD})</p>
-          </div>
-          <div className="rowAlignLeft">
-            <p>Reward Cut {rewardCut}%</p>
-            <p>Fee Cut {feeCut}%</p>
-          </div>
-          <div className="rowAlignLeft">
-            <p>Total Stake {totalStake} LPT</p>
-            <p>Self stake {selfStake} LPT ({selfStakeRatio}%)</p>
-          </div>
+          <p>Earned fees {totalVolumeETH} Eth (${totalVolumeUSD})</p>
+          <p>Reward Cut {rewardCut}%</p>
+          <p>Fee Cut {feeCut}%</p>
+          <p>Total Stake {totalStake} LPT</p>
+          <p>Self stake {selfStake} LPT ({selfStakeRatio}%)</p>
         </div>
-        <div className="rowAlignLeft">
+        <div className="strokeSmollLeft">
           <div className="content-wrapper">
             <ScrollContainer className="overflow-container" hideScrollbars={false}>
               <div className="overflow-content" style={{ cursor: 'grab', height: '300px' }}>
                 {
                   delegators.map((delObj, idx) => {
                     return (
-                      <div className="rowAlignLeft">
+                      <div className="rowAlignLeft" key={"delegator"+idx}>
                         <a href={"https://explorer.livepeer.org/accounts/" + delObj.id}>
                           <img alt="" src="livepeer.png" width="30" height="30" />{delObj.id.substr(0, 6) + ".."}</a>
                         <div className="strokeSmollLeft">
@@ -85,14 +79,12 @@ const Orchestrator = (obj) => {
   }
   return (
     <div className="hostInfo" style={{ height: '100%', width: '100%', display: 'flex' }}>
-      <div style={{ flexDirection: 'strokeSmollLeft', display: "flex", height: '100%', width: '100%' }}>
-        <div className="rowAlignLeft">
-          <img alt="" src="livepeer.png" width="30" height="30" />
-          <h3>Orchestrator Info</h3>
-        </div>
-        <div className="rowAlignLeft">
-          <p>Click on an orchestrator in the list below!</p>
-        </div>
+      <div className="rowAlignLeft">
+        <img alt="" src="livepeer.png" width="30" height="30" />
+        <h3>Orchestrator Info</h3>
+      </div>
+      <div className="rowAlignLeft">
+        <p>Click on an orchestrator in the list below!</p>
       </div>
     </div>
   )

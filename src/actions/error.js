@@ -1,9 +1,3 @@
-{/* Ability to receive and clear errors as dispatch actions
-Requires this in files where errors can be received:
-const mapStateToProps = ({ errors }) => ({
-  errors
-});
-*/}
 export const RECEIVE_ERRORS = "RECEIVE_ERRORS";
 export const RECEIVE_NOTIFICATIONS = "RECEIVE_NOTIFICATIONS";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
