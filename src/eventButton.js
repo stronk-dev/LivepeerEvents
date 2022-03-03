@@ -103,15 +103,15 @@ const EventButton = (obj) => {
       eventSpecificInfo =
         <div className="rowAlignLeft">
           <p> staked {(transactionAmount / 1000000000000000000).toFixed(2)} LPT to </p>
-          <button className="selectOrch" onClick={() => {obj.setOrchFunction(transactionTo)}} >{transactionTo}</button>
+          <button className="selectOrch" onClick={() => { obj.setOrchFunction(transactionTo) }} >{transactionTo}</button>
         </div>
     } else {
       eventSpecificInfo =
         <div className="rowAlignLeft">
           <p> moved {(transactionAmount / 1000000000000000000).toFixed(2)} LPT stake: </p>
-          <button className="selectOrch" onClick={() => {obj.setOrchFunction(transactionFrom)}} >{transactionFrom}</button>
+          <button className="selectOrch" onClick={() => { obj.setOrchFunction(transactionFrom) }} >{transactionFrom}</button>
           <p> to </p>
-          <button className="selectOrch" onClick={() => {obj.setOrchFunction(transactionTo)}} >{transactionTo}</button>
+          <button className="selectOrch" onClick={() => { obj.setOrchFunction(transactionTo) }} >{transactionTo}</button>
         </div>
     }
   } else if (transactionName === "Withdraw") {
@@ -145,9 +145,11 @@ const EventButton = (obj) => {
   return (
     <div className="row" style={{ backgroundColor: thisColour, borderRadius: "1.2em" }}>
       <div style={{ flexDirection: 'row', display: "flex" }}>
-        <img alt="" src="livepeer.png" width="30" height="30" />
+        <a href={"https://explorer.livepeer.org/accounts/" + transactionCaller}>
+          <img alt="" src="livepeer.png" width="30" height="30" />
+        </a>
         <div className="row">
-          <button className="selectOrch" onClick={() => {obj.setOrchFunction(transactionCaller)}} >{transactionCaller}</button>
+          <button className="selectOrch" onClick={() => { obj.setOrchFunction(transactionCaller) }} >{transactionCaller}</button>
         </div>
       </div>
       {eventSpecificInfo}

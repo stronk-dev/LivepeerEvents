@@ -199,12 +199,14 @@ svg {
   user-select: text;
   font-size: small;
   color: rgba(15, 15, 15, 0.8750);
-  background-color: rgba(169, 177, 214, 0.8);
+  background-color: rgba(148, 154, 184, 0.8);
   -webkit-box-shadow: inset 3px 3px 12px 2px rgba(28, 28, 170, 0.2);
   -moz-box-shadow: inset 3px 3px 12px 2px rgba(28, 28, 170, 0.2);
   box-shadow: inset 3px 3px 12px 2px rgba(28, 28, 170, 0.2);
   display: flex;
   flex-direction: row;
+  height: 100%;
+  width: 100%;
 }
 
 .flexContainer {
@@ -248,9 +250,9 @@ svg {
   margin: 0;
   display: flex;
   text-align: center;
-  justify-content: center;
-  align-items: center;
-  justify-content: middle;
+  justify-content: flex-start;
+  align-items: flex-start;
+  justify-content: flex-start;
   vertical-align: middle;
   flex-direction: column;
   z-index: 2;

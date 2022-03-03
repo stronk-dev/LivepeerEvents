@@ -81,7 +81,9 @@ class Grafana extends React.Component {
                   </div>
                 </div>
                 <div className="stroke roundedOpaque" style={{ borderRadius: "1em", backgroundColor: "#111217" }}>
-                  <Orchestrator thisOrchestrator={this.props.livepeer.thisOrchestrator} />
+                  <div className="row" style={{paddingLeft: "1em", paddingRight: "1em"}}>
+                    <Orchestrator thisOrchestrator={this.props.livepeer.thisOrchestrator} />
+                  </div>
                   <div className="flexContainer" style={{ justifyContent: "center" }}>
                     <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark&panelId=23763572056" height="200" frameBorder="0"></iframe>
                   </div>
