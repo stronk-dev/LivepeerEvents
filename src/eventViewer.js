@@ -14,7 +14,7 @@ const EventViewer = (obj) => {
   let finalHash = "";
   let finalIdx = 0;
   return (
-    <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, marginTop: '2em', position: 'absolute', bottom: 0, top: '200px', left: '0px', right: '0px', overflowY: 'auto', overflowX: 'hidden', width: '100%' }}>
+    <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, marginTop: '2em', position: 'absolute', bottom: 0, top: '300px', left: '0px', right: '0px', overflowY: 'auto', overflowX: 'hidden', width: '100%' }}>
       <div className="content-wrapper">
         <ScrollContainer className="overflow-container" hideScrollbars={false}>
           <div className="overflow-content" style={{ cursor: 'grab' }}>
@@ -50,6 +50,7 @@ const EventViewer = (obj) => {
                   transactionHash={finalHash}
                   events={eventBundle}
                   idx={finalIdx}
+                  setOrchFunction={obj.setOrchFunction}
                 />
               }
             })}

@@ -5,9 +5,10 @@ import {
 } from "react-router-dom";
 import { connect } from "react-redux";
 import {
-  getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo
+  getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo, getOrchestratorInfo
 } from "./actions/livepeer";
 import EventViewer from "./eventViewer";
+import Orchestrator from "./orchestratorViewer";
 
 const mapStateToProps = (state) => {
   return {
@@ -22,7 +23,8 @@ const mapDispatchToProps = dispatch => ({
   getQuotes: () => dispatch(getQuotes()),
   getBlockchainData: () => dispatch(getBlockchainData()),
   getEvents: () => dispatch(getEvents()),
-  getCurrentOrchestratorInfo: () => dispatch(getCurrentOrchestratorInfo())
+  getCurrentOrchestratorInfo: () => dispatch(getCurrentOrchestratorInfo()),
+  getOrchestratorInfo: (addr) => dispatch(getOrchestratorInfo(addr))
 });
 
 class Livepeer extends React.Component {
@@ -120,9 +122,14 @@ class Livepeer extends React.Component {
       eventsList = this.props.livepeer.events;
     }
 
+    let thisOrchObj = this.props.livepeer.thisOrchestrator;
+    if (this.props.livepeer.selectedOrchestrator){
+      thisOrchObj = this.props.livepeer.selectedOrchestrator;
+    }
+
     return (
       <div style={{ width: '100%', height: '100%' }}>
-        <div className="row" style={{ margin: 0, padding: 0, backgroundColor: "rgba(180, 175, 252, 0.80)", boxSizing: "border-box", backdropDilter: "blur(6px)", boxSshadow: "9px 13px 18px 8px  rgba(8, 7, 56, 0.692)", position: 'absolute', top: '0px', left: '0px', height: '200px', right: '0px', overflow: 'hidden' }}>
+        <div className="row" style={{ margin: 0, padding: 0, backgroundColor: "rgba(180, 175, 252, 0.80)", boxSizing: "border-box", backdropDilter: "blur(6px)", boxSshadow: "9px 13px 18px 8px  rgba(8, 7, 56, 0.692)", position: 'absolute', top: '0px', left: '0px', height: '300px', right: '0px', overflow: 'hidden' }}>
           <div className="row" style={{ margin: 0, padding: 0 }}>
             <button className="homeButton" onClick={() => {
               this.setState({ redirectToHome: true });
@@ -130,22 +137,8 @@ class Livepeer extends React.Component {
               <img alt="" src="livepeer.png" width="100em" height="100em" />
             </button>
           </div>
+          <Orchestrator thisOrchestrator={thisOrchObj} />
           <div className="row metaSidebar" style={{ padding: 0 }}>
-            <div className="stroke" style={{ margin: 0, padding: 0 }}>
-              <div className="row">
-                <h3>Price Info</h3>
-              </div>
-              <div className="row">
-                <img alt="" src="livepeer.png" width="30" height="30" />
-                <p>${lptPrice}</p>
-                <p>({lptPriceChange24h}%)</p>
-              </div>
-              <div className="row">
-                <img alt="" src="eth.png" width="30" height="30" />
-                <p>${ethPrice}</p>
-                <p>({ethPriceChange24h}%)</p>
-              </div>
-            </div>
             <div className="stroke" style={{ margin: 0, padding: 0 }}>
               <h3>Smart contract prices</h3>
               <div className="row">
@@ -163,7 +156,7 @@ class Livepeer extends React.Component {
             </div>
           </div>
         </div >
-        <EventViewer events={eventsList} />
+        <EventViewer events={eventsList} setOrchFunction={this.props.getOrchestratorInfo}/>
       </div >
     );
   }

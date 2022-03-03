@@ -37,9 +37,8 @@ export const getCurrentOrchestratorInfo = () => (
 );
 
 export const getOrchestratorInfo = (orchAddr) => (
-  fetch("api/livepeer/getOrchestrator", {
-    method: "POST",
-    body: JSON.stringify(orchAddr),
+  fetch("api/livepeer/getOrchestrator/" + orchAddr, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json"
     }

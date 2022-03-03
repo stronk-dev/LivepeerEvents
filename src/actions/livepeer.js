@@ -62,6 +62,7 @@ export const getCurrentOrchestratorInfo = () => async dispatch => {
 export const getOrchestratorInfo = (orchAddr) => async dispatch => {
   const response = await apiUtil.getOrchestratorInfo(orchAddr);
   const data = await response.json();
+  console.log(data);
   if (response.ok) {
     return dispatch(setOrchestratorInfo(data));
   }

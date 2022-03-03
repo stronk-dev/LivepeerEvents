@@ -1,4 +1,5 @@
 import React from "react";
+import ScrollContainer from "react-indiana-drag-scroll";
 
 const Orchestrator = (obj) => {
   let rewardCut = 0;
@@ -9,6 +10,8 @@ const Orchestrator = (obj) => {
   let delegators = [];
   let selfStake = 0;
   let selfStakeRatio = 0;
+  let thisUrl = "";
+  let thisID = "";
   if (obj.thisOrchestrator) {
     if (obj.thisOrchestrator.rewardCut) {
       rewardCut = (obj.thisOrchestrator.rewardCut / 10000).toFixed(2);
@@ -30,14 +33,23 @@ const Orchestrator = (obj) => {
       selfStake = parseFloat(obj.thisOrchestrator.delegator.bondedAmount);
       selfStakeRatio = ((selfStake / totalStake) * 100).toFixed(2);
       selfStake = selfStake.toFixed(2);
+      thisID = obj.thisOrchestrator.delegator.id;
+      thisUrl = "https://explorer.livepeer.org/accounts/" + thisID;
     }
   }
 
   return (
-    <div className="hostInfo" style={{ margin: 0, padding: 0 }}>
-      <div className="stroke" style={{ margin: 0, padding: 0 }}>
+    <div className="hostInfo">
+      <div className="strokeSmollLeft">
+        <div style={{ flexDirection: 'row', display: "flex" }}>
+          <a href={thisUrl}>
+            <img alt="" src="livepeer.png" width="30" height="30" />
+            <h3>Orchestrator Info</h3>
+            {thisID}
+          </a>
+        </div>
         <div className="rowAlignLeft">
-          <h3>Orchestrator Info</h3>
+          <p>Earned fees {totalVolumeETH} Eth (${totalVolumeUSD})</p>
         </div>
         <div className="rowAlignLeft">
           <p>Reward Cut {rewardCut}%</p>
@@ -45,27 +57,32 @@ const Orchestrator = (obj) => {
         </div>
         <div className="rowAlignLeft">
           <p>Total Stake {totalStake} LPT</p>
-        </div>
-        <div className="rowAlignLeft">
           <p>Self stake {selfStake} LPT ({selfStakeRatio}%)</p>
         </div>
-        <div className="rowAlignLeft">
-          <p>Earned fees {totalVolumeETH} Eth (${totalVolumeUSD})</p>
+      </div>
+      <div className="rowAlignLeft">
+        <div className="content-wrapper">
+          <ScrollContainer className="overflow-container" hideScrollbars={false}>
+            <div className="overflow-content" style={{ cursor: 'grab', height: '300px' }}>
+              {
+                delegators.map((delObj, idx) => {
+                  return (
+                    <div className="rowAlignLeft">
+                      <a href={"https://explorer.livepeer.org/accounts/" + delObj.id}>
+                        <img alt="" src="livepeer.png" width="30" height="30" />{delObj.id.substr(0, 6) + ".."}</a>
+                      <div className="strokeSmollLeft">
+                        <p>{parseFloat(delObj.bondedAmount).toFixed(2)} LPT since round {delObj.startRound}</p>
+                      </div>
+                    </div>
+                  )
+                })
+              }
+            </div>
+          </ScrollContainer>
         </div>
-        {
-          delegators.map((delObj, idx) => {
-            return (
-              <div className="rowAlignLeft">
-                <a href={"https://explorer.livepeer.org/accounts/" + delObj.id}>
-                  <img alt="" src="livepeer.png" width="30" height="30" />
-                </a>
-                <p>{parseFloat(delObj.bondedAmount).toFixed(2)} LPT since round {delObj.startRound}</p>
-              </div>
-            )
-          })
-        }
       </div>
     </div>
+
   )
 }
 
