@@ -75,7 +75,7 @@ const EventButton = (obj) => {
   })
 
   // If we only had a bond transaction and nothing else, this is a stake
-  if (hasBondTransaction && isOnlyBond){
+  if (hasBondTransaction && isOnlyBond) {
     transactionName = "Stake";
     thisColour = stakeColour;
   }
@@ -93,26 +93,33 @@ const EventButton = (obj) => {
           <p>called reward worth {transactionAmount.toFixed(2)} LPT</p>
         </div>
     }
-  }else if (transactionName == "Update") {
+  } else if (transactionName == "Update") {
     eventSpecificInfo =
       <div className="row">
         <p>changed their reward commission to {transactionAmount.toFixed(2)}% and their fee commission to {transactionAdditionalAmount.toFixed(2)}%</p>
       </div>
-  }else if (transactionName == "Stake") {
+  } else if (transactionName == "Stake") {
+    if (transactionFrom == "0x0000000000000000000000000000000000000000") {
+      eventSpecificInfo =
+        <div className="row">
+          <p> staked {(transactionAmount / 1000000000000000000).toFixed(2)} LPT to {transactionTo} </p>
+        </div>
+    } else {
+      eventSpecificInfo =
+        <div className="row">
+          <p> changed stake from {transactionFrom} to {transactionTo} of {(transactionAmount / 1000000000000000000).toFixed(2)} LPT</p>
+        </div>
+    }
+  } else if (transactionName == "Withdraw") {
     eventSpecificInfo =
       <div className="row">
-        <p> changed stake from {transactionFrom} to {transactionTo} of {(transactionAmount * 7e-18).toFixed(2)} LPT</p>
-      </div>
-  }else if (transactionName == "Withdraw") {
-    eventSpecificInfo =
-      <div className="row">
-        <p> withdrew {(transactionAmount * 7e-18).toFixed(2)} LPT in round {transactionWhen}</p>
+        <p> withdrew {(transactionAmount / 1000000000000000000).toFixed(2)} LPT in round {transactionWhen}</p>
       </div>
   } else if (transactionName == "Activated") {
     if (hasBondTransaction) {
       eventSpecificInfo =
         <div className="row">
-          <p>{transactionCaller} activated with a self stake of {(transactionAmount * 7e-18).toFixed(2)} LPT and will become active in round {transactionWhen}</p>
+          <p>{transactionCaller} activated with a self stake of {(transactionAmount / 1000000000000000000).toFixed(2)} LPT and will become active in round {transactionWhen}</p>
         </div>
     } else {
       // If there was no bond transaction, display fewer information
