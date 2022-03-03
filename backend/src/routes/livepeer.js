@@ -311,13 +311,26 @@ const parseOrchestrator = async function (reqAddr) {
       orchestratorCache.push(orchestratorObj);
     }
   }
-  console.log(orchestratorObj);
   return orchestratorObj;
 }
 
 apiRouter.get("/getOrchestrator", async (req, res) => {
   try {
-    const reqObj = await parseOrchestrator(defaultOrch);
+    let reqOrch = req.query.orch;
+    if (!reqOrch || reqOrch == ""){
+      reqOrch = defaultOrch;
+    }
+    const reqObj = await parseOrchestrator(reqOrch);
+    res.send(reqObj);
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getOrchestrator/:orch", async (req, res) => {
+  try {
+    const reqObj = await parseOrchestrator(req.params.orch);
     res.send(reqObj);
   } catch (err) {
     console.log(err);
