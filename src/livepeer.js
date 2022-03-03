@@ -42,7 +42,6 @@ class Livepeer extends React.Component {
   }
 
   render() {
-    console.log(this.props.livepeer.thisOrchestrator);
     if (this.state.redirectToHome) {
       return <Navigate push to="/" />;
     }
