@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import {
   getQuotes, getCurrentOrchestratorInfo
 } from "./actions/livepeer";
+import Orchestrator from "./orchestratorViewer";
 
 const mapStateToProps = (state) => {
   return {
@@ -51,47 +52,6 @@ class Grafana extends React.Component {
       }
     }
 
-    console.log(this.props.livepeer);
-
-    let rewardCut = 0;
-    let feeCut = 0;
-    let totalStake = 0;
-    let totalVolumeETH = 0;
-    let totalVolumeUSD = 0;
-    let delegators = [];
-    let delegatorsTotalStake = 0;
-    let selfStake = 0;
-    let selfStakeRatio = 0;
-    if (this.props.livepeer.thisOrchestrator) {
-      if (this.props.livepeer.thisOrchestrator.rewardCut) {
-        rewardCut = (this.props.livepeer.thisOrchestrator.rewardCut / 10000).toFixed(2);
-      }
-      if (this.props.livepeer.thisOrchestrator.feeShare) {
-        feeCut = (100 - (this.props.livepeer.thisOrchestrator.feeShare / 10000)).toFixed(2);
-      }
-      if (this.props.livepeer.thisOrchestrator.totalStake) {
-        totalStake = parseFloat(this.props.livepeer.thisOrchestrator.totalStake).toFixed(2);
-      }
-      if (this.props.livepeer.thisOrchestrator.totalVolumeETH) {
-        totalVolumeETH = parseFloat(this.props.livepeer.thisOrchestrator.totalVolumeETH * 1).toFixed(4);
-      }
-      if (this.props.livepeer.thisOrchestrator.totalVolumeUSD) {
-        totalVolumeUSD = parseFloat(this.props.livepeer.thisOrchestrator.totalVolumeUSD * 1).toFixed(2);
-      }
-      if (this.props.livepeer.thisOrchestrator.delegators && this.props.livepeer.thisOrchestrator.delegator) {
-        delegators = this.props.livepeer.thisOrchestrator.delegators;
-        selfStake = parseFloat(this.props.livepeer.thisOrchestrator.delegator.bondedAmount);
-        {
-          delegators.map((delObj, idx) => {
-            delegatorsTotalStake += parseFloat(delObj.bondedAmount);
-          })
-        }
-        selfStakeRatio = ((selfStake / delegatorsTotalStake) * 100).toFixed(2);
-        delegatorsTotalStake = delegatorsTotalStake.toFixed(2);
-        selfStake = selfStake.toFixed(2);
-      }
-    }
-
     return (
       <div className="stroke" style={{ margin: 0, padding: 0 }}>
         <div className="row" style={{ margin: 0, padding: 0 }}>
@@ -106,43 +66,22 @@ class Grafana extends React.Component {
             <div className="stroke" style={{ marginTop: 0, marginBottom: 5, paddingBottom: 0 }}>
               <div className="stroke roundedOpaque" style={{}}>
                 <div className="row">
-                  <h2> <img alt="" src="livepeer.png" width="30" height="30" /> <a href="https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/">Livepeer Orchestrator</a></h2>
+                  <div className="row">
+                    <img alt="" src="livepeer.png" width="30" height="30" />
+                    <p>${lptPrice}</p>
+                    <p>({lptPriceChange24h}%)</p>
+                  </div>
+                  <div className="row">
+                    <h2> <a href="https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/">Livepeer Orchestrator</a></h2>
+                  </div>
+                  <div className="row">
+                    <img alt="" src="eth.png" width="30" height="30" />
+                    <p>${ethPrice}</p>
+                    <p>({ethPriceChange24h}%)</p>
+                  </div>
                 </div>
                 <div className="stroke roundedOpaque" style={{ borderRadius: "1em", backgroundColor: "#111217" }}>
-                  <div className="hostInfo" style={{ margin: 0, padding: 0 }}>
-                    <div className="stroke" style={{ margin: 0, padding: 0 }}>
-                      <div className="row">
-                        <h3>Price Info</h3>
-                      </div>
-                      <div className="row">
-                        <img alt="" src="livepeer.png" width="30" height="30" />
-                        <p>${lptPrice}</p>
-                        <p>({lptPriceChange24h}%)</p>
-                      </div>
-                      <div className="row">
-                        <img alt="" src="eth.png" width="30" height="30" />
-                        <p>${ethPrice}</p>
-                        <p>({ethPriceChange24h}%)</p>
-                      </div>
-                    </div>
-                    <div className="stroke" style={{ margin: 0, padding: 0 }}>
-                      <div className="row">
-                        <h3>Orchestrator Info</h3>
-                      </div>
-                      <div className="row">
-                        <p>Reward Cut {rewardCut}%</p>
-                        <p>Fee Cut {feeCut}%</p>
-                      </div>
-                      <div className="row">
-                        <p>Total Stake {totalStake} LPT</p>
-                        <p>Earned fees {totalVolumeETH} Eth (${totalVolumeUSD})</p>
-                      </div>
-                      <div className="row">
-                        <p>Self stake {selfStake} LPT (Ratio of {selfStakeRatio}%)</p>
-                        <p>Total stake {delegatorsTotalStake} LPT</p>
-                      </div>
-                    </div>
-                  </div>
+                  <Orchestrator thisOrchestrator={this.props.livepeer.thisOrchestrator} />
                   <div className="flexContainer" style={{ justifyContent: "center" }}>
                     <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark&panelId=23763572077" height="400" frameBorder="0"></iframe>
                   </div>

@@ -256,6 +256,19 @@ svg {
   margin-right: 10px;
 }
 
+.rowAlignLeft {
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  vertical-align: middle;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
 .flexItem {
   padding: 5px;
   width: 20px;

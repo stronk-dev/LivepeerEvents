@@ -44,52 +44,12 @@ let claimTicketCostL2 = 0;
 let withdrawFeeCostL1 = 0;
 let withdrawFeeCostL2 = 0;
 
-// Update info from thegraph every 5 minutes
-const timeoutTheGraph = 300000;
-let theGraphGet = 0;
+// Update O info from thegraph every 1 minute
+const timeoutTheGraph = 60000;
 // Address of O info we are want to display
-const orchQuery = gql`
-    {
-      transcoders(where: {id: "0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e"}) {
-        activationRound
-        deactivationRound
-        active
-        lastRewardRound {
-          id
-          length
-          startBlock
-          endBlock
-          mintableTokens
-          volumeETH
-          volumeUSD
-          totalActiveStake
-          totalSupply
-          participationRate
-          movedStake
-          newStake
-        }
-        rewardCut
-        feeShare
-        pendingFeeShare
-        pendingRewardCut
-        totalStake
-        totalVolumeETH
-        totalVolumeUSD
-        serviceURI
-        delegators {
-          id
-          bondedAmount
-          startRound
-        }
-        delegator {
-          id
-          bondedAmount
-          startRound
-        }
-      }
-    }
-  `;
-let orchestratorCache = {};
+const defaultOrch = "0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e";
+// Will contain addr, lastGet, and obj of any requested O's
+let orchestratorCache = [];
 
 // Listen to smart contract emitters. Resync with DB every 5 minutes
 const timeoutEvents = 300000;
@@ -279,14 +239,96 @@ apiRouter.get("/getEvents", async (req, res) => {
   }
 });
 
+const parseOrchestrator = async function (reqAddr) {
+  const now = new Date().getTime();
+  // Default assume it's the first time we request this Orchestrator
+  let wasCached = false;
+  let needsUpdate = true;
+  let orchestratorObj = {};
+  // First get cached object
+  for (var orch of orchestratorCache) {
+    if (orch.addr == reqAddr) {
+      wasCached = true;
+      orchestratorObj = orch;
+      break;
+    }
+  }
+  if (wasCached) {
+    if (now - orch.lastGet < timeoutTheGraph) {
+      needsUpdate = false;
+    }
+  }
+  if (!wasCached || needsUpdate) {
+    const orchQuery = gql`{
+    transcoders(where: {id: "${reqAddr}"}) {
+        activationRound
+        deactivationRound
+        active
+        lastRewardRound {
+          id
+          length
+          startBlock
+          endBlock
+          mintableTokens
+          volumeETH
+          volumeUSD
+          totalActiveStake
+          totalSupply
+          participationRate
+          movedStake
+          newStake
+        }
+        rewardCut
+        feeShare
+        pendingFeeShare
+        pendingRewardCut
+        totalStake
+        totalVolumeETH
+        totalVolumeUSD
+        serviceURI
+        delegators {
+          id
+          bondedAmount
+          startRound
+        }
+        delegator {
+          id
+          bondedAmount
+          startRound
+        }
+      }
+    }
+  `;
+    orchestratorObj = JSON.stringify(await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", orchQuery));
+    if (wasCached) {
+      for (var orch of orchestratorCache) {
+        if (orch.addr == requestedOrchestrator) {
+          orch = orchestratorObj;
+          break;
+        }
+      }
+    } else {
+      orchestratorCache.push(orchestratorObj);
+    }
+  }
+  console.log(orchestratorObj);
+  return orchestratorObj;
+}
+
 apiRouter.get("/getOrchestrator", async (req, res) => {
   try {
-    const now = new Date().getTime();
-    // Update cmc once their data has expired
-    if (now - theGraphGet > timeoutTheGraph) {
-      orchestratorCache = JSON.stringify(await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", orchQuery));
-    }
-    res.send(orchestratorCache);
+    const reqObj = await parseOrchestrator(defaultOrch);
+    res.send(reqObj);
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.post("/getOrchestrator", async (req, res) => {
+  try {
+    const reqObj = await parseOrchestrator(req.body.orchAddr);
+    res.send(reqObj);
   } catch (err) {
     res.status(400).send(err);
   }

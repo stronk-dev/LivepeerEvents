@@ -4,6 +4,7 @@ import { receiveErrors } from "./error";
 export const RECEIVE_QUOTES = "RECEIVE_QUOTES";
 export const RECEIVE_BLOCKCHAIN_DATA = "RECEIVE_BLOCKCHAIN_DATA";
 export const RECEIVE_EVENTS = "RECEIVE_EVENTS";
+export const RECEIVE_CURRENT_ORCHESTRATOR = "RECEIVE_CURRENT_ORCHESTRATOR";
 export const RECEIVE_ORCHESTRATOR = "RECEIVE_ORCHESTRATOR";
 
 const setQuotes = message => ({
@@ -16,6 +17,9 @@ const setEvents = message => ({
   type: RECEIVE_EVENTS, message
 });
 const setCurrentOrchestratorInfo = message => ({
+  type: RECEIVE_CURRENT_ORCHESTRATOR, message
+});
+const setOrchestratorInfo = message => ({
   type: RECEIVE_ORCHESTRATOR, message
 });
 
@@ -51,6 +55,15 @@ export const getCurrentOrchestratorInfo = () => async dispatch => {
   const data = await response.json();
   if (response.ok) {
     return dispatch(setCurrentOrchestratorInfo(data));
+  }
+  return dispatch(receiveErrors(data));
+};
+
+export const getOrchestratorInfo = (orchAddr) => async dispatch => {
+  const response = await apiUtil.getOrchestratorInfo(orchAddr);
+  const data = await response.json();
+  if (response.ok) {
+    return dispatch(setOrchestratorInfo(data));
   }
   return dispatch(receiveErrors(data));
 };
