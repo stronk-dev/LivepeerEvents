@@ -50,10 +50,13 @@ const EventButton = (obj) => {
   }
 
   return (
-    <a href={obj.transactionUrl} className="row">
+    <div className="row">
       <img alt="" src="livepeer.png" width="30" height="30" />
       {obj.idx}: {eventSpecificInfo}
-    </a>
+      <a href={obj.transactionUrl}>
+        <img alt="" src="arb.svg" width="30" height="30" />
+      </a>
+    </div>
   )
 }
 
