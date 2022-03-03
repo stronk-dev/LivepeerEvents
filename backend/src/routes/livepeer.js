@@ -70,8 +70,6 @@ const orchQuery = gql`
         }
         rewardCut
         feeShare
-        pricePerSegment
-        pendingPricePerSegment
         pendingFeeShare
         pendingRewardCut
         totalStake

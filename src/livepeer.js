@@ -3,10 +3,9 @@ import './style.css';
 import {
   Navigate
 } from "react-router-dom";
-import ScrollContainer from 'react-indiana-drag-scroll';
 import { connect } from "react-redux";
 import {
-  getQuotes, getBlockchainData, getEvents
+  getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo
 } from "./actions/livepeer";
 import EventViewer from "./eventViewer";
 
@@ -22,7 +21,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => ({
   getQuotes: () => dispatch(getQuotes()),
   getBlockchainData: () => dispatch(getBlockchainData()),
-  getEvents: () => dispatch(getEvents())
+  getEvents: () => dispatch(getEvents()),
+  getCurrentOrchestratorInfo: () => dispatch(getCurrentOrchestratorInfo())
 });
 
 class Livepeer extends React.Component {
@@ -38,9 +38,11 @@ class Livepeer extends React.Component {
     this.props.getQuotes();
     this.props.getBlockchainData();
     this.props.getEvents();
+    this.props.getCurrentOrchestratorInfo();
   }
 
   render() {
+    console.log(this.props.livepeer.thisOrchestrator);
     if (this.state.redirectToHome) {
       return <Navigate push to="/" />;
     }

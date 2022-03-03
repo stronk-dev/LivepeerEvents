@@ -189,7 +189,7 @@ svg {
   color: rgba(162, 161, 255, 0.5);
 }
 
-.hostinfo {
+.hostInfo {
   cursor: default;
   text-align: start;
   padding: 10px;
@@ -197,9 +197,9 @@ svg {
   user-select: text;
   margin-top: 0;
   margin-bottom: 0;
-  font-size: x-small;
+  font-size: small;
   color: rgba(15, 15, 15, 0.8750);
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: rgba(169, 177, 214, 0.8);
   -webkit-box-shadow: inset 3px 3px 12px 2px rgba(28, 28, 170, 0.2);
   -moz-box-shadow: inset 3px 3px 12px 2px rgba(28, 28, 170, 0.2);
   box-shadow: inset 3px 3px 12px 2px rgba(28, 28, 170, 0.2);

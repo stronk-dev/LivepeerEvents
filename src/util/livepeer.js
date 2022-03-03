@@ -26,3 +26,12 @@ export const getEvents = () => (
     }
   })
 );
+
+export const getCurrentOrchestratorInfo = () => (
+  fetch("api/livepeer/getOrchestrator", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
