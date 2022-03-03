@@ -122,22 +122,22 @@ class Livepeer extends React.Component {
       eventsList = this.props.livepeer.events;
     }
 
-    let thisOrchObj = this.props.livepeer.thisOrchestrator;
-    if (this.props.livepeer.selectedOrchestrator){
+    let thisOrchObj;
+    if (this.props.livepeer.selectedOrchestrator) {
       thisOrchObj = this.props.livepeer.selectedOrchestrator;
     }
 
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <div className="row" style={{ margin: 0, padding: 0, backgroundColor: "rgba(180, 175, 252, 0.80)", boxSizing: "border-box", backdropDilter: "blur(6px)", boxSshadow: "9px 13px 18px 8px  rgba(8, 7, 56, 0.692)", position: 'absolute', top: '0px', left: '0px', height: '300px', right: '0px', overflow: 'hidden' }}>
-          <div className="row" style={{ margin: 0, padding: 0 }}>
-            <button className="homeButton" onClick={() => {
-              this.setState({ redirectToHome: true });
-            }}>
-              <img alt="" src="livepeer.png" width="100em" height="100em" />
-            </button>
+          <button className="homeButton" onClick={() => {
+            this.setState({ redirectToHome: true });
+          }}>
+            <img alt="" src="livepeer.png" width="100em" height="100em" />
+          </button>
+          <div className="row" style={{alignItems: 'stretch', height:'100%'}}>
+            <Orchestrator thisOrchestrator={thisOrchObj} />
           </div>
-          <Orchestrator thisOrchestrator={thisOrchObj} />
           <div className="row metaSidebar" style={{ padding: 0 }}>
             <div className="stroke" style={{ margin: 0, padding: 0 }}>
               <h3>Smart contract prices</h3>
@@ -156,7 +156,7 @@ class Livepeer extends React.Component {
             </div>
           </div>
         </div >
-        <EventViewer events={eventsList} setOrchFunction={this.props.getOrchestratorInfo}/>
+        <EventViewer events={eventsList} setOrchFunction={this.props.getOrchestratorInfo} />
       </div >
     );
   }
