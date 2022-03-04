@@ -1,7 +1,6 @@
 import React from "react";
 
 const Stat = (obj) => {
-  console.log(obj);
   return (
     <div className="strokeSmollLeft" style={{margin: 0, padding: 0}}>
       <div className="rowAlignLeft" style={{margin: 0, padding: 0}}>

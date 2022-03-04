@@ -41,9 +41,8 @@ const Orchestrator = (obj) => {
     return (
       <div className="hostInfo">
         <div className="strokeSmollLeft" style={{ display: "flex" }}>
-          <div style={{ flexDirection: 'row', display: "flex" }}>
+          <div style={{ flexDirection: 'row', display: "flex" }} style={{marginTop: '1em'}}>
             <a href={thisUrl}>
-              <img alt="" src="livepeer.png" width="30" height="30" />
               <h3 style={{ padding: 0, margin: 0 }}>Orchestrator Info</h3>
               {thisID}
             </a>
@@ -55,6 +54,9 @@ const Orchestrator = (obj) => {
           <Stat header={"Self Stake"} content={selfStake + " LPT(" + selfStakeRatio + ")%"} />
         </div>
         <div className="strokeSmollLeft" style={{ alignItems: 'stretch', flex: 2, marginLeft: '1em', borderLeft: '3px solid rgba(15,15,15,0.05)' }}>
+            <div className="row" style={{marginTop: '1em'}}>
+              <h3 style={{ padding: 0, margin: 0 }}>Current Delegators</h3>
+            </div>
           <div className="content-wrapper">
             <ScrollContainer className="overflow-container" hideScrollbars={false}>
               <div className="overflow-content" style={{ cursor: 'grab', height: '300px' }}>
