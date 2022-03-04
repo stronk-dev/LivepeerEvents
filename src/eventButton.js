@@ -11,6 +11,7 @@ const rewardColour = "rgba(20, 99, 29, 0.3)";
 const updateColour = "rgba(122, 63, 23, 0.3)";
 const withdrawStakeColour = "rgba(102, 3, 10, 0.3)";
 const stakeColour = "rgba(71, 23, 122, 0.3)";
+const claimColour = "rgba(77, 91, 42, 0.3)";
 
 const EventButton = (obj) => {
   const dispatch = useDispatch();
@@ -28,19 +29,66 @@ const EventButton = (obj) => {
   let transactionAdditionalAmount = 0;
   let transactionWhen = 0;
   let hasBondTransaction = false;
-  let isOnlyBond = true;
+  let hasRebondTransaction = false;
+  let hasUnbondTransaction = false;
+  let hasTransferbondTransaction = false;
+  let hasEarningsClaimed = false;
+  let isOnlyBondRelated = true;
   let thisColour = "";
 
   // Which we will fill in by going over all of the events once
   thisData.map(eventObj => {
     // Bond: contains amount the transaction is about and who is participating
-    if (eventObj.name === "Bond") {
+    if (eventObj.name === "Bond" && !hasEarningsClaimed) {
       transactionCaller = eventObj.data.delegator.toLowerCase();
       transactionFrom = eventObj.data.oldDelegate.toLowerCase();
       transactionTo = eventObj.data.newDelegate.toLowerCase();
       transactionAmount = parseFloat(eventObj.data.bondedAmount);
       transactionAdditionalAmount = parseFloat(eventObj.data.additionalAmount);
       hasBondTransaction = true;
+    }
+    // Unbond: defines transactionWhen. Defines transactionAmount as X / 1000000000000000000 LPT
+    if (eventObj.name === "Unbond") {
+      // Caller and from will get overwritten by TranserBond or Rebond, but might as well set them
+      if (isOnlyBondRelated) {
+        transactionCaller = eventObj.data.delegate.toLowerCase();
+        transactionFrom = eventObj.data.delegator.toLowerCase();
+        transactionAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
+      }
+      hasUnbondTransaction = true;
+    }
+    // TransferBond: defines to transactionFrom and transactionTo. Defines transactionAmount as X / 1000000000000000000 LPT
+    if (eventObj.name === "TransferBond") {
+      // transactionFrommight get overwritten by Rebond, but might as well set them
+      if (isOnlyBondRelated) {
+        transactionFrom = eventObj.data.oldDelegator.toLowerCase();
+        transactionTo = eventObj.data.newDelegator.toLowerCase();
+        transactionAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
+      }
+      hasTransferbondTransaction = true;
+    }
+    // TransferBond: defines to transactionFrom and transactionTo. Defines transactionAmount as X / 1000000000000000000 LPT
+    if (eventObj.name === "Rebond") {
+      // transactionCaller might get overwritten by TranserBond, but might as well set them
+      if (isOnlyBondRelated) {
+        transactionCaller = eventObj.data.delegate.toLowerCase();
+        transactionFrom = eventObj.data.delegator.toLowerCase();
+        transactionAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
+      }
+      hasRebondTransaction = true;
+    }
+
+    // TranscoderActivated: defines transactionName as a stake claim. Defines transactionWhen
+    if (eventObj.name === "EarningsClaimed") {
+      transactionName = "Claim";
+      transactionWhen = eventObj.data.endRound;
+      transactionFrom = eventObj.data.delegate;
+      transactionCaller = eventObj.data.delegator;
+      transactionAmount = parseFloat(eventObj.data.rewards) / 1000000000000000000;
+      transactionAdditionalAmount = parseFloat(eventObj.data.fees) / 1000000000000000000;
+      thisColour = claimColour;
+      isOnlyBondRelated = false;
+      hasEarningsClaimed = true;
     }
     // TranscoderActivated: defines transactionName. Defines transactionAmount as X * 7e-18 LPT
     if (eventObj.name === "TranscoderActivated") {
@@ -50,15 +98,15 @@ const EventButton = (obj) => {
         transactionCaller = eventObj.data.transcoder.toLowerCase();
       }
       thisColour = activationColour;
-      isOnlyBond = false;
+      isOnlyBondRelated = false;
     }
     // TranscoderActivated: defines transactionName. Defines transactionAmount as X / 1000000000000000000 LPT
     if (eventObj.name === "Reward") {
       transactionName = "Reward";
       transactionCaller = eventObj.data.transcoder.toLowerCase();
-      transactionAmount = eventObj.data.amount / 1000000000000000000;
+      transactionAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
       thisColour = rewardColour;
-      isOnlyBond = false;
+      isOnlyBondRelated = false;
     }
     // TranscoderUpdate: defines transactionName. Defines transactionAmount as rewardCut and transactionAdditionalAmount as feeCut
     if (eventObj.name === "TranscoderUpdate") {
@@ -67,23 +115,28 @@ const EventButton = (obj) => {
       transactionAmount = eventObj.data.rewardCut / 10000;
       transactionAdditionalAmount = 100 - (eventObj.data.feeShare / 10000);
       thisColour = updateColour;
-      isOnlyBond = false;
+      isOnlyBondRelated = false;
     }
     // WithdrawStake: defines transactionName. Defines transactionAmount as rewardCut and transactionAdditionalAmount as feeCut
     if (eventObj.name === "WithdrawStake") {
       transactionName = "Withdraw";
       transactionCaller = eventObj.data.delegator.toLowerCase();
-      transactionAmount = eventObj.data.amount / 1000000000000000000;
+      transactionAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
       transactionWhen = eventObj.data.withdrawRound;
       thisColour = withdrawStakeColour;
-      isOnlyBond = false;
+      isOnlyBondRelated = false;
     }
   })
 
   // If we only had a bond transaction and nothing else, this is a stake
-  if (hasBondTransaction && isOnlyBond) {
-    transactionName = "Stake";
-    thisColour = stakeColour;
+  if (isOnlyBondRelated) {
+    if (hasBondTransaction) {
+      transactionName = "Stake";
+      thisColour = stakeColour;
+    } else if (hasRebondTransaction) {
+      console.log("Filtering out lone Rebond");
+      return null;
+    }
   }
 
   // Check name filter on transactionCaller, transactionFrom, transactionTo
@@ -129,6 +182,12 @@ const EventButton = (obj) => {
     }
     count++;
   }
+  if (obj.delegatorRewardActivated) {
+    if (transactionName === "Claim") {
+      isFiltered = false;
+    }
+    count++;
+  }
   if (isFiltered && count) {
     return null;
   }
@@ -147,6 +206,25 @@ const EventButton = (obj) => {
           <p>called reward worth {transactionAmount.toFixed(2)} LPT</p>
         </div>
     }
+  } else if (transactionName === "Claim") {
+    if (transactionFrom == "0x0000000000000000000000000000000000000000") {
+      return null;
+    }
+    let claimString = "claimed ";
+    if (transactionAmount > 0.001){
+      claimString += transactionAmount.toFixed(2) + " LPT staking rewards";
+      if (transactionAdditionalAmount > 0.00009){
+        claimString += " and "
+      }
+    }
+    if (transactionAdditionalAmount > 0.00009){
+      claimString += transactionAdditionalAmount.toFixed(4) + " Eth fee rewards";
+    }
+    eventSpecificInfo =
+      <div className="rowAlignLeft">
+        <p>{claimString} at </p>
+        <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionFrom)) }} >{transactionFrom}</button>
+      </div>
   } else if (transactionName === "Update") {
     eventSpecificInfo =
       <div className="rowAlignLeft">

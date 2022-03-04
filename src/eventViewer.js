@@ -9,6 +9,7 @@ const rewardColour = "rgba(20, 99, 29, 0.3)";
 const updateColour = "rgba(122, 63, 23, 0.3)";
 const withdrawStakeColour = "rgba(102, 3, 10, 0.3)";
 const stakeColour = "rgba(71, 23, 122, 0.3)";
+const claimColour = "rgba(77, 91, 42, 0.3)";
 
 const EventViewer = (obj) => {
   const [searchTerm, setSearchTerm] = useState(obj.prefill || "");
@@ -17,6 +18,7 @@ const EventViewer = (obj) => {
   const [updateActivated, setUpdateActivated] = useState(false);
   const [withdrawActivated, setWithdrawActivated] = useState(false);
   const [stakeActivated, setStakeActivated] = useState(false);
+  const [delegatorRewardActivated, setDelegatorRewardActivated] = useState(false);
   console.log("Rendering EventViewer");
 
   let txCounter = 0;
@@ -43,12 +45,6 @@ const EventViewer = (obj) => {
         <ScrollContainer className="overflow-container" hideScrollbars={false}>
           <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0 }}>
             {obj.events.slice(0).reverse().map((eventObj, idx) => {
-              // Filter
-              if (eventObj.name === "WithdrawFees" || eventObj.name === "TransferBond"
-                || eventObj.name === "Rebond" || eventObj.name === "Unbond" || eventObj.name === "EarningsClaimed") {
-                console.log("Skipping event" + eventObj);
-                return;
-              }
               // New transaction found
               if (currentTx != eventObj.transactionHash) {
                 // Save old event data
@@ -81,6 +77,7 @@ const EventViewer = (obj) => {
                   updateActivated={updateActivated}
                   withdrawActivated={withdrawActivated}
                   stakeActivated={stakeActivated}
+                  delegatorRewardActivated={delegatorRewardActivated}
                 />
               }
             })}
@@ -111,6 +108,11 @@ const EventViewer = (obj) => {
             setStakeActivated(!stakeActivated);
           }}>
             <h3>Stake</h3>
+          </button>
+          <button className={delegatorRewardActivated ? "row homeButton active" : "row homeButton"} style={{ backgroundColor: claimColour }} onClick={() => {
+            setDelegatorRewardActivated(!delegatorRewardActivated);
+          }}>
+            <h3>Claim</h3>
           </button>
         </div>
       </div>
