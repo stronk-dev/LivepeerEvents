@@ -324,7 +324,6 @@ svg {
 }
 
 .homeButton {
-  min-width: 200px;
   cursor: pointer;
   padding: 8px;
   border: 0;
@@ -345,7 +344,25 @@ svg {
   cursor: default;
   opacity: 0.7;
 }
-
+.nonHomeButton{
+  cursor: pointer;
+  padding: 8px;
+  border: 0;
+  border-radius: 20px;
+  background-color: transparent;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  justify-content: space-evenly;
+  z-index: 10; 
+}
+.nonHomeButton:hover {
+  backdrop-filter: blur(6px);
+}
+.active {
+  box-shadow: 4px 5px 3px 2px rgba(8, 7, 56, 0.692);
+}
 .searchField {
   margin: auto;
   display: flex;
@@ -393,7 +410,7 @@ svg {
 }
 .overflow-content {
   color: black;
-  padding: 20px;
+  padding: 1em;
 }
 
 

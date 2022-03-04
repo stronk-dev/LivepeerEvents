@@ -135,7 +135,7 @@ class Livepeer extends React.Component {
           }}>
             <img alt="" src="livepeer.png" width="100em" height="100em" />
           </button>
-          <div className="row" style={{alignItems: 'stretch', height:'100%', flex: 2}}>
+          <div className="row" style={{ alignItems: 'stretch', height: '100%', flex: 2 }}>
             <Orchestrator thisOrchestrator={thisOrchObj} />
           </div>
           <div className="row metaSidebar" style={{ padding: 0, flex: 1 }}>

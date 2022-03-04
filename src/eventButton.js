@@ -80,6 +80,53 @@ const EventButton = (obj) => {
     thisColour = stakeColour;
   }
 
+  // Check name filter on transactionCaller, transactionFrom, transactionTo
+  if (obj.searchTerm){
+    if (obj.searchTerm !== ""){
+      let isFiltered = true;
+      if (transactionCaller.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+      if (transactionFrom.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+      if (transactionTo.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+      if (isFiltered) return null;
+    }
+  }
+  let isFiltered = true;
+  // Check boolean filters on transactionName
+  let count = 0;
+  if(obj.filterActivated){
+    if (transactionName === "Activated"){
+      isFiltered = false;
+    }
+    count++;
+  }
+  if(obj.rewardActivated){
+    if (transactionName === "Reward"){
+      isFiltered = false;
+    }
+    count++;
+  }
+  if(obj.updateActivated){
+    if (transactionName === "Update"){
+      isFiltered = false;
+    }
+    count++;
+  }
+  if(obj.withdrawActivated){
+    if (transactionName === "Withdraw"){
+      isFiltered = false;
+    }
+    count++;
+  }
+  if(obj.stakeActivated){
+    if (transactionName === "Stake"){
+      isFiltered = false;
+    }
+    count++;
+  }
+  if (isFiltered && count){
+    return null;
+  }
+  
   let eventSpecificInfo;
   if (transactionName === "Reward") {
     if (transactionAmount - 69 < 1 && transactionAmount - 69 > 0) {
