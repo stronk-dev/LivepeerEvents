@@ -45,28 +45,23 @@ const Startup = (obj) => {
     }
   }, [refreshInterval]);
 
-  if(isLoaded){
+  if (isLoaded) {
     console.log("Rendering Application");
     return obj.children;
-  }else{
+  } else {
     console.log("Rendering Loading Screen");
-    return <div className="stroke" style={{ padding: 0 }}>
-    <div className="row" style={{ margin: 0, padding: 0 }}>
-      <img alt="" src="livepeer.png" width="100em" height="100em" style={{ zIndex: 10 }} />
-    </div>
-    <div className="flexContainer">
-      <div className="stroke roundedOpaque">
+    return (
+      <div className="stroke">
         <div className="row">
-          <h3>Loading...</h3>
+          <img alt="" src="livepeer.png" width="200em" height="200em" style={{ zIndex: 10 }} />
+        </div>
+        <div className="stroke roundedOpaque" style={{ width: 'unset', padding: '5em' }}>
+          <div className="stroke">
+            <h1>Loading...</h1>
+          </div>
         </div>
       </div>
-    </div>
-    <div className="alwaysOnBottomRight" style={{ margin: 0, padding: 0 }}>
-      <h6 className="lightText" style={{ margin: 0, padding: 0 }}>
-        nframe.nl
-      </h6>
-    </div>
-  </div>
+    )
   }
 }
 
