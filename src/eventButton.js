@@ -49,11 +49,17 @@ const EventButton = (obj) => {
       transactionTo = eventObj.data.newDelegate.toLowerCase();
       transactionAmount = parseFloat(eventObj.data.bondedAmount) / 1000000000000000000;
       transactionAdditionalAmount = parseFloat(eventObj.data.additionalAmount) / 1000000000000000000;
+      if (hasEarningsClaimed){
+        transactionName = "Stake";
+        hasEarningsClaimed = false;
+        console.log("COMPLEX BOND " + thisURL);
+        console.log(thisData);
+      }
       hasBondTransaction = true;
     }
     // Unbond: defines transactionWhen. Defines transactionAmount as X / 1000000000000000000 LPT
     if (eventObj.name === "Unbond") {
-      // Caller and from will get overwritten by TranserBond or Rebond, but might as well set them
+      // Caller and from will get overwritten by TransferBond or Rebond, but might as well set them
       if (isOnlyBondRelated) {
         transactionCaller = eventObj.data.delegate.toLowerCase();
         transactionFrom = eventObj.data.delegator.toLowerCase();
@@ -62,7 +68,7 @@ const EventButton = (obj) => {
       hasUnbondTransaction = true;
     }
     // TransferBond: defines to transactionFrom and transactionTo. Defines transactionAmount as X / 1000000000000000000 LPT
-    if (eventObj.name === "TransferBond") {
+    if (eventObj.name === "TransferBond" && !hasBondTransaction && !hasRebondTransaction) {
       // transactionFrommight get overwritten by Rebond, but might as well set them
       if (isOnlyBondRelated) {
         transactionFrom = eventObj.data.oldDelegator.toLowerCase();
@@ -79,11 +85,19 @@ const EventButton = (obj) => {
         transactionCaller = eventObj.data.delegator.toLowerCase();
         transactionAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
       }
+      if (hasEarningsClaimed){
+        transactionName = "Rebond";
+        hasEarningsClaimed = false;
+        transactionTo = eventObj.data.delegate.toLowerCase();
+        transactionCaller = eventObj.data.delegator.toLowerCase();
+        transactionAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
+        thisColour = stakeColour;
+      }
       hasRebondTransaction = true;
     }
 
     // TranscoderActivated: defines transactionName as a stake claim. Defines transactionWhen
-    if (eventObj.name === "EarningsClaimed" && !hasActivation && !hasBondTransaction) {
+    if (eventObj.name === "EarningsClaimed" && !hasActivation && !hasBondTransaction && !hasRebondTransaction) {
       transactionName = "Claim";
       transactionWhen = eventObj.data.endRound;
       transactionFrom = eventObj.data.delegate;
@@ -130,6 +144,12 @@ const EventButton = (obj) => {
       transactionWhen = eventObj.data.withdrawRound;
       thisColour = withdrawStakeColour;
       isOnlyBondRelated = false;
+    }
+    if (eventObj.name === "WithdrawFees") {
+      console.log("Skipping WithdrawFees");
+    }
+    if (eventObj.name === "Unbond") {
+      console.log("Skipping WithdrawFees");
     }
   })
 
@@ -220,6 +240,8 @@ const EventButton = (obj) => {
     }
   } else if (transactionName === "Claim") {
     if (transactionFrom == "0x0000000000000000000000000000000000000000") {
+      console.log("EMPTY CLAIM " + thisURL);
+      console.log(thisData);
       return null;
     }
     let claimString = "claimed ";
