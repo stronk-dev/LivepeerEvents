@@ -92,7 +92,7 @@ const Orchestrator = (obj) => {
         </div>
         <div className="strokeSmollLeft" style={{ alignItems: 'stretch', flex: 2, marginLeft: '1em', borderLeft: '3px solid rgba(15,15,15,0.05)' }}>
           <div className="row" style={{ marginTop: '1em' }}>
-            <h3 style={{ padding: 0, margin: 0 }}>Current Delegators</h3>
+            <h3 style={{ padding: 0, margin: 0 }}>{delegators.length} Current Delegators</h3>
           </div>
           <div className="content-wrapper">
             <ScrollContainer className="overflow-container" hideScrollbars={false}>

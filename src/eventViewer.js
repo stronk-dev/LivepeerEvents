@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import EventButton from "./eventButton";
 import ScrollContainer from 'react-indiana-drag-scroll';
-
+import ReactPaginate from 'react-paginate';
 /// A scrollable and filterable list of EventButtons
 
 const activationColour = "rgba(23, 60, 122, 0.3)";
@@ -10,6 +10,7 @@ const updateColour = "rgba(122, 63, 23, 0.3)";
 const withdrawStakeColour = "rgba(102, 3, 10, 0.3)";
 const stakeColour = "rgba(71, 23, 122, 0.3)";
 const claimColour = "rgba(77, 91, 42, 0.3)";
+const unbondColour = "rgba(122, 23, 51, 0.3)";
 
 const EventViewer = (obj) => {
   const [searchTerm, setSearchTerm] = useState(obj.prefill || "");
@@ -19,6 +20,7 @@ const EventViewer = (obj) => {
   const [withdrawActivated, setWithdrawActivated] = useState(false);
   const [stakeActivated, setStakeActivated] = useState(false);
   const [delegatorRewardActivated, setDelegatorRewardActivated] = useState(false);
+  const [unbondActivated, setUnbondActivated] = useState(false);
   console.log("Rendering EventViewer");
 
   let txCounter = 0;
@@ -33,7 +35,7 @@ const EventViewer = (obj) => {
   let finalIdx = 0;
   return (
     <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, marginTop: '2em', position: 'absolute', bottom: 0, top: '300px', left: '0px', right: '0px', overflowY: 'auto', overflowX: 'hidden', width: '100%' }}>
-      <div className="fixed-container" style={{ padding: 0, width: '300px'}}>
+      <div className="fixed-container" style={{ padding: 0, width: '300px' }}>
         <input className="searchField" style={{ width: '300px' }}
           value={searchTerm}
           onChange={(evt) => setSearchTerm(evt.target.value)}
@@ -78,41 +80,47 @@ const EventViewer = (obj) => {
                   withdrawActivated={withdrawActivated}
                   stakeActivated={stakeActivated}
                   delegatorRewardActivated={delegatorRewardActivated}
+                  unbondActivated={unbondActivated}
                 />
               }
             })}
           </div>
         </ScrollContainer>
         <div className="strokeSmollLeft" style={{ marginRight: "1em" }}>
-          <button className={filterActivated ? "row homeButton active" : "row homeButton"} style={{ backgroundColor: activationColour }} onClick={() => {
+          <button className={filterActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: activationColour }} onClick={() => {
             setFilterActivated(!filterActivated);
           }}>
             <h3>Activated</h3>
           </button>
-          <button className={rewardActivated ? "row homeButton active" : "row homeButton"} style={{ backgroundColor: rewardColour }} onClick={() => {
+          <button className={rewardActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: rewardColour }} onClick={() => {
             setRewardActivated(!rewardActivated);
           }}>
             <h3>Reward</h3>
           </button>
-          <button className={updateActivated ? "row homeButton active" : "row homeButton"} style={{ backgroundColor: updateColour }} onClick={() => {
+          <button className={updateActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: updateColour }} onClick={() => {
             setUpdateActivated(!updateActivated);
           }}>
             <h3>Update</h3>
           </button>
-          <button className={withdrawActivated ? "row homeButton active" : "row homeButton"} style={{ backgroundColor: withdrawStakeColour }} onClick={() => {
+          <button className={withdrawActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: withdrawStakeColour }} onClick={() => {
             setWithdrawActivated(!withdrawActivated);
           }}>
             <h3>Withdraw</h3>
           </button>
-          <button className={stakeActivated ? "row homeButton active" : "row homeButton"} style={{ backgroundColor: stakeColour }} onClick={() => {
+          <button className={stakeActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: stakeColour }} onClick={() => {
             setStakeActivated(!stakeActivated);
           }}>
             <h3>Stake</h3>
           </button>
-          <button className={delegatorRewardActivated ? "row homeButton active" : "row homeButton"} style={{ backgroundColor: claimColour }} onClick={() => {
+          <button className={delegatorRewardActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: claimColour }} onClick={() => {
             setDelegatorRewardActivated(!delegatorRewardActivated);
           }}>
             <h3>Claim</h3>
+          </button>
+          <button className={unbondActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: unbondColour }} onClick={() => {
+            setUnbondActivated(!unbondActivated);
+          }}>
+            <h3>Unbond</h3>
           </button>
         </div>
       </div>

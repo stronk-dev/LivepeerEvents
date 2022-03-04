@@ -360,12 +360,17 @@ svg {
   display: flex;
   justify-content: space-evenly;
   z-index: 10; 
+  margin-bottom: 0.7em;
 }
 .nonHomeButton:hover {
+  box-shadow: 4px 5px 3px 2px rgba(8, 7, 56, 0.692);
   backdrop-filter: blur(6px);
 }
+.nonHomeButton:active {
+  box-shadow: inset -4px -5px 6px 4px rgba(8, 7, 56, 0.692);
+}
 .active {
-  box-shadow: 4px 5px 3px 2px rgba(8, 7, 56, 0.692);
+  box-shadow: inset -4px -5px 6px 4px rgba(8, 7, 56, 0.692);
 }
 .searchField {
   margin: auto;

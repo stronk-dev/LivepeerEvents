@@ -10,8 +10,8 @@ import { login } from "./actions/session";
 
 // Shows a loading screen on first load and gets fresh data every refreshInterval milliseconds
 
-// Refresh every 30 seconds
-const refreshInterval = 30000;
+// Refresh every 60 seconds
+const refreshInterval = 60000;
 
 const Startup = (obj) => {
   const [isLoaded, setIsLoaded] = useState(false);
