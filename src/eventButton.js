@@ -33,6 +33,7 @@ const EventButton = (obj) => {
   let hasUnbondTransaction = false;
   let hasTransferbondTransaction = false;
   let hasEarningsClaimed = false;
+  let hasActivation = false;
   let isOnlyBondRelated = true;
   let thisColour = "";
 
@@ -79,7 +80,7 @@ const EventButton = (obj) => {
     }
 
     // TranscoderActivated: defines transactionName as a stake claim. Defines transactionWhen
-    if (eventObj.name === "EarningsClaimed") {
+    if (eventObj.name === "EarningsClaimed" && !hasActivation) {
       transactionName = "Claim";
       transactionWhen = eventObj.data.endRound;
       transactionFrom = eventObj.data.delegate;
@@ -99,6 +100,7 @@ const EventButton = (obj) => {
       }
       thisColour = activationColour;
       isOnlyBondRelated = false;
+      hasActivation = true;
     }
     // TranscoderActivated: defines transactionName. Defines transactionAmount as X / 1000000000000000000 LPT
     if (eventObj.name === "Reward") {
