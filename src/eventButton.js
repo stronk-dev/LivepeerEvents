@@ -235,6 +235,8 @@ const EventButton = (obj) => {
 
   // Displays info specific to a type of transactions
   let eventSpecificInfo;
+  let eventTo;
+  let eventFrom;
   if (transactionName === "Reward") {
     if (transactionAmount - 69 < 1 && transactionAmount - 69 > 0) {
       eventSpecificInfo =
@@ -265,9 +267,9 @@ const EventButton = (obj) => {
     }
     eventSpecificInfo =
       <div className="rowAlignLeft">
-        <p>{claimString} at </p>
-        <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionFrom)) }} >{transactionFrom}</button>
+        <p>{claimString} at</p>
       </div>
+    eventFrom = <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionFrom)) }} >{transactionFrom}</button>;
   } else if (transactionName === "Update") {
     eventSpecificInfo =
       <div className="rowAlignLeft">
@@ -276,40 +278,39 @@ const EventButton = (obj) => {
   } else if (transactionName === "Unbond") {
     eventSpecificInfo =
       <div className="rowAlignLeft">
-        <p> unbonded {transactionAmount.toFixed(2)} LPT from {transactionFrom} starting from round {transactionWhen}</p>
+        <p>unbonded {transactionAmount.toFixed(2)} LPT starting from round {transactionWhen}</p>
       </div>
+    eventFrom = <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionFrom)) }} >{transactionFrom}</button>;
   } else if (transactionName === "Stake") {
+    eventTo = <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionTo)) }} >{transactionTo}</button>;
     if (transactionFrom == "0x0000000000000000000000000000000000000000") {
       eventSpecificInfo =
         <div className="rowAlignLeft">
           <p> staked {transactionAmount.toFixed(2)} LPT to </p>
-          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionTo)) }} >{transactionTo}</button>
         </div>
     } else {
+      eventFrom = <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionFrom)) }} >{transactionFrom}</button>;
       eventSpecificInfo =
         <div className="rowAlignLeft">
-          <p> moved {transactionAmount.toFixed(2)} LPT stake: </p>
-          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionFrom)) }} >{transactionFrom}</button>
-          <p> to </p>
-          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionTo)) }} >{transactionTo}</button>
+          <p>moved {transactionAmount.toFixed(2)} LPT stake</p>
         </div>
     }
   } else if (transactionName === "Rebond") {
+    eventTo = <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionTo)) }} >{transactionTo}</button>;
     eventSpecificInfo =
       <div className="rowAlignLeft">
-        <p> increased their stake with {transactionAmount.toFixed(2)} LPT at </p>
-        <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionTo)) }} >{transactionTo}</button>
+        <p>increased their stake with {transactionAmount.toFixed(2)} LPT at</p>
       </div>
   } else if (transactionName === "Migrate") {
+    eventTo = <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionTo)) }} >{transactionTo}</button>;
     eventSpecificInfo =
       <div className="rowAlignLeft">
-        <p> migrated {transactionAmount.toFixed(2)} LPT to L2 at </p>
-        <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionTo)) }} >{transactionTo}</button>
+        <p>migrated {transactionAmount.toFixed(2)} LPT to L2 at</p>
       </div>
   } else if (transactionName === "Withdraw") {
     eventSpecificInfo =
       <div className="rowAlignLeft">
-        <p> withdrew {(transactionAmount).toFixed(2)} LPT in round {transactionWhen}</p>
+        <p>withdrew {(transactionAmount).toFixed(2)} LPT in round {transactionWhen}</p>
       </div>
   } else if (transactionName === "Activated") {
     if (hasBondTransaction) {
@@ -332,6 +333,10 @@ const EventButton = (obj) => {
 
   // IF ON MOBILE
   // transactionCaller.substring(0,8)+"..."
+  let eventArrow;
+  if(eventTo && eventFrom){
+    eventArrow = <p>→</p>;
+  }
 
   return (
     <div className="row" style={{ backgroundColor: thisColour, borderRadius: "1.2em" }}>
@@ -344,6 +349,9 @@ const EventButton = (obj) => {
         </div>
       </div>
       {eventSpecificInfo}
+      {eventTo}
+      {eventArrow}
+      {eventFrom}
       <a href={thisURL}>
         <img alt="" src="arb.svg" width="30" height="30" />
       </a>
