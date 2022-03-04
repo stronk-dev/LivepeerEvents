@@ -19,7 +19,7 @@ const EventButton = (obj) => {
   if (obj.eventObj.eventTo === "0x0000000000000000000000000000000000000000") {
     obj.eventObj.eventTo = "";
   }
-  if (obj.eventObj.eventTo && obj.eventObj.eventFrom) {
+  if (obj.eventObj.eventTo !== "" || obj.eventObj.eventFrom !== "") {
     eventArrow = <p>→</p>;
   }
   if (obj.eventObj.eventTo) {
@@ -48,9 +48,9 @@ const EventButton = (obj) => {
         {obj.eventObj.eventDescription}
       </div>
       <div className="row" style={{ width: 'unset'}}>
-        {eventTo}
-        {eventArrow}
         {eventFrom}
+        {eventArrow}
+        {eventTo}
       </div>
     </div>
   )

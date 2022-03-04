@@ -97,7 +97,7 @@ export const getEvents = () => async dispatch => {
             if (eventContainsEarningsClaimed) {
               eventType = "Migrate";
               eventColour = migrateColour;
-              eventDescription = "migrated " + tmpAmount.toFixed(2) + " LPT to L2 at";
+              eventDescription = "migrated " + tmpAmount.toFixed(2) + " LPT to L2";
             } else {
               eventType = "Stake";
               eventColour = stakeColour;
@@ -137,7 +137,10 @@ export const getEvents = () => async dispatch => {
           // Fill description of Stake Event if it wasn't set yet
           if (eventType === "Stake" && eventDescription === "") {
             if (eventFrom === "0x0000000000000000000000000000000000000000") {
-              eventDescription = "staked " + tmpAmount.toFixed(2) + " LPT with";
+              eventDescription = "staked " + tmpAmount.toFixed(2) + " LPT";
+            } else if (eventFrom === eventTo) {
+              eventFrom = "";
+              eventDescription = "increased their self stake to " + tmpAmount.toFixed(2) + " LPT";
             } else {
               eventDescription = "moved a " + tmpAmount.toFixed(2) + " LPT stake";
             }
@@ -194,12 +197,12 @@ export const getEvents = () => async dispatch => {
           });
         } else if (eventObj.name === "WithdrawFees") {
           const amount = parseFloat(eventObj.data.amount) / 1000000000000000000;
-          const txt = " withdrew " + amount + " LPT earned fees from " + eventObj.data.delegator;
+          const txt = " withdrew " + amount + " LPT earned fees";
           finalEventList.push({
             eventType: "Withdraw",
             eventDescription: txt,
             eventCaller: eventObj.data.delegator.toLowerCase(),
-            eventFrom: "",
+            eventFrom: eventObj.data.delegator.toLowerCase(),
             eventTo: "",
             eventColour: withdrawStakeColour,
             transactionHash: currentTx,
@@ -301,8 +304,12 @@ export const getEvents = () => async dispatch => {
         }
         else if (eventObj.name === "TransferBond") {
           eventContainsTransferBond = true;
-          eventFrom = eventObj.data.oldDelegator.toLowerCase();
-          eventTo = eventObj.data.newDelegator.toLowerCase();
+          if (!eventContainsUnbond){
+            eventFrom = eventObj.data.oldDelegator.toLowerCase();
+          }
+          if (!eventContainsRebond){
+            eventTo = eventObj.data.newDelegator.toLowerCase();
+          }
           tmpAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
         } else {
           console.log("UNIMPLEMENTED: " + eventObj.name);
