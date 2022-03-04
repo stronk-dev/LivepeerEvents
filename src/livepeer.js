@@ -1,43 +1,26 @@
 import React, { useState, useEffect } from 'react'
 import './style.css';
-import {
-  Navigate, useSearchParams
-} from "react-router-dom";
-import { useSelector, useDispatch, batch } from 'react-redux'
-import {
-  getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo, getOrchestratorInfo
-} from "./actions/livepeer";
+import { Navigate, useSearchParams } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux'
+import { getOrchestratorInfo } from "./actions/livepeer";
 import EventViewer from "./eventViewer";
 import Orchestrator from "./orchestratorViewer";
 import Stat from "./statViewer";
 
-// Refresh every 30 seconds
-const refreshInterval = 30000;
+// Shows the EventViewer and other Livepeer related info
 
 const Livepeer = (obj) => {
   const [prefill, setPrefill] = useSearchParams();
   const dispatch = useDispatch();
   const livepeer = useSelector((state) => state.livepeerstate);
   const [redirectToHome, setRedirectToHome] = useState(false);
-
-  const refreshAllZeData = () => {
-    batch(() => {
-      dispatch(getQuotes())
-      dispatch(getEvents())
-      dispatch(getBlockchainData())
-      dispatch(getCurrentOrchestratorInfo())
-    });
-  }
+  console.log("Rendering Livepeer");
 
   useEffect(() => {
-    if (prefill.get('orchAddr') != ""){
+    if (prefill.get('orchAddr') != "") {
       dispatch(getOrchestratorInfo(prefill.get('orchAddr')));
     }
-    if (refreshInterval) {
-      const interval = setInterval(refreshAllZeData, refreshInterval);
-      return () => clearInterval(interval);
-    }
-  }, [refreshInterval]);
+  }, [prefill]);
 
   if (redirectToHome) {
     return <Navigate push to="/" />;

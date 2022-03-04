@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import EventButton from "./eventButton";
 import ScrollContainer from 'react-indiana-drag-scroll';
 
+/// A scrollable and filterable list of EventButtons
+
 const activationColour = "rgba(23, 60, 122, 0.3)";
 const rewardColour = "rgba(20, 99, 29, 0.3)";
 const updateColour = "rgba(122, 63, 23, 0.3)";
@@ -15,6 +17,7 @@ const EventViewer = (obj) => {
   const [updateActivated, setUpdateActivated] = useState(false);
   const [withdrawActivated, setWithdrawActivated] = useState(false);
   const [stakeActivated, setStakeActivated] = useState(false);
+  console.log("Rendering EventViewer");
 
   let txCounter = 0;
   let currentTx = "";

@@ -1,5 +1,5 @@
-import * as React from "react";
-import { connect, batch } from "react-redux";
+import React, { useEffect, useState } from 'react'
+import { useDispatch, batch } from 'react-redux'
 import {
   getVisitorStats
 } from "./actions/user";
@@ -8,41 +8,66 @@ import {
 } from "./actions/livepeer";
 import { login } from "./actions/session";
 
-const mapStateToProps = (state) => {
-  return {
-    session: state.session,
-    userstate: state.userstate,
-    errors: state.errors
-  }
-};
+// Shows a loading screen on first load and gets fresh data every refreshInterval milliseconds
 
-const mapDispatchToProps = dispatch => ({
-  getVisitorStats: () => dispatch(getVisitorStats()),
-  login: () => dispatch(login()),
-  getQuotes: () => dispatch(getQuotes()),
-  getEvents: () => dispatch(getEvents()),
-  getBlockchainData: () => dispatch(getBlockchainData()),
-  getCurrentOrchestratorInfo: () => dispatch(getCurrentOrchestratorInfo())
-});
+// Refresh every 30 seconds
+const refreshInterval = 30000;
 
+const Startup = (obj) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const dispatch = useDispatch();
 
-class Startup extends React.Component {
-  componentDidMount() {
+  const refreshAllZeData = () => {
+    console.log("Refreshing data...");
     batch(() => {
-      this.props.login();
-      this.props.getVisitorStats();
-      this.props.getQuotes();
-      this.props.getBlockchainData();
-      this.props.getEvents();
-      this.props.getCurrentOrchestratorInfo();
+      dispatch(getQuotes());
+      dispatch(getEvents());
+      dispatch(getBlockchainData());
+      dispatch(getCurrentOrchestratorInfo());
     });
   }
-  render() {
-    return this.props.children;
+
+  const refreshLogin = () => {
+    console.log("Logging in and getting visitor statistics...");
+    batch(() => {
+      dispatch(login());
+      dispatch(getVisitorStats());
+    });
+    setIsLoaded(true);
+  }
+
+  useEffect(() => {
+    refreshLogin();
+    refreshAllZeData();
+    if (refreshInterval) {
+      const interval = setInterval(refreshAllZeData, refreshInterval);
+      return () => clearInterval(interval);
+    }
+  }, [refreshInterval]);
+
+  if(isLoaded){
+    console.log("Rendering Application");
+    return obj.children;
+  }else{
+    console.log("Rendering Loading Screen");
+    return <div className="stroke" style={{ padding: 0 }}>
+    <div className="row" style={{ margin: 0, padding: 0 }}>
+      <img alt="" src="livepeer.png" width="100em" height="100em" style={{ zIndex: 10 }} />
+    </div>
+    <div className="flexContainer">
+      <div className="stroke roundedOpaque">
+        <div className="row">
+          <h3>Loading...</h3>
+        </div>
+      </div>
+    </div>
+    <div className="alwaysOnBottomRight" style={{ margin: 0, padding: 0 }}>
+      <h6 className="lightText" style={{ margin: 0, padding: 0 }}>
+        nframe.nl
+      </h6>
+    </div>
+  </div>
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Startup);
+export default Startup;

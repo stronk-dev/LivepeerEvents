@@ -6,6 +6,8 @@ import {
 import { useSelector } from 'react-redux'
 import Orchestrator from "./orchestratorViewer";
 
+// Displays orchestrator info and embedded grafana panels
+
 const Grafana = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [redirectToHome, setRedirectToHome] = useState(false);

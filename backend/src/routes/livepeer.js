@@ -1,23 +1,27 @@
 import express from "express";
 import Event from '../models/event';
-const fs = require('fs');
 const apiRouter = express.Router();
 import {
   API_CMC, API_L1_HTTP, API_L2_HTTP, API_L2_WS
 } from "../config";
+// Do API requests to other API's
 const https = require('https');
+// Read ABI files
+const fs = require('fs');
+// Used for the livepeer thegraph API
 import { request, gql } from 'graphql-request';
-
-// Get ETH price & LPT coin prices
+// Gets ETH, LPT and other coin info
 const CoinMarketCap = require('coinmarketcap-api');
 const cmcClient = new CoinMarketCap(API_CMC);
-// Get gas price on ETH (L2 already gets exported by the O's themselves)
+// Gets blockchain data
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
+// Gets gas prices
 const web3layer1 = createAlchemyWeb3(API_L1_HTTP);
 const web3layer2 = createAlchemyWeb3(API_L2_HTTP);
+// For listening to blockchain events
 const web3layer2WS = createAlchemyWeb3(API_L2_WS);
 
-// Update CMC related api calls every 5 minutes
+// Update CoinMarketCap related api calls every 5 minutes
 const timeoutCMC = 300000;
 let cmcPriceGet = 0;
 let ethPrice = 0;
@@ -25,7 +29,7 @@ let lptPrice = 0;
 let cmcQuotes = {};
 let cmcCache = {};
 
-// Update alchemy related API calls every 2 seconds
+// Update Alchemy related API calls every 2 seconds
 const timeoutAlchemy = 2000;
 let l2Gwei = 0;
 let l1Gwei = 0;
@@ -34,10 +38,10 @@ let l1block = 0;
 let arbGet = 0;
 
 // Gas limits on common contract interactions
+// 50000 gas for approval when creating a new O
 const redeemRewardGwei = 1053687;
 const claimTicketGwei = 1333043;
 const withdrawFeeGwei = 688913;
-// 50000 gas for approval when creating a new O
 const stakeFeeGwei = 680000;
 const commissionFeeGwei = 140000;
 const serviceUriFee = 51000;
@@ -94,7 +98,7 @@ var BondingManagerProxyListener = contractInstance.events.allEvents(async (error
 });
 console.log("listening for events on", BondingManagerProxyAddr)
 
-// Splits of the big CMC object into separate datas
+// Splits of raw CMC object into coin quote data
 const parseCmc = async function () {
   try {
     cmcCache = await cmcClient.getTickers({ limit: 200 });
@@ -115,17 +119,7 @@ const parseCmc = async function () {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-// Queries Alchemy for block info and fees
+// Queries Alchemy for block info and gas fees
 const parseL1Blockchain = async function () {
   const l1Wei = await web3layer1.eth.getGasPrice();
   l1block = await web3layer1.eth.getBlockNumber();
@@ -193,6 +187,7 @@ apiRouter.get("/grafana", async (req, res) => {
   }
 });
 
+// Exports raw CoinMarketCap info
 apiRouter.get("/cmc", async (req, res) => {
   try {
     const now = new Date().getTime();
@@ -207,6 +202,7 @@ apiRouter.get("/cmc", async (req, res) => {
   }
 });
 
+// Exports gas fees and contract prices
 apiRouter.get("/blockchains", async (req, res) => {
   try {
     const now = new Date().getTime();
@@ -240,7 +236,7 @@ apiRouter.get("/blockchains", async (req, res) => {
   }
 });
 
-
+// Exports top 200 coin quotes
 apiRouter.get("/quotes", async (req, res) => {
   try {
     const now = new Date().getTime();
@@ -256,6 +252,7 @@ apiRouter.get("/quotes", async (req, res) => {
   }
 });
 
+// Exports list of smart contract events
 apiRouter.get("/getEvents", async (req, res) => {
   try {
     const now = new Date().getTime();
@@ -277,6 +274,7 @@ apiRouter.get("/getEvents", async (req, res) => {
   }
 });
 
+// Gets info on a given Orchestrator
 const parseOrchestrator = async function (reqAddr) {
   reqAddr = reqAddr.toLowerCase();
   const now = new Date().getTime();
@@ -353,6 +351,7 @@ const parseOrchestrator = async function (reqAddr) {
   return orchestratorObj;
 }
 
+// Exports info on a given Orchestrator
 apiRouter.get("/getOrchestrator", async (req, res) => {
   try {
     let reqOrch = req.query.orch;
@@ -365,7 +364,6 @@ apiRouter.get("/getOrchestrator", async (req, res) => {
     res.status(400).send(err);
   }
 });
-
 apiRouter.get("/getOrchestrator/:orch", async (req, res) => {
   try {
     const reqObj = await parseOrchestrator(req.params.orch);
@@ -374,7 +372,6 @@ apiRouter.get("/getOrchestrator/:orch", async (req, res) => {
     res.status(400).send(err);
   }
 });
-
 apiRouter.post("/getOrchestrator", async (req, res) => {
   try {
     const reqObj = await parseOrchestrator(req.body.orchAddr);

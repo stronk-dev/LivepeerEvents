@@ -2,7 +2,9 @@ import React from "react";
 import {
   getOrchestratorInfo
 } from "./actions/livepeer";
-import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux';
+
+/// Displays a single event. Sets selected Orchestrator info in the redux store
 
 const activationColour = "rgba(23, 60, 122, 0.3)";
 const rewardColour = "rgba(20, 99, 29, 0.3)";
@@ -28,7 +30,6 @@ const EventButton = (obj) => {
   let hasBondTransaction = false;
   let isOnlyBond = true;
   let thisColour = "";
-
 
   // Which we will fill in by going over all of the events once
   thisData.map(eventObj => {
@@ -132,6 +133,7 @@ const EventButton = (obj) => {
     return null;
   }
 
+  // Displays info specific to a type of transactions
   let eventSpecificInfo;
   if (transactionName === "Reward") {
     if (transactionAmount - 69 < 1 && transactionAmount - 69 > 0) {
