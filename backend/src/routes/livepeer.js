@@ -76,7 +76,6 @@ var BondingManagerProxyListener = contractInstance.events.allEvents(async (error
       throw error
     }
     console.log('New event emitted on', BondingManagerProxyAddr);
-    console.log(event);
     // Push obj of event to cache and create a new entry for it in the DB
     const eventObj = {
       address: event.address,
