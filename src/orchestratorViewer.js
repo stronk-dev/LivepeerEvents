@@ -39,7 +39,7 @@ const Orchestrator = (obj) => {
 
     return (
       <div className="hostInfo">
-        <div className="strokeSmollLeft" style={{ flex: 1, display: "flex" }}>
+        <div className="strokeSmollLeft" style={{ display: "flex" }}>
           <div style={{ flexDirection: 'row', flex: 1, display: "flex" }}>
             <a href={thisUrl}>
               <img alt="" src="livepeer.png" width="30" height="30" />
@@ -72,7 +72,7 @@ const Orchestrator = (obj) => {
                     return (
                       <div className="rowAlignLeft" key={"delegator" + idx} style={{ marginLeft: '1em', borderBottom: '2px solid rgba(15,15,15,0.05)' }}>
                         <a href={"https://explorer.livepeer.org/accounts/" + delObj.id}>
-                          <img alt="" src="livepeer.png" width="30" height="30" />{delObj.id.substr(0, 6) + ".."}</a>
+                          <img alt="" src="livepeer.png" width="30" height="30" />{delObj.id.substr(0, 12) + "..."}</a>
                         <div className="strokeSmollLeft">
                           <p>{parseFloat(delObj.bondedAmount).toFixed(2)} LPT since round {delObj.startRound}</p>
                         </div>

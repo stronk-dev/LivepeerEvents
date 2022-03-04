@@ -164,7 +164,7 @@ const EventButton = (obj) => {
   } else if (transactionName === "Withdraw") {
     eventSpecificInfo =
       <div className="rowAlignLeft">
-        <p> withdrew {(transactionAmount / 1000000000000000000).toFixed(2)} LPT in round {transactionWhen}</p>
+        <p> withdrew {(transactionAmount).toFixed(2)} LPT in round {transactionWhen}</p>
       </div>
   } else if (transactionName === "Activated") {
     if (hasBondTransaction) {
