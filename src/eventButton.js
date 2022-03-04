@@ -1,4 +1,8 @@
 import React from "react";
+import {
+  getOrchestratorInfo
+} from "./actions/livepeer";
+import { useDispatch } from 'react-redux'
 
 const activationColour = "rgba(23, 60, 122, 0.3)";
 const rewardColour = "rgba(20, 99, 29, 0.3)";
@@ -7,6 +11,7 @@ const withdrawStakeColour = "rgba(102, 3, 10, 0.3)";
 const stakeColour = "rgba(71, 23, 122, 0.3)";
 
 const EventButton = (obj) => {
+  const dispatch = useDispatch();
   // Data shared among all events in this transaction
   const thisURL = obj.transactionUrl;
   //const thisTransaction = obj.transactionHash;
@@ -81,8 +86,8 @@ const EventButton = (obj) => {
   }
 
   // Check name filter on transactionCaller, transactionFrom, transactionTo
-  if (obj.searchTerm){
-    if (obj.searchTerm !== ""){
+  if (obj.searchTerm) {
+    if (obj.searchTerm !== "") {
       let isFiltered = true;
       if (transactionCaller.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
       if (transactionFrom.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
@@ -93,40 +98,40 @@ const EventButton = (obj) => {
   let isFiltered = true;
   // Check boolean filters on transactionName
   let count = 0;
-  if(obj.filterActivated){
-    if (transactionName === "Activated"){
+  if (obj.filterActivated) {
+    if (transactionName === "Activated") {
       isFiltered = false;
     }
     count++;
   }
-  if(obj.rewardActivated){
-    if (transactionName === "Reward"){
+  if (obj.rewardActivated) {
+    if (transactionName === "Reward") {
       isFiltered = false;
     }
     count++;
   }
-  if(obj.updateActivated){
-    if (transactionName === "Update"){
+  if (obj.updateActivated) {
+    if (transactionName === "Update") {
       isFiltered = false;
     }
     count++;
   }
-  if(obj.withdrawActivated){
-    if (transactionName === "Withdraw"){
+  if (obj.withdrawActivated) {
+    if (transactionName === "Withdraw") {
       isFiltered = false;
     }
     count++;
   }
-  if(obj.stakeActivated){
-    if (transactionName === "Stake"){
+  if (obj.stakeActivated) {
+    if (transactionName === "Stake") {
       isFiltered = false;
     }
     count++;
   }
-  if (isFiltered && count){
+  if (isFiltered && count) {
     return null;
   }
-  
+
   let eventSpecificInfo;
   if (transactionName === "Reward") {
     if (transactionAmount - 69 < 1 && transactionAmount - 69 > 0) {
@@ -150,15 +155,15 @@ const EventButton = (obj) => {
       eventSpecificInfo =
         <div className="rowAlignLeft">
           <p> staked {(transactionAmount / 1000000000000000000).toFixed(2)} LPT to </p>
-          <button className="selectOrch" onClick={() => { obj.setOrchFunction(transactionTo) }} >{transactionTo}</button>
+          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionTo)) }} >{transactionTo}</button>
         </div>
     } else {
       eventSpecificInfo =
         <div className="rowAlignLeft">
           <p> moved {(transactionAmount / 1000000000000000000).toFixed(2)} LPT stake: </p>
-          <button className="selectOrch" onClick={() => { obj.setOrchFunction(transactionFrom) }} >{transactionFrom}</button>
+          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionFrom)) }} >{transactionFrom}</button>
           <p> to </p>
-          <button className="selectOrch" onClick={() => { obj.setOrchFunction(transactionTo) }} >{transactionTo}</button>
+          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionTo)) }} >{transactionTo}</button>
         </div>
     }
   } else if (transactionName === "Withdraw") {
@@ -196,7 +201,7 @@ const EventButton = (obj) => {
           <img alt="" src="livepeer.png" width="30" height="30" />
         </a>
         <div className="row">
-          <button className="selectOrch" onClick={() => { obj.setOrchFunction(transactionCaller) }} >{transactionCaller}</button>
+          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionCaller)) }} >{transactionCaller}</button>
         </div>
       </div>
       {eventSpecificInfo}

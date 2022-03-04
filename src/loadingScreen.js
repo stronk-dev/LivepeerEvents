@@ -1,5 +1,5 @@
 import * as React from "react";
-import { connect } from "react-redux";
+import { connect, batch } from "react-redux";
 import {
   getVisitorStats
 } from "./actions/user";
@@ -20,20 +20,22 @@ const mapDispatchToProps = dispatch => ({
   getVisitorStats: () => dispatch(getVisitorStats()),
   login: () => dispatch(login()),
   getQuotes: () => dispatch(getQuotes()),
-  getBlockchainData: () => dispatch(getBlockchainData()),
   getEvents: () => dispatch(getEvents()),
+  getBlockchainData: () => dispatch(getBlockchainData()),
   getCurrentOrchestratorInfo: () => dispatch(getCurrentOrchestratorInfo())
 });
 
 
 class Startup extends React.Component {
   componentDidMount() {
-    this.props.login();
-    this.props.getVisitorStats();
-    this.props.getQuotes();
-    this.props.getBlockchainData();
-    this.props.getEvents();
-    this.props.getCurrentOrchestratorInfo();
+    batch(() => {
+      this.props.login();
+      this.props.getVisitorStats();
+      this.props.getQuotes();
+      this.props.getBlockchainData();
+      this.props.getEvents();
+      this.props.getCurrentOrchestratorInfo();
+    });
   }
   render() {
     return this.props.children;

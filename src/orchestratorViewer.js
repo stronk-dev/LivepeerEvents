@@ -2,6 +2,27 @@ import React from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
 import Stat from "./statViewer";
 
+function updateClipboard(newClip) {
+  navigator.clipboard.writeText(newClip).then(
+    () => {
+      console.log("Copied!");
+    },
+    () => {
+      console.log("Copy failed!");
+    }
+  );
+}
+
+function copyLink(addr) {
+  navigator.permissions
+    .query({ name: "clipboard-write" })
+    .then((result) => {
+      if (result.state === "granted" || result.state === "prompt") {
+        updateClipboard(addr);
+      }
+    });
+}
+
 const Orchestrator = (obj) => {
   let rewardCut = 0;
   let feeCut = 0;
@@ -41,7 +62,7 @@ const Orchestrator = (obj) => {
     return (
       <div className="hostInfo">
         <div className="strokeSmollLeft" style={{ display: "flex" }}>
-          <div style={{ flexDirection: 'row', display: "flex" }} style={{marginTop: '1em'}}>
+          <div style={{ flexDirection: 'row', display: "flex" }} style={{ marginTop: '1em' }}>
             <a href={thisUrl}>
               <h3 style={{ padding: 0, margin: 0 }}>Orchestrator Info</h3>
               {thisID}
@@ -52,11 +73,16 @@ const Orchestrator = (obj) => {
           <Stat header={"Fee Cut"} content={feeCut + "%"} />
           <Stat header={"Total Stake"} content={totalStake + " LPT"} />
           <Stat header={"Self Stake"} content={selfStake + " LPT(" + selfStakeRatio + ")%"} />
+          <button className="homeButton" onClick={() => {
+            copyLink(window.location.href + "?orchAddr=0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e");
+          }}>
+            <img alt="" src="clipboard.svg" width="20em" height="20em" />
+          </button>
         </div>
         <div className="strokeSmollLeft" style={{ alignItems: 'stretch', flex: 2, marginLeft: '1em', borderLeft: '3px solid rgba(15,15,15,0.05)' }}>
-            <div className="row" style={{marginTop: '1em'}}>
-              <h3 style={{ padding: 0, margin: 0 }}>Current Delegators</h3>
-            </div>
+          <div className="row" style={{ marginTop: '1em' }}>
+            <h3 style={{ padding: 0, margin: 0 }}>Current Delegators</h3>
+          </div>
           <div className="content-wrapper">
             <ScrollContainer className="overflow-container" hideScrollbars={false}>
               <div className="overflow-content" style={{ cursor: 'grab', height: '300px' }}>
