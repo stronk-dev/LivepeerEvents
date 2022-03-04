@@ -68,12 +68,17 @@ let orchestratorCache = [];
 // Listen to smart contract emitters. Resync with DB every 5 minutes
 const timeoutEvents = 300000;
 let eventsCache = [];
+let syncCache = [];
+let isSyncing = false;
 let eventsGet = 0;
+// Set to true to drop the entire collection on boot and get all events
+const fullSync = false;
 // https://arbiscan.io/address/0x35Bcf3c30594191d53231E4FF333E8A770453e40#events
 const BondingManagerTargetJson = fs.readFileSync('src/abi/BondingManagerTarget.json');
 const BondingManagerTargetAbi = JSON.parse(BondingManagerTargetJson);
 const BondingManagerProxyAddr = "0x35Bcf3c30594191d53231E4FF333E8A770453e40";
 const contractInstance = new web3layer2WS.eth.Contract(BondingManagerTargetAbi.abi, BondingManagerProxyAddr);
+
 var BondingManagerProxyListener = contractInstance.events.allEvents(async (error, event) => {
   try {
     if (error) {
@@ -88,15 +93,69 @@ var BondingManagerProxyListener = contractInstance.events.allEvents(async (error
       name: event.event,
       data: event.returnValues
     }
-    const dbObj = new Event(eventObj);
-    await dbObj.save();
-    eventsCache.push(eventObj);
+    if(isSyncing){
+      syncCache.push(eventObj);
+    }else{
+      const dbObj = new Event(eventObj);
+      await dbObj.save();
+      eventsCache.push(eventObj);
+    }
   }
   catch (err) {
     console.log("FATAL ERROR: ", err);
   }
 });
-console.log("listening for events on", BondingManagerProxyAddr)
+console.log("listening for events on", BondingManagerProxyAddr);
+
+if(fullSync){
+  console.log("dropping old data");
+  Event.collection.drop();
+  console.log("getting all events");
+  isSyncing = true;
+  contractInstance.getPastEvents("allEvents", {fromBlock: 0, toBlock: 'latest'}, async (error, events) => {
+    try {
+      if (error) {
+        throw error
+      }
+      let counter = 1;
+      let size = events.length;
+      for (const event of events) {
+        console.log("Parsing " + counter + " out of " + size + " events");
+        const eventObj = {
+          address: event.address,
+          transactionHash: event.transactionHash,
+          transactionUrl: "https://arbiscan.io/tx/" + event.transactionHash,
+          name: event.event,
+          data: event.returnValues
+        }
+        const dbObj = new Event(eventObj);
+        await dbObj.save();
+        eventsCache.push(eventObj);
+        counter++;
+      }
+    }
+    catch (err) {
+      console.log("FATAL ERROR: ", err);
+    }
+    isSyncing = false;
+    let counter = 1;
+    let size = syncCache.length;
+    for (const event of syncCache) {
+      console.log("Parsing " + counter + " out of " + size + " events received while syncing");
+      const eventObj = {
+        address: event.address,
+        transactionHash: event.transactionHash,
+        transactionUrl: "https://arbiscan.io/tx/" + event.transactionHash,
+        name: event.event,
+        data: event.returnValues
+      }
+      const dbObj = new Event(eventObj);
+      await dbObj.save();
+      eventsCache.push(eventObj);
+      counter++;
+    }
+  });
+}
 
 // Splits of raw CMC object into coin quote data
 const parseCmc = async function () {
