@@ -9,6 +9,7 @@ import {
 } from "./actions/livepeer";
 import EventViewer from "./eventViewer";
 import Orchestrator from "./orchestratorViewer";
+import Stat from "./statViewer";
 
 const mapStateToProps = (state) => {
   return {
@@ -74,6 +75,12 @@ class Livepeer extends React.Component {
     let claimTicketCostL2 = 0;
     let withdrawFeeCostL1 = 0;
     let withdrawFeeCostL2 = 0;
+    let stakeFeeCostL1 = 0;
+    let stakeFeeCostL2 = 0;
+    let commissionFeeCostL1 = 0;
+    let commissionFeeCostL2 = 0;
+    let serviceUriFeeCostL1 = 0;
+    let serviceUriFeeCostL2 = 0;
     if (this.props.livepeer.blockchains) {
       blockchainTime = this.props.livepeer.blockchains.timestamp;
       l1GasFeeInGwei = this.props.livepeer.blockchains.l1GasFeeInGwei;
@@ -86,14 +93,26 @@ class Livepeer extends React.Component {
       withdrawFeeCostL2 = this.props.livepeer.blockchains.withdrawFeeCostL2;
       l1Block = this.props.livepeer.blockchains.l1block;
       l2Block = this.props.livepeer.blockchains.l2block;
+      stakeFeeCostL1 = this.props.livepeer.blockchains.stakeFeeCostL1;
+      stakeFeeCostL2 = this.props.livepeer.blockchains.stakeFeeCostL2;
+      commissionFeeCostL1 = this.props.livepeer.blockchains.commissionFeeCostL1;
+      commissionFeeCostL2 = this.props.livepeer.blockchains.commissionFeeCostL2;
+      serviceUriFeeCostL1 = this.props.livepeer.blockchains.serviceUriFeeCostL1;
+      serviceUriFeeCostL2 = this.props.livepeer.blockchains.serviceUriFeeCostL2;
     }
 
-    let redeemRewardCostL1USD;
-    let redeemRewardCostL2USD;
-    let claimTicketCostL1USD;
-    let claimTicketCostL2USD;
-    let withdrawFeeCostL1USD;
-    let withdrawFeeCostL2USD;
+    let redeemRewardCostL1USD = 0;
+    let redeemRewardCostL2USD = 0;
+    let claimTicketCostL1USD = 0;
+    let claimTicketCostL2USD = 0;
+    let withdrawFeeCostL1USD = 0;
+    let withdrawFeeCostL2USD = 0;
+    let stakeFeeCostL1USD = 0;
+    let stakeFeeCostL2USD = 0;
+    let commissionFeeCostL1USD = 0;
+    let commissionFeeCostL2USD = 0;
+    let serviceUriFeeCostL1USD = 0;
+    let serviceUriFeeCostL2USD = 0;
     if (l1GasFeeInGwei && ethPrice) {
       if (redeemRewardCostL1) {
         redeemRewardCostL1USD = (redeemRewardCostL1 * ethPrice).toFixed(2);
@@ -103,6 +122,15 @@ class Livepeer extends React.Component {
       }
       if (withdrawFeeCostL1) {
         withdrawFeeCostL1USD = (withdrawFeeCostL1 * ethPrice).toFixed(2);
+      }
+      if (stakeFeeCostL1) {
+        stakeFeeCostL1USD = (stakeFeeCostL1 * ethPrice).toFixed(2);
+      }
+      if (commissionFeeCostL1) {
+        commissionFeeCostL1USD = (commissionFeeCostL1 * ethPrice).toFixed(2);
+      }
+      if (serviceUriFeeCostL1) {
+        serviceUriFeeCostL1USD = (serviceUriFeeCostL1 * ethPrice).toFixed(2);
       }
     }
     if (l2GasFeeInGwei && ethPrice) {
@@ -114,6 +142,15 @@ class Livepeer extends React.Component {
       }
       if (withdrawFeeCostL2) {
         withdrawFeeCostL2USD = (withdrawFeeCostL2 * ethPrice).toFixed(2);
+      }
+      if (stakeFeeCostL2) {
+        stakeFeeCostL2USD = (stakeFeeCostL2 * ethPrice).toFixed(2);
+      }
+      if (commissionFeeCostL2) {
+        commissionFeeCostL2USD = (commissionFeeCostL2 * ethPrice).toFixed(2);
+      }
+      if (serviceUriFeeCostL2) {
+        serviceUriFeeCostL2USD = (serviceUriFeeCostL2 * ethPrice).toFixed(2);
       }
     }
 
@@ -135,24 +172,19 @@ class Livepeer extends React.Component {
           }}>
             <img alt="" src="livepeer.png" width="100em" height="100em" />
           </button>
-          <div className="row" style={{ alignItems: 'stretch', height: '100%', flex: 2 }}>
+          <div className="row" style={{ alignItems: 'stretch', height: '100%', flex: 2, padding: '1em' }}>
             <Orchestrator thisOrchestrator={thisOrchObj} />
           </div>
-          <div className="row metaSidebar" style={{ padding: 0, flex: 1 }}>
+          <div className="stroke metaSidebar" style={{ padding: 0, flex: 1 }}>
+            <div className="row" style={{ margin: 0, padding: 0 }}>
+              <h3 style={{ margin: 0, padding: 0 }}>Smart contract prices</h3>
+            </div>
             <div className="stroke" style={{ margin: 0, padding: 0 }}>
-              <h3>Smart contract prices</h3>
-              <div className="row">
-                <p>Reward Call:</p>
-                <p>${redeemRewardCostL2USD} (vs ${redeemRewardCostL1USD} on L1)</p>
-              </div>
-              <div className="row">
-                <p>Claim Ticket:</p>
-                <p>${claimTicketCostL2USD} (vs ${claimTicketCostL1USD} on L1)</p>
-              </div>
-              <div className="row">
-                <p>Withdraw Fees:</p>
-                <p>${withdrawFeeCostL2USD} (vs ${withdrawFeeCostL1USD} on L1)</p>
-              </div>
+              <Stat header={"Reward Call"} content={"$" + redeemRewardCostL2USD + " (vs " + redeemRewardCostL1USD + " on L1)"} />
+              <Stat header={"Claim Ticket"} content={"$" + claimTicketCostL2USD + " (vs " + claimTicketCostL1USD + " on L1)"} />
+              <Stat header={"Staking Fees"} content={"$" + stakeFeeCostL2USD + " (vs " + stakeFeeCostL1USD + " on L1)"} />
+              <Stat header={"Change Commission"} content={"$" + commissionFeeCostL2USD + " (vs " + commissionFeeCostL1USD + " on L1)"} />
+              <Stat header={"Change URI"} content={"$" + serviceUriFeeCostL2USD + " (vs " + serviceUriFeeCostL1USD + " on L1)"} />
             </div>
           </div>
         </div >

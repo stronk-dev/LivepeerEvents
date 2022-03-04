@@ -194,8 +194,9 @@ svg {
 .hostInfo {
   cursor: default;
   text-align: start;
-  padding: 10px;
-  margin: 10px;
+  padding: 0;
+  padding-left: 1em;
+  margin: 0;
   user-select: text;
   font-size: small;
   color: rgba(15, 15, 15, 0.8750);

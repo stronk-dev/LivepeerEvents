@@ -37,12 +37,22 @@ let arbGet = 0;
 const redeemRewardGwei = 1053687;
 const claimTicketGwei = 1333043;
 const withdrawFeeGwei = 688913;
+// 50000 gas for approval when creating a new O
+const stakeFeeGwei = 680000;
+const commissionFeeGwei = 140000;
+const serviceUriFee = 51000;
 let redeemRewardCostL1 = 0;
 let redeemRewardCostL2 = 0;
 let claimTicketCostL1 = 0;
 let claimTicketCostL2 = 0;
 let withdrawFeeCostL1 = 0;
 let withdrawFeeCostL2 = 0;
+let stakeFeeCostL1 = 0;
+let stakeFeeCostL2 = 0;
+let commissionFeeCostL1 = 0;
+let commissionFeeCostL2 = 0;
+let serviceUriFeeCostL1 = 0;
+let serviceUriFeeCostL2 = 0;
 
 // Update O info from thegraph every 1 minute
 const timeoutTheGraph = 60000;
@@ -66,6 +76,7 @@ var BondingManagerProxyListener = contractInstance.events.allEvents(async (error
       throw error
     }
     console.log('New event emitted on', BondingManagerProxyAddr);
+    console.log(event);
     // Push obj of event to cache and create a new entry for it in the DB
     const eventObj = {
       address: event.address,
@@ -105,6 +116,16 @@ const parseCmc = async function () {
   }
 }
 
+
+
+
+
+
+
+
+
+
+
 // Queries Alchemy for block info and fees
 const parseL1Blockchain = async function () {
   const l1Wei = await web3layer1.eth.getGasPrice();
@@ -113,6 +134,9 @@ const parseL1Blockchain = async function () {
   redeemRewardCostL1 = (redeemRewardGwei * l1Gwei) / 1000000000;
   claimTicketCostL1 = (claimTicketGwei * l1Gwei) / 1000000000;
   withdrawFeeCostL1 = (withdrawFeeGwei * l1Gwei) / 1000000000;
+  stakeFeeCostL1 = (stakeFeeGwei * l1Gwei) / 1000000000;
+  commissionFeeCostL1 = (commissionFeeGwei * l1Gwei) / 1000000000;
+  serviceUriFeeCostL1 = (serviceUriFee * l1Gwei) / 1000000000;
 }
 const parseL2Blockchain = async function () {
   const l2Wei = await web3layer2.eth.getGasPrice();
@@ -121,6 +145,9 @@ const parseL2Blockchain = async function () {
   redeemRewardCostL2 = (redeemRewardGwei * l2Gwei) / 1000000000;
   claimTicketCostL2 = (claimTicketGwei * l2Gwei) / 1000000000;
   withdrawFeeCostL2 = (withdrawFeeGwei * l2Gwei) / 1000000000;
+  stakeFeeCostL2 = (stakeFeeGwei * l2Gwei) / 1000000000;
+  commissionFeeCostL2 = (commissionFeeGwei * l2Gwei) / 1000000000;
+  serviceUriFeeCostL2 = (serviceUriFee * l2Gwei) / 1000000000;
 }
 const parseEthBlockchain = async function () {
   await Promise.all([parseL1Blockchain(), parseL2Blockchain()]);
@@ -154,6 +181,12 @@ apiRouter.get("/grafana", async (req, res) => {
       claimTicketCostL2,
       withdrawFeeCostL1,
       withdrawFeeCostL2,
+      stakeFeeCostL1,
+      stakeFeeCostL2,
+      commissionFeeCostL1,
+      commissionFeeCostL2,
+      serviceUriFeeCostL1,
+      serviceUriFeeCostL2,
       quotes: cmcQuotes
     });
   } catch (err) {
@@ -195,7 +228,13 @@ apiRouter.get("/blockchains", async (req, res) => {
       claimTicketCostL1,
       claimTicketCostL2,
       withdrawFeeCostL1,
-      withdrawFeeCostL2
+      withdrawFeeCostL2,
+      stakeFeeCostL1,
+      stakeFeeCostL2,
+      commissionFeeCostL1,
+      commissionFeeCostL2,
+      serviceUriFeeCostL1,
+      serviceUriFeeCostL2,
     });
   } catch (err) {
     res.status(400).send(err);

@@ -1,5 +1,6 @@
 import React from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
+import Stat from "./statViewer";
 
 const Orchestrator = (obj) => {
   let rewardCut = 0;
@@ -40,28 +41,18 @@ const Orchestrator = (obj) => {
     return (
       <div className="hostInfo">
         <div className="strokeSmollLeft" style={{ display: "flex" }}>
-          <div style={{ flexDirection: 'row', flex: 1, display: "flex" }}>
+          <div style={{ flexDirection: 'row', display: "flex" }}>
             <a href={thisUrl}>
               <img alt="" src="livepeer.png" width="30" height="30" />
               <h3 style={{ padding: 0, margin: 0 }}>Orchestrator Info</h3>
               {thisID}
             </a>
           </div>
-          <div className="rowAlignLeft">
-            <p>Earned fees {totalVolumeETH} Eth (${totalVolumeUSD})</p>
-          </div>
-          <div className="rowAlignLeft">
-            <p>Reward Cut {rewardCut}%</p>
-          </div>
-          <div className="rowAlignLeft">
-            <p>Fee Cut {feeCut}%</p>
-          </div>
-          <div className="rowAlignLeft">
-            <p>Total Stake {totalStake} LPT</p>
-          </div>
-          <div className="rowAlignLeft">
-            <p>Self stake {selfStake} LPT ({selfStakeRatio}%)</p>
-          </div>
+          <Stat header={"Earned Fees"} content={totalVolumeETH + " Eth ($" + totalVolumeUSD + ")"} />
+          <Stat header={"Reward Cut"} content={rewardCut + "%"} />
+          <Stat header={"Fee Cut"} content={feeCut + "%"} />
+          <Stat header={"Total Stake"} content={totalStake + " LPT"} />
+          <Stat header={"Self Stake"} content={selfStake + " LPT(" + selfStakeRatio + ")%"} />
         </div>
         <div className="strokeSmollLeft" style={{ alignItems: 'stretch', flex: 2, marginLeft: '1em', borderLeft: '3px solid rgba(15,15,15,0.05)' }}>
           <div className="content-wrapper">
