@@ -12,6 +12,7 @@ const updateColour = "rgba(122, 63, 23, 0.3)";
 const withdrawStakeColour = "rgba(102, 3, 10, 0.3)";
 const stakeColour = "rgba(71, 23, 122, 0.3)";
 const claimColour = "rgba(77, 91, 42, 0.3)";
+const migrateColour = "rgba(56, 23, 122, 0.3)";
 
 const thresholdStaking = 0.001;
 const thresholdFees = 0.00009;
@@ -49,7 +50,7 @@ const EventButton = (obj) => {
       transactionTo = eventObj.data.newDelegate.toLowerCase();
       transactionAmount = parseFloat(eventObj.data.bondedAmount) / 1000000000000000000;
       transactionAdditionalAmount = parseFloat(eventObj.data.additionalAmount) / 1000000000000000000;
-      if (hasEarningsClaimed){
+      if (hasEarningsClaimed) {
         transactionName = "Stake";
         hasEarningsClaimed = false;
         console.log("COMPLEX BOND " + thisURL);
@@ -85,13 +86,13 @@ const EventButton = (obj) => {
         transactionCaller = eventObj.data.delegator.toLowerCase();
         transactionAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
       }
-      if (hasEarningsClaimed){
-        transactionName = "Rebond";
+      if (hasEarningsClaimed) {
+        transactionName = "Migrate";
         hasEarningsClaimed = false;
         transactionTo = eventObj.data.delegate.toLowerCase();
         transactionCaller = eventObj.data.delegator.toLowerCase();
         transactionAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
-        thisColour = stakeColour;
+        thisColour = migrateColour;
       }
       hasRebondTransaction = true;
     }
@@ -155,6 +156,9 @@ const EventButton = (obj) => {
 
   // If we only had a bond transaction and nothing else, this is a stake
   if (hasBondTransaction) {
+    if (transactionName === "Migrate"){
+      console.log("overwr");
+    }
     transactionName = "Stake";
     thisColour = stakeColour;
   }
@@ -210,6 +214,12 @@ const EventButton = (obj) => {
   }
   if (obj.stakeActivated) {
     if (transactionName === "Rebond") {
+      isFiltered = false;
+    }
+    count++;
+  }
+  if (obj.stakeActivated) {
+    if (transactionName === "Migrate") {
       isFiltered = false;
     }
     count++;
@@ -281,11 +291,17 @@ const EventButton = (obj) => {
         </div>
     }
   } else if (transactionName === "Rebond") {
-      eventSpecificInfo =
-        <div className="rowAlignLeft">
-          <p> increased their stake with {transactionAmount.toFixed(2)} LPT at </p>
-          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionTo)) }} >{transactionTo}</button>
-        </div>
+    eventSpecificInfo =
+      <div className="rowAlignLeft">
+        <p> increased their stake with {transactionAmount.toFixed(2)} LPT at </p>
+        <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionTo)) }} >{transactionTo}</button>
+      </div>
+  } else if (transactionName === "Migrate") {
+    eventSpecificInfo =
+      <div className="rowAlignLeft">
+        <p> migrated {transactionAmount.toFixed(2)} LPT to L2 at </p>
+        <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(transactionTo)) }} >{transactionTo}</button>
+      </div>
   } else if (transactionName === "Withdraw") {
     eventSpecificInfo =
       <div className="rowAlignLeft">
