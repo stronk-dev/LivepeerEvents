@@ -59,6 +59,13 @@ const Orchestrator = (obj) => {
       thisUrl = "https://explorer.livepeer.org/accounts/" + thisID;
     }
 
+    let shareUrl;
+    if (obj.rootOnly){
+      shareUrl = window.location.href;
+    }else{
+      shareUrl = window.location.href + "?orchAddr=" + thisID;
+    }
+
     return (
       <div className="hostInfo">
         <div className="strokeSmollLeft" style={{ display: "flex" }}>
@@ -74,7 +81,7 @@ const Orchestrator = (obj) => {
           <Stat header={"Total Stake"} content={totalStake + " LPT"} />
           <Stat header={"Self Stake"} content={selfStake + " LPT(" + selfStakeRatio + ")%"} />
           <button className="homeButton" onClick={() => {
-            copyLink(window.location.href + "?orchAddr=0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e");
+            copyLink(shareUrl);
           }}>
             <img alt="" src="clipboard.svg" width="20em" height="20em" />
           </button>
