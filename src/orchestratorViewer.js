@@ -63,7 +63,11 @@ const Orchestrator = (obj) => {
     if (obj.rootOnly){
       shareUrl = window.location.href;
     }else{
-      shareUrl = window.location.href + "?orchAddr=" + thisID;
+      let thisFullPath = window.location.href;
+      if (thisFullPath.lastIndexOf("?") > -1){
+        thisFullPath = thisFullPath.substring(0, thisFullPath.lastIndexOf("?"));
+      }
+      shareUrl = thisFullPath + "?orchAddr=" + thisID;
     }
 
     return (
