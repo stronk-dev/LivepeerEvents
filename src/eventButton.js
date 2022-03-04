@@ -50,12 +50,6 @@ const EventButton = (obj) => {
       transactionTo = eventObj.data.newDelegate.toLowerCase();
       transactionAmount = parseFloat(eventObj.data.bondedAmount) / 1000000000000000000;
       transactionAdditionalAmount = parseFloat(eventObj.data.additionalAmount) / 1000000000000000000;
-      if (hasEarningsClaimed) {
-        transactionName = "Stake";
-        hasEarningsClaimed = false;
-        console.log("COMPLEX BOND " + thisURL);
-        console.log(thisData);
-      }
       hasBondTransaction = true;
     }
     // Unbond: defines transactionWhen. Defines transactionAmount as X / 1000000000000000000 LPT
@@ -155,10 +149,7 @@ const EventButton = (obj) => {
   })
 
   // If we only had a bond transaction and nothing else, this is a stake
-  if (hasBondTransaction) {
-    if (transactionName === "Migrate"){
-      console.log("overwr");
-    }
+  if (hasBondTransaction && transactionName == "") {
     transactionName = "Stake";
     thisColour = stakeColour;
   }
