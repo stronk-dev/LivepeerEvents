@@ -135,10 +135,10 @@ const Livepeer = (obj) => {
         }}>
           <img alt="" src="livepeer.png" width="100em" height="100em" />
         </button>
-        <div className="row" style={{ alignItems: 'stretch', height: '100%', flex: 2, padding: '0.2em' }}>
+        <div className="row" style={{ alignItems: 'stretch', height: '100%', flex: 2, padding: '0.2em', maxWidth: "1100px" }}>
           <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} />
         </div>
-        <div className="stroke metaSidebar showNeverOnMobile" style={{ padding: 0, flex: 1 }}>
+        <div className="stroke metaSidebar showNeverOnMobile" style={{ padding: 0, maxWidth: "300px" }}>
           <div className="row" style={{ margin: 0, padding: 0 }}>
             <h3 style={{ margin: 0, padding: 0 }}>Smart contract prices</h3>
           </div>
