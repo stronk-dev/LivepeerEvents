@@ -164,6 +164,7 @@ const EventViewer = (obj) => {
         eventList.push(<EventButton
           key={eventObj.transactionHash + unfiltered}
           eventObj={eventObj}
+          setSearchTerm={setSearchTerm}
         />);
       } else {
         prevBlock = eventObj.transactionBlock;
@@ -172,6 +173,7 @@ const EventViewer = (obj) => {
           eventObj={eventObj}
           isFirstOfBlock={prevBlock}
           time={eventObj.transactionTime}
+          setSearchTerm={setSearchTerm}
         />);
       }
     }

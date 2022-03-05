@@ -26,14 +26,37 @@ const EventButton = (obj) => {
   }
   if (obj.eventObj.eventTo || obj.eventObj.eventFrom || obj.eventObj.eventCaller) {
     if (obj.eventObj.eventTo) {
-      eventTo = <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventTo)) }} ><span className="elipsText">{obj.eventObj.eventTo}</span></button>
+      eventTo =
+        <div className="row" style={{ flex: '1', width: 'unset' }}>
+          <button className="selectOrch" style={{margin: 0, padding: '0.5em'}} onClick={() => { obj.setSearchTerm(obj.eventObj.eventTo) }} >
+            <span className="elipsText">🔎</span>
+          </button>
+          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventTo)) }} >
+            <span className="elipsText">{obj.eventObj.eventTo}</span>
+          </button>
+        </div>
     }
     if (obj.eventObj.eventFrom) {
-      eventFrom = <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventFrom)) }} ><span className="elipsText">{obj.eventObj.eventFrom}</span></button>
+      eventFrom =
+        <div className="row" style={{ flex: '1', width: 'unset' }}>
+          <button className="selectOrch" style={{margin: 0, padding: '0.5em'}}  onClick={() => { obj.setSearchTerm(obj.eventObj.eventFrom) }} >
+            <span className="elipsText">🔎</span>
+          </button>
+          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventFrom)) }}>
+            <span className="elipsText">{obj.eventObj.eventFrom}</span>
+          </button>
+        </div >
     }
     if (obj.eventObj.eventCaller) {
       eventCaller =
-        <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventCaller)) }} ><span className="elipsText">{obj.eventObj.eventCaller}</span></button>
+        <div className="rowAlignLeft" style={{ flex: '1', width: 'unset', margin: 0 }}>
+          <button className="selectOrch" style={{margin: 0, padding: '0.5em'}}  onClick={() => { obj.setSearchTerm(obj.eventObj.eventCaller) }} >
+            <span className="elipsText">🔎</span>
+          </button>
+          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventCaller)) }} >
+            <span className="elipsText">{obj.eventObj.eventCaller}</span>
+          </button>
+        </div>
     }
     eventRightAddr = <div className="rowAlignRight" style={{ flex: '1', width: '100%', padding: 0, margin: 0 }}>
       {eventFrom}
@@ -45,7 +68,6 @@ const EventButton = (obj) => {
   let blockNumber;
   if (obj.isFirstOfBlock) {
     blockNumber = <Block block={obj.isFirstOfBlock} time={obj.time} />
-
   }
 
   return (

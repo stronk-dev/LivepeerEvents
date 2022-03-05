@@ -134,7 +134,7 @@ const Orchestrator = (obj) => {
         <h3>Orchestrator Info</h3>
       </div>
       <div className="rowAlignLeft">
-        <p>Click on an orchestrator in the list below!</p>
+        <p>Click on an orchestrator address in the list below!</p>
       </div>
     </div>
   )
