@@ -13,8 +13,8 @@ const claimColour = "rgba(77, 91, 42, 0.3)";
 const unbondColour = "rgba(122, 23, 51, 0.3)";
 const greyColour = "rgba(122, 128, 127, 0.3)";
 
-const defaultMaxShown = 200;
-const defaultIncrementMaxShown = 200;
+const defaultMaxShown = 100;
+const defaultIncrementMaxShown = 100;
 
 const EventViewer = (obj) => {
   const [searchTerm, setSearchTerm] = useState(obj.prefill || "");
@@ -68,7 +68,7 @@ const EventViewer = (obj) => {
         <h3>Show {defaultMaxShown}</h3>
       </button>
     </div>
-  }else{
+  } else {
     showLessBlock = <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, width: '5em' }}></div>
   }
 
@@ -83,8 +83,102 @@ const EventViewer = (obj) => {
     searchTermText = <h3>Filter by Orchestrator address</h3>
   }
 
+  let eventList = [];
+  for (const eventObj of obj.events) {
+    if (unfiltered > maxAmount) {
+      break;
+    }
+    // Filter by minimum value
+    if (amountFilter !== "") {
+      if (parseFloat(amountFilter) > eventObj.eventValue) {
+        return null;
+      }
+    }
+    // Filter name on from, to, caller
+    if (searchTerm !== "") {
+      let isFiltered = true;
+      if (eventObj.eventCaller.toLowerCase().includes(searchTerm.toLowerCase())) isFiltered = false;
+      if (eventObj.eventFrom.toLowerCase().includes(searchTerm.toLowerCase())) isFiltered = false;
+      if (eventObj.eventTo.toLowerCase().includes(searchTerm.toLowerCase())) isFiltered = false;
+      if (isFiltered) return null;
+    }
+    // Filter Events on filter buttons
+    let isFiltered = true;
+    // Check boolean filters on eventObj.eventType
+    let count = 0;
+    if (filterActivated) {
+      if (eventObj.eventType === "Activate") {
+        isFiltered = false;
+      }
+      count++;
+    }
+    if (rewardActivated) {
+      if (eventObj.eventType === "Reward") {
+        isFiltered = false;
+      }
+      count++;
+    }
+    if (updateActivated) {
+      if (eventObj.eventType === "Update") {
+        isFiltered = false;
+      }
+      count++;
+    }
+    if (withdrawActivated) {
+      if (eventObj.eventType === "Withdraw") {
+        isFiltered = false;
+      }
+      count++;
+    }
+    if (stakeActivated) {
+      if (eventObj.eventType === "Stake") {
+        isFiltered = false;
+      }
+      count++;
+    }
+    if (stakeActivated) {
+      if (eventObj.eventType === "Migrate") {
+        isFiltered = false;
+      }
+      count++;
+    }
+    if (unbondActivated) {
+      if (eventObj.eventType === "Unbond") {
+        isFiltered = false;
+      }
+      count++;
+    }
+    if (delegatorRewardActivated) {
+      if (eventObj.eventType === "Claim") {
+        isFiltered = false;
+      }
+      count++;
+    }
+    if (isFiltered && count) {
+      continue;
+    }
+
+    if (unfiltered < maxAmount) {
+      unfiltered++;
+      if (prevBlock === eventObj.transactionBlock) {
+        eventList.push(<EventButton
+          key={eventObj.transactionHash + unfiltered}
+          eventObj={eventObj}
+        />);
+      } else {
+        prevBlock = eventObj.transactionBlock;
+        eventList.push(<EventButton
+          key={eventObj.transactionHash + unfiltered}
+          eventObj={eventObj}
+          isFirstOfBlock={prevBlock}
+          time={eventObj.transactionTime}
+        />);
+      }
+    }
+  }
+
   return (
-    <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, marginTop: '2em', position: 'absolute', bottom: 0, top: '300px', left: '0px', right: '0px', overflowY: 'auto', overflowX: 'hidden', width: '100%' }}>
+    <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, marginTop: '2em', position: 'absolute', bottom: 0, top: '300px', overflowY: 'auto', overflowX: 'hidden', width: 'unset' }}>
       <div className="row showNeverOnMobile">
         <div className="row">
           {showLessBlock}
@@ -173,95 +267,7 @@ const EventViewer = (obj) => {
       <div className="content-wrapper" style={{ alignItems: 'stretch', width: '100%' }}>
         <ScrollContainer className="overflow-container" hideScrollbars={false}>
           <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0 }}>
-            {obj.events.map((eventObj, idx) => {
-              // Filter by minimum value
-              if (amountFilter !== "") {
-                if (parseFloat(amountFilter) > eventObj.eventValue) {
-                  return null;
-                }
-              }
-              // Filter name on from, to, caller
-              if (searchTerm !== "") {
-                let isFiltered = true;
-                if (eventObj.eventCaller.toLowerCase().includes(searchTerm.toLowerCase())) isFiltered = false;
-                if (eventObj.eventFrom.toLowerCase().includes(searchTerm.toLowerCase())) isFiltered = false;
-                if (eventObj.eventTo.toLowerCase().includes(searchTerm.toLowerCase())) isFiltered = false;
-                if (isFiltered) return null;
-              }
-              // Filter Events on filter buttons
-              let isFiltered = true;
-              // Check boolean filters on eventObj.eventType
-              let count = 0;
-              if (filterActivated) {
-                if (eventObj.eventType === "Activate") {
-                  isFiltered = false;
-                }
-                count++;
-              }
-              if (rewardActivated) {
-                if (eventObj.eventType === "Reward") {
-                  isFiltered = false;
-                }
-                count++;
-              }
-              if (updateActivated) {
-                if (eventObj.eventType === "Update") {
-                  isFiltered = false;
-                }
-                count++;
-              }
-              if (withdrawActivated) {
-                if (eventObj.eventType === "Withdraw") {
-                  isFiltered = false;
-                }
-                count++;
-              }
-              if (stakeActivated) {
-                if (eventObj.eventType === "Stake") {
-                  isFiltered = false;
-                }
-                count++;
-              }
-              if (stakeActivated) {
-                if (eventObj.eventType === "Migrate") {
-                  isFiltered = false;
-                }
-                count++;
-              }
-              if (unbondActivated) {
-                if (eventObj.eventType === "Unbond") {
-                  isFiltered = false;
-                }
-                count++;
-              }
-              if (delegatorRewardActivated) {
-                if (eventObj.eventType === "Claim") {
-                  isFiltered = false;
-                }
-                count++;
-              }
-              if (isFiltered && count) {
-                return null;
-              }
-
-              if (unfiltered < maxAmount) {
-                unfiltered++;
-                if (prevBlock === eventObj.transactionBlock) {
-                  return <EventButton
-                    key={eventObj.transactionHash + idx}
-                    eventObj={eventObj}
-                  />
-                } else {
-                  prevBlock = eventObj.transactionBlock;
-                  return <EventButton
-                    key={eventObj.transactionHash + idx}
-                    eventObj={eventObj}
-                    isFirstOfBlock={prevBlock}
-                    time={eventObj.transactionTime}
-                  />
-                }
-              }
-            })}
+            {eventList}
           </div>
         </ScrollContainer>
         <div className="strokeSmollLeft" style={{ marginRight: "1em" }}>

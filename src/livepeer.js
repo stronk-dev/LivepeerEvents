@@ -151,7 +151,9 @@ const Livepeer = (obj) => {
           </div>
         </div>
       </div >
-      <EventViewer events={eventsList} prefill={prefill.get('orchAddr')} />
+      <div className="row" style={{ margin: 0, padding: 0 }}>
+        <EventViewer events={eventsList} prefill={prefill.get('orchAddr')} />
+      </div>
     </div >
   );
 }
