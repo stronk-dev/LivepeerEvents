@@ -1,6 +1,8 @@
 import React from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
 import Stat from "./statViewer";
+import ReactTooltip from "react-tooltip";
+import Address from "./OrchAddressViewer";
 
 function updateClipboard(newClip) {
   navigator.clipboard.writeText(newClip).then(
@@ -60,11 +62,11 @@ const Orchestrator = (obj) => {
     }
 
     let shareUrl;
-    if (obj.rootOnly){
+    if (obj.rootOnly) {
       shareUrl = window.location.href;
-    }else{
+    } else {
       let thisFullPath = window.location.href;
-      if (thisFullPath.lastIndexOf("?") > -1){
+      if (thisFullPath.lastIndexOf("?") > -1) {
         thisFullPath = thisFullPath.substring(0, thisFullPath.lastIndexOf("?"));
       }
       shareUrl = thisFullPath + "?orchAddr=" + thisID;
@@ -76,7 +78,7 @@ const Orchestrator = (obj) => {
           <div style={{ flexDirection: 'row', display: "flex" }} style={{ marginTop: '1em' }}>
             <a href={thisUrl}>
               <h3 style={{ padding: 0, margin: 0 }}>Orchestrator Info</h3>
-              {thisID}
+              <Address address={thisID} />
             </a>
           </div>
           <Stat header={"Earned Fees"} content={totalVolumeETH + " Eth ($" + totalVolumeUSD + ")"} />
@@ -84,11 +86,16 @@ const Orchestrator = (obj) => {
           <Stat header={"Fee Cut"} content={feeCut + "%"} />
           <Stat header={"Total Stake"} content={totalStake + " LPT"} />
           <Stat header={"Self Stake"} content={selfStake + " LPT(" + selfStakeRatio + ")%"} />
-          <button className="homeButton" onClick={() => {
-            copyLink(shareUrl);
-          }}>
-            <img alt="" src="clipboard.svg" width="20em" height="20em" />
-          </button>
+          <div className="strokeSmollLeft" style={{ display: "flex" }}>
+            <button className="homeButton" data-tip data-for="registerTip" onClick={() => {
+              copyLink(shareUrl);
+            }}>
+              <img alt="" src="clipboard.svg" width="20em" height="20em" />
+            </button>
+            <ReactTooltip id="registerTip" place="top" effect="solid">
+              Copy to clipboard
+            </ReactTooltip>
+          </div>
         </div>
         <div className="strokeSmollLeft" style={{ alignItems: 'stretch', flex: 2, marginLeft: '1em', borderLeft: '3px solid rgba(15,15,15,0.05)' }}>
           <div className="row" style={{ marginTop: '1em' }}>
@@ -101,8 +108,7 @@ const Orchestrator = (obj) => {
                   delegators.map((delObj, idx) => {
                     return (
                       <div className="rowAlignLeft" key={"delegator" + idx} style={{ marginLeft: '1em', borderBottom: '2px solid rgba(15,15,15,0.05)' }}>
-                        <a href={"https://explorer.livepeer.org/accounts/" + delObj.id}>
-                          <img alt="" src="livepeer.png" width="30" height="30" />{delObj.id.substr(0, 12) + "..."}</a>
+                        <Address address={delObj.id} seed={"delegator" + idx + delObj.id} />
                         <div className="strokeSmollLeft">
                           <p>{parseFloat(delObj.bondedAmount).toFixed(2)} LPT since round {delObj.startRound}</p>
                         </div>
