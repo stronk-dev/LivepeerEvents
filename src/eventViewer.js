@@ -12,11 +12,14 @@ const stakeColour = "rgba(71, 23, 122, 0.3)";
 const claimColour = "rgba(77, 91, 42, 0.3)";
 const unbondColour = "rgba(122, 23, 51, 0.3)";
 const greyColour = "rgba(122, 128, 127, 0.3)";
-const maxShown = 500;
+
+const defaultMaxShown = 200;
+const defaultIncrementMaxShown = 200;
 
 const EventViewer = (obj) => {
   const [searchTerm, setSearchTerm] = useState(obj.prefill || "");
   const [amountFilter, setAmountFilter] = useState("0");
+  const [maxAmount, setMaxAmount] = useState(defaultMaxShown);
   const [filterActivated, setFilterActivated] = useState(true);
   const [rewardActivated, setRewardActivated] = useState(false);
   const [updateActivated, setUpdateActivated] = useState(true);
@@ -26,6 +29,7 @@ const EventViewer = (obj) => {
   const [unbondActivated, setUnbondActivated] = useState(true);
   console.log("Rendering EventViewer");
   let unfiltered = 0;
+  let limitShown = obj.events.length;
 
   let filterActivatedColour;
   filterActivatedColour = filterActivated ? activationColour : greyColour;
@@ -43,16 +47,42 @@ const EventViewer = (obj) => {
   unbondActivatedColour = unbondActivated ? unbondColour : greyColour;
 
   let prevBlock = 0;
+  let showMoreBlock;
+  if (maxAmount < limitShown) {
+    showMoreBlock = <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+      <h3></h3>
+      <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
+        setMaxAmount(maxAmount + defaultIncrementMaxShown);
+      }}>
+        <h3>Show more</h3>
+      </button>
+    </div>
+  }
+  let showLessBlock;
+  if (defaultMaxShown < maxAmount) {
+    showLessBlock = <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+      <h3></h3>
+      <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
+        setMaxAmount(defaultMaxShown);
+      }}>
+        <h3>Show {defaultMaxShown}</h3>
+      </button>
+    </div>
+  }
 
   return (
     <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, marginTop: '2em', position: 'absolute', bottom: 0, top: '300px', left: '0px', right: '0px', overflowY: 'auto', overflowX: 'hidden', width: '100%' }}>
       <div className="row">
         <div className="row">
-          <h4>Shows the latest {maxShown} entries of your search query</h4>
+          {showLessBlock}
+          <div className="strokeSmollLeft" style={{ margin: "0", padding: 0 }}>
+            <h3>Showing {maxAmount} results</h3>
+          </div>
+          {showMoreBlock}
         </div>
         <div className="row">
           <div className="stroke" style={{ margin: "0", padding: 0 }}>
-            <h3>Filter by Orchestrator address</h3>
+            <h3>{searchTerm !== "" ? ("Only showing addresses containing " + searchTerm) : "Filter by Orchestrator address"}</h3>
             <input className="searchField" style={{ width: '100%' }}
               value={searchTerm}
               onChange={(evt) => setSearchTerm(evt.target.value)}
@@ -90,7 +120,7 @@ const EventViewer = (obj) => {
             </button>
           </div>
           <div className="strokeSmollLeft" style={{ margin: "0", padding: 0 }}>
-            <h3>Filter by minimum value</h3>
+            <h3>{parseFloat(amountFilter) > 0 ? ("Only showing higher than " + amountFilter) : "Filter by minimum value"}</h3>
             <input className="searchField" style={{ margin: 0, padding: 0, height: '2em', width: '80%', paddingLeft: '1em', paddingRight: '1em' }}
               value={amountFilter}
               onChange={(evt) => setAmountFilter(evt.target.value)}
@@ -201,7 +231,7 @@ const EventViewer = (obj) => {
                 return null;
               }
 
-              if (unfiltered < maxShown) {
+              if (unfiltered < maxAmount) {
                 unfiltered++;
                 if (prevBlock === eventObj.transactionBlock) {
                   return <EventButton
