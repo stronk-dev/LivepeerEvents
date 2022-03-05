@@ -91,7 +91,7 @@ const EventViewer = (obj) => {
     // Filter by minimum value
     if (amountFilter !== "") {
       if (parseFloat(amountFilter) > eventObj.eventValue) {
-        return null;
+        continue;
       }
     }
     // Filter name on from, to, caller
@@ -100,7 +100,7 @@ const EventViewer = (obj) => {
       if (eventObj.eventCaller.toLowerCase().includes(searchTerm.toLowerCase())) isFiltered = false;
       if (eventObj.eventFrom.toLowerCase().includes(searchTerm.toLowerCase())) isFiltered = false;
       if (eventObj.eventTo.toLowerCase().includes(searchTerm.toLowerCase())) isFiltered = false;
-      if (isFiltered) return null;
+      if (isFiltered) continue;
     }
     // Filter Events on filter buttons
     let isFiltered = true;
