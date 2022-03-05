@@ -16,6 +16,7 @@ const maxShown = 500;
 
 const EventViewer = (obj) => {
   const [searchTerm, setSearchTerm] = useState(obj.prefill || "");
+  const [amountFilter, setAmountFilter] = useState("0");
   const [filterActivated, setFilterActivated] = useState(true);
   const [rewardActivated, setRewardActivated] = useState(false);
   const [updateActivated, setUpdateActivated] = useState(true);
@@ -50,20 +51,92 @@ const EventViewer = (obj) => {
           <h4>Shows the latest {maxShown} entries of your search query</h4>
         </div>
         <div className="row">
-          <input className="searchField" style={{ marginLeft: '2em', width: '100%' }}
-            value={searchTerm}
-            onChange={(evt) => setSearchTerm(evt.target.value)}
-            placeholder='Filter by Orchestrator address'
-            type="text"
-          />
+          <div className="stroke" style={{ margin: "0", padding: 0 }}>
+            <h3>Filter by Orchestrator address</h3>
+            <input className="searchField" style={{ width: '100%' }}
+              value={searchTerm}
+              onChange={(evt) => setSearchTerm(evt.target.value)}
+              placeholder='Filter by Orchestrator address'
+              type="text"
+            />
+          </div>
         </div>
         <div className="row">
+          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+            <h3></h3>
+            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
+              const curVal = parseFloat(amountFilter);
+              setAmountFilter(curVal - 1000);
+            }}>
+              <h3>-1000</h3>
+            </button>
+          </div>
+          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+            <h3></h3>
+            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '4em' }} onClick={() => {
+              const curVal = parseFloat(amountFilter);
+              setAmountFilter(curVal - 100);
+            }}>
+              <h3>-100</h3>
+            </button>
+          </div>
+          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+            <h3></h3>
+            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '3em' }} onClick={() => {
+              const curVal = parseFloat(amountFilter);
+              setAmountFilter(curVal - 10);
+            }}>
+              <h3>-10</h3>
+            </button>
+          </div>
+          <div className="strokeSmollLeft" style={{ margin: "0", padding: 0 }}>
+            <h3>Filter by minimum value</h3>
+            <input className="searchField" style={{ margin: 0, padding: 0, height: '2em', width: '80%', paddingLeft: '1em', paddingRight: '1em' }}
+              value={amountFilter}
+              onChange={(evt) => setAmountFilter(evt.target.value)}
+              placeholder='Filter by minimum value'
+              type="number"
+            />
+          </div>
+          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+            <h3></h3>
+            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '3em' }} onClick={() => {
+              const curVal = parseFloat(amountFilter);
+              setAmountFilter(curVal + 10);
+            }}>
+              <h3>+10</h3>
+            </button>
+          </div>
+          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+            <h3></h3>
+            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '4em' }} onClick={() => {
+              const curVal = parseFloat(amountFilter);
+              setAmountFilter(curVal + 100);
+            }}>
+              <h3>+100</h3>
+            </button>
+          </div>
+          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+            <h3></h3>
+            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
+              const curVal = parseFloat(amountFilter);
+              setAmountFilter(curVal + 1000);
+            }}>
+              <h3>+1000</h3>
+            </button>
+          </div>
         </div>
       </div>
       <div className="content-wrapper" style={{ alignItems: 'stretch', width: '100%' }}>
         <ScrollContainer className="overflow-container" hideScrollbars={false}>
           <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0 }}>
             {obj.events.map((eventObj, idx) => {
+              // Filter by minimum value
+              if (amountFilter !== "") {
+                if (parseFloat(amountFilter) > eventObj.eventValue) {
+                  return null;
+                }
+              }
               // Filter name on from, to, caller
               if (searchTerm !== "") {
                 let isFiltered = true;

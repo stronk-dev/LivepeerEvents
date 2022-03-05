@@ -153,7 +153,8 @@ export const getEvents = () => async dispatch => {
               transactionHash: currentTx,
               transactionUrl: currentUrl,
               transactionBlock: currentBlock,
-              transactionTime: currentTime
+              transactionTime: currentTime,
+              eventValue: (tmpAmount > tmpAmountOther) ? tmpAmount : tmpAmountOther
             });
           }
 
@@ -198,7 +199,8 @@ export const getEvents = () => async dispatch => {
             transactionHash: currentTx,
             transactionUrl: currentUrl,
             transactionBlock: currentBlock,
-            transactionTime: currentTime
+            transactionTime: currentTime,
+            eventValue: amount 
           });
         } else if (eventObj.name === "WithdrawFees") {
           const amount = parseFloat(eventObj.data.amount) / 1000000000000000000;
@@ -216,7 +218,8 @@ export const getEvents = () => async dispatch => {
             transactionHash: currentTx,
             transactionUrl: currentUrl,
             transactionBlock: currentBlock,
-            transactionTime: currentTime
+            transactionTime: currentTime,
+            eventValue: amount
           });
         }
         // Always split off TranscoderUpdate as a separate Update Event
@@ -235,7 +238,8 @@ export const getEvents = () => async dispatch => {
             transactionHash: currentTx,
             transactionUrl: currentUrl,
             transactionBlock: currentBlock,
-            transactionTime: currentTime
+            transactionTime: currentTime,
+            eventValue: (amount1 > amount2) ? amount1 : amount2
           });
         }
         // Always split off EarningsClaimed as a separate Claim Event
@@ -288,7 +292,8 @@ export const getEvents = () => async dispatch => {
             transactionHash: currentTx,
             transactionUrl: currentUrl,
             transactionBlock: currentBlock,
-            transactionTime: currentTime
+            transactionTime: currentTime,
+            eventValue: amount1
           });
         }
         // Extract useful info from other types of Event
