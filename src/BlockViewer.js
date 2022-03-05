@@ -6,7 +6,7 @@ const Block = (obj) => {
   dateObj.setUTCSeconds(thisEpoch);
   const [thisDate, thisTime] = dateObj.toISOString().split('T');
   return (
-    <div className="rowAlignLeft" style={{ width: '100%' }}>
+    <div className="rowAlignLeft" style={{ width: '100%', marginTop: '1em' }}>
       <span className="rowAlignRight elipsText">
         <a className="selectOrch" href={"https://arbiscan.io/block/" + obj.block}>
           🔗{obj.block}

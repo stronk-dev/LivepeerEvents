@@ -49,7 +49,7 @@ const EventButton = (obj) => {
   }
 
   return (
-    <div className="stroke" style={{ width: '100%', padding: 0, margin: 0, marginTop: '1em' }}>
+    <div className="stroke" style={{ width: '100%', padding: 0, margin: 0 }}>
       {blockNumber}
       <div className="rowAlignLeft" style={{ backgroundColor: obj.eventObj.eventColour, borderRadius: "1.2em", width: '100%' }}>
         <div className="rowAlignLeft" style={{ flex: '1', width: 'unset' }}>
