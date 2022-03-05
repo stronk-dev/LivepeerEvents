@@ -1,4 +1,4 @@
-.selectOrch:hover, a:hover, a:visited, a:link, a:active{
+a:hover, a:visited, a:link, a:active{
   text-decoration: none;
   color: rgba(0, 0, 0, 0.875);
   text-align: center;
@@ -44,9 +44,15 @@ h2, h3, h1, h4, h5, h6 {
 
 .selectOrch, a {
   text-shadow: 0.5px 0.5px 0.8px #948dff;
-  color: #1a1b26;
   background-color: transparent;
   border: none;
+}
+
+.selectOrch:hover{
+  text-decoration: none;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  border-radius: 1em;
 }
 
 p {
@@ -224,6 +230,16 @@ svg {
   vertical-align: middle;
   margin-left: 10px;
   margin-right: 10px;
+}
+
+.withWrap {
+  flex-wrap: wrap;
+}
+
+.alignEnd {
+  justify-content: flex-start;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .rowAlignLeft {

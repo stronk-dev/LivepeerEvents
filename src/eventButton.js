@@ -36,10 +36,10 @@ const EventButton = (obj) => {
   return (
     <div className="rowAlignLeft" style={{ backgroundColor: obj.eventObj.eventColour, borderRadius: "1.2em", width: 'unset' }}>
       <div className="rowAlignLeft" style={{ width: 'unset' }}>
-        <a href={obj.eventObj.transactionUrl}>
+        <a className="selectOrch"  href={obj.eventObj.transactionUrl}>
           <img alt="" src="arb.svg" width="30" height="30" />
         </a>
-        <a href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
+        <a className="selectOrch"  href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
           <img alt="" src="livepeer.png" width="30" height="30" />
         </a>
         {eventCaller}
