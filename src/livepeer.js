@@ -143,11 +143,11 @@ const Livepeer = (obj) => {
             <h3 style={{ margin: 0, padding: 0 }}>Smart contract prices</h3>
           </div>
           <div className="stroke" style={{ margin: 0, padding: 0 }}>
-            <Stat header={"Reward Call"} content={"$" + redeemRewardCostL2USD + " (vs " + redeemRewardCostL1USD + " on L1)"} />
-            <Stat header={"Claim Ticket"} content={"$" + claimTicketCostL2USD + " (vs " + claimTicketCostL1USD + " on L1)"} />
-            <Stat header={"Staking Fees"} content={"$" + stakeFeeCostL2USD + " (vs " + stakeFeeCostL1USD + " on L1)"} />
-            <Stat header={"Change Commission"} content={"$" + commissionFeeCostL2USD + " (vs " + commissionFeeCostL1USD + " on L1)"} />
-            <Stat header={"Change URI"} content={"$" + serviceUriFeeCostL2USD + " (vs " + serviceUriFeeCostL1USD + " on L1)"} />
+            <Stat header={"Reward Call"} content1={"$" + redeemRewardCostL2USD + " (vs " + redeemRewardCostL1USD + " on L1)"} />
+            <Stat header={"Claim Ticket"} content1={"$" + claimTicketCostL2USD + " (vs " + claimTicketCostL1USD + " on L1)"} />
+            <Stat header={"Staking Fees"} content1={"$" + stakeFeeCostL2USD + " (vs " + stakeFeeCostL1USD + " on L1)"} />
+            <Stat header={"Change Commission"} content1={"$" + commissionFeeCostL2USD + " (vs " + commissionFeeCostL1USD + " on L1)"} />
+            <Stat header={"Change URI"} content1={"$" + serviceUriFeeCostL2USD + " (vs " + serviceUriFeeCostL1USD + " on L1)"} />
           </div>
         </div>
       </div >
