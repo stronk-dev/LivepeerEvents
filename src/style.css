@@ -42,7 +42,15 @@ h2, h3, h1, h4, h5, h6 {
   justify-content: space-evenly;
 }
 
-.selectOrch, a {
+.elipsText{
+  overflow: hidden;
+  white-space: nowrap;
+  display: block;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.selectOrch{
   text-shadow: 0.5px 0.5px 0.8px #948dff;
   background-color: transparent;
   border: none;
@@ -151,6 +159,13 @@ svg {
   color: rgba(162, 161, 255, 0.5);
 }
 
+.darkText {
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.875);
+  text-shadow: 0.5px 0.5px 0.8px #5a5663;
+}
+
 .hostInfo {
   cursor: default;
   text-align: start;
@@ -168,6 +183,7 @@ svg {
   flex-direction: row;
   height: 100%;
   width: 100%;
+  border-radius: 1em;
 }
 
 .flexContainer {
@@ -250,6 +266,19 @@ svg {
   align-items: center;
   display: flex;
   justify-content: flex-start;
+  vertical-align: middle;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.rowAlignRight {
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
   vertical-align: middle;
   margin-left: 10px;
   margin-right: 10px;

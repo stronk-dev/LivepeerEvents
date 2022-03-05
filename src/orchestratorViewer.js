@@ -81,13 +81,17 @@ const Orchestrator = (obj) => {
               <Address address={thisID} />
             </a>
           </div>
-          <Stat header={"Earned Fees"} content={totalVolumeETH + " Eth ($" + totalVolumeUSD + ")"} />
-          <Stat header={"Reward Cut"} content={rewardCut + "%"} />
-          <Stat header={"Fee Cut"} content={feeCut + "%"} />
-          <Stat header={"Total Stake"} content={totalStake + " LPT"} />
-          <Stat header={"Self Stake"} content={selfStake + " LPT(" + selfStakeRatio + ")%"} />
+          <div className="row" style={{}}>
+            <Stat header={"Earned Fees"} content1={totalVolumeETH + " Eth"} content2={"$" + totalVolumeUSD} />
+          </div>
+          <div className="row" style={{}}>
+            <Stat header={"Commission"}  title1={"Reward"} content1={rewardCut + "%"}  title2={"Fee"} content2={feeCut + "%"} />
+          </div>
+          <div className="row" style={{}}>
+            <Stat header={"Stake"}  title1={"Total"} content1={totalStake + " LPT"}  title2={"Self"} content2={selfStake + " LPT (" + selfStakeRatio + ")%"} />
+          </div>
           <div className="strokeSmollLeft" style={{ display: "flex" }}>
-            <button className="homeButton" data-tip data-for="registerTip" onClick={() => {
+            <button style={{marginBottom:'1em'}} className="homeButton" data-tip data-for="registerTip" onClick={() => {
               copyLink(shareUrl);
             }}>
               <img alt="" src="clipboard.svg" width="20em" height="20em" />
@@ -103,14 +107,14 @@ const Orchestrator = (obj) => {
           </div>
           <div className="content-wrapper">
             <ScrollContainer className="overflow-container" hideScrollbars={false}>
-              <div className="overflow-content" style={{ cursor: 'grab', height: '300px' }}>
+              <div className="overflow-content" style={{ cursor: 'grab' }}>
                 {
                   delegators.map((delObj, idx) => {
                     return (
                       <div className="rowAlignLeft" key={"delegator" + idx} style={{ marginLeft: '1em', borderBottom: '2px solid rgba(15,15,15,0.05)' }}>
                         <Address address={delObj.id} seed={"delegator" + idx + delObj.id} />
                         <div className="strokeSmollLeft">
-                          <p>{parseFloat(delObj.bondedAmount).toFixed(2)} LPT since round {delObj.startRound}</p>
+                          <p className="darkText">{parseFloat(delObj.bondedAmount).toFixed(2)} LPT since round {delObj.startRound}</p>
                         </div>
                       </div>
                     )

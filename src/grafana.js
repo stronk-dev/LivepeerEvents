@@ -60,12 +60,8 @@ const Grafana = (obj) => {
                 </div>
               </div>
               <div className="stroke roundedOpaque" style={{ borderRadius: "1em", backgroundColor: "#111217" }}>
-              <div className="flexContainer" style={{ justifyContent: "center" }}>
-                  <iframe className="halfGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark&panelId=23763572109" height="200" frameBorder="0"></iframe>
-                  <iframe className="halfGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark&panelId=23763572110" height="200" frameBorder="0"></iframe>
-                </div>
                 <div className="flexContainer" style={{ justifyContent: "center" }}>
-                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark&panelId=23763572108" height="200" frameBorder="0"></iframe>
+                  <Orchestrator thisOrchestrator={livepeer.thisOrchestrator} rootOnly={true} />
                 </div>
                 <div className="flexContainer" style={{ justifyContent: "center" }}>
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark&panelId=23763572056" height="200" frameBorder="0"></iframe>

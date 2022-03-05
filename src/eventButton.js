@@ -13,6 +13,7 @@ const EventButton = (obj) => {
   let eventTo;
   let eventFrom;
   let eventCaller;
+  let eventRightAddr;
   if (obj.eventObj.eventFrom === "0x0000000000000000000000000000000000000000") {
     obj.eventObj.eventFrom = "";
   }
@@ -22,37 +23,43 @@ const EventButton = (obj) => {
   if (obj.eventObj.eventTo !== "" || obj.eventObj.eventFrom !== "") {
     eventArrow = <p>→</p>;
   }
-  if (obj.eventObj.eventTo) {
-    eventTo = <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventTo)) }} >{obj.eventObj.eventTo}</button>
+  if (obj.eventObj.eventTo || obj.eventObj.eventFrom || obj.eventObj.eventCaller) {
+    if (obj.eventObj.eventTo) {
+      eventTo = <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventTo)) }} ><span className="elipsText">{obj.eventObj.eventTo}</span></button>
+    }
+    if (obj.eventObj.eventFrom) {
+      eventFrom = <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventFrom)) }} ><span className="elipsText">{obj.eventObj.eventFrom}</span></button>
+    }
+    if (obj.eventObj.eventCaller) {
+      eventCaller =
+        <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventCaller)) }} ><span className="elipsText">{obj.eventObj.eventCaller}</span></button>
+    }
+    eventRightAddr = <div className="rowAlignRight" style={{ flex: '1', width: '100%', padding: 0, margin: 0 }}>
+      {eventFrom}
+      {eventArrow}
+      {eventTo}
+    </div>
   }
-  if (obj.eventObj.eventFrom) {
-    eventFrom = <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventFrom)) }} >{obj.eventObj.eventFrom}</button>
-  }
-  if (obj.eventObj.eventCaller) {
-    eventCaller =
-      <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventCaller)) }} >{obj.eventObj.eventCaller}</button>
-  }
-
   return (
     <div className="rowAlignLeft" style={{ backgroundColor: obj.eventObj.eventColour, borderRadius: "1.2em", width: 'unset' }}>
-      <div className="rowAlignLeft" style={{ width: 'unset' }}>
-        <a className="selectOrch"  href={obj.eventObj.transactionUrl}>
+      <div className="rowAlignLeft" style={{ flex: '1', width: 'unset' }}>
+        <a className="selectOrch" href={obj.eventObj.transactionUrl}>
           <img alt="" src="arb.svg" width="30" height="30" />
         </a>
-        <a className="selectOrch"  href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
+        <a className="selectOrch" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
           <img alt="" src="livepeer.png" width="30" height="30" />
         </a>
-        {eventCaller}
+        <div className="rowAlignLeft" style={{ flex: '1', width: '100%', padding: 0, margin: 0 }}>
+          {eventCaller}
+        </div>
       </div>
-      <div className="rowAlignLeft">
-        {obj.eventObj.eventDescription}
+      <div className="rowAlignLeft" style={{ flex: '2', width: 'unset', padding: 0, margin: 0 }}>
+        <span className="rowAlignLeft elipsText">
+          {obj.eventObj.eventDescription}
+        </span>
+        {eventRightAddr}
       </div>
-      <div className="row" style={{ width: 'unset'}}>
-        {eventFrom}
-        {eventArrow}
-        {eventTo}
-      </div>
-    </div>
+    </div >
   )
 }
 
