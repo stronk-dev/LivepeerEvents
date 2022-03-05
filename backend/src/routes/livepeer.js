@@ -1,5 +1,6 @@
 import express from "express";
 import Event from '../models/event';
+import Block from '../models/block';
 const apiRouter = express.Router();
 import {
   API_CMC, API_L1_HTTP, API_L2_HTTP, API_L2_WS
@@ -78,6 +79,27 @@ const BondingManagerTargetAbi = JSON.parse(BondingManagerTargetJson);
 const BondingManagerProxyAddr = "0x35Bcf3c30594191d53231E4FF333E8A770453e40";
 const contractInstance = new web3layer2WS.eth.Contract(BondingManagerTargetAbi.abi, BondingManagerProxyAddr);
 
+let blockCache = [];
+const getBlock = async function (blockNumber) {
+  // See if it is cached
+  for (const thisBlock of blockCache) {
+    if (thisBlock.number === blockNumber) {
+      return thisBlock;
+    }
+  }
+  // Else get it and cache it
+  const thisBlock = await web3layer2.eth.getBlock(blockNumber);
+  console.log("Caching new block " + thisBlock.number + " mined at " + thisBlock.timestamp);
+  const blockObj = {
+    blockNumber: thisBlock.number,
+    blockTime: thisBlock.timestamp
+  };
+  blockCache.push(blockObj);
+  const dbObj = new Block(blockObj);
+  await dbObj.save();
+  return thisBlock;
+}
+
 // If fullsync: drop collection on DB
 if (fullSync) {
   console.log("dropping old data due to full synchronization");
@@ -97,6 +119,7 @@ var BondingManagerProxyListener = contractInstance.events.allEvents(async (error
     } else {
       console.log('Received new Event on block ' + event.blockNumber);
     }
+    const thisBlock = await getBlock(event.blockNumber);
     // Push obj of event to cache and create a new entry for it in the DB
     const eventObj = {
       address: event.address,
@@ -104,13 +127,14 @@ var BondingManagerProxyListener = contractInstance.events.allEvents(async (error
       transactionUrl: "https://arbiscan.io/tx/" + event.transactionHash,
       name: event.event,
       data: event.returnValues,
-      blockNumber: event.blockNumber
+      blockNumber: thisBlock.number,
+      blockTime: thisBlock.timestamp
     }
-    if(!isSyncing){
+    if (!isSyncing) {
       const dbObj = new Event(eventObj);
       await dbObj.save();
       eventsCache.push(eventObj);
-    }else{
+    } else {
       syncCache.push(eventObj);
     }
   }
@@ -136,13 +160,15 @@ const doSync = function () {
         if (event.blockNumber > lastBlockDataAdded) {
           lastBlockDataAdded = event.blockNumber;
         }
+        const thisBlock = await getBlock(event.blockNumber);
         const eventObj = {
           address: event.address,
           transactionHash: event.transactionHash,
           transactionUrl: "https://arbiscan.io/tx/" + event.transactionHash,
           name: event.event,
           data: event.returnValues,
-          blockNumber: event.blockNumber
+          blockNumber: thisBlock.number,
+          blockTime: thisBlock.timestamp
         }
         const dbObj = new Event(eventObj);
         await dbObj.save();
@@ -170,6 +196,7 @@ const handleSync = async function () {
     name: 1,
     data: 1,
     blockNumber: 1,
+    blockTime: 1,
     _id: 0
   });
   console.log("Retrieved existing Events of size " + eventsCache.length);
@@ -186,12 +213,18 @@ const handleSync = async function () {
     latestMissedDuringSync = latestBlock;
   }
   console.log("Parsed up to block " + lastBlockDataAdded + " out of " + latestMissedDuringSync + " blocks");
+  // Get all parsed blocks
+  blockCache = await Block.find({}, {
+    blockNumber: 1,
+    blockTime: 1
+  });
+  console.log("Retrieved existing Blocks of size " + blockCache.length);
   doSync();
   while (isSyncRunning) {
     await sleep(1000);
     console.log("Parsed " + lastBlockDataAdded + " out of " + latestMissedDuringSync + " blocks");
   }
-  while(syncCache.length){
+  while (syncCache.length) {
     const liveEvents = syncCache;
     syncCache = [];
     for (const eventObj of liveEvents) {

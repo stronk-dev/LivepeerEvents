@@ -24,8 +24,12 @@ const EventSchema = new mongoose.Schema({
   blockNumber: {
     type: Number,
     required: true
+  },
+  blockTime: {
+    type: Number,
+    required: true
   }
-}, { timestamps: true });
+}, { timestamps: false });
 
 const Event = mongoose.model('Event', EventSchema);
 export default Event;

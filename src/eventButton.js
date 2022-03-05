@@ -44,7 +44,7 @@ const EventButton = (obj) => {
 
   let blockNumber;
   if (obj.isFirstOfBlock) {
-    blockNumber = <Block block={obj.isFirstOfBlock} />
+    blockNumber = <Block block={obj.isFirstOfBlock} time={obj.time} />
 
   }
 

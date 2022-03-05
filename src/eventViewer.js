@@ -141,6 +141,7 @@ const EventViewer = (obj) => {
                     key={eventObj.transactionHash + idx}
                     eventObj={eventObj}
                     isFirstOfBlock={prevBlock}
+                    time={eventObj.transactionTime}
                   />
                 }
               }

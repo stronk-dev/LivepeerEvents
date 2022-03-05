@@ -63,6 +63,7 @@ export const getEvents = () => async dispatch => {
     let currentTx = "";
     let currentUrl = "";
     let currentBlock = 0;
+    let currentTime = 0;
     // Current Event we are processing
     let eventType = "";             // Named type: Withdraw, Update, Claim, Reward, Activate, Unbond, Stake
     let eventDescription = "";      // Descriptive text, also containing Amount, AmountOther and When
@@ -89,6 +90,7 @@ export const getEvents = () => async dispatch => {
           currentTx = eventObj.transactionHash;
           currentUrl = eventObj.transactionUrl;
           currentBlock = eventObj.blockNumber;
+          currentTime = eventObj.blockTime;
         }
         // New transaction found
         if (currentTx !== eventObj.transactionHash) {
@@ -150,7 +152,8 @@ export const getEvents = () => async dispatch => {
               eventColour,
               transactionHash: currentTx,
               transactionUrl: currentUrl,
-              transactionBlock: currentBlock
+              transactionBlock: currentBlock,
+              transactionTime: currentTime
             });
           }
 
@@ -176,6 +179,7 @@ export const getEvents = () => async dispatch => {
           currentTx = eventObj.transactionHash;
           currentUrl = eventObj.transactionUrl;
           currentBlock = eventObj.blockNumber;
+          currentTime = eventObj.blockTime;
         }
         // Always split off WithdrawStake as a separate Withdraw Event
         if (eventObj.name === "WithdrawStake") {
@@ -193,7 +197,8 @@ export const getEvents = () => async dispatch => {
             eventColour: withdrawStakeColour,
             transactionHash: currentTx,
             transactionUrl: currentUrl,
-            transactionBlock: currentBlock
+            transactionBlock: currentBlock,
+            transactionTime: currentTime
           });
         } else if (eventObj.name === "WithdrawFees") {
           const amount = parseFloat(eventObj.data.amount) / 1000000000000000000;
@@ -210,7 +215,8 @@ export const getEvents = () => async dispatch => {
             eventColour: withdrawStakeColour,
             transactionHash: currentTx,
             transactionUrl: currentUrl,
-            transactionBlock: currentBlock
+            transactionBlock: currentBlock,
+            transactionTime: currentTime
           });
         }
         // Always split off TranscoderUpdate as a separate Update Event
@@ -228,7 +234,8 @@ export const getEvents = () => async dispatch => {
             eventColour: updateColour,
             transactionHash: currentTx,
             transactionUrl: currentUrl,
-            transactionBlock: currentBlock
+            transactionBlock: currentBlock,
+            transactionTime: currentTime
           });
         }
         // Always split off EarningsClaimed as a separate Claim Event
@@ -259,7 +266,8 @@ export const getEvents = () => async dispatch => {
             eventColour: claimColour,
             transactionHash: currentTx,
             transactionUrl: currentUrl,
-            transactionBlock: currentBlock
+            transactionBlock: currentBlock,
+            transactionTime: currentTime
           });
         }
         // Always split off Reward as a separate Reward Event
@@ -279,7 +287,8 @@ export const getEvents = () => async dispatch => {
             eventColour: rewardColour,
             transactionHash: currentTx,
             transactionUrl: currentUrl,
-            transactionBlock: currentBlock
+            transactionBlock: currentBlock,
+            transactionTime: currentTime
           });
         }
         // Extract useful info from other types of Event
