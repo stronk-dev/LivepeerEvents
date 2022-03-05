@@ -63,6 +63,7 @@ export const getEvents = () => async dispatch => {
     let txCounter = 0;
     let currentTx = "";
     let currentUrl = "";
+    let currentBlock = 0;
     // Current Event we are processing
     let eventType = "";             // Named type: Withdraw, Update, Claim, Reward, Activate, Unbond, Stake
     let eventDescription = "";      // Descriptive text, also containing Amount, AmountOther and When
@@ -88,6 +89,7 @@ export const getEvents = () => async dispatch => {
         if (currentTx === "") {
           currentTx = eventObj.transactionHash;
           currentUrl = eventObj.transactionUrl;
+          currentBlock = eventObj.blockNumber;
         }
         // New transaction found
         if (currentTx !== eventObj.transactionHash) {
@@ -155,7 +157,8 @@ export const getEvents = () => async dispatch => {
               eventTo,
               eventColour,
               transactionHash: currentTx,
-              transactionUrl: currentUrl
+              transactionUrl: currentUrl,
+              transactionBlock: currentBlock
             });
           }
 
@@ -180,11 +183,15 @@ export const getEvents = () => async dispatch => {
           txCounter++;
           currentTx = eventObj.transactionHash;
           currentUrl = eventObj.transactionUrl;
+          currentBlock = eventObj.blockNumber;
         }
         // Always split off WithdrawStake as a separate Withdraw Event
         if (eventObj.name === "WithdrawStake") {
           const amount = parseFloat(eventObj.data.amount) / 1000000000000000000;
-          const txt = " withdrew a " + amount + " LPT stake in round " + eventObj.data.withdrawRound;
+          if (amount < thresholdFees){
+            continue;
+          }
+          const txt = " withdrew a " + amount.toFixed(2) + " LPT stake in round " + eventObj.data.withdrawRound;
           finalEventList.push({
             eventType: "Withdraw",
             eventDescription: txt,
@@ -193,11 +200,15 @@ export const getEvents = () => async dispatch => {
             eventTo: "",
             eventColour: withdrawStakeColour,
             transactionHash: currentTx,
-            transactionUrl: currentUrl
+            transactionUrl: currentUrl,
+            transactionBlock: currentBlock
           });
         } else if (eventObj.name === "WithdrawFees") {
           const amount = parseFloat(eventObj.data.amount) / 1000000000000000000;
-          const txt = " withdrew " + amount + " LPT earned fees";
+          if (amount < thresholdFees){
+            continue;
+          }
+          const txt = " withdrew " + amount.toFixed(2) + " LPT earned fees";
           finalEventList.push({
             eventType: "Withdraw",
             eventDescription: txt,
@@ -206,7 +217,8 @@ export const getEvents = () => async dispatch => {
             eventTo: "",
             eventColour: withdrawStakeColour,
             transactionHash: currentTx,
-            transactionUrl: currentUrl
+            transactionUrl: currentUrl,
+            transactionBlock: currentBlock
           });
         }
         // Always split off TranscoderUpdate as a separate Update Event
@@ -223,7 +235,8 @@ export const getEvents = () => async dispatch => {
             eventTo: "",
             eventColour: updateColour,
             transactionHash: currentTx,
-            transactionUrl: currentUrl
+            transactionUrl: currentUrl,
+            transactionBlock: currentBlock
           });
         }
         // Always split off EarningsClaimed as a separate Claim Event
@@ -253,7 +266,8 @@ export const getEvents = () => async dispatch => {
             eventTo: "",
             eventColour: claimColour,
             transactionHash: currentTx,
-            transactionUrl: currentUrl
+            transactionUrl: currentUrl,
+            transactionBlock: currentBlock
           });
         }
         // Always split off Reward as a separate Reward Event
@@ -272,7 +286,8 @@ export const getEvents = () => async dispatch => {
             eventTo: "",
             eventColour: rewardColour,
             transactionHash: currentTx,
-            transactionUrl: currentUrl
+            transactionUrl: currentUrl,
+            transactionBlock: currentBlock
           });
         }
         // Extract useful info from other types of Event

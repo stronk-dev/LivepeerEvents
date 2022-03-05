@@ -113,7 +113,7 @@ const Orchestrator = (obj) => {
                     return (
                       <div className="rowAlignLeft" key={"delegator" + idx} style={{ marginLeft: '1em', borderBottom: '2px solid rgba(15,15,15,0.05)' }}>
                         <Address address={delObj.id} seed={"delegator" + idx + delObj.id} />
-                        <div className="strokeSmollLeft">
+                        <div className="rowAlignRight">
                           <p className="darkText">{parseFloat(delObj.bondedAmount).toFixed(2)} LPT since round {delObj.startRound}</p>
                         </div>
                       </div>

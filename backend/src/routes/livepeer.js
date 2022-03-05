@@ -65,13 +65,11 @@ const defaultOrch = "0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e";
 // Will contain addr, lastGet, and obj of any requested O's
 let orchestratorCache = [];
 
-// Listen to smart contract emitters. Resync with DB every 5 minutes
-const timeoutEvents = 300000;
+// Listen to smart contract emitters. Only re-syncs on boot!
 let eventsCache = [];
 let latestMissedDuringSync = 0;
 let lastBlockDataAdded = 0;
 let syncCache = [];
-let eventsGet = 0;
 // Set to true to drop the entire collection on boot and get all events
 const fullSync = false;
 // https://arbiscan.io/address/0x35Bcf3c30594191d53231E4FF333E8A770453e40#events
@@ -367,19 +365,6 @@ apiRouter.get("/quotes", async (req, res) => {
 // Exports list of smart contract events
 apiRouter.get("/getEvents", async (req, res) => {
   try {
-    const now = new Date().getTime();
-    // Update cmc once their data has expired
-    if (now - eventsGet > timeoutEvents) {
-      eventsCache = await Event.find({}, {
-        address: 1,
-        transactionHash: 1,
-        transactionUrl: 1,
-        name: 1,
-        data: 1,
-        _id: 0
-      });
-      eventsGet = now;
-    }
     res.send(eventsCache);
   } catch (err) {
     res.status(400).send(err);

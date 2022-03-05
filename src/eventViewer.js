@@ -41,6 +41,7 @@ const EventViewer = (obj) => {
   let unbondActivatedColour;
   unbondActivatedColour = unbondActivated ? unbondColour : greyColour;
 
+  let prevBlock = 0;
 
   return (
     <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, marginTop: '2em', position: 'absolute', bottom: 0, top: '300px', left: '0px', right: '0px', overflowY: 'auto', overflowX: 'hidden', width: '100%' }}>
@@ -129,10 +130,19 @@ const EventViewer = (obj) => {
 
               if (unfiltered < maxShown) {
                 unfiltered++;
-                return <EventButton
-                  key={eventObj.transactionHash + idx}
-                  eventObj={eventObj}
-                />
+                if (prevBlock === eventObj.transactionBlock) {
+                  return <EventButton
+                    key={eventObj.transactionHash + idx}
+                    eventObj={eventObj}
+                  />
+                } else {
+                  prevBlock = eventObj.transactionBlock;
+                  return <EventButton
+                    key={eventObj.transactionHash + idx}
+                    eventObj={eventObj}
+                    isFirstOfBlock={prevBlock}
+                  />
+                }
               }
             })}
           </div>

@@ -3,6 +3,7 @@ import {
   getOrchestratorInfo
 } from "./actions/livepeer";
 import { useDispatch } from 'react-redux';
+import Block from "./BlockViewer";
 
 /// Displays a single event. Sets selected Orchestrator info in the redux store
 
@@ -40,26 +41,36 @@ const EventButton = (obj) => {
       {eventTo}
     </div>
   }
+
+  let blockNumber;
+  if (obj.isFirstOfBlock) {
+    blockNumber = <Block block={obj.isFirstOfBlock} />
+
+  }
+
   return (
-    <div className="rowAlignLeft" style={{ backgroundColor: obj.eventObj.eventColour, borderRadius: "1.2em", width: 'unset' }}>
-      <div className="rowAlignLeft" style={{ flex: '1', width: 'unset' }}>
-        <a className="selectOrch" href={obj.eventObj.transactionUrl}>
-          <img alt="" src="arb.svg" width="30" height="30" />
-        </a>
-        <a className="selectOrch" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
-          <img alt="" src="livepeer.png" width="30" height="30" />
-        </a>
-        <div className="rowAlignLeft" style={{ flex: '1', width: '100%', padding: 0, margin: 0 }}>
-          {eventCaller}
+    <div className="stroke" style={{ width: '100%', padding: 0, margin: 0 }}>
+      {blockNumber}
+      <div className="rowAlignLeft" style={{ backgroundColor: obj.eventObj.eventColour, borderRadius: "1.2em", width: '100%' }}>
+        <div className="rowAlignLeft" style={{ flex: '1', width: 'unset' }}>
+          <a className="selectOrch" href={obj.eventObj.transactionUrl}>
+            <img alt="" src="arb.svg" width="30" height="30" />
+          </a>
+          <a className="selectOrch" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
+            <img alt="" src="livepeer.png" width="30" height="30" />
+          </a>
+          <div className="rowAlignLeft" style={{ flex: '1', width: '100%', padding: 0, margin: 0 }}>
+            {eventCaller}
+          </div>
         </div>
-      </div>
-      <div className="rowAlignLeft" style={{ flex: '2', width: 'unset', padding: 0, margin: 0 }}>
-        <span className="rowAlignLeft elipsText">
-          {obj.eventObj.eventDescription}
-        </span>
-        {eventRightAddr}
-      </div>
-    </div >
+        <div className="rowAlignLeft" style={{ flex: '2', width: 'unset', padding: 0, margin: 0 }}>
+          <span className="rowAlignLeft elipsText">
+            {obj.eventObj.eventDescription}
+          </span>
+          {eventRightAddr}
+        </div>
+      </div >
+    </div>
   )
 }
 
