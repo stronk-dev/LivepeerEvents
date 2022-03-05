@@ -68,6 +68,8 @@ const EventViewer = (obj) => {
         <h3>Show {defaultMaxShown}</h3>
       </button>
     </div>
+  }else{
+    showLessBlock = <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, width: '5em' }}></div>
   }
 
   let searchTermText;
@@ -87,7 +89,7 @@ const EventViewer = (obj) => {
         <div className="row">
           {showLessBlock}
           <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <h3>Showing {maxAmount} results</h3>
+            <h3>Showing max {maxAmount} results</h3>
           </div>
           {showMoreBlock}
         </div>

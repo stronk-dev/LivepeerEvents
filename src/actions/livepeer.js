@@ -271,7 +271,8 @@ export const getEvents = () => async dispatch => {
             transactionHash: currentTx,
             transactionUrl: currentUrl,
             transactionBlock: currentBlock,
-            transactionTime: currentTime
+            transactionTime: currentTime,
+            eventValue: (amount1 > amount2) ? amount1 : amount2
           });
         }
         // Always split off Reward as a separate Reward Event
