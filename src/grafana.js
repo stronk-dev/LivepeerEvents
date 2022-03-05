@@ -50,7 +50,7 @@ const Grafana = (obj) => {
                   <p>${lptPrice}</p>
                   <p>({lptPriceChange24h}%)</p>
                 </div>
-                <div className="row">
+                <div className="row selectOrch">
                   <h2> <a href="https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/">Livepeer Orchestrator</a></h2>
                 </div>
                 <div className="row">

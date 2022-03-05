@@ -50,19 +50,6 @@ h2, h3, h1, h4, h5, h6 {
   width: 100%;
 }
 
-.selectOrch{
-  text-shadow: 0.5px 0.5px 0.8px #948dff;
-  background-color: transparent;
-  border: none;
-}
-
-.selectOrch:hover{
-  text-decoration: none;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-  border-radius: 1em;
-}
-
 p {
   text-shadow: 0.5px 0.5px 0.8px #948dff;
   color: #1a1b26;
@@ -451,6 +438,33 @@ svg {
   /* transform: translate(-50%, -50%); */
   margin: 0 auto;
   user-select: none;
+}
+
+.selectOrch, .selectOrch a{
+  text-shadow: 0.5px 0.5px 0.8px #948dff;
+  background-color: transparent;
+  border: none;
+}
+
+.selectOrch:hover, .selectOrch a:hover{
+  backdrop-filter: blur(6px);
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 1em;
+}
+
+.selectOrchLight, .selectOrchLight a{
+  text-shadow: 0.5px 0.5px 0.8px #948dff;
+  background-color: transparent;
+  border: none;
+}
+
+.selectOrchLight:hover, .selectOrchLight a:hover{
+  backdrop-filter: blur(6px);
+  text-decoration: none;
+  cursor: pointer;
+  background-color: rgba(115, 114, 146, 0.9);
+  border-radius: 1em;
 }
 
 @media (max-aspect-ratio: 1/1) {

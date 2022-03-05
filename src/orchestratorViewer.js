@@ -91,7 +91,7 @@ const Orchestrator = (obj) => {
             <Stat header={"Stake"}  title1={"Total"} content1={totalStake + " LPT"}  title2={"Self"} content2={selfStake + " LPT (" + selfStakeRatio + ")%"} />
           </div>
           <div className="strokeSmollLeft" style={{ display: "flex" }}>
-            <button style={{marginBottom:'1em'}} className="homeButton" data-tip data-for="registerTip" onClick={() => {
+            <button style={{marginBottom:'1em'}} className="selectOrchLight" data-tip data-for="registerTip" onClick={() => {
               copyLink(shareUrl);
             }}>
               <img alt="" src="clipboard.svg" width="20em" height="20em" />
