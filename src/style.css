@@ -129,55 +129,9 @@ svg {
   from { top: 0; } to { top: calc(100vh - 69px); }
 }
 
-.scrollWindow {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  width: calc(50vw);
-  height: calc((9 / 16 ) * 50vw);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  opacity: 0.95;
-  flex-direction: column;
-}
-
 .metaSidebar {
   display: flex;
   flex-direction: row;
-}
-
-.rowContainer {
-  height: 100%;
-  display: block;
-}
-
-.serviceButton {
-  width: 100%;
-  margin: 0.4em;
-  margin-left: 2em;
-  margin-right: 2em;
-  text-decoration: none;
-  color: rgba(0, 0, 0, 0.875);
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-}
-
-.camBox {
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  justify-content: space-evenly;
-}
-
-.cam {
-  display: flex;
-  width: 1920px;
-  height: 1080px;
-  align-self: center;
-  margin: auto;
 }
 
 .fullGrafana {
@@ -283,17 +237,6 @@ svg {
   vertical-align: middle;
   margin-left: 10px;
   margin-right: 10px;
-}
-
-.flexItem {
-  padding: 5px;
-  width: 20px;
-  height: 20px;
-  margin: 10px;
-  line-height: 20px;
-  font-weight: bold;
-  font-size: 2em;
-  text-align: center;
 }
 
 .waveButton {
@@ -435,108 +378,15 @@ svg {
   backdrop-filter: blur(6px);
 }
 
-.mainContainer {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-top: 64px;
-}
-
-.dataContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 600px;
-}
-
 .header {
   text-align: center;
   font-size: 32px;
   font-weight: 600;
 }
 
-.bio {
-  text-align: center;
-  color: black;
-  margin-top: 16px;
-}
-
-.waveDiv {
-  text-align: center;
-  margin-top: 16px;
-  padding: 8px;
-  border: 0;
-  border-radius: 5px;
-}
-
-.blockyBlockRoundedCornersWazzup{
-  background-color: rgba(163, 161, 255, 0.9);
-  margin-top: 6px;
-  padding: 8px;
-  border-radius: 10px;
-}
-
-.stilo {
-  -webkit-user-select: none;
-  background-color: hsl(0, 0%, 90%);
-  transition: background-color 300ms;
-  object-fit: cover;
-  width: 100%;
-}
-
-.grid-item {
-  padding: 20px;
-  font-size: 30px;
-  text-align: center;
-}
-
-.grid-container {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  padding: 10px;
-  width: 100%;
-}
-
-.showOnlyOnMobile {
-  visibility: hidden;
-  display:none;
-}
-
-.showNeverOnMobile {
-  visibility: visible;
-  display:block;
-}
-
-.separator {
-  border:none;
-  border-top:25px dotted rgba(56, 19, 124, 0.6);
-  width: 30vw;
-  height: 10px;
-  margin: 0;
-}
-
-.markdown {
-  padding: 50px;
-  width: 50vw;
-  z-index: 5;
-}
-
-.markdown img {
-  align-self: center;
-  margin: auto;
-  width: 100%;
-}
-
 .container {
   position: relative;
   text-align: center;
-}
-
-.centered {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .alwaysOnBottom {
@@ -558,13 +408,7 @@ svg {
   user-select: none;
 }
 
-
-
 @media (max-aspect-ratio: 1/1) {
-  .scrollWindow {
-    width: calc(100vw - 20px);
-    height: calc((9 / 16 ) * (100vw - 20px));
-  }
   .fullGrafana {
     width: calc(100vw - 2em);
   }
@@ -607,10 +451,5 @@ svg {
   }
   .main-container {
     height: calc(100vh - 60px);
-  }
-  .markdown {
-    width: 80vw;
-    margin: 20px;
-    padding: 20px;
   }
 }
