@@ -5,10 +5,9 @@ const activationColour = "rgba(23, 60, 122, 0.3)";
 const rewardColour = "rgba(20, 99, 29, 0.3)";
 const updateColour = "rgba(122, 63, 23, 0.3)";
 const withdrawStakeColour = "rgba(115, 110, 22, 0.3)";
-const stakeColour = "rgba(71, 23, 122, 0.3)";
+const stakeColour = "rgba(56, 23, 122, 0.3)";
 const unbondColour = "rgba(122, 23, 51, 0.3)";
 const claimColour = "rgba(77, 91, 42, 0.3)";
-const migrateColour = "rgba(56, 23, 122, 0.3)";
 
 const thresholdStaking = 0.001;
 const thresholdFees = 0.00009;
@@ -93,17 +92,10 @@ export const getEvents = () => async dispatch => {
         }
         // New transaction found
         if (currentTx !== eventObj.transactionHash) {
-          // Unbond <> TransferBond <> Rebond => Stake Event
+          // Unbond <> TransferBond <> (eventContainsEarningsClaimed) <> Rebond => Stake Event
           if (eventContainsUnbond && eventContainsTransferBond && eventContainsRebond) {
-            // If also hasEarningsClaimed => Migrate Event
-            if (eventContainsEarningsClaimed) {
-              eventType = "Migrate";
-              eventColour = migrateColour;
-              eventDescription = "migrated " + tmpAmount.toFixed(2) + " LPT to L2";
-            } else {
-              eventType = "Stake";
-              eventColour = stakeColour;
-            }
+            eventType = "Stake";
+            eventColour = stakeColour;
           }
           // (Bond <>) TranscoderActivated => Activate Event
           else if (eventContainsTranscoderActivated) {
@@ -133,7 +125,7 @@ export const getEvents = () => async dispatch => {
           else if (eventContainsRebond) {
             eventType = "Stake";
             eventColour = stakeColour;
-            eventDescription = "increased their stake with " + tmpAmount.toFixed(2) + " LPT at";
+            eventDescription = "increased their stake to " + tmpAmount.toFixed(2) + " LPT at";
           }
 
           // Fill description of Stake Event if it wasn't set yet
@@ -142,7 +134,7 @@ export const getEvents = () => async dispatch => {
               eventDescription = "staked " + tmpAmount.toFixed(2) + " LPT";
             } else if (eventFrom === eventTo) {
               eventFrom = "";
-              eventDescription = "increased their self stake to " + tmpAmount.toFixed(2) + " LPT";
+              eventDescription = "increased their stake to " + tmpAmount.toFixed(2) + " LPT";
             } else {
               eventDescription = "moved a " + tmpAmount.toFixed(2) + " LPT stake";
             }
@@ -188,7 +180,7 @@ export const getEvents = () => async dispatch => {
         // Always split off WithdrawStake as a separate Withdraw Event
         if (eventObj.name === "WithdrawStake") {
           const amount = parseFloat(eventObj.data.amount) / 1000000000000000000;
-          if (amount < thresholdFees){
+          if (amount < thresholdFees) {
             continue;
           }
           const txt = " withdrew a " + amount.toFixed(2) + " LPT stake in round " + eventObj.data.withdrawRound;
@@ -205,7 +197,7 @@ export const getEvents = () => async dispatch => {
           });
         } else if (eventObj.name === "WithdrawFees") {
           const amount = parseFloat(eventObj.data.amount) / 1000000000000000000;
-          if (amount < thresholdFees){
+          if (amount < thresholdFees) {
             continue;
           }
           const txt = " withdrew " + amount.toFixed(2) + " LPT earned fees";
@@ -319,10 +311,10 @@ export const getEvents = () => async dispatch => {
         }
         else if (eventObj.name === "TransferBond") {
           eventContainsTransferBond = true;
-          if (!eventContainsUnbond){
+          if (!eventContainsUnbond) {
             eventFrom = eventObj.data.oldDelegator.toLowerCase();
           }
-          if (!eventContainsRebond){
+          if (!eventContainsRebond) {
             eventTo = eventObj.data.newDelegator.toLowerCase();
           }
           tmpAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
