@@ -17,11 +17,11 @@ const maxShown = 500;
 const EventViewer = (obj) => {
   const [searchTerm, setSearchTerm] = useState(obj.prefill || "");
   const [filterActivated, setFilterActivated] = useState(true);
-  const [rewardActivated, setRewardActivated] = useState(true);
+  const [rewardActivated, setRewardActivated] = useState(false);
   const [updateActivated, setUpdateActivated] = useState(true);
-  const [withdrawActivated, setWithdrawActivated] = useState(true);
+  const [withdrawActivated, setWithdrawActivated] = useState(false);
   const [stakeActivated, setStakeActivated] = useState(true);
-  const [delegatorRewardActivated, setDelegatorRewardActivated] = useState(true);
+  const [delegatorRewardActivated, setDelegatorRewardActivated] = useState(false);
   const [unbondActivated, setUnbondActivated] = useState(true);
   console.log("Rendering EventViewer");
   let unfiltered = 0;
