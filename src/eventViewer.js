@@ -70,19 +70,30 @@ const EventViewer = (obj) => {
     </div>
   }
 
+  let searchTermText;
+  if (searchTerm !== "") {
+    if (searchTerm.length > 15) {
+      searchTermText = <h3>Only showing addresses containing {searchTerm.substring(0, 15)}...</h3>
+    } else {
+      searchTermText = <h3>Only showing addresses containing {searchTerm}</h3>
+    }
+  } else {
+    searchTermText = <h3>Filter by Orchestrator address</h3>
+  }
+
   return (
     <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, marginTop: '2em', position: 'absolute', bottom: 0, top: '300px', left: '0px', right: '0px', overflowY: 'auto', overflowX: 'hidden', width: '100%' }}>
-      <div className="row">
+      <div className="row showNeverOnMobile">
         <div className="row">
           {showLessBlock}
-          <div className="strokeSmollLeft" style={{ margin: "0", padding: 0 }}>
+          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
             <h3>Showing {maxAmount} results</h3>
           </div>
           {showMoreBlock}
         </div>
         <div className="row">
           <div className="stroke" style={{ margin: "0", padding: 0 }}>
-            <h3>{searchTerm !== "" ? ("Only showing addresses containing " + searchTerm) : "Filter by Orchestrator address"}</h3>
+            {searchTermText}
             <input className="searchField" style={{ width: '100%' }}
               value={searchTerm}
               onChange={(evt) => setSearchTerm(evt.target.value)}
