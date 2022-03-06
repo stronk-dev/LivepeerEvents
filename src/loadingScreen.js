@@ -25,17 +25,17 @@ const Startup = (obj) => {
       dispatch(getBlockchainData());
       dispatch(getCurrentOrchestratorInfo());
     });
+    setIsLoaded(true);
   }
-
+  
   const refreshLogin = () => {
     console.log("Logging in and getting visitor statistics...");
     batch(() => {
       dispatch(login());
       dispatch(getVisitorStats());
     });
-    setIsLoaded(true);
   }
-
+  
   useEffect(() => {
     refreshLogin();
     refreshAllZeData();
