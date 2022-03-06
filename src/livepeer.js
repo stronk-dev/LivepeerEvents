@@ -17,7 +17,7 @@ const Livepeer = (obj) => {
   console.log("Rendering Livepeer");
 
   useEffect(() => {
-    if (prefill.get('orchAddr') != "") {
+    if (prefill.get('orchAddr') && prefill.get('orchAddr') !== "") {
       dispatch(getOrchestratorInfo(prefill.get('orchAddr')));
     }
   }, [prefill]);

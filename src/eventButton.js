@@ -22,7 +22,7 @@ const EventButton = (obj) => {
     obj.eventObj.eventTo = "";
   }
   if (obj.eventObj.eventTo !== "" || obj.eventObj.eventFrom !== "") {
-    eventArrow = <p>→</p>;
+    eventArrow = <p style={{marginRight: 0}}>→</p>;
   }
   if (obj.eventObj.eventTo || obj.eventObj.eventFrom || obj.eventObj.eventCaller) {
     if (obj.eventObj.eventTo) {
