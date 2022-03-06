@@ -27,38 +27,38 @@ const EventButton = (obj) => {
   if (obj.eventObj.eventTo || obj.eventObj.eventFrom || obj.eventObj.eventCaller) {
     if (obj.eventObj.eventTo) {
       eventTo =
-        <div className="row" style={{ flex: '1', width: 'unset' }}>
-          <button className="selectOrch" style={{margin: 0, padding: '0.5em'}} onClick={() => { obj.setSearchTerm(obj.eventObj.eventTo) }} >
+        <div className="rowAlignRight" style={{ width: 'unset', marginLeft: 0 }}>
+          <button className="selectOrch" style={{ margin: 0, padding: '0.5em' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventTo) }} >
             <span className="elipsText">🔎</span>
           </button>
-          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventTo)) }} >
+          <button className="selectOrch" style={{ margin: 0, padding: 0 }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventTo)) }} >
             <span className="elipsText">{obj.eventObj.eventTo}</span>
           </button>
         </div>
     }
     if (obj.eventObj.eventFrom) {
       eventFrom =
-        <div className="row" style={{ flex: '1', width: 'unset' }}>
-          <button className="selectOrch" style={{margin: 0, padding: '0.5em'}}  onClick={() => { obj.setSearchTerm(obj.eventObj.eventFrom) }} >
+        <div className="rowAlignRight" style={{ width: 'unset', margin: 0 }}>
+          <button className="selectOrch" style={{ margin: 0, padding: '0.5em' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventFrom) }} >
             <span className="elipsText">🔎</span>
           </button>
-          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventFrom)) }}>
+          <button className="selectOrch" style={{ margin: 0, padding: 0 }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventFrom)) }}>
             <span className="elipsText">{obj.eventObj.eventFrom}</span>
           </button>
         </div >
     }
     if (obj.eventObj.eventCaller) {
       eventCaller =
-        <div className="rowAlignLeft" style={{ flex: '1', width: 'unset', margin: 0 }}>
-          <button className="selectOrch" style={{margin: 0, padding: '0.5em'}}  onClick={() => { obj.setSearchTerm(obj.eventObj.eventCaller) }} >
+        <div className="rowAlignLeft" style={{ width: 'unset', margin: 0 }}>
+          <button className="selectOrch" style={{ margin: 0, padding: '0.5em' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventCaller) }} >
             <span className="elipsText">🔎</span>
           </button>
-          <button className="selectOrch" onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventCaller)) }} >
+          <button className="selectOrch" style={{ margin: 0, padding: 0 }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventCaller)) }} >
             <span className="elipsText">{obj.eventObj.eventCaller}</span>
           </button>
         </div>
     }
-    eventRightAddr = <div className="rowAlignRight" style={{ flex: '1', width: '100%', padding: 0, margin: 0 }}>
+    eventRightAddr = <div className="rowAlignRight" style={{ width: 'unset', padding: 0, margin: 0 }}>
       {eventFrom}
       {eventArrow}
       {eventTo}

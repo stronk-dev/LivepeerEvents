@@ -267,8 +267,8 @@ const EventViewer = (obj) => {
         </div>
       </div>
       <div className="content-wrapper" style={{ alignItems: 'stretch', width: '100%' }}>
-        <ScrollContainer className="overflow-container" hideScrollbars={false}>
-          <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0 }}>
+        <ScrollContainer className="overflow-container" hideScrollbars={false} style={{}}>
+          <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0}}>
             {eventList}
           </div>
         </ScrollContainer>
