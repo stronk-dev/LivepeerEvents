@@ -11,5 +11,6 @@ export const {
     API_CMC = "Coinmarketcap API key",
     API_L1_HTTP = "ETH L1 HTTP API KEY",
     API_L2_HTTP = "ETH L2 HTTP API KEY",
-    API_L2_WS = "ALCHEMY WSS API KEY"
+    API_L2_WS = "ALCHEMY WSS API KEY",
+    CONF_DEFAULT_ORCH = "YOUR OWN ORCHESTRATORS PUBLIC ADDRESS"
 } = process.env;
