@@ -63,16 +63,16 @@ const Grafana = (obj) => {
                 <div className="flexContainer" style={{ justifyContent: "center" }}>
                   <Orchestrator thisOrchestrator={livepeer.thisOrchestrator} rootOnly={true} />
                 </div>
-                <div className="flexContainer" style={{ justifyContent: "center" }}>
+                <div className="flexContainer" style={{ justifyContent: "stretch", padding: '20px', width: '100%' }}>
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark&panelId=23763572056" height="200" frameBorder="0"></iframe>
                 </div>
-                <div className="flexContainer" style={{ justifyContent: "center" }}>
+                <div className="flexContainer" style={{ justifyContent: "stretch", padding: '20px', width: '100%' }}>
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark&panelId=23763572077" height="400" frameBorder="0"></iframe>
                 </div>
-                <div className="flexContainer" style={{ justifyContent: "center" }}>
+                <div className="flexContainer" style={{ justifyContent: "stretch", padding: '20px', width: '100%' }}>
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark&panelId=23763572032" height="200" frameBorder="0"></iframe>
                 </div>
-                <div className="flexContainer" style={{ justifyContent: "center" }}>
+                <div className="flexContainer" style={{ justifyContent: "stretch", padding: '20px', width: '100%' }}>
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&from=now-2d&to=now&refresh=5s&theme=dark&panelId=23763572040" height="400" frameBorder="0"></iframe>
                 </div>
                 <div className="row">

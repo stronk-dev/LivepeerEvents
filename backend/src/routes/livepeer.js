@@ -3,7 +3,7 @@ import Event from '../models/event';
 import Block from '../models/block';
 const apiRouter = express.Router();
 import {
-  API_CMC, API_L1_HTTP, API_L2_HTTP, API_L2_WS
+  API_CMC, API_L1_HTTP, API_L2_HTTP, API_L2_WS, CONF_DEFAULT_ORCH
 } from "../config";
 // Do API requests to other API's
 const https = require('https');
@@ -61,8 +61,6 @@ let serviceUriFeeCostL2 = 0;
 
 // Update O info from thegraph every 1 minute
 const timeoutTheGraph = 60000;
-// Address of O info we are want to display
-const defaultOrch = "0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e";
 // Will contain addr, lastGet, and obj of any requested O's
 let orchestratorCache = [];
 
@@ -486,7 +484,7 @@ apiRouter.get("/getOrchestrator", async (req, res) => {
   try {
     let reqOrch = req.query.orch;
     if (!reqOrch || reqOrch == "") {
-      reqOrch = defaultOrch;
+      reqOrch = CONF_DEFAULT_ORCH;
     }
     const reqObj = await parseOrchestrator(reqOrch);
     res.send(reqObj);

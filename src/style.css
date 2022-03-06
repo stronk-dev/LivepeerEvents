@@ -146,10 +146,10 @@ svg {
 }
 
 .fullGrafana {
-  width: 900px;
+  width: 100%;
 }
 .halfGrafana {
-  width: 450px;
+  width: 50%;
 }
 
 .lightText {
@@ -167,7 +167,6 @@ svg {
   cursor: default;
   text-align: start;
   padding: 0;
-  padding-left: 1em;
   margin: 0;
   user-select: text;
   font-size: small;
