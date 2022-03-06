@@ -21,11 +21,11 @@ const EventViewer = (obj) => {
   const [amountFilter, setAmountFilter] = useState("0");
   const [maxAmount, setMaxAmount] = useState(defaultMaxShown);
   const [filterActivated, setFilterActivated] = useState(true);
-  const [rewardActivated, setRewardActivated] = useState(false);
+  const [rewardActivated, setRewardActivated] = useState(true);
   const [updateActivated, setUpdateActivated] = useState(true);
-  const [withdrawActivated, setWithdrawActivated] = useState(false);
+  const [withdrawActivated, setWithdrawActivated] = useState(true);
   const [stakeActivated, setStakeActivated] = useState(true);
-  const [delegatorRewardActivated, setDelegatorRewardActivated] = useState(false);
+  const [delegatorRewardActivated, setDelegatorRewardActivated] = useState(true);
   const [unbondActivated, setUnbondActivated] = useState(true);
   console.log("Rendering EventViewer");
   let unfiltered = 0;

@@ -25,7 +25,6 @@ const Startup = (obj) => {
       dispatch(getBlockchainData());
       dispatch(getCurrentOrchestratorInfo());
     });
-    setIsLoaded(true);
   }
   
   const refreshLogin = () => {
@@ -39,6 +38,7 @@ const Startup = (obj) => {
   useEffect(() => {
     refreshLogin();
     refreshAllZeData();
+    setIsLoaded(true);
     if (refreshInterval) {
       const interval = setInterval(refreshAllZeData, refreshInterval);
       return () => clearInterval(interval);
