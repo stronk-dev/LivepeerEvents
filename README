@@ -1,4 +1,4 @@
-What
+# What
 This project shows a live feed of events happening on the Livepeer BondingManager smart contract. This way it is able to track:
 - (De)activations of Orchestrators on the Livepeer network
 - Orchestrators calling reward
@@ -9,32 +9,30 @@ This project shows a live feed of events happening on the Livepeer BondingManage
 
 Orchestrators can be inspected by clicking on their address, showing all of their delegators, earned fees and stake
 
-
-API endpoints:
+## API endpoints:
 - https://nframe.nl/api/livepeer/grafana
--    Returns a JSON object of top 200 coin data, as well as gas fees and contract prices
+  - Returns a JSON object of top 200 coin data, as well as gas fees and contract prices
 - https://nframe.nl/api/livepeer/cmc
--    Returns a JSON object of the raw data of the top 200 coins
+  - Returns a JSON object of the raw data of the top 200 coins
 - https://nframe.nl/api/livepeer/blockchains
--    Returns a JSON object of gas fees and livepeer contract fees on L1 and L2
+  - Returns a JSON object of gas fees and livepeer contract fees on L1 and L2
 - https://nframe.nl/api/livepeer/quotes
--    Returns a JSON object of top 200 coint data by coin symbol
+  - Returns a JSON object of top 200 coint data by coin symbol
 - https://nframe.nl/api/livepeer/getEvents
--    Returns a JSON object of the raw data of all events on the Livepeer BondingManager contract
+  - Returns a JSON object of the raw data of all events on the Livepeer BondingManager contract
 - https://nframe.nl/api/livepeer/getEvents
--    Returns a JSON object of the raw data of all events on the Livepeer BondingManager contract
-- https://nframe.nl/api/livepeer/getEvents
--    POST request with orchAddr in the body
-- https://www.nframe.nl/livepeer?orchAddr=0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e
--    GET requests with the orchAddr as URL parameter
--    Returns a JSON object of the current data on the given Orchestrator
-- https://www.nframe.nl/livepeer/
--    Returns a JSON object of the Orchestrator selected in the backend
+  - Returns a JSON object of the raw data of all events on the Livepeer BondingManager contract
+- https://nframe.nl/api/livepeer/getOrchestrator
+    - POST request with orchAddr in the body
+- https://www.nframe.nl/livepeer/getOrchestrator?orchAddr=0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e
+  - GET requests with the orchAddr as URL parameter
+  - Returns a JSON object of the current data on the given Orchestrator
+- https://www.nframe.nl/livepeer/getOrchestrator
+  - Returns a JSON object of the default Orchestrator selected in the backend
 
-How
+# How
 
-
-Frontend
+## Frontend
 The frontend can be used on it's own as a basis for hosting your own Orchestrator website
 By default the website will forward all API requests to http://localhost:42609
 Meaning, it will look for the backend at the same place where the website is running!
@@ -42,15 +40,15 @@ If you want to run this frontend without running your own backend, you have to c
 Modify package.json to do this
 - Edit the line containing "proxy": "http://localhost:42609" and replace "http://localhost:42609" with "http://localhost:42609"
 
-Dependencies
+## Dependencies
 nginx, certbot, certbot-nginx, npm
 
-HTTPS using nginx
+### HTTPS using nginx
 - replace /etc/nginx/nginx.conf with supplied one, certbot will upgrade it to HTTPS
 - systemctl enable --now nginx.service
 - certbot --nginx
 
-Initial Config
+## Initial Config
 Download copy of repository and change directory to it
 - git clone https://github.com/stronk-dev/LivepeerEvents.git /var/www
 - cd /var/www
@@ -91,25 +89,25 @@ Note that you can specify the timerange and update frequency in the URL by using
 - from=now-2d&to=now&refresh=5s
 
 
-Developing
+## Developing
 Open the directory of your frontend and run
 - npm start
 Your local environtment is available at http://localhost:3000/
 
-Running or updating in Production
+## Running or updating in Production
 - cd /var/www
 - npm run build
 
 
 
-(Optional) Run your own Backend
+# (Optional) Run your own Backend
 Note that running your own backend is not required, since you can also use the existing API at nframe.nl
 Nonetheless, running your own backend is recommended so you can make changes as well as keep things quick if you are far away from Western Europe, where nframe.nl is hosted
 
-Dependencies
+## Dependencies
 nodejs, npm, pm2
 
-Initial Config
+## Initial Config
 Download copy of repository and change directory to it
 - git clone https://github.com/stronk-dev/LivepeerEvents.git /var/www
 - cd /var/www/backend
@@ -128,11 +126,11 @@ Set configuration variables
 - API_L2_WS should be edited to the WS url of an Arbitrum mainnet Alchemy node
 - CONF_DEFAULT_ORCH should be edited to the public address of your own Orchestrator. This is the default Orchestrator the backend will return
 
-Developing
+## Developing
 Open the directory of your backend and run
 - npm run dev
 
-Running in Production
+## Running in Production
 Open the directory of your backend and run the backend using pm2
 - cd /var/www/backend
 - pm2 start ecosystem.config.js --env production
@@ -141,10 +139,10 @@ Save the current pm2 process list configuration
 Automatically start the backend when the server reboots
 - pm2 startup
 
-Updating in Production
+## Updating in Production
 - pm2 restart backend
 
-Other commands
+## Other commands
 View logs
 - pm2 log backend
 Stop the entire thing
