@@ -5,7 +5,8 @@ const apiRouter = express.Router();
 import {
   API_CMC, API_L1_HTTP, API_L2_HTTP, API_L2_WS,
   CONF_DEFAULT_ORCH, CONF_SIMPLE_MODE, CONF_TIMEOUT_CMC,
-  CONF_TIMEOUT_ALCHEMY, CONF_TIMEOUT_LIVEPEER
+  CONF_TIMEOUT_ALCHEMY, CONF_TIMEOUT_LIVEPEER, CONF_DISABLE_SYNC,
+  CONF_DISABLE_DB
 } from "../config";
 // Do API requests to other API's
 const https = require('https');
@@ -101,13 +102,16 @@ const getBlock = async function (blockNumber) {
   // Else get it and cache it
   const thisBlock = await web3layer2.eth.getBlock(blockNumber);
   console.log("Caching new block " + thisBlock.number + " mined at " + thisBlock.timestamp);
+
   const blockObj = {
     blockNumber: thisBlock.number,
     blockTime: thisBlock.timestamp
   };
   blockCache.push(blockObj);
-  const dbObj = new Block(blockObj);
-  await dbObj.save();
+  if (!CONF_DISABLE_DB) {
+    const dbObj = new Block(blockObj);
+    await dbObj.save();
+  }
   return thisBlock;
 }
 
@@ -139,8 +143,10 @@ if (!CONF_SIMPLE_MODE) {
         blockTime: thisBlock.timestamp
       }
       if (!isSyncing) {
-        const dbObj = new Event(eventObj);
-        await dbObj.save();
+        if (!CONF_DISABLE_DB) {
+          const dbObj = new Event(eventObj);
+          await dbObj.save();
+        }
         eventsCache.push(eventObj);
       } else {
         syncCache.push(eventObj);
@@ -179,8 +185,10 @@ const doSync = function () {
           blockNumber: thisBlock.number,
           blockTime: thisBlock.timestamp
         }
-        const dbObj = new Event(eventObj);
-        await dbObj.save();
+        if (!CONF_DISABLE_DB) {
+          const dbObj = new Event(eventObj);
+          await dbObj.save();
+        }
         eventsCache.push(eventObj);
       }
     }
@@ -238,15 +246,17 @@ const handleSync = async function () {
     syncCache = [];
     for (const eventObj of liveEvents) {
       console.log("Parsing event received while syncing");
-      const dbObj = new Event(eventObj);
-      await dbObj.save();
+      if (!CONF_DISABLE_DB) {
+        const dbObj = new Event(eventObj);
+        await dbObj.save();
+      }
       eventsCache.push(eventObj);
     }
   }
   console.log('done syncing')
   isSyncing = false;
 };
-if (!isSyncRunning && !CONF_SIMPLE_MODE) {
+if (!isSyncRunning && !CONF_SIMPLE_MODE && !CONF_DISABLE_SYNC) {
   handleSync();
 }
 

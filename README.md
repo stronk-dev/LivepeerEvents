@@ -30,6 +30,8 @@ Orchestrators can be inspected by clicking on their address, showing all of thei
   - Returns a JSON object of the current data on the given Orchestrator
 - https://www.nframe.nl/livepeer/getOrchestrator
   - Returns a JSON object of the default Orchestrator selected in the backend
+- https://www.nframe.nl/livepeer/prometheus/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e
+  - Returns a Prometheus compatible output of all data except blockchain Events
 
 # How
 
@@ -113,7 +115,20 @@ Note that running your own backend is not required, since you can also use the e
 Nonetheless, running your own backend is recommended so you can make changes as well as keep things quick if you are far away from Western Europe, where nframe.nl is hosted
 
 ## Dependencies
-nodejs, npm, pm2
+nodejs, npm, pm2, mongodb
+
+### Standalone for Prometheus/Grafana
+The backend can be run in 'simple' mode. In this mode the entire API stays functioning, except for the /getEvents API call. Perfect for using the API just for pulling the data as JSON or using the Prometheus endpoint and requires much let configuration to set up.
+
+Example Prometheus.yml entry for accessing the API using Prometheus:
+    - job_name: 'livepeer'
+      scheme: https
+      scrape_interval: 30s
+      metrics_path: /api/livepeer/prometheus/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e
+      static_configs:
+      - targets: ['nframe.nl']
+### MongoDB Cloud
+If not running the backend in simple mode, the free tier of MongoDB Cloud Services is recommended in order to store blockchain Events persistently. Otherwise the backend has to parse all blockchain events each time it boots
 
 ## Initial Config
 Download copy of repository and change directory to it
@@ -122,7 +137,7 @@ Download copy of repository and change directory to it
 
 Download all external dependencies we are using
 - `npm install`
-- 
+
 Set configuration variables
 - `nano /var/www/backend/src/config.js`
 - `PORT` can be left as is, defines at what port the backend will accept API requests
@@ -135,6 +150,10 @@ Set configuration variables
 - `API_L2_HTTP` should be edited to the HTTP url of a L2 ethereum node
 - `API_L2_WS` should be edited to the WS url of an Arbitrum mainnet Alchemy node
 - `CONF_DEFAULT_ORCH` should be edited to the public address of your own Orchestrator. This is the default Orchestrator the backend will return
+- 'CONF_SIMPLE_MODE' if set to true, will disable live smart contract monitoring. Also disabled all MONGO related functionalities. Config flags 'API_L2_WS', 'MONGO_URI', 'MONGO_URI_DEV' and 'MONGO_URI_LOCAL' can be ignored if this flag is set to true.
+- 'CONF_TIMEOUT_CMC' time in milliseconds of how long coinmarketcap data is kept in the cache before a new request is made. Recommended is around 5-6 minutes in order to stay below the default daily soft cap
+- 'CONF_TIMEOUT_ALCHEMY' time in milliseconds of how long blockchain information, like gas prices, is being kept in the cache
+- 'CONF_TIMEOUT_LIVEPEER' time in milliseconds of how long livepeer data, like orchestrator and delegator information, is being kept in the cache
 
 ## Developing
 Open the directory of your backend and run

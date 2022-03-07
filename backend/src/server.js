@@ -6,7 +6,8 @@ import connectStore from "connect-mongo";
 import { userRouter, sessionRouter, livepeerRouter } from './routes/index';
 import {
   NODE_PORT, NODE_ENV, MONGO_URI, SESS_NAME, SESS_SECRET,
-  SESS_LIFETIME , MONGO_URI_DEV, MONGO_URI_LOCAL, CONF_SIMPLE_MODE
+  SESS_LIFETIME , MONGO_URI_DEV, MONGO_URI_LOCAL, CONF_SIMPLE_MODE,
+  CONF_DISABLE_DB
 } from "./config";
 // Env variable which determines which DB to connect to
 const { NODE_ENV: mode } = process.env;
@@ -14,7 +15,7 @@ const { NODE_ENV: mode } = process.env;
 (async () => {
   try {
     // Make DB connection if needed
-    if (!CONF_SIMPLE_MODE){
+    if (!CONF_SIMPLE_MODE && !CONF_DISABLE_DB){
       if (mode == "production"){
         await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useFindAndModify: false});
       }else if (mode == "development"){
@@ -26,7 +27,7 @@ const { NODE_ENV: mode } = process.env;
       }
       console.log('MongoDB connected on ' + mode);
     }else{
-      console.log('Running in basic mode' );
+      console.log('Running without a database connection' );
     }
     // Web application framework
     const app = express();
@@ -36,7 +37,7 @@ const { NODE_ENV: mode } = process.env;
     app.use(express.json());
 
     let MongoStore;
-    if (!CONF_SIMPLE_MODE){
+    if (!CONF_SIMPLE_MODE && !CONF_DISABLE_DB){
       // Import session module
       MongoStore = connectStore(session);
       // Declare session data
