@@ -23,7 +23,7 @@ const web3layer2 = createAlchemyWeb3(API_L2_HTTP);
 const web3layer2WS = createAlchemyWeb3(API_L2_WS);
 
 // Update CoinMarketCap related api calls every 5 minutes
-const timeoutCMC = 300000;
+const timeoutCMC = 360000;
 let cmcPriceGet = 0;
 let ethPrice = 0;
 let lptPrice = 0;
@@ -334,8 +334,8 @@ apiRouter.get("/cmc", async (req, res) => {
     const now = new Date().getTime();
     // Update cmc once their data has expired
     if (now - cmcPriceGet > timeoutCMC) {
-      await parseCmc();
       cmcPriceGet = now;
+      await parseCmc();
     }
     res.send(cmcCache);
   } catch (err) {
@@ -349,8 +349,8 @@ apiRouter.get("/blockchains", async (req, res) => {
     const now = new Date().getTime();
     // Update blockchain data if the cached data has expired
     if (now - arbGet > timeoutAlchemy) {
-      await parseEthBlockchain();
       arbGet = now;
+      await parseEthBlockchain();
     }
     res.send({
       timestamp: now,
@@ -383,9 +383,8 @@ apiRouter.get("/quotes", async (req, res) => {
     const now = new Date().getTime();
     // Update cmc once their data has expired
     if (now - cmcPriceGet > timeoutCMC) {
-      cmcCache = await cmcClient.getTickers({ limit: 200 });
-      await parseCmc();
       cmcPriceGet = now;
+      await parseCmc();
     }
     res.send(cmcQuotes);
   } catch (err) {
