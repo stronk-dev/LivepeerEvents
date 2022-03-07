@@ -642,67 +642,67 @@ apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
     let outputString = "";
     // Add L1 gas fee price as gas_l1_gwei
     outputString += "# HELP gas_l1_gwei Gas fees on L1 Ethereum in Gwei.\n";
-    outputString += "# TYPE gas_l1_gwei gauge\n";
+    outputString += "# TYPE gas_l1_gwei gauge\ngas_l1_gwei ";
     outputString += l1Gwei + "\n\n";
     // Add L2 gas fee price as gas_l2_gwei
     outputString += "# HELP gas_l2_gwei Gas fees on L1 Ethereum in Gwei.\n";
-    outputString += "# TYPE gas_l2_gwei gauge\n";
+    outputString += "# TYPE gas_l2_gwei gauge\ngas_l2_gwei ";
     outputString += l2Gwei + "\n\n";
     // Add Eth price as coin_eth_price
     outputString += "# HELP coin_eth_price Price of Ethereum in dollars.\n";
-    outputString += "# TYPE coin_eth_price gauge\n";
+    outputString += "# TYPE coin_eth_price gauge\ncoin_eth_price ";
     outputString += ethPrice + "\n\n";
     // Add LPT price as coin_lpt_price
     outputString += "# HELP coin_lpt_price Price of the Livepeer token in dollars.\n";
-    outputString += "# TYPE coin_lpt_price gauge\n";
+    outputString += "# TYPE coin_lpt_price gauge\ncoin_lpt_price ";
     outputString += lptPrice + "\n\n";
     // Add L1 redeem reward cost in Eth as price_redeem_reward_l1
     outputString += "# HELP price_redeem_reward_l1 Cost of redeeming reward on L1.\n";
-    outputString += "# TYPE price_redeem_reward_l1 gauge\n";
+    outputString += "# TYPE price_redeem_reward_l1 gauge\nprice_redeem_reward_l1 ";
     outputString += redeemRewardCostL1 + "\n\n";
     // Add L2 redeem reward cost in Eth as price_redeem_reward_l2
     outputString += "# HELP price_redeem_reward_l2 Cost of redeeming reward on L2.\n";
-    outputString += "# TYPE price_redeem_reward_l2 gauge\n";
+    outputString += "# TYPE price_redeem_reward_l2 gauge\nprice_redeem_reward_l2 ";
     outputString += redeemRewardCostL1 + "\n\n";
     // Add L1 claim ticket cost in Eth as price_claim_ticket_l1
     outputString += "# HELP price_claim_ticket_l1 Cost of claiming a ticket on L1.\n";
-    outputString += "# TYPE price_claim_ticket_l1 gauge\n";
+    outputString += "# TYPE price_claim_ticket_l1 gauge\nprice_claim_ticket_l1 ";
     outputString += claimTicketCostL1 + "\n\n";
     // Add L2 claim ticket cost in Eth as price_claim_ticket_l2
     outputString += "# HELP price_claim_ticket_l2 Cost of claiming a ticket on L2.\n";
-    outputString += "# TYPE price_claim_ticket_l2 gauge\n";
+    outputString += "# TYPE price_claim_ticket_l2 gauge\nprice_claim_ticket_l2 ";
     outputString += claimTicketCostL2 + "\n\n";
     // Add L1 withdraw fee cost in Eth as price_withdraw_fees_l1
     outputString += "# HELP price_withdraw_fees_l1 Cost of withdrawing fees on L1.\n";
-    outputString += "# TYPE price_withdraw_fees_l1 gauge\n";
+    outputString += "# TYPE price_withdraw_fees_l1 gauge\nprice_withdraw_fees_l1 ";
     outputString += withdrawFeeCostL1 + "\n\n";
     // Add L2 withdraw fee cost in Eth as price_withdraw_fees_l2
     outputString += "# HELP price_withdraw_fees_l2 Cost of withdrawing fees on L2.\n";
-    outputString += "# TYPE price_withdraw_fees_l2 gauge\n";
+    outputString += "# TYPE price_withdraw_fees_l2 gauge\nprice_withdraw_fees_l2 ";
     outputString += withdrawFeeCostL2 + "\n\n";
     // Add L1 stake fee cost in Eth as price_stake_fees_l1
     outputString += "# HELP price_stake_fees_l1 Cost of staking on L1.\n";
-    outputString += "# TYPE price_stake_fees_l1 gauge\n";
+    outputString += "# TYPE price_stake_fees_l1 gauge\nprice_stake_fees_l1 ";
     outputString += stakeFeeCostL1 + "\n\n";
     // Add L2 stake ticket cost in Eth as price_stake_fees_l2
     outputString += "# HELP price_stake_fees_l2 Cost of staking on L2.\n";
-    outputString += "# TYPE price_stake_fees_l2 gauge\n";
+    outputString += "# TYPE price_stake_fees_l2 gauge\nprice_stake_fees_l2 ";
     outputString += stakeFeeCostL2 + "\n\n";
     // Add L1 change commission cost in Eth as price_change_commission_l1
     outputString += "# HELP price_change_commission_l1 Cost of changing commission rates on L1.\n";
-    outputString += "# TYPE price_change_commission_l1 gauge\n";
+    outputString += "# TYPE price_change_commission_l1 gauge\nprice_change_commission_l1 ";
     outputString += commissionFeeCostL1 + "\n\n";
     // Add L2 change commission cost in Eth as price_change_commission_l2
     outputString += "# HELP price_change_commission_l2 Cost of changing commission rates on L2.\n";
-    outputString += "# TYPE price_change_commission_l2 gauge\n";
+    outputString += "# TYPE price_change_commission_l2 gauge\nprice_change_commission_l2 ";
     outputString += commissionFeeCostL2 + "\n\n";
     // Add L1 change service uri cost in Eth as price_change_service_uri_l1
     outputString += "# HELP price_change_service_uri_l1 Cost of changing service uri on L1.\n";
-    outputString += "# TYPE price_change_service_uri_l1 gauge\n";
+    outputString += "# TYPE price_change_service_uri_l1 gauge\nprice_change_service_uri_l1 ";
     outputString += serviceUriFeeCostL1 + "\n\n";
     // Add L2 change service uri cost in Eth as price_change_service_uri_l2
     outputString += "# HELP price_change_service_uri_l2 Cost of changing service uri on L2.\n";
-    outputString += "# TYPE price_change_service_uri_l2 gauge\n";
+    outputString += "# TYPE price_change_service_uri_l2 gauge\nprice_change_service_uri_l2 ";
     outputString += serviceUriFeeCostL2 + "\n\n";
 
     // Get requested orchestrator info if it is requested
@@ -715,59 +715,59 @@ apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
         if (orchObj.lastRewardRound){
           if (orchObj.lastRewardRound.volumeETH){
             outputString += "# HELP last_round_reward_eth Total earned fees in Eth from the previous round.\n";
-            outputString += "# TYPE last_round_reward_eth gauge\n";
+            outputString += "# TYPE last_round_reward_eth gauge\nlast_round_reward_eth ";
             outputString += orchObj.lastRewardRound.volumeETH + "\n\n";
           }
           if (orchObj.lastRewardRound.volumeUSD){
             outputString += "# HELP last_round_reward_usd Total earned fees in USD from the previous round.\n";
-            outputString += "# TYPE last_round_reward_usd gauge\n";
+            outputString += "# TYPE last_round_reward_usd gauge\nlast_round_reward_usd ";
             outputString += orchObj.lastRewardRound.volumeUSD + "\n\n";
           }
           if (orchObj.lastRewardRound.participationRate){
             outputString += "# HELP last_round_participation Participation rate of the previous round.\n";
-            outputString += "# TYPE last_round_participation gauge\n";
+            outputString += "# TYPE last_round_participation gauge\nlast_round_participation ";
             outputString += orchObj.lastRewardRound.participationRate + "\n\n";
           }
         }
         // Add O reward cut
         if (orchObj.rewardCut){
           outputString += "# HELP orchestrator_reward_commission Reward commission rate of this Orchestrator.\n";
-          outputString += "# TYPE orchestrator_reward_commission gauge\n";
+          outputString += "# TYPE orchestrator_reward_commission gauge\norchestrator_reward_commission ";
           outputString += (orchObj.rewardCut / 10000) + "\n\n";
         }
         // Add O fee cut
         if (orchObj.feeShare){
           outputString += "# HELP orchestrator_fee_commission Transcoding fee commission rate of this Orchestrator.\n";
-          outputString += "# TYPE orchestrator_fee_commission gauge\n";
+          outputString += "# TYPE orchestrator_fee_commission gauge\norchestrator_fee_commission ";
           outputString += (100 - (orchObj.feeShare / 10000)) + "\n\n";
         }
         // Add O total stake
         if (orchObj.totalStake){
           outputString += "# HELP orchestrator_total_stake Total stake of this Orchestrator.\n";
-          outputString += "# TYPE orchestrator_total_stake gauge\n";
+          outputString += "# TYPE orchestrator_total_stake gauge\norchestrator_total_stake ";
           outputString += orchObj.totalStake + "\n\n";
         }
         // Add O self stake
         if (orchObj.delegator && orchObj.delegator.bondedAmount){
           outputString += "# HELP orchestrator_total_stake Self stake of this Orchestrator.\n";
-          outputString += "# TYPE orchestrator_total_stake gauge\n";
+          outputString += "# TYPE orchestrator_total_stake gauge\norchestrator_total_stake";
           outputString += orchObj.delegator.bondedAmount + "\n\n";
         }
         // Add O total fees earned in eth
         if (orchObj.totalVolumeETH){
           outputString += "# HELP orchestrator_earned_fees_eth Total transcoding rewards of this Orchestrator in Eth.\n";
-          outputString += "# TYPE orchestrator_earned_fees_eth counter\n";
+          outputString += "# TYPE orchestrator_earned_fees_eth counter\norchestrator_earned_fees_eth ";
           outputString += orchObj.totalVolumeETH + "\n\n";
         }
         // Add O total fees earned in usd
         if (orchObj.totalVolumeUSD){
           outputString += "# HELP orchestrator_earned_fees_usd Total transcoding rewards of this Orchestrator in USD.\n";
-          outputString += "# TYPE orchestrator_earned_fees_usd counter\n";
+          outputString += "# TYPE orchestrator_earned_fees_usd counter\norchestrator_earned_fees_usd ";
           outputString += orchObj.totalVolumeUSD + "\n\n";
         }
       }
     }
-    res.setHeader('Content-type', "text/plain");
+    res.setHeader('Content-type', "text/plain; version=0.0.4");
     res.send(outputString);
   } catch (err) {
     res.status(400).send(err);
