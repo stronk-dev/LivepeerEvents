@@ -16,9 +16,9 @@ export default (state = {}, { type, message }) => {
     case RECEIVE_EVENTS:
       return { ...state, events: message };
     case RECEIVE_CURRENT_ORCHESTRATOR:
-      return { ...state, thisOrchestrator: message.transcoders[0] };
+      return { ...state, thisOrchestrator: message };
     case RECEIVE_ORCHESTRATOR:
-      return { ...state, selectedOrchestrator: message.transcoders[0] };
+      return { ...state, selectedOrchestrator: message };
     default:
       return { ...state };
   }

@@ -63,6 +63,8 @@ let serviceUriFeeCostL2 = 0;
 const timeoutTheGraph = 60000;
 // Will contain addr, lastGet, and obj of any requested O's
 let orchestratorCache = [];
+// Contains delegator addr and the address of the O they are bounded to
+let delegatorCache = [];
 
 // Listen to smart contract emitters. Only re-syncs on boot!
 let eventsCache = [];
@@ -411,20 +413,21 @@ const parseOrchestrator = async function (reqAddr) {
   let orchestratorObj = {};
   // First get cached object
   for (var orch of orchestratorCache) {
-    if (orch.addr == reqAddr) {
+    if (orch.id == reqAddr) {
       wasCached = true;
       orchestratorObj = orch;
       break;
     }
   }
   if (wasCached) {
-    if (now - orch.lastGet < timeoutTheGraph) {
+    if (now - orchestratorObj.lastGet < timeoutTheGraph) {
       needsUpdate = false;
     }
   }
   if (!wasCached || needsUpdate) {
     const orchQuery = gql`{
     transcoders(where: {id: "${reqAddr}"}) {
+        id
         activationRound
         deactivationRound
         active
@@ -463,7 +466,9 @@ const parseOrchestrator = async function (reqAddr) {
       }
     }
   `;
-    orchestratorObj = JSON.stringify(await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", orchQuery));
+    orchestratorObj = await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", orchQuery);
+    orchestratorObj = orchestratorObj.transcoders[0];
+    orchestratorObj.lastGet = now;
     if (wasCached) {
       for (var orch of orchestratorCache) {
         if (orch.addr == requestedOrchestrator) {
@@ -475,7 +480,7 @@ const parseOrchestrator = async function (reqAddr) {
       orchestratorCache.push(orchestratorObj);
     }
   }
-  return orchestratorObj;
+  return JSON.stringify(orchestratorObj);
 }
 
 // Exports info on a given Orchestrator
@@ -504,6 +509,104 @@ apiRouter.post("/getOrchestrator", async (req, res) => {
     const reqObj = await parseOrchestrator(req.body.orchAddr);
     res.send(reqObj);
   } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+
+// Gets info on a given Delegator
+const parseDelegator = async function (reqAddr) {
+  reqAddr = reqAddr.toLowerCase();
+  const now = new Date().getTime();
+  // Default assume it's the first time we request this Orchestrator
+  let wasCached = false;
+  let needsUpdate = true;
+  let delegatorObj = {};
+  // First get cached object
+  for (var delegator of delegatorCache) {
+    if (delegator.id == reqAddr) {
+      wasCached = true;
+      delegatorObj = delegator;
+      break;
+    }
+  }
+  if (wasCached) {
+    if (now - delegatorObj.lastGet < timeoutTheGraph) {
+      needsUpdate = false;
+    }
+  }
+  if (!wasCached || needsUpdate) {
+    const delegatorQuery = gql`{
+      delegators(where: {
+        id: "${reqAddr}"
+      }){
+        id
+        delegate {
+          id
+        }
+      }
+    }
+  `;
+    delegatorObj = await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", delegatorQuery);
+    delegatorObj = delegatorObj.delegators[0];
+    delegatorObj.lastGet = now;
+    if (wasCached) {
+      for (var delegator of delegatorCache) {
+        if (delegator.addr == requestedOrchestrator) {
+          delegator = delegatorObj;
+          break;
+        }
+      }
+    } else {
+      delegatorCache.push(delegatorObj);
+    }
+  }
+  return delegatorObj;
+}
+
+// Exports info on a given Orchestrator by the address any Delegator delegating to them
+apiRouter.get("/getOrchestratorByDelegator", async (req, res) => {
+  try {
+    const reqDel = req.query.delegatorAddress;
+    const delObj = await parseDelegator(reqDel);
+    if (delObj.delegate && delObj.delegate.id) {
+      const reqObj = await parseOrchestrator(delObj.delegate.id);
+      res.send(reqObj);
+    } else {
+      res.send(JSON.stringify(delObj));
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+});
+apiRouter.get("/getOrchestratorByDelegator/:delegatorAddress", async (req, res) => {
+  try {
+    const reqDel = req.params.delegatorAddress;
+    const delObj = await parseDelegator(reqDel);
+    if (delObj.id && delObj.delegate.id) {
+      const reqObj = await parseOrchestrator(delObj.delegate.id);
+      res.send(reqObj);
+    } else {
+      res.send(JSON.stringify(delObj));
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+});
+apiRouter.post("/getOrchestratorByDelegator", async (req, res) => {
+  try {
+    const reqDel = req.body.delegatorAddress;
+    const delObj = await parseDelegator(reqDel);
+    if (delObj.id && delObj.delegate.id) {
+      const reqObj = await parseOrchestrator(delObj.delegate.id);
+      res.send(reqObj);
+    } else {
+      res.send(JSON.stringify(delObj));
+    }
+  } catch (err) {
+    console.log(err);
     res.status(400).send(err);
   }
 });
