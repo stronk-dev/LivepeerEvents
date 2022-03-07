@@ -475,7 +475,7 @@ const parseOrchestrator = async function (reqAddr) {
     orchestratorObj.lastGet = now;
     if (wasCached) {
       for (var orch of orchestratorCache) {
-        if (orch.addr == requestedOrchestrator) {
+        if (orch.id == reqAddr) {
           orch = orchestratorObj;
           break;
         }
@@ -563,7 +563,7 @@ const parseDelegator = async function (reqAddr) {
     delegatorObj.lastGet = now;
     if (wasCached) {
       for (var delegator of delegatorCache) {
-        if (delegator.addr == requestedOrchestrator) {
+        if (delegator.id == reqAddr) {
           delegator = delegatorObj;
           break;
         }
