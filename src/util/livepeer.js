@@ -44,3 +44,12 @@ export const getOrchestratorInfo = (orchAddr) => (
     }
   })
 );
+
+export const getOrchestratorByDelegator = (delAddr) => (
+  fetch("api/livepeer/getOrchestratorByDelegator/" + delAddr, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);

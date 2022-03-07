@@ -358,7 +358,15 @@ export const getOrchestratorInfo = (orchAddr) => async dispatch => {
   const response = await apiUtil.getOrchestratorInfo(orchAddr);
   const data = await response.json();
   if (response.ok) {
-    return dispatch(setOrchestratorInfo(data));
+    if (data && data.id){
+      return dispatch(setOrchestratorInfo(data));
+    }else{
+      const response = await apiUtil.getOrchestratorByDelegator(orchAddr);
+      const data = await response.json();
+      if (response.ok) {
+        return dispatch(setOrchestratorInfo(data));
+      }
+    }
   }
   return dispatch(receiveErrors(data));
 };

@@ -468,6 +468,10 @@ const parseOrchestrator = async function (reqAddr) {
   `;
     orchestratorObj = await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", orchQuery);
     orchestratorObj = orchestratorObj.transcoders[0];
+    // Not found
+    if (!orchestratorObj){
+      return JSON.stringify({});
+    }
     orchestratorObj.lastGet = now;
     if (wasCached) {
       for (var orch of orchestratorCache) {
@@ -493,6 +497,7 @@ apiRouter.get("/getOrchestrator", async (req, res) => {
     const reqObj = await parseOrchestrator(reqOrch);
     res.send(reqObj);
   } catch (err) {
+    console.log(err);
     res.status(400).send(err);
   }
 });
@@ -501,6 +506,7 @@ apiRouter.get("/getOrchestrator/:orch", async (req, res) => {
     const reqObj = await parseOrchestrator(req.params.orch);
     res.send(reqObj);
   } catch (err) {
+    console.log(err);
     res.status(400).send(err);
   }
 });
@@ -509,6 +515,7 @@ apiRouter.post("/getOrchestrator", async (req, res) => {
     const reqObj = await parseOrchestrator(req.body.orchAddr);
     res.send(reqObj);
   } catch (err) {
+    console.log(err);
     res.status(400).send(err);
   }
 });
@@ -549,6 +556,10 @@ const parseDelegator = async function (reqAddr) {
   `;
     delegatorObj = await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", delegatorQuery);
     delegatorObj = delegatorObj.delegators[0];
+    // Not found
+    if (!delegatorObj){
+      return {};
+    }
     delegatorObj.lastGet = now;
     if (wasCached) {
       for (var delegator of delegatorCache) {
