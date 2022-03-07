@@ -624,7 +624,7 @@ apiRouter.post("/getOrchestratorByDelegator", async (req, res) => {
 
 
 // Export livepeer and eth coin prices and L1 Eth gas price
-apiRouter.get("/prometheus", async (req, res) => {
+apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
   try {
     const now = new Date().getTime();
     // Update blockchain data if the cached data has expired
@@ -706,7 +706,7 @@ apiRouter.get("/prometheus", async (req, res) => {
     outputString += serviceUriFeeCostL2 + "\n\n";
 
     // Get requested orchestrator info if it is requested
-    let reqOrch = req.query.orch;
+    let reqOrch = req.params.orchAddr;
     let orchObj = {};
     if (reqOrch && reqOrch !== "") {
       orchObj = await parseOrchestrator(reqOrch);
