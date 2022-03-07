@@ -3,7 +3,9 @@ import Event from '../models/event';
 import Block from '../models/block';
 const apiRouter = express.Router();
 import {
-  API_CMC, API_L1_HTTP, API_L2_HTTP, API_L2_WS, CONF_DEFAULT_ORCH
+  API_CMC, API_L1_HTTP, API_L2_HTTP, API_L2_WS,
+  CONF_DEFAULT_ORCH, CONF_SIMPLE_MODE, CONF_TIMEOUT_CMC,
+  CONF_TIMEOUT_ALCHEMY, CONF_TIMEOUT_LIVEPEER
 } from "../config";
 // Do API requests to other API's
 const https = require('https');
@@ -19,11 +21,16 @@ const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 // Gets gas prices
 const web3layer1 = createAlchemyWeb3(API_L1_HTTP);
 const web3layer2 = createAlchemyWeb3(API_L2_HTTP);
+
+let web3layer2WS;
+// Skip if running in basic mode
+if (!CONF_SIMPLE_MODE) {
+  web3layer2WS = createAlchemyWeb3(API_L2_WS);
+}
 // For listening to blockchain events
-const web3layer2WS = createAlchemyWeb3(API_L2_WS);
 
 // Update CoinMarketCap related api calls every 5 minutes
-const timeoutCMC = 360000;
+const timeoutCMC = CONF_TIMEOUT_CMC;
 let cmcPriceGet = 0;
 let ethPrice = 0;
 let lptPrice = 0;
@@ -31,7 +38,7 @@ let cmcQuotes = {};
 let cmcCache = {};
 
 // Update Alchemy related API calls every 2 seconds
-const timeoutAlchemy = 2000;
+const timeoutAlchemy = CONF_TIMEOUT_ALCHEMY;
 let l2Gwei = 0;
 let l1Gwei = 0;
 let l2block = 0;
@@ -60,7 +67,7 @@ let serviceUriFeeCostL1 = 0;
 let serviceUriFeeCostL2 = 0;
 
 // Update O info from thegraph every 1 minute
-const timeoutTheGraph = 60000;
+const timeoutTheGraph = CONF_TIMEOUT_LIVEPEER;
 // Will contain addr, lastGet, and obj of any requested O's
 let orchestratorCache = [];
 // Contains delegator addr and the address of the O they are bounded to
@@ -71,13 +78,17 @@ let eventsCache = [];
 let latestMissedDuringSync = 0;
 let lastBlockDataAdded = 0;
 let syncCache = [];
-// Set to true to drop the entire collection on boot and get all events
-const fullSync = false;
 // https://arbiscan.io/address/0x35Bcf3c30594191d53231E4FF333E8A770453e40#events
-const BondingManagerTargetJson = fs.readFileSync('src/abi/BondingManagerTarget.json');
-const BondingManagerTargetAbi = JSON.parse(BondingManagerTargetJson);
-const BondingManagerProxyAddr = "0x35Bcf3c30594191d53231E4FF333E8A770453e40";
-const contractInstance = new web3layer2WS.eth.Contract(BondingManagerTargetAbi.abi, BondingManagerProxyAddr);
+let BondingManagerTargetJson;
+let BondingManagerTargetAbi;
+let BondingManagerProxyAddr;
+let contractInstance;
+if (!CONF_SIMPLE_MODE) {
+  BondingManagerTargetJson = fs.readFileSync('src/abi/BondingManagerTarget.json');
+  BondingManagerTargetAbi = JSON.parse(BondingManagerTargetJson);
+  BondingManagerProxyAddr = "0x35Bcf3c30594191d53231E4FF333E8A770453e40";
+  contractInstance = new web3layer2WS.eth.Contract(BondingManagerTargetAbi.abi, BondingManagerProxyAddr);
+}
 
 let blockCache = [];
 const getBlock = async function (blockNumber) {
@@ -100,49 +111,47 @@ const getBlock = async function (blockNumber) {
   return thisBlock;
 }
 
-// If fullsync: drop collection on DB
-if (fullSync) {
-  console.log("dropping old data due to full synchronization");
-  Event.collection.drop();
-}
 // Set special flag to make sure also get blocks that pass us by while we are syncing
 let isSyncing = true;
 let isSyncRunning = false;
 // Start Listening for live updates
-var BondingManagerProxyListener = contractInstance.events.allEvents(async (error, event) => {
-  try {
-    if (error) {
-      throw error
+var BondingManagerProxyListener;
+if (!CONF_SIMPLE_MODE) {
+  BondingManagerProxyListener = contractInstance.events.allEvents(async (error, event) => {
+    try {
+      if (error) {
+        throw error
+      }
+      if (isSyncing) {
+        console.log('Received new Event on block ' + event.blockNumber + " during sync");
+      } else {
+        console.log('Received new Event on block ' + event.blockNumber);
+      }
+      const thisBlock = await getBlock(event.blockNumber);
+      // Push obj of event to cache and create a new entry for it in the DB
+      const eventObj = {
+        address: event.address,
+        transactionHash: event.transactionHash,
+        transactionUrl: "https://arbiscan.io/tx/" + event.transactionHash,
+        name: event.event,
+        data: event.returnValues,
+        blockNumber: thisBlock.number,
+        blockTime: thisBlock.timestamp
+      }
+      if (!isSyncing) {
+        const dbObj = new Event(eventObj);
+        await dbObj.save();
+        eventsCache.push(eventObj);
+      } else {
+        syncCache.push(eventObj);
+      }
     }
-    if (isSyncing) {
-      console.log('Received new Event on block ' + event.blockNumber + " during sync");
-    } else {
-      console.log('Received new Event on block ' + event.blockNumber);
+    catch (err) {
+      console.log("FATAL ERROR: ", err);
     }
-    const thisBlock = await getBlock(event.blockNumber);
-    // Push obj of event to cache and create a new entry for it in the DB
-    const eventObj = {
-      address: event.address,
-      transactionHash: event.transactionHash,
-      transactionUrl: "https://arbiscan.io/tx/" + event.transactionHash,
-      name: event.event,
-      data: event.returnValues,
-      blockNumber: thisBlock.number,
-      blockTime: thisBlock.timestamp
-    }
-    if (!isSyncing) {
-      const dbObj = new Event(eventObj);
-      await dbObj.save();
-      eventsCache.push(eventObj);
-    } else {
-      syncCache.push(eventObj);
-    }
-  }
-  catch (err) {
-    console.log("FATAL ERROR: ", err);
-  }
-});
-console.log("Listening for events on " + BondingManagerProxyAddr);
+  });
+  console.log("Listening for events on " + BondingManagerProxyAddr);
+}
 
 // Does the syncing
 const doSync = function () {
@@ -237,7 +246,7 @@ const handleSync = async function () {
   console.log('done syncing')
   isSyncing = false;
 };
-if (!isSyncRunning) {
+if (!isSyncRunning && !CONF_SIMPLE_MODE) {
   handleSync();
 }
 
@@ -710,57 +719,57 @@ apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
     let orchObj = {};
     if (reqOrch && reqOrch !== "") {
       orchObj = await parseOrchestrator(reqOrch);
-      if (orchObj){
+      if (orchObj) {
         // Add details on the rewards from the last round
-        if (orchObj.lastRewardRound){
-          if (orchObj.lastRewardRound.volumeETH){
+        if (orchObj.lastRewardRound) {
+          if (orchObj.lastRewardRound.volumeETH) {
             outputString += "# HELP last_round_reward_eth Total earned fees in Eth from the previous round.\n";
             outputString += "# TYPE last_round_reward_eth gauge\nlast_round_reward_eth ";
             outputString += orchObj.lastRewardRound.volumeETH + "\n\n";
           }
-          if (orchObj.lastRewardRound.volumeUSD){
+          if (orchObj.lastRewardRound.volumeUSD) {
             outputString += "# HELP last_round_reward_usd Total earned fees in USD from the previous round.\n";
             outputString += "# TYPE last_round_reward_usd gauge\nlast_round_reward_usd ";
             outputString += orchObj.lastRewardRound.volumeUSD + "\n\n";
           }
-          if (orchObj.lastRewardRound.participationRate){
+          if (orchObj.lastRewardRound.participationRate) {
             outputString += "# HELP last_round_participation Participation rate of the previous round.\n";
             outputString += "# TYPE last_round_participation gauge\nlast_round_participation ";
             outputString += orchObj.lastRewardRound.participationRate + "\n\n";
           }
         }
         // Add O reward cut
-        if (orchObj.rewardCut){
+        if (orchObj.rewardCut) {
           outputString += "# HELP orchestrator_reward_commission Reward commission rate of this Orchestrator.\n";
           outputString += "# TYPE orchestrator_reward_commission gauge\norchestrator_reward_commission ";
           outputString += (orchObj.rewardCut / 10000) + "\n\n";
         }
         // Add O fee cut
-        if (orchObj.feeShare){
+        if (orchObj.feeShare) {
           outputString += "# HELP orchestrator_fee_commission Transcoding fee commission rate of this Orchestrator.\n";
           outputString += "# TYPE orchestrator_fee_commission gauge\norchestrator_fee_commission ";
           outputString += (100 - (orchObj.feeShare / 10000)) + "\n\n";
         }
         // Add O total stake
-        if (orchObj.totalStake){
+        if (orchObj.totalStake) {
           outputString += "# HELP orchestrator_total_stake Total stake of this Orchestrator.\n";
           outputString += "# TYPE orchestrator_total_stake gauge\norchestrator_total_stake ";
           outputString += orchObj.totalStake + "\n\n";
         }
         // Add O self stake
-        if (orchObj.delegator && orchObj.delegator.bondedAmount){
+        if (orchObj.delegator && orchObj.delegator.bondedAmount) {
           outputString += "# HELP orchestrator_self_stake Self stake of this Orchestrator.\n";
           outputString += "# TYPE orchestrator_self_stake gauge\norchestrator_self_stake ";
           outputString += orchObj.delegator.bondedAmount + "\n\n";
         }
         // Add O total fees earned in eth
-        if (orchObj.totalVolumeETH){
+        if (orchObj.totalVolumeETH) {
           outputString += "# HELP orchestrator_earned_fees_eth Total transcoding rewards of this Orchestrator in Eth.\n";
           outputString += "# TYPE orchestrator_earned_fees_eth counter\norchestrator_earned_fees_eth ";
           outputString += orchObj.totalVolumeETH + "\n\n";
         }
         // Add O total fees earned in usd
-        if (orchObj.totalVolumeUSD){
+        if (orchObj.totalVolumeUSD) {
           outputString += "# HELP orchestrator_earned_fees_usd Total transcoding rewards of this Orchestrator in USD.\n";
           outputString += "# TYPE orchestrator_earned_fees_usd counter\norchestrator_earned_fees_usd ";
           outputString += orchObj.totalVolumeUSD + "\n\n";

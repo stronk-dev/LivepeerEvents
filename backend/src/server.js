@@ -5,54 +5,62 @@ import session from "express-session";
 import connectStore from "connect-mongo";
 import { userRouter, sessionRouter, livepeerRouter } from './routes/index';
 import {
-  PORT, NODE_ENV, MONGO_URI, SESS_NAME, SESS_SECRET, SESS_LIFETIME , MONGO_URI_DEV, MONGO_URI_LOCAL
+  NODE_PORT, NODE_ENV, MONGO_URI, SESS_NAME, SESS_SECRET,
+  SESS_LIFETIME , MONGO_URI_DEV, MONGO_URI_LOCAL, CONF_SIMPLE_MODE
 } from "./config";
 // Env variable which determines which DB to connect to
 const { NODE_ENV: mode } = process.env;
 
 (async () => {
   try {
-    // Make DB connection
-    if (mode == "production"){
-      await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useFindAndModify: false});
-    }else if (mode == "development"){
-      await mongoose.connect(MONGO_URI_DEV, { useNewUrlParser: true, useFindAndModify: false});
-    }else if (mode == "local"){
-      await mongoose.connect(MONGO_URI_LOCAL, { useNewUrlParser: true, useFindAndModify: false});
+    // Make DB connection if needed
+    if (!CONF_SIMPLE_MODE){
+      if (mode == "production"){
+        await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useFindAndModify: false});
+      }else if (mode == "development"){
+        await mongoose.connect(MONGO_URI_DEV, { useNewUrlParser: true, useFindAndModify: false});
+      }else if (mode == "local"){
+        await mongoose.connect(MONGO_URI_LOCAL, { useNewUrlParser: true, useFindAndModify: false});
+      }else{
+        await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useFindAndModify: false});
+      }
+      console.log('MongoDB connected on ' + mode);
     }else{
-      await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useFindAndModify: false});
+      console.log('Running in basic mode' );
     }
-    console.log('MongoDB connected on ' + mode);
     // Web application framework
     const app = express();
     app.disable('x-powered-by');
     // Parses and validates requests to make things harder for malicious actors 
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
-    // Import session module
-    const MongoStore = connectStore(session);
 
-    // Declare session data
-    app.use(session({
-      name: SESS_NAME,
-      //TODO: change secret in config file
-      secret: SESS_SECRET,
-      //define where to store them
-      store: new MongoStore({
-        mongooseConnection: mongoose.connection,
-        collection: 'session',
-        ttl: parseInt(SESS_LIFETIME) / 1000,
-      }),
-      saveUninitialized: false,
-      proxy: NODE_ENV === "production",
-      resave: false,
-      //cookie to send to users
-      cookie: {
-        sameSite: true,
-        secure: NODE_ENV === 'production',
-        maxAge: parseInt(SESS_LIFETIME)
-      }
-    }));
+    let MongoStore;
+    if (!CONF_SIMPLE_MODE){
+      // Import session module
+      MongoStore = connectStore(session);
+      // Declare session data
+      app.use(session({
+        name: SESS_NAME,
+        //TODO: change secret in config file
+        secret: SESS_SECRET,
+        //define where to store them
+        store: new MongoStore({
+          mongooseConnection: mongoose.connection,
+          collection: 'session',
+          ttl: parseInt(SESS_LIFETIME) / 1000,
+        }),
+        saveUninitialized: false,
+        proxy: NODE_ENV === "production",
+        resave: false,
+        //cookie to send to users
+        cookie: {
+          sameSite: true,
+          secure: NODE_ENV === 'production',
+          maxAge: parseInt(SESS_LIFETIME)
+        }
+      }));
+    }
 
     // Define endpoint paths
     const apiRouter = express.Router();
@@ -73,8 +81,8 @@ const { NODE_ENV: mode } = process.env;
     });
 
     // Start listening on the defined port
-    app.listen(PORT, "0.0.0.0", function () {
-      console.log(`Listening on port ${PORT}`);
+    app.listen(NODE_PORT, "0.0.0.0", function () {
+      console.log(`Listening on port ${NODE_PORT}`);
     });
   } catch (err) {
     console.log(err);
