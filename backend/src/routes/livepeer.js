@@ -750,7 +750,7 @@ apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
         // Add O self stake
         if (orchObj.delegator && orchObj.delegator.bondedAmount){
           outputString += "# HELP orchestrator_self_stake Self stake of this Orchestrator.\n";
-          outputString += "# TYPE orchestrator_self_stake gauge\norchestrator_self_stake";
+          outputString += "# TYPE orchestrator_self_stake gauge\norchestrator_self_stake ";
           outputString += orchObj.delegator.bondedAmount + "\n\n";
         }
         // Add O total fees earned in eth
