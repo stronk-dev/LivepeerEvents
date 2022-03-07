@@ -3,7 +3,8 @@ import './style.css';
 import {
   Navigate
 } from "react-router-dom";
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
+import RetroHitCounter from 'react-retro-hit-counter';
 
 // Index of all subpages on this website
 
@@ -62,14 +63,22 @@ const Home = (obj) => {
       </div>
       <div className="alwaysOnBottom showNeverOnMobile" style={{ margin: 0, padding: 0 }}>
         <div className="row" style={{ margin: 0, padding: 0 }}>
-          <h4 className="lightText" style={{ margin: 0, padding: 0 }}>
-            Connected as {sessionstate.ip || "?"}
-          </h4>
-        </div>
-        <div className="row" style={{ margin: 0, padding: 0 }}>
-          <h3 className="lightText" style={{ margin: 0, padding: 0 }}>
-            {totalVisitorCount} unique visitors / {activeVisitorCount} of which have interacted with this website
-          </h3>
+          <RetroHitCounter
+            hits={totalVisitorCount}
+            withBorder={true}
+            withGlow={true}
+            minLength={4}
+            size={50}
+            padding={6}
+            digitSpacing={4}
+            segmentThickness={5}
+            segmentSpacing={0.6}
+            segmentActiveColor="#76FF03"
+            segmentInactiveColor="#315324"
+            backgroundColor="#222222"
+            borderThickness={6}
+            glowStrength={0.4}
+          />
         </div>
       </div>
       <div className="alwaysOnBottomRight" style={{ margin: 0, padding: 0 }}>

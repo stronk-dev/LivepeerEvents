@@ -580,7 +580,7 @@ apiRouter.get("/getOrchestratorByDelegator", async (req, res) => {
   try {
     const reqDel = req.query.delegatorAddress;
     const delObj = await parseDelegator(reqDel);
-    if (delObj.delegate && delObj.delegate.id) {
+    if (delObj && delObj.delegate && delObj.delegate.id) {
       const reqObj = await parseOrchestrator(delObj.delegate.id);
       res.send(reqObj);
     } else {
@@ -595,7 +595,7 @@ apiRouter.get("/getOrchestratorByDelegator/:delegatorAddress", async (req, res) 
   try {
     const reqDel = req.params.delegatorAddress;
     const delObj = await parseDelegator(reqDel);
-    if (delObj.id && delObj.delegate.id) {
+    if (delObj && delObj.delegate && delObj.delegate.id) {
       const reqObj = await parseOrchestrator(delObj.delegate.id);
       res.send(reqObj);
     } else {
@@ -610,7 +610,7 @@ apiRouter.post("/getOrchestratorByDelegator", async (req, res) => {
   try {
     const reqDel = req.body.delegatorAddress;
     const delObj = await parseDelegator(reqDel);
-    if (delObj.id && delObj.delegate.id) {
+    if (delObj && delObj.delegate && delObj.delegate.id) {
       const reqObj = await parseOrchestrator(delObj.delegate.id);
       res.send(reqObj);
     } else {
