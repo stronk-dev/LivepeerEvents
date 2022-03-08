@@ -8,8 +8,11 @@ import Orchestrator from "./orchestratorViewer";
 import Stat from "./statViewer";
 
 // Shows the EventViewer and other Livepeer related info
+const defaultMaxShown = 100;
 
 const Livepeer = (obj) => {
+  const [amountFilter, setAmountFilter] = useState("0");
+  const [maxAmount, setMaxAmount] = useState(defaultMaxShown);
   const [prefill, setPrefill] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
@@ -176,6 +179,8 @@ const Livepeer = (obj) => {
           <button className="homeButton" style={{ padding: 0, paddingRight: '1em', paddingLeft: '1em' }} onClick={() => {
             dispatch(clearOrchestrator());
             setSearchTerm("");
+            setAmountFilter(0);
+            setMaxAmount(defaultMaxShown);
           }}>
             <h4>✖️ Clear</h4>
           </button>
@@ -194,7 +199,9 @@ const Livepeer = (obj) => {
       <div id='bodyContent'>
         {sidebar}
         <div className="mainContent">
-          <EventViewer events={eventsList} searchTerm={searchTerm} setSearchTerm={setSearchTerm} forceVertical={true} showFilter={showFilter} />
+          <EventViewer events={eventsList} searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+          forceVertical={true} showFilter={showFilter} setAmountFilter={setAmountFilter} amountFilter={amountFilter} 
+          maxAmount={maxAmount} setMaxAmount={setMaxAmount}/>
         </div>
       </div>
     </div >

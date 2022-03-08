@@ -17,8 +17,6 @@ const defaultMaxShown = 100;
 const defaultIncrementMaxShown = 100;
 
 const EventViewer = (obj) => {
-  const [amountFilter, setAmountFilter] = useState("0");
-  const [maxAmount, setMaxAmount] = useState(defaultMaxShown);
   const [filterActivated, setFilterActivated] = useState(true);
   const [rewardActivated, setRewardActivated] = useState(true);
   const [updateActivated, setUpdateActivated] = useState(true);
@@ -47,17 +45,17 @@ const EventViewer = (obj) => {
 
   let prevBlock = 0;
   let showMoreBlock;
-  if (maxAmount < limitShown) {
+  if (obj.maxAmount < limitShown) {
     showMoreBlock = <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
-      setMaxAmount(maxAmount + defaultIncrementMaxShown);
+      obj.setMaxAmount(obj.maxAmount + defaultIncrementMaxShown);
     }}>
       <h3>Show more</h3>
     </button>
   }
   let showLessBlock;
-  if (defaultMaxShown < maxAmount) {
+  if (defaultMaxShown < obj.maxAmount) {
     showLessBlock = <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
-      setMaxAmount(defaultMaxShown);
+      obj.setMaxAmount(defaultMaxShown);
     }}>
       <h3>Show {defaultMaxShown}</h3>
     </button>
@@ -78,12 +76,12 @@ const EventViewer = (obj) => {
 
   let eventList = [];
   for (const eventObj of obj.events) {
-    if (unfiltered > maxAmount) {
+    if (unfiltered > obj.maxAmount) {
       break;
     }
     // Filter by minimum value
-    if (amountFilter !== "") {
-      if (parseFloat(amountFilter) > eventObj.eventValue) {
+    if (obj.amountFilter !== "") {
+      if (parseFloat(obj.amountFilter) > eventObj.eventValue) {
         continue;
       }
     }
@@ -151,7 +149,7 @@ const EventViewer = (obj) => {
       continue;
     }
 
-    if (unfiltered < maxAmount) {
+    if (unfiltered < obj.maxAmount) {
       unfiltered++;
       if (prevBlock === eventObj.transactionBlock) {
         eventList.push(<EventButton
@@ -178,7 +176,7 @@ const EventViewer = (obj) => {
       <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 1 }}>
         <div className="stroke" style={{ margin: "0", padding: 0 }}>
           <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <h3>Showing max {maxAmount} results</h3>
+            <h3>Showing max {obj.maxAmount} results</h3>
           </div>
           <div className="row" style={{ margin: 0, padding: 0 }}>
             <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
@@ -212,34 +210,34 @@ const EventViewer = (obj) => {
       </div>
       <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 2 }}>
         <div className="row" style={{ margin: 0, padding: 0 }}>
-          <h3>{parseFloat(amountFilter) > 0 ? ("Only showing higher than " + amountFilter) : "Filter by minimum value"}</h3>
+          <h3>{parseFloat(obj.amountFilter) > 0 ? ("Only showing higher than " + obj.amountFilter) : "Filter by minimum value"}</h3>
         </div>
         <div className="row" style={{ margin: 0, padding: 0 }}>
           <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
             <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
-              setAmountFilter(0);
+              obj.setAmountFilter(0);
             }}>
               <h3>0</h3>
             </button>
           </div>
           <input className="searchField" style={{ margin: 0, padding: 0, height: '2em', width: '80%', paddingLeft: '1em', paddingRight: '1em' }}
-            value={amountFilter}
-            onChange={(evt) => setAmountFilter(evt.target.value)}
+            value={obj.amountFilter}
+            onChange={(evt) => obj.setAmountFilter(evt.target.value)}
             placeholder='Filter by minimum value'
             type="number"
           />
           <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
             <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '4em' }} onClick={() => {
-              const curVal = parseFloat(amountFilter);
-              setAmountFilter(curVal + 100);
+              const curVal = parseFloat(obj.amountFilter);
+              obj.setAmountFilter(curVal + 100);
             }}>
               <h3>+100</h3>
             </button>
           </div>
           <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
             <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
-              const curVal = parseFloat(amountFilter);
-              setAmountFilter(curVal + 1000);
+              const curVal = parseFloat(obj.amountFilter);
+              obj.setAmountFilter(curVal + 1000);
             }}>
               <h3>+1000</h3>
             </button>
