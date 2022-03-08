@@ -12,7 +12,7 @@ import Stat from "./statViewer";
 const Livepeer = (obj) => {
   const [prefill, setPrefill] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
-  const dispatch = useDispatch();  
+  const dispatch = useDispatch();
   const livepeer = useSelector((state) => state.livepeerstate);
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -136,26 +136,29 @@ const Livepeer = (obj) => {
   }
 
   let sidebar;
-  if (showSidebar){
+  if (showSidebar) {
     sidebar = <div id='sideContent'>
-    <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, width: '100%', marginTop: '1em' }}>
-      <div className="row" style={{ alignItems: 'stretch', height: '100%', padding: '0.2em', width: "unset" }}>
-        <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} forceVertical={true} />
-      </div>
-      <div className="stroke metaSidebar" style={{ padding: 0, maxWidth: "300px" }}>
-        <div className="row" style={{ margin: 0, padding: 0 }}>
-          <h3 style={{ margin: 0, padding: 0 }}>Smart contract prices</h3>
+      <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, width: '100%', marginTop: '1em' }}>
+        <div className="row" style={{ alignItems: 'stretch', height: '100%', padding: '0.2em', width: "unset" }}>
+          <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} forceVertical={true} />
         </div>
-        <div className="stroke" style={{ margin: 0, padding: 0 }}>
-          <Stat header={"Reward Call"} content1={"$" + redeemRewardCostL2USD + " (vs " + redeemRewardCostL1USD + " on L1)"} />
-          <Stat header={"Claim Ticket"} content1={"$" + claimTicketCostL2USD + " (vs " + claimTicketCostL1USD + " on L1)"} />
-          <Stat header={"Staking Fees"} content1={"$" + stakeFeeCostL2USD + " (vs " + stakeFeeCostL1USD + " on L1)"} />
-          <Stat header={"Change Commission"} content1={"$" + commissionFeeCostL2USD + " (vs " + commissionFeeCostL1USD + " on L1)"} />
-          <Stat header={"Change URI"} content1={"$" + serviceUriFeeCostL2USD + " (vs " + serviceUriFeeCostL1USD + " on L1)"} />
+        <div className="stroke metaSidebar" style={{ padding: 0, maxWidth: "300px" }}>
+          <div className="row" style={{ margin: 0, padding: 0 }}>
+            <h3 style={{ margin: 0, padding: 0 }}>Smart contract prices</h3>
+          </div>
+          <div className="stroke" style={{ margin: 0, padding: 0 }}>
+            <div className='rowAlignRight'>
+              <Stat header={"Reward Call"} content1={"$" + redeemRewardCostL2USD + " (vs " + redeemRewardCostL1USD + " on L1)"} />
+              <Stat header={"Claim Ticket"} content1={"$" + claimTicketCostL2USD + " (vs " + claimTicketCostL1USD + " on L1)"} />
+            </div>
+            <div className='rowAlignRight'>
+              <Stat header={"Staking Fees"} content1={"$" + stakeFeeCostL2USD + " (vs " + stakeFeeCostL1USD + " on L1)"} />
+              <Stat header={"Set Config"} content1={"$" + commissionFeeCostL2USD + " (vs " + commissionFeeCostL1USD + " on L1)"} />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div >
+    </div >
   }
 
   return (
@@ -165,23 +168,23 @@ const Livepeer = (obj) => {
           <button className="homeButton" onClick={() => {
             setRedirectToHome(true);
           }}>
-            <h1 style={{margin: 0, padding: 0}}>🏠</h1>
+            <h1 style={{ margin: 0, padding: 0 }}>🏠</h1>
           </button>
           <h4>{headerString}</h4>
         </div>
         <div className='rowAlignRight'>
-        <button className="homeButton" style={{padding: 0, paddingRight: '1em', paddingLeft: '1em'}} onClick={() => {
+          <button className="homeButton" style={{ padding: 0, paddingRight: '1em', paddingLeft: '1em' }} onClick={() => {
             dispatch(clearOrchestrator());
             setSearchTerm("");
           }}>
             <h4>✖️ Clear</h4>
           </button>
-          <button className="homeButton" style={{padding: 0, paddingRight: '1em', paddingLeft: '1em'}} onClick={() => {
+          <button className="homeButton" style={{ padding: 0, paddingRight: '1em', paddingLeft: '1em' }} onClick={() => {
             setShowSidebar(!showSidebar);
           }}>
             <h4>🔎 Sidebar</h4>
           </button>
-          <button className="homeButton" style={{padding: 0, paddingRight: '1em', paddingLeft: '1em'}} onClick={() => {
+          <button className="homeButton" style={{ padding: 0, paddingRight: '1em', paddingLeft: '1em' }} onClick={() => {
             setShowFilter(!showFilter);
           }}>
             <h4>🛠️ Filter</h4>

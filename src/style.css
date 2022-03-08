@@ -160,6 +160,8 @@ svg {
   box-shadow: 9px 13px 8px 8px  rgba(8, 7, 56, 0.692);
   border-bottom-right-radius: 1em;
   width: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .mainContent {
   overflow: hidden;
