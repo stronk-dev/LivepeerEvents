@@ -7,7 +7,7 @@ const Address = (obj) => {
       <a className="selectOrchLight" href={"https://explorer.livepeer.org/accounts/" + obj.address} data-tip data-for={obj.seed} >
         <div className="rowAlignLeft" style={{ width: 'unset', margin: 0 }}>
           <img alt="" src="livepeer.png" width="20" height="20" />
-          <span className="elipsText">{obj.address}</span>
+          <span className="elipsText elipsOnMobile">{obj.address}</span>
         </div>
       </a>
       <ReactTooltip id={obj.seed} place="top" effect="solid">

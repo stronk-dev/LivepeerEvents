@@ -546,6 +546,18 @@ svg {
     visibility: hidden;
     display:none;
   }
+  .elipsOnMobile {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 30vw;
+    text-align: start;
+  }
+  .elipsOnMobileExtra {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 5vw;
+    text-align: start;
+  }
   .mobileNoPadding {
     padding: 0;
   }

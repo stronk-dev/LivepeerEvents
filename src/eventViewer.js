@@ -172,7 +172,7 @@ const EventViewer = (obj) => {
 
   let filterBit;
   if (obj.showFilter) {
-    filterBit = <div className="row roundedOpaque" style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, margin: 0 }}>
+    filterBit = <div className="flexContainer roundedOpaque" style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, margin: 0, width: '100%' }}>
       <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 1 }}>
         <div className="stroke" style={{ margin: "0", padding: 0 }}>
           <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
