@@ -26,7 +26,7 @@ const EventButton = (obj) => {
       eventTo =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
           <p>To</p>
-          <a className="selectOrch" style={{cursor: 'alias'}} href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventTo}>
+          <a className="selectOrch" style={{ cursor: 'alias' }} href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventTo}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'alias' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventTo) }} >
@@ -41,7 +41,7 @@ const EventButton = (obj) => {
       eventFrom =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
           <p>From</p>
-          <a className="selectOrch" style={{cursor: 'alias'}} href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventFrom}>
+          <a className="selectOrch" style={{ cursor: 'alias' }} href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventFrom}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'alias' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventFrom) }} >
@@ -56,7 +56,7 @@ const EventButton = (obj) => {
       eventCaller =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
           <p>Caller</p>
-          <a className="selectOrch" style={{cursor: 'alias'}} href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
+          <a className="selectOrch" style={{ cursor: 'alias' }} href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'alias' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventCaller) }} >
@@ -78,17 +78,15 @@ const EventButton = (obj) => {
   }
 
   return (
-    <div className="stroke" style={{ width: '100%', padding: 0, margin: 0 }}>
+    <div className="stroke" style={{ width: '100%', padding: 0, margin: 0, marginBottom: '0.2em' }}>
       {blockNumber}
-      <div className="rowAlignLeft" style={{ borderRadius: "1.2em", backgroundColor: obj.eventObj.eventColour, padding: 0, margin: 0 }}>
-        <div className="strokeSmollLeft">
-          {eventCaller}
-          <p className="rowAlignLeft withWrap" style={{ width: '100%' }}>
-            💬 {obj.eventObj.eventDescription}
-          </p>
-          {eventFrom}
-          {eventTo}
-        </div>
+      <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", backgroundColor: obj.eventObj.eventColour, padding: 0, margin: 0, width: '100%' }}>
+        {eventCaller}
+        <p className="row withWrap" style={{ maxWidth: '600px' }}>
+          💬 {obj.eventObj.eventDescription}
+        </p>
+        {eventFrom}
+        {eventTo}
       </div>
     </div>
   )
