@@ -555,7 +555,7 @@ svg {
   .elipsOnMobileExtra {
     text-overflow: ellipsis;
     overflow: hidden;
-    max-width: 5vw;
+    width: 10em;
     text-align: start;
   }
   .mobileNoPadding {
