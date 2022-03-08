@@ -17,7 +17,6 @@ const defaultMaxShown = 100;
 const defaultIncrementMaxShown = 100;
 
 const EventViewer = (obj) => {
-  const [searchTerm, setSearchTerm] = useState(obj.prefill || "");
   const [amountFilter, setAmountFilter] = useState("0");
   const [maxAmount, setMaxAmount] = useState(defaultMaxShown);
   const [filterActivated, setFilterActivated] = useState(true);
@@ -49,35 +48,29 @@ const EventViewer = (obj) => {
   let prevBlock = 0;
   let showMoreBlock;
   if (maxAmount < limitShown) {
-    showMoreBlock = <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-      <h3></h3>
-      <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
-        setMaxAmount(maxAmount + defaultIncrementMaxShown);
-      }}>
-        <h3>Show more</h3>
-      </button>
-    </div>
+    showMoreBlock = <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
+      setMaxAmount(maxAmount + defaultIncrementMaxShown);
+    }}>
+      <h3>Show more</h3>
+    </button>
   }
   let showLessBlock;
   if (defaultMaxShown < maxAmount) {
-    showLessBlock = <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-      <h3></h3>
-      <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
-        setMaxAmount(defaultMaxShown);
-      }}>
-        <h3>Show {defaultMaxShown}</h3>
-      </button>
-    </div>
+    showLessBlock = <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
+      setMaxAmount(defaultMaxShown);
+    }}>
+      <h3>Show {defaultMaxShown}</h3>
+    </button>
   } else {
     showLessBlock = <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, width: '5em' }}></div>
   }
 
   let searchTermText;
-  if (searchTerm !== "") {
-    if (searchTerm.length > 15) {
-      searchTermText = <h3>Only showing addresses containing {searchTerm.substring(0, 15)}...</h3>
+  if (obj.searchTerm !== "") {
+    if (obj.searchTerm.length > 15) {
+      searchTermText = <h3>Only showing addresses containing {obj.searchTerm.substring(0, 15)}...</h3>
     } else {
-      searchTermText = <h3>Only showing addresses containing {searchTerm}</h3>
+      searchTermText = <h3>Only showing addresses containing {obj.searchTerm}</h3>
     }
   } else {
     searchTermText = <h3>Filter by Orchestrator address</h3>
@@ -95,11 +88,11 @@ const EventViewer = (obj) => {
       }
     }
     // Filter name on from, to, caller
-    if (searchTerm !== "") {
+    if (obj.searchTerm !== "") {
       let isFiltered = true;
-      if (eventObj.eventCaller.toLowerCase().includes(searchTerm.toLowerCase())) isFiltered = false;
-      if (eventObj.eventFrom.toLowerCase().includes(searchTerm.toLowerCase())) isFiltered = false;
-      if (eventObj.eventTo.toLowerCase().includes(searchTerm.toLowerCase())) isFiltered = false;
+      if (eventObj.eventCaller.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+      if (eventObj.eventFrom.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+      if (eventObj.eventTo.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
       if (isFiltered) continue;
     }
     // Filter Events on filter buttons
@@ -164,7 +157,7 @@ const EventViewer = (obj) => {
         eventList.push(<EventButton
           key={eventObj.transactionHash + unfiltered}
           eventObj={eventObj}
-          setSearchTerm={setSearchTerm}
+          setSearchTerm={obj.setSearchTerm}
         />);
       } else {
         prevBlock = eventObj.transactionBlock;
@@ -173,81 +166,69 @@ const EventViewer = (obj) => {
           eventObj={eventObj}
           isFirstOfBlock={prevBlock}
           time={eventObj.transactionTime}
-          setSearchTerm={setSearchTerm}
+          setSearchTerm={obj.setSearchTerm}
         />);
       }
     }
   }
 
-  return (
-    <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, marginTop: '2em', position: 'absolute', bottom: 0, top: '300px', overflowY: 'auto', overflowX: 'hidden', width: 'unset' }}>
-      <div className="row showNeverOnMobile">
-        <div className="row">
-          {showLessBlock}
+  let filterBit;
+  if (obj.showFilter) {
+    filterBit = <div className="row roundedOpaque" style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, margin: 0 }}>
+      <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 1 }}>
+        <div className="stroke" style={{ margin: "0", padding: 0 }}>
           <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
             <h3>Showing max {maxAmount} results</h3>
           </div>
-          {showMoreBlock}
-        </div>
-        <div className="row">
-          <div className="stroke" style={{ margin: "0", padding: 0 }}>
-            {searchTermText}
-            <input className="searchField" style={{ width: '100%' }}
-              value={searchTerm}
-              onChange={(evt) => setSearchTerm(evt.target.value)}
-              placeholder='Filter by Orchestrator address'
-              type="text"
-            />
+          <div className="row" style={{ margin: 0, padding: 0 }}>
+            <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+              {showLessBlock}
+            </div>
+            <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+              {showMoreBlock}
+            </div>
           </div>
         </div>
-        <div className="row">
+      </div>
+      <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 2 }}>
+        <div className="row" style={{ margin: 0, padding: 0 }}>
+          {searchTermText}
+        </div>
+        <div className="row" style={{ margin: 0, padding: 0 }}>
+          <input className="searchField" style={{ width: '80%', paddingLeft: '1em', paddingRight: '1em' }}
+            value={obj.searchTerm}
+            onChange={(evt) => obj.setSearchTerm(evt.target.value)}
+            placeholder='Filter by Orchestrator address'
+            type="text"
+          />
           <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <h3></h3>
+            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '6em' }} onClick={() => {
+              obj.setSearchTerm("");
+            }}>
+              <h3>Clear</h3>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 2 }}>
+        <div className="row" style={{ margin: 0, padding: 0 }}>
+          <h3>{parseFloat(amountFilter) > 0 ? ("Only showing higher than " + amountFilter) : "Filter by minimum value"}</h3>
+        </div>
+        <div className="row" style={{ margin: 0, padding: 0 }}>
+          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
             <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
-              const curVal = parseFloat(amountFilter);
-              setAmountFilter(curVal - 1000);
+              setAmountFilter(0);
             }}>
-              <h3>-1000</h3>
+              <h3>0</h3>
             </button>
           </div>
+          <input className="searchField" style={{ margin: 0, padding: 0, height: '2em', width: '80%', paddingLeft: '1em', paddingRight: '1em' }}
+            value={amountFilter}
+            onChange={(evt) => setAmountFilter(evt.target.value)}
+            placeholder='Filter by minimum value'
+            type="number"
+          />
           <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <h3></h3>
-            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '4em' }} onClick={() => {
-              const curVal = parseFloat(amountFilter);
-              setAmountFilter(curVal - 100);
-            }}>
-              <h3>-100</h3>
-            </button>
-          </div>
-          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <h3></h3>
-            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '3em' }} onClick={() => {
-              const curVal = parseFloat(amountFilter);
-              setAmountFilter(curVal - 10);
-            }}>
-              <h3>-10</h3>
-            </button>
-          </div>
-          <div className="strokeSmollLeft" style={{ margin: "0", padding: 0 }}>
-            <h3>{parseFloat(amountFilter) > 0 ? ("Only showing higher than " + amountFilter) : "Filter by minimum value"}</h3>
-            <input className="searchField" style={{ margin: 0, padding: 0, height: '2em', width: '80%', paddingLeft: '1em', paddingRight: '1em' }}
-              value={amountFilter}
-              onChange={(evt) => setAmountFilter(evt.target.value)}
-              placeholder='Filter by minimum value'
-              type="number"
-            />
-          </div>
-          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <h3></h3>
-            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '3em' }} onClick={() => {
-              const curVal = parseFloat(amountFilter);
-              setAmountFilter(curVal + 10);
-            }}>
-              <h3>+10</h3>
-            </button>
-          </div>
-          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <h3></h3>
             <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '4em' }} onClick={() => {
               const curVal = parseFloat(amountFilter);
               setAmountFilter(curVal + 100);
@@ -256,7 +237,6 @@ const EventViewer = (obj) => {
             </button>
           </div>
           <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <h3></h3>
             <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
               const curVal = parseFloat(amountFilter);
               setAmountFilter(curVal + 1000);
@@ -266,48 +246,60 @@ const EventViewer = (obj) => {
           </div>
         </div>
       </div>
-      <div className="content-wrapper" style={{ alignItems: 'stretch', width: '100%' }}>
-        <ScrollContainer className="overflow-container" hideScrollbars={false} style={{}}>
-          <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0}}>
-            {eventList}
+    </div>
+  }
+
+  return (
+    <div className="strokeSmollLeft" style={{ padding: 0, margin: 0, height: 'calc( 100vh - 50px)' }}>
+      {filterBit}
+      <div className="row" style={{ padding: 0, margin: 0, width: '100%', height: '100%' }}>
+        <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, width: 'unset', height: '100%', marginRight: '1em', overflow: 'hidden', marginTop: '1em', overflowX: 'scroll' }}>
+          <div className="content-wrapper" style={{ width: '100%' }}>
+            <ScrollContainer className="overflow-container" hideScrollbars={false}>
+              <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0 }}>
+                <div className={obj.forceVertical ? "flexContainer forceWrap" : "flexContainer"} style={{ margin: 0, textAlign: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                  {eventList}
+                </div>
+              </div>
+            </ScrollContainer>
+            <div className="strokeSmollLeft" style={{ marginRight: "1em" }}>
+              <button className={filterActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: filterActivatedColour }} onClick={() => {
+                setFilterActivated(!filterActivated);
+              }}>
+                <h3>Activated</h3>
+              </button>
+              <button className={rewardActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: rewardActivatedColour }} onClick={() => {
+                setRewardActivated(!rewardActivated);
+              }}>
+                <h3>Reward</h3>
+              </button>
+              <button className={updateActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: updateActivatedColour }} onClick={() => {
+                setUpdateActivated(!updateActivated);
+              }}>
+                <h3>Update</h3>
+              </button>
+              <button className={withdrawActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: withdrawActivatedColour }} onClick={() => {
+                setWithdrawActivated(!withdrawActivated);
+              }}>
+                <h3>Withdraw</h3>
+              </button>
+              <button className={stakeActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: stakeActivatedColour }} onClick={() => {
+                setStakeActivated(!stakeActivated);
+              }}>
+                <h3>Stake</h3>
+              </button>
+              <button className={delegatorRewardActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: delegatorActivatedColour }} onClick={() => {
+                setDelegatorRewardActivated(!delegatorRewardActivated);
+              }}>
+                <h3>Claim</h3>
+              </button>
+              <button className={unbondActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: unbondActivatedColour }} onClick={() => {
+                setUnbondActivated(!unbondActivated);
+              }}>
+                <h3>Unbond</h3>
+              </button>
+            </div>
           </div>
-        </ScrollContainer>
-        <div className="strokeSmollLeft" style={{ marginRight: "1em" }}>
-          <button className={filterActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: filterActivatedColour }} onClick={() => {
-            setFilterActivated(!filterActivated);
-          }}>
-            <h3>Activated</h3>
-          </button>
-          <button className={rewardActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: rewardActivatedColour }} onClick={() => {
-            setRewardActivated(!rewardActivated);
-          }}>
-            <h3>Reward</h3>
-          </button>
-          <button className={updateActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: updateActivatedColour }} onClick={() => {
-            setUpdateActivated(!updateActivated);
-          }}>
-            <h3>Update</h3>
-          </button>
-          <button className={withdrawActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: withdrawActivatedColour }} onClick={() => {
-            setWithdrawActivated(!withdrawActivated);
-          }}>
-            <h3>Withdraw</h3>
-          </button>
-          <button className={stakeActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: stakeActivatedColour }} onClick={() => {
-            setStakeActivated(!stakeActivated);
-          }}>
-            <h3>Stake</h3>
-          </button>
-          <button className={delegatorRewardActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: delegatorActivatedColour }} onClick={() => {
-            setDelegatorRewardActivated(!delegatorRewardActivated);
-          }}>
-            <h3>Claim</h3>
-          </button>
-          <button className={unbondActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: unbondActivatedColour }} onClick={() => {
-            setUnbondActivated(!unbondActivated);
-          }}>
-            <h3>Unbond</h3>
-          </button>
         </div>
       </div>
     </div>

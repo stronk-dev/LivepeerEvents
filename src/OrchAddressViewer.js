@@ -3,9 +3,9 @@ import ReactTooltip from "react-tooltip";
 
 const Address = (obj) => {
   return (
-    <div className="rowAlignLeft" style={{ width: 'unset' }}>
+    <div className="rowAlignLeft" style={{ width: 'unset', margin: 0 }}>
       <a className="selectOrchLight" href={"https://explorer.livepeer.org/accounts/" + obj.address} data-tip data-for={obj.seed} >
-        <div className="rowAlignLeft" style={{ width: 'unset' }}>
+        <div className="rowAlignLeft" style={{ width: 'unset', margin: 0 }}>
           <img alt="" src="livepeer.png" width="20" height="20" />
           <span className="elipsText">{obj.address}</span>
         </div>

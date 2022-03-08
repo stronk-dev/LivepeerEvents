@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import './style.css';
 import { Navigate, useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'
-import { getOrchestratorInfo } from "./actions/livepeer";
+import { getOrchestratorInfo, clearOrchestrator } from "./actions/livepeer";
 import EventViewer from "./eventViewer";
 import Orchestrator from "./orchestratorViewer";
 import Stat from "./statViewer";
@@ -11,14 +11,18 @@ import Stat from "./statViewer";
 
 const Livepeer = (obj) => {
   const [prefill, setPrefill] = useSearchParams();
-  const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState("");
+  const dispatch = useDispatch();  
   const livepeer = useSelector((state) => state.livepeerstate);
   const [redirectToHome, setRedirectToHome] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
   console.log("Rendering Livepeer");
 
   useEffect(() => {
     if (prefill.get('orchAddr') && prefill.get('orchAddr') !== "") {
       dispatch(getOrchestratorInfo(prefill.get('orchAddr')));
+      setSearchTerm(prefill.get('orchAddr'));
     }
   }, [prefill]);
 
@@ -123,36 +127,72 @@ const Livepeer = (obj) => {
   }
 
   let thisOrchObj;
+  let headerString;
   if (livepeer.selectedOrchestrator) {
     thisOrchObj = livepeer.selectedOrchestrator;
+    headerString = "Inspecting " + thisOrchObj.id;
+  } else {
+    headerString = "Livepeer Orchestrator Explorer";
+  }
+
+  let sidebar;
+  if (showSidebar){
+    sidebar = <div id='sideContent'>
+    <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, width: '100%', marginTop: '1em' }}>
+      <div className="row" style={{ alignItems: 'stretch', height: '100%', padding: '0.2em', width: "unset" }}>
+        <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} forceVertical={true} />
+      </div>
+      <div className="stroke metaSidebar" style={{ padding: 0, maxWidth: "300px" }}>
+        <div className="row" style={{ margin: 0, padding: 0 }}>
+          <h3 style={{ margin: 0, padding: 0 }}>Smart contract prices</h3>
+        </div>
+        <div className="stroke" style={{ margin: 0, padding: 0 }}>
+          <Stat header={"Reward Call"} content1={"$" + redeemRewardCostL2USD + " (vs " + redeemRewardCostL1USD + " on L1)"} />
+          <Stat header={"Claim Ticket"} content1={"$" + claimTicketCostL2USD + " (vs " + claimTicketCostL1USD + " on L1)"} />
+          <Stat header={"Staking Fees"} content1={"$" + stakeFeeCostL2USD + " (vs " + stakeFeeCostL1USD + " on L1)"} />
+          <Stat header={"Change Commission"} content1={"$" + commissionFeeCostL2USD + " (vs " + commissionFeeCostL1USD + " on L1)"} />
+          <Stat header={"Change URI"} content1={"$" + serviceUriFeeCostL2USD + " (vs " + serviceUriFeeCostL1USD + " on L1)"} />
+        </div>
+      </div>
+    </div>
+  </div >
   }
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <div className="row" style={{ margin: 0, padding: 0, backgroundColor: "rgba(180, 175, 252, 0.80)", boxSizing: "border-box", backdropDilter: "blur(6px)", boxSshadow: "9px 13px 18px 8px  rgba(8, 7, 56, 0.692)", position: 'absolute', top: '0px', left: '0px', height: '300px', right: '0px', overflow: 'hidden' }}>
-        <button className="homeButton" onClick={() => {
-          setRedirectToHome(true);
-        }}>
-          <img alt="" src="livepeer.png" width="100em" height="100em" />
-        </button>
-        <div className="row" style={{ alignItems: 'stretch', height: '100%', flex: 2, padding: '0.2em', maxWidth: "1100px" }}>
-          <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} />
+    <div style={{ margin: 0, padding: 0, height: '100%', width: '100%', overflow: 'hidden' }}>
+      <div id='header'>
+        <div className='rowAlignLeft'>
+          <button className="homeButton" onClick={() => {
+            setRedirectToHome(true);
+          }}>
+            <h1 style={{margin: 0, padding: 0}}>🏠</h1>
+          </button>
+          <h4>{headerString}</h4>
         </div>
-        <div className="stroke metaSidebar showNeverOnMobile" style={{ padding: 0, maxWidth: "300px" }}>
-          <div className="row" style={{ margin: 0, padding: 0 }}>
-            <h3 style={{ margin: 0, padding: 0 }}>Smart contract prices</h3>
-          </div>
-          <div className="stroke" style={{ margin: 0, padding: 0 }}>
-            <Stat header={"Reward Call"} content1={"$" + redeemRewardCostL2USD + " (vs " + redeemRewardCostL1USD + " on L1)"} />
-            <Stat header={"Claim Ticket"} content1={"$" + claimTicketCostL2USD + " (vs " + claimTicketCostL1USD + " on L1)"} />
-            <Stat header={"Staking Fees"} content1={"$" + stakeFeeCostL2USD + " (vs " + stakeFeeCostL1USD + " on L1)"} />
-            <Stat header={"Change Commission"} content1={"$" + commissionFeeCostL2USD + " (vs " + commissionFeeCostL1USD + " on L1)"} />
-            <Stat header={"Change URI"} content1={"$" + serviceUriFeeCostL2USD + " (vs " + serviceUriFeeCostL1USD + " on L1)"} />
-          </div>
+        <div className='rowAlignRight'>
+        <button className="homeButton" style={{padding: 0, paddingRight: '1em', paddingLeft: '1em'}} onClick={() => {
+            dispatch(clearOrchestrator());
+            setSearchTerm("");
+          }}>
+            <h4>✖️ Clear</h4>
+          </button>
+          <button className="homeButton" style={{padding: 0, paddingRight: '1em', paddingLeft: '1em'}} onClick={() => {
+            setShowSidebar(!showSidebar);
+          }}>
+            <h4>🔎 Sidebar</h4>
+          </button>
+          <button className="homeButton" style={{padding: 0, paddingRight: '1em', paddingLeft: '1em'}} onClick={() => {
+            setShowFilter(!showFilter);
+          }}>
+            <h4>🛠️ Filter</h4>
+          </button>
         </div>
-      </div >
-      <div className="row" style={{ margin: 0, padding: 0 }}>
-        <EventViewer events={eventsList} prefill={prefill.get('orchAddr')} />
+      </div>
+      <div id='bodyContent'>
+        {sidebar}
+        <div className="mainContent">
+          <EventViewer events={eventsList} searchTerm={searchTerm} setSearchTerm={setSearchTerm} forceVertical={true} showFilter={showFilter} />
+        </div>
       </div>
     </div >
   );

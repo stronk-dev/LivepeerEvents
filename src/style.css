@@ -140,10 +140,36 @@ svg {
   from { top: 0; } to { top: calc(100vh - 69px); }
 }
 
-.metaSidebar {
+
+#header {
+  height: 50px;
   display: flex;
-  flex-direction: row;
+  align-items: center;
+  background-color: rgba(180, 175, 252, 0.80);
 }
+#bodyContent {
+  height: calc( 100vh - 50px);
+  max-height: calc( 100vh - 50px);
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+#sideContent {
+  background-color: rgba(180, 175, 252, 0.80);
+  backdrop-filter: blur(6px);
+  box-shadow: 9px 13px 8px 8px  rgba(8, 7, 56, 0.692);
+  border-bottom-right-radius: 1em;
+  width: 400px;
+}
+.mainContent {
+  overflow: hidden;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  flex-basis: 0;
+  flex-grow: 999;
+}
+
 
 .fullGrafana {
   width: 100%;
@@ -192,6 +218,10 @@ svg {
   justify-content: center;
   flex-direction: row;
   width: auto;
+}
+
+.forceWrap{
+  flex-direction: column;
 }
 
 .stroke {

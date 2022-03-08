@@ -3,7 +3,8 @@ import {
   RECEIVE_BLOCKCHAIN_DATA,
   RECEIVE_EVENTS,
   RECEIVE_ORCHESTRATOR,
-  RECEIVE_CURRENT_ORCHESTRATOR
+  RECEIVE_CURRENT_ORCHESTRATOR,
+  CLEAR_ORCHESTRATOR
 } from "../../actions/livepeer";
 
 export default (state = {}, { type, message }) => {
@@ -19,6 +20,8 @@ export default (state = {}, { type, message }) => {
       return { ...state, thisOrchestrator: message };
     case RECEIVE_ORCHESTRATOR:
       return { ...state, selectedOrchestrator: message };
+    case CLEAR_ORCHESTRATOR:
+      return { ...state, selectedOrchestrator: null };
     default:
       return { ...state };
   }

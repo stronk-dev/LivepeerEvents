@@ -7,6 +7,9 @@ const Block = (obj) => {
   const [thisDate, thisTime] = dateObj.toISOString().split('T');
   return (
     <div className="rowAlignLeft" style={{ width: '100%', marginTop: '1em' }}>
+      <a className="selectOrch" href={obj.url}>
+        <img alt="" src="arb.svg" width="30em" height="30em" />
+      </a>
       <span className="rowAlignRight elipsText">
         <a className="selectOrch" href={"https://arbiscan.io/block/" + obj.block}>
           🔗{obj.block}

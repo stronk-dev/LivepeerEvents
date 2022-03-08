@@ -17,6 +17,7 @@ export const RECEIVE_BLOCKCHAIN_DATA = "RECEIVE_BLOCKCHAIN_DATA";
 export const RECEIVE_EVENTS = "RECEIVE_EVENTS";
 export const RECEIVE_CURRENT_ORCHESTRATOR = "RECEIVE_CURRENT_ORCHESTRATOR";
 export const RECEIVE_ORCHESTRATOR = "RECEIVE_ORCHESTRATOR";
+export const CLEAR_ORCHESTRATOR = "CLEAR_ORCHESTRATOR";
 
 const setQuotes = message => ({
   type: RECEIVE_QUOTES, message
@@ -33,6 +34,9 @@ const setCurrentOrchestratorInfo = message => ({
 const setOrchestratorInfo = message => ({
   type: RECEIVE_ORCHESTRATOR, message
 });
+const clearOrchestratorInfo = () => ({
+  type: CLEAR_ORCHESTRATOR
+})
 
 export const getQuotes = () => async dispatch => {
   const response = await apiUtil.getQuotes();
@@ -127,7 +131,7 @@ export const getEvents = () => async dispatch => {
           else if (eventContainsRebond) {
             eventType = "Stake";
             eventColour = stakeColour;
-            eventDescription = "increased their stake to " + tmpAmount.toFixed(2) + " LPT at";
+            eventDescription = "is now staking " + tmpAmount.toFixed(2) + " LPT";
           }
 
           // Fill description of Stake Event if it wasn't set yet
@@ -136,7 +140,7 @@ export const getEvents = () => async dispatch => {
               eventDescription = "staked " + tmpAmount.toFixed(2) + " LPT";
             } else if (eventFrom === eventTo) {
               eventFrom = "";
-              eventDescription = "increased their stake to " + tmpAmount.toFixed(2) + " LPT";
+              eventDescription = "is now staking " + tmpAmount.toFixed(2) + " LPT";
             } else {
               eventDescription = "moved a " + tmpAmount.toFixed(2) + " LPT stake";
             }
@@ -369,4 +373,8 @@ export const getOrchestratorInfo = (orchAddr) => async dispatch => {
     }
   }
   return dispatch(receiveErrors(data));
+};
+
+export const clearOrchestrator = () => async dispatch => {
+  return dispatch(clearOrchestratorInfo({}));
 };
