@@ -26,13 +26,13 @@ const EventButton = (obj) => {
       eventTo =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
           <p>To</p>
-          <a className="selectOrch" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventTo}>
+          <a className="selectOrch" style={{cursor: 'alias'}} href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventTo}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
-          <button className="selectOrch" style={{ margin: 0, padding: '0.5em' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventTo) }} >
+          <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'alias' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventTo) }} >
             <span className="elipsText">🔎</span>
           </button>
-          <button className="selectOrch" style={{ margin: 0, padding: 0 }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventTo)) }} >
+          <button className="selectOrch" style={{ margin: 0, padding: 0, cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventTo)) }} >
             <span className="elipsText">{obj.eventObj.eventTo}</span>
           </button>
         </div>
@@ -41,13 +41,13 @@ const EventButton = (obj) => {
       eventFrom =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
           <p>From</p>
-          <a className="selectOrch" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventFrom}>
+          <a className="selectOrch" style={{cursor: 'alias'}} href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventFrom}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
-          <button className="selectOrch" style={{ margin: 0, padding: '0.5em' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventFrom) }} >
+          <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'alias' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventFrom) }} >
             <span className="elipsText">🔎</span>
           </button>
-          <button className="selectOrch" style={{ margin: 0, padding: 0 }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventFrom)) }}>
+          <button className="selectOrch" style={{ margin: 0, padding: 0, cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventFrom)) }}>
             <span className="elipsText">{obj.eventObj.eventFrom}</span>
           </button>
         </div >
@@ -56,13 +56,13 @@ const EventButton = (obj) => {
       eventCaller =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
           <p>Caller</p>
-          <a className="selectOrch" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
+          <a className="selectOrch" style={{cursor: 'alias'}} href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
-          <button className="selectOrch" style={{ margin: 0, padding: '0.5em' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventCaller) }} >
+          <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'alias' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventCaller) }} >
             <span className="elipsText">🔎</span>
           </button>
-          <button className="selectOrch" style={{ margin: 0, padding: 0 }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventCaller)) }} >
+          <button className="selectOrch" style={{ margin: 0, padding: 0, cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventCaller)) }} >
             <span className="elipsText">{obj.eventObj.eventCaller}</span>
           </button>
         </div>
