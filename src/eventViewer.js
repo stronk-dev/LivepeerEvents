@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import EventButton from "./eventButton";
 import ScrollContainer from 'react-indiana-drag-scroll';
 import ReactPaginate from 'react-paginate';
@@ -18,6 +18,7 @@ const defaultMaxShown = 100;
 const defaultIncrementMaxShown = 100;
 
 const EventViewer = (obj) => {
+  const listInnerRef = useRef();
   const [filterActivated, setFilterActivated] = useState(true);
   const [rewardActivated, setRewardActivated] = useState(true);
   const [updateActivated, setUpdateActivated] = useState(true);
@@ -28,6 +29,7 @@ const EventViewer = (obj) => {
   const [unbondActivated, setUnbondActivated] = useState(true);
   console.log("Rendering EventViewer");
   let unfiltered = 0;
+  let prevBlock = 0;
   let limitShown = obj.events.length;
 
   let filterActivatedColour;
@@ -47,24 +49,13 @@ const EventViewer = (obj) => {
   let unbondActivatedColour;
   unbondActivatedColour = unbondActivated ? unbondColour : greyColour;
 
-  let prevBlock = 0;
-  let showMoreBlock;
-  if (obj.maxAmount < limitShown) {
-    showMoreBlock = <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
-      obj.setMaxAmount(obj.maxAmount + defaultIncrementMaxShown);
-    }}>
-      <h3>Show more</h3>
-    </button>
-  }
-  let showLessBlock;
-  if (defaultMaxShown < obj.maxAmount) {
-    showLessBlock = <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
-      obj.setMaxAmount(defaultMaxShown);
-    }}>
-      <h3>Show {defaultMaxShown}</h3>
-    </button>
-  } else {
-    showLessBlock = <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, width: '5em' }}></div>
+  const updateOnScroll = () => {
+    if (listInnerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current.container.current;
+      if (scrollTop + clientHeight === scrollHeight) {
+        obj.setMaxAmount(obj.maxAmount + defaultIncrementMaxShown);
+      }
+    }
   }
 
   let searchTermText;
@@ -85,21 +76,21 @@ const EventViewer = (obj) => {
   while (eventIdx >= 0 || ticketIdx >= 0) {
     const latestEvent = obj.events[eventIdx];
     let latestEventTime = 0;
-    if (eventIdx >= 0){
+    if (eventIdx >= 0) {
       latestEventTime = latestEvent.transactionTime;
     }
     const latestTicket = obj.tickets[ticketIdx];
     let latestTicketTime = 0;
-    if (ticketIdx >= 0){
+    if (ticketIdx >= 0) {
       latestTicketTime = latestTicket.transactionTime;
     }
-    if (latestEventTime > latestTicketTime){
+    if (latestEventTime > latestTicketTime) {
       thisEvent = latestEvent;
       eventIdx -= 1;
-    }else if (latestTicketTime){
+    } else if (latestTicketTime) {
       thisEvent = latestTicket;
       ticketIdx -= 1;
-    }else{
+    } else {
       console.log("error, breaky breaky");
       break;
     }
@@ -206,39 +197,24 @@ const EventViewer = (obj) => {
   let filterBit;
   if (obj.showFilter) {
     filterBit = <div className="flexContainer roundedOpaque" style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, margin: 0, width: '100%' }}>
-      <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 1 }}>
-        <div className="stroke" style={{ margin: "0", padding: 0 }}>
-          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <h3>Showing max {obj.maxAmount} results</h3>
-          </div>
-          <div className="row" style={{ margin: 0, padding: 0 }}>
-            <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-              {showLessBlock}
-            </div>
-            <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-              {showMoreBlock}
-            </div>
-          </div>
-        </div>
-      </div>
       <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 2 }}>
         <div className="row" style={{ margin: 0, padding: 0 }}>
           {searchTermText}
         </div>
         <div className="row" style={{ margin: 0, padding: 0 }}>
+          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
+              obj.setSearchTerm("");
+            }}>
+              <h3>Clear</h3>
+            </button>
+          </div>
           <input className="searchField" style={{ width: '80%', paddingLeft: '1em', paddingRight: '1em' }}
             value={obj.searchTerm}
             onChange={(evt) => obj.setSearchTerm(evt.target.value)}
             placeholder='Filter by Orchestrator address'
             type="text"
           />
-          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '6em' }} onClick={() => {
-              obj.setSearchTerm("");
-            }}>
-              <h3>Clear</h3>
-            </button>
-          </div>
         </div>
       </div>
       <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 2 }}>
@@ -286,10 +262,18 @@ const EventViewer = (obj) => {
       <div className="row" style={{ padding: 0, margin: 0, width: '100%', height: '100%' }}>
         <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, width: 'unset', height: '100%', marginRight: '1em', overflow: 'hidden', marginTop: '1em', overflowX: 'scroll' }}>
           <div className="content-wrapper" style={{ width: '100%' }}>
-            <ScrollContainer className="overflow-container" hideScrollbars={false}>
+            <ScrollContainer activationDistance={1} className="overflow-container"
+              hideScrollbars={false} onEndScroll={updateOnScroll} ref={listInnerRef}>
               <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0 }}>
                 <div className={obj.forceVertical ? "flexContainer forceWrap" : "flexContainer"} style={{ margin: 0, textAlign: 'center', alignItems: 'center', justifyContent: 'center' }}>
                   {eventList}
+                  <div className="stroke" style={{ width: '100%', padding: 0, margin: 0, marginBottom: '2em', marginTop: '2em' }}>
+                    <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", backgroundColor: greyColour, padding: 0, margin: 0, width: '100%' }}>
+                      <p className="row withWrap" style={{ maxWidth: '600px' }}>
+                        🔄 Scroll to bottom for more
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </ScrollContainer>
