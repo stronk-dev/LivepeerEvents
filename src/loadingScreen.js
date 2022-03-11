@@ -4,7 +4,7 @@ import {
   getVisitorStats
 } from "./actions/user";
 import {
-  getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo
+  getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo, getTickets
 } from "./actions/livepeer";
 import { login } from "./actions/session";
 
@@ -24,6 +24,7 @@ const Startup = (obj) => {
       dispatch(getEvents());
       dispatch(getBlockchainData());
       dispatch(getCurrentOrchestratorInfo());
+      dispatch(getTickets());
     });
   }
   

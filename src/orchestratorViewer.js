@@ -41,7 +41,7 @@ const Orchestrator = (obj) => {
               totalVolumeUSD={obj.thisOrchestrator.totalVolumeUSD}
               delegator={obj.thisOrchestrator.delegator}
             />
-            <OrchDelegatorViewer delegators={obj.thisOrchestrator.delegators} forceVertical={obj.forceVertical} />
+            <OrchDelegatorViewer delegators={obj.thisOrchestrator.delegators} />
           </div>
         </div>
       )
@@ -57,7 +57,7 @@ const Orchestrator = (obj) => {
               totalVolumeUSD={obj.thisOrchestrator.totalVolumeUSD}
               delegator={obj.thisOrchestrator.delegator}
             />
-            <OrchDelegatorViewer delegators={obj.thisOrchestrator.delegators} forceVertical={obj.forceVertical} />
+            <OrchDelegatorViewer delegators={obj.thisOrchestrator.delegators} />
           </div>
         </div>
       )

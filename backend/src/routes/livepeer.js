@@ -1,6 +1,8 @@
 import express from "express";
 import Event from '../models/event';
 import Block from '../models/block';
+import Ticket from '../models/ticketEvent'
+
 const apiRouter = express.Router();
 import {
   API_CMC, API_L1_HTTP, API_L2_HTTP, API_L2_WS,
@@ -76,19 +78,32 @@ let delegatorCache = [];
 
 // Listen to smart contract emitters. Only re-syncs on boot!
 let eventsCache = [];
-let latestMissedDuringSync = 0;
-let lastBlockDataAdded = 0;
+let latestBlockInChain = 0;
+let lastBlockEvents = 0;
+let lastBlockTickets = 0;
 let syncCache = [];
+let ticketsCache = [];
+let ticketsSyncCache = [];
 // https://arbiscan.io/address/0x35Bcf3c30594191d53231E4FF333E8A770453e40#events
 let BondingManagerTargetJson;
 let BondingManagerTargetAbi;
 let BondingManagerProxyAddr;
-let contractInstance;
+let bondingManagerContract;
+let TicketBrokerTargetJson;
+let TicketBrokerTargetAbi;
+let TicketBrokerTargetAddr;
+let ticketBrokerContract;
 if (!CONF_SIMPLE_MODE) {
+  // Listen for events on the bonding manager contract
   BondingManagerTargetJson = fs.readFileSync('src/abi/BondingManagerTarget.json');
   BondingManagerTargetAbi = JSON.parse(BondingManagerTargetJson);
   BondingManagerProxyAddr = "0x35Bcf3c30594191d53231E4FF333E8A770453e40";
-  contractInstance = new web3layer2WS.eth.Contract(BondingManagerTargetAbi.abi, BondingManagerProxyAddr);
+  bondingManagerContract = new web3layer2WS.eth.Contract(BondingManagerTargetAbi.abi, BondingManagerProxyAddr);
+  // Listen for events on the ticket broker contract
+  TicketBrokerTargetJson = fs.readFileSync('src/abi/TicketBrokerTarget.json');
+  TicketBrokerTargetAbi = JSON.parse(TicketBrokerTargetJson);
+  TicketBrokerTargetAddr = "0xa8bB618B1520E284046F3dFc448851A1Ff26e41B";
+  ticketBrokerContract = new web3layer2WS.eth.Contract(TicketBrokerTargetAbi.abi, TicketBrokerTargetAddr);
 }
 
 let blockCache = [];
@@ -117,11 +132,13 @@ const getBlock = async function (blockNumber) {
 
 // Set special flag to make sure also get blocks that pass us by while we are syncing
 let isSyncing = true;
-let isSyncRunning = false;
+let isEventSyncing = false;
+let isTicketSyncing = false;
 // Start Listening for live updates
 var BondingManagerProxyListener;
+var TicketBrokerProxyListener;
 if (!CONF_SIMPLE_MODE) {
-  BondingManagerProxyListener = contractInstance.events.allEvents(async (error, event) => {
+  BondingManagerProxyListener = bondingManagerContract.events.allEvents(async (error, event) => {
     try {
       if (error) {
         throw error
@@ -157,14 +174,50 @@ if (!CONF_SIMPLE_MODE) {
     }
   });
   console.log("Listening for events on " + BondingManagerProxyAddr);
+  TicketBrokerProxyListener = ticketBrokerContract.events.allEvents(async (error, event) => {
+    try {
+      if (error) {
+        throw error
+      }
+      if (isSyncing) {
+        console.log('Received new ticket event on block ' + event.blockNumber + " during sync");
+      } else {
+        console.log('Received new ticket event on block ' + event.blockNumber);
+      }
+      const thisBlock = await getBlock(event.blockNumber);
+      // Push obj of event to cache and create a new entry for it in the DB
+      const eventObj = {
+        address: event.address,
+        transactionHash: event.transactionHash,
+        transactionUrl: "https://arbiscan.io/tx/" + event.transactionHash,
+        name: event.event,
+        data: event.returnValues,
+        blockNumber: thisBlock.number,
+        blockTime: thisBlock.timestamp
+      }
+      if (!isSyncing) {
+        if (!CONF_DISABLE_DB) {
+          const dbObj = new Ticket(eventObj);
+          await dbObj.save();
+        }
+        ticketsCache.push(eventObj);
+      } else {
+        ticketsSyncCache.push(eventObj);
+      }
+    }
+    catch (err) {
+      console.log("FATAL ERROR: ", err);
+    }
+  });
+  console.log("Listening for tickets on " + TicketBrokerTargetAddr);
 }
 
-// Does the syncing
-const doSync = function () {
-  console.log("Starting sync process");
-  isSyncRunning = true;
+// Syncs events database
+const syncEvents = function () {
+  console.log("Starting sync process for Bonding Manager events");
+  isEventSyncing = true;
   // Then do a sync from last found until latest known
-  contractInstance.getPastEvents("allEvents", { fromBlock: lastBlockDataAdded + 1, toBlock: 'latest' }, async (error, events) => {
+  bondingManagerContract.getPastEvents("allEvents", { fromBlock: lastBlockEvents + 1, toBlock: 'latest' }, async (error, events) => {
     try {
       if (error) {
         throw error
@@ -172,8 +225,8 @@ const doSync = function () {
       let size = events.length;
       console.log("Parsing " + size + " events");
       for (const event of events) {
-        if (event.blockNumber > lastBlockDataAdded) {
-          lastBlockDataAdded = event.blockNumber;
+        if (event.blockNumber > lastBlockEvents) {
+          lastBlockEvents = event.blockNumber;
         }
         const thisBlock = await getBlock(event.blockNumber);
         const eventObj = {
@@ -195,7 +248,46 @@ const doSync = function () {
     catch (err) {
       console.log("FATAL ERROR: ", err);
     }
-    isSyncRunning = false;
+    isEventSyncing = false;
+  });
+}
+// Syncs tickets database
+const syncTickets = function () {
+  console.log("Starting sync process for Ticket Broker events");
+  isTicketSyncing = true;
+  // Then do a sync from last found until latest known
+  ticketBrokerContract.getPastEvents("allEvents", { fromBlock: lastBlockTickets + 1, toBlock: 'latest' }, async (error, events) => {
+    try {
+      if (error) {
+        throw error
+      }
+      let size = events.length;
+      console.log("Parsing " + size + " tickets");
+      for (const event of events) {
+        if (event.blockNumber > lastBlockTickets) {
+          lastBlockTickets = event.blockNumber;
+        }
+        const thisBlock = await getBlock(event.blockNumber);
+        const eventObj = {
+          address: event.address,
+          transactionHash: event.transactionHash,
+          transactionUrl: "https://arbiscan.io/tx/" + event.transactionHash,
+          name: event.event,
+          data: event.returnValues,
+          blockNumber: thisBlock.number,
+          blockTime: thisBlock.timestamp
+        }
+        if (!CONF_DISABLE_DB) {
+          const dbObj = new Ticket(eventObj);
+          await dbObj.save();
+        }
+        ticketsCache.push(eventObj);
+      }
+    }
+    catch (err) {
+      console.log("FATAL ERROR: ", err);
+    }
+    isTicketSyncing = false;
   });
 }
 function sleep(ms) {
@@ -206,6 +298,13 @@ function sleep(ms) {
 
 const handleSync = async function () {
   // First collection -> cache
+  // Get all parsed blocks
+  blockCache = await Block.find({}, {
+    blockNumber: 1,
+    blockTime: 1
+  });
+  console.log("Retrieved existing Blocks of size " + blockCache.length);
+  // Get all parsed Events
   eventsCache = await Event.find({}, {
     address: 1,
     transactionHash: 1,
@@ -217,31 +316,54 @@ const handleSync = async function () {
     _id: 0
   });
   console.log("Retrieved existing Events of size " + eventsCache.length);
+  // Get all parsedTickets
+  ticketsCache = await Ticket.find({}, {
+    address: 1,
+    transactionHash: 1,
+    transactionUrl: 1,
+    name: 1,
+    data: 1,
+    blockNumber: 1,
+    blockTime: 1,
+    _id: 0
+  });
+  console.log("Retrieved existing Tickets of size " + ticketsCache.length);
   // Then determine latest block number parsed based on collection
   for (var idx = 0; idx < eventsCache.length; idx++) {
     const thisBlock = eventsCache[idx];
-    if (thisBlock.blockNumber > lastBlockDataAdded) {
-      lastBlockDataAdded = thisBlock.blockNumber;
+    if (thisBlock.blockNumber > lastBlockEvents) {
+      lastBlockEvents = thisBlock.blockNumber;
     }
   }
+  console.log("Latest Event block parsed is " + lastBlockEvents);
+  // Then determine latest block number parsed based on collection
+  for (var idx = 0; idx < ticketsCache.length; idx++) {
+    const thisBlock = ticketsCache[idx];
+    if (thisBlock.blockNumber > lastBlockTickets) {
+      lastBlockTickets = thisBlock.blockNumber;
+    }
+  }
+  console.log("Latest Ticket block parsed is " + lastBlockTickets);
   // Get latest block in chain
   const latestBlock = await web3layer2.eth.getBlockNumber();
-  if (latestBlock > latestMissedDuringSync) {
-    latestMissedDuringSync = latestBlock;
+  if (latestBlock > latestBlockInChain) {
+    latestBlockInChain = latestBlock;
   }
-  console.log("Parsed up to block " + lastBlockDataAdded + " out of " + latestMissedDuringSync + " blocks");
-  // Get all parsed blocks
-  blockCache = await Block.find({}, {
-    blockNumber: 1,
-    blockTime: 1
-  });
-  console.log("Retrieved existing Blocks of size " + blockCache.length);
-  doSync();
-  while (isSyncRunning) {
-    await sleep(1000);
-    console.log("Parsed " + lastBlockDataAdded + " out of " + latestMissedDuringSync + " blocks");
+  console.log("Latest L2 Eth block is " + latestBlockInChain);
+  console.log("Needs to sync " + (latestBlockInChain - lastBlockEvents) + " blocks for Events sync");
+  console.log("Needs to sync " + (latestBlockInChain - lastBlockTickets) + " blocks for Tickets sync");
+  syncTickets();
+  syncEvents();
+  while (isEventSyncing || isTicketSyncing) {
+    await sleep(3000);
+    if (isEventSyncing){
+      console.log("Parsed " + lastBlockEvents + " out of " + latestBlockInChain + " blocks for Event sync");
+    }
+    if (isTicketSyncing){
+      console.log("Parsed " + lastBlockTickets + " out of " + latestBlockInChain + " blocks for Ticket sync");
+    }
   }
-  while (syncCache.length) {
+  while (syncCache.length || ticketsSyncCache.length) {
     const liveEvents = syncCache;
     syncCache = [];
     for (const eventObj of liveEvents) {
@@ -252,16 +374,27 @@ const handleSync = async function () {
       }
       eventsCache.push(eventObj);
     }
+    const liveTickets = ticketsSyncCache;
+    ticketsSyncCache = [];
+    for (const eventObj of liveTickets) {
+      console.log("Parsing ticket received while syncing");
+      if (!CONF_DISABLE_DB) {
+        const dbObj = new Ticket(eventObj);
+        await dbObj.save();
+      }
+      ticketsCache.push(eventObj);
+    }
   }
   console.log('done syncing')
   isSyncing = false;
 };
-if (!isSyncRunning && !CONF_SIMPLE_MODE && !CONF_DISABLE_SYNC) {
+if (!isEventSyncing && !CONF_SIMPLE_MODE && !CONF_DISABLE_SYNC) {
   handleSync();
 }
 
 // Splits of raw CMC object into coin quote data
 const parseCmc = async function () {
+  return;
   try {
     cmcCache = await cmcClient.getTickers({ limit: 200 });
     for (var idx = 0; idx < cmcCache.data.length; idx++) {
@@ -417,6 +550,15 @@ apiRouter.get("/quotes", async (req, res) => {
 apiRouter.get("/getEvents", async (req, res) => {
   try {
     res.send(eventsCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// Exports list of smart contract ticket events
+apiRouter.get("/getTickets", async (req, res) => {
+  try {
+    res.send(ticketsCache);
   } catch (err) {
     res.status(400).send(err);
   }

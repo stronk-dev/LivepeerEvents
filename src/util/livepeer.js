@@ -27,6 +27,15 @@ export const getEvents = () => (
   })
 );
 
+export const getTickets = () => (
+  fetch("api/livepeer/getTickets", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
 export const getCurrentOrchestratorInfo = () => (
   fetch("api/livepeer/getOrchestrator", {
     method: "GET",

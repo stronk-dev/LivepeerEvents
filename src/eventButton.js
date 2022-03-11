@@ -25,8 +25,8 @@ const EventButton = (obj) => {
     if (obj.eventObj.eventTo) {
       eventTo =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
-          <p>To</p>
-          <a className="selectOrch" style={{ cursor: 'alias' }} href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventTo}>
+          <span>To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+          <a className="selectOrch" style={{ cursor: 'alias', marginLeft: '0.5em' }} target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventTo}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventTo) }} >
@@ -40,8 +40,8 @@ const EventButton = (obj) => {
     if (obj.eventObj.eventFrom) {
       eventFrom =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
-          <p>From</p>
-          <a className="selectOrch" style={{ cursor: 'alias' }} href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventFrom}>
+          <span>From&nbsp;&nbsp;:</span>
+          <a className="selectOrch" style={{ cursor: 'alias', marginLeft: '0.5em' }} target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventFrom}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventFrom) }} >
@@ -55,15 +55,15 @@ const EventButton = (obj) => {
     if (obj.eventObj.eventCaller) {
       eventCaller =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
-          <p>Caller</p>
-          <a className="selectOrch" style={{ cursor: 'alias' }} href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
+          <span>Caller&nbsp;:</span>
+          <a className="selectOrch" style={{ cursor: 'alias', marginLeft: '0.5em' }} target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventCaller) }} >
             <span className="elipsText">🔎</span>
           </button>
           <button className="selectOrch" style={{ margin: 0, padding: 0, cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventCaller)) }} >
-            <p className="elipsText elipsOnMobileExtra">{obj.eventObj.eventCaller}</p>
+            <span className="elipsText elipsOnMobileExtra">{obj.eventObj.eventCaller}</span>
           </button>
         </div>
     }

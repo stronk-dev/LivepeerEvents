@@ -9,6 +9,9 @@ const stakeColour = "rgba(56, 23, 122, 0.3)";
 const unbondColour = "rgba(122, 23, 51, 0.3)";
 const claimColour = "rgba(77, 91, 42, 0.3)";
 
+const ticketTransferColour = "rgba(88, 91, 42, 0.3)";
+const ticketRedeemColour = "rgba(42, 91, 44, 0.3)";
+
 const thresholdStaking = 0.001;
 const thresholdFees = 0.00009;
 
@@ -18,6 +21,7 @@ export const RECEIVE_EVENTS = "RECEIVE_EVENTS";
 export const RECEIVE_CURRENT_ORCHESTRATOR = "RECEIVE_CURRENT_ORCHESTRATOR";
 export const RECEIVE_ORCHESTRATOR = "RECEIVE_ORCHESTRATOR";
 export const CLEAR_ORCHESTRATOR = "CLEAR_ORCHESTRATOR";
+export const RECEIVE_TICKETS = "RECEIVE_TICKETS";
 
 const setQuotes = message => ({
   type: RECEIVE_QUOTES, message
@@ -37,6 +41,9 @@ const setOrchestratorInfo = message => ({
 const clearOrchestratorInfo = () => ({
   type: CLEAR_ORCHESTRATOR
 })
+const setTickets = message => ({
+  type: RECEIVE_TICKETS, message
+});
 
 export const getQuotes = () => async dispatch => {
   const response = await apiUtil.getQuotes();
@@ -204,7 +211,7 @@ export const getEvents = () => async dispatch => {
             transactionUrl: currentUrl,
             transactionBlock: currentBlock,
             transactionTime: currentTime,
-            eventValue: amount 
+            eventValue: amount
           });
         } else if (eventObj.name === "WithdrawFees") {
           const amount = parseFloat(eventObj.data.amount) / 1000000000000000000;
@@ -349,6 +356,83 @@ export const getEvents = () => async dispatch => {
   return dispatch(receiveErrors(data));
 };
 
+export const getTickets = () => async dispatch => {
+  const response = await apiUtil.getTickets();
+  const data = await response.json();
+  // Combine raw list of events into a list of useful Events
+  if (response.ok) {
+    let finalTicketList = [];
+    // Current transaction we are processing
+    let txCounter = 0;
+    let currentTx = "";
+    let currentUrl = "";
+    let currentBlock = 0;
+    let currentTime = 0;
+    // Parse Tickets
+    {
+      for (const eventObj of data.slice(0).reverse()) {
+        if (currentTx === "") {
+          currentTx = eventObj.transactionHash;
+          currentUrl = eventObj.transactionUrl;
+          currentBlock = eventObj.blockNumber;
+          currentTime = eventObj.blockTime;
+        }
+        // New transaction found
+        if (currentTx !== eventObj.transactionHash) {
+          // Reset event data
+          txCounter++;
+          currentTx = eventObj.transactionHash;
+          currentUrl = eventObj.transactionUrl;
+          currentBlock = eventObj.blockNumber;
+          currentTime = eventObj.blockTime;
+        }
+        // Always split off WithdrawStake as a separate Withdraw Event
+        if (eventObj.name === "WinningTicketRedeemed") {
+          const amount = parseFloat(eventObj.data.faceValue) / 1000000000000000000;
+          const txt = " redeemed a winning ticket worth " + amount.toFixed(4) + " Eth";
+          finalTicketList.push({
+            eventType: "Withdraw",
+            eventDescription: txt,
+            eventCaller: eventObj.data.recipient.toLowerCase(),
+            eventFrom: eventObj.data.sender.toLowerCase(),
+            eventTo: "",
+            eventColour: ticketRedeemColour,
+            transactionHash: currentTx,
+            transactionUrl: currentUrl,
+            transactionBlock: currentBlock,
+            transactionTime: currentTime,
+            eventValue: amount 
+          });
+        } else if (eventObj.name === "WinningTicketTransfer") {
+          // For now lets just ignore these, they are boring
+          continue;
+          const amount = parseFloat(eventObj.data.amount) / 1000000000000000000;
+          const txt = " broadcaster payed out  " + amount.toFixed(4) + " Eth";
+          finalTicketList.push({
+            eventType: "TransferTicket",
+            eventDescription: txt,
+            eventCaller: eventObj.data.sender.toLowerCase(),
+            eventFrom: "",
+            eventTo: eventObj.data.recipient.toLowerCase(),
+            eventColour: ticketTransferColour,
+            transactionHash: currentTx,
+            transactionUrl: currentUrl,
+            transactionBlock: currentBlock,
+            transactionTime: currentTime,
+            eventValue: amount
+          });
+        } else {
+          console.log("UNIMPLEMENTED: " + eventObj.name);
+        }
+      }
+    }
+    // NOTE: We are throwing away the very oldest Ticket now, which should be fine.
+    // We can fix this once above wall of text becomes a separate function
+    return dispatch(setTickets(finalTicketList));
+  }
+  return dispatch(receiveErrors(data));
+};
+
 export const getCurrentOrchestratorInfo = () => async dispatch => {
   const response = await apiUtil.getCurrentOrchestratorInfo();
   const data = await response.json();
@@ -362,9 +446,9 @@ export const getOrchestratorInfo = (orchAddr) => async dispatch => {
   const response = await apiUtil.getOrchestratorInfo(orchAddr);
   const data = await response.json();
   if (response.ok) {
-    if (data && data.id){
+    if (data && data.id) {
       return dispatch(setOrchestratorInfo(data));
-    }else{
+    } else {
       const response = await apiUtil.getOrchestratorByDelegator(orchAddr);
       const data = await response.json();
       if (response.ok) {

@@ -17,7 +17,7 @@ const OrchDelegatorViewer = (obj) => {
                 {
                   delegators.map((delObj, idx) => {
                     return (
-                      <div className={obj.forceVertical ? "flexContainer forceWrap" : "flexContainer"} key={"delegator" + idx} style={{ margin: 0, textAlign: 'center',alignItems: 'center', justifyContent:'center' }}>
+                      <div className="flexContainer forceWrap" key={"delegator" + idx} style={{ margin: 0, textAlign: 'center',alignItems: 'center', justifyContent:'center' }}>
                         <Address address={delObj.id} seed={"delegator" + idx + delObj.id} />
                         <div className="rowAlignRight" style={{ margin: 0 }}>
                           <p className="darkText">{parseFloat(delObj.bondedAmount).toFixed(2)} LPT since round {delObj.startRound}</p>

@@ -4,7 +4,8 @@ import {
   RECEIVE_EVENTS,
   RECEIVE_ORCHESTRATOR,
   RECEIVE_CURRENT_ORCHESTRATOR,
-  CLEAR_ORCHESTRATOR
+  CLEAR_ORCHESTRATOR,
+  RECEIVE_TICKETS
 } from "../../actions/livepeer";
 
 export default (state = {}, { type, message }) => {
@@ -22,6 +23,8 @@ export default (state = {}, { type, message }) => {
       return { ...state, selectedOrchestrator: message };
     case CLEAR_ORCHESTRATOR:
       return { ...state, selectedOrchestrator: null };
+    case RECEIVE_TICKETS:
+      return { ...state, tickets: message };
     default:
       return { ...state };
   }

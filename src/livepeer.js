@@ -6,6 +6,7 @@ import { getOrchestratorInfo, clearOrchestrator } from "./actions/livepeer";
 import EventViewer from "./eventViewer";
 import Orchestrator from "./orchestratorViewer";
 import Stat from "./statViewer";
+import TicketViewer from './ticketViewer';
 
 // Shows the EventViewer and other Livepeer related info
 const defaultMaxShown = 100;
@@ -15,6 +16,7 @@ const Livepeer = (obj) => {
   const [maxAmount, setMaxAmount] = useState(defaultMaxShown);
   const [prefill, setPrefill] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
+  const [showTickets, setShowTickets] = useState("");
   const dispatch = useDispatch();
   const livepeer = useSelector((state) => state.livepeerstate);
   const [redirectToHome, setRedirectToHome] = useState(false);
@@ -129,6 +131,18 @@ const Livepeer = (obj) => {
     eventsList = livepeer.events;
   }
 
+  let ticketList = [];
+  let ticketBit;
+  if (livepeer.tickets) {
+    ticketList = livepeer.tickets;
+  }
+  if (showTickets) {
+    ticketBit =
+      <div className="rightContent">
+        <TicketViewer tickets={ticketList} forceVertical={true} />
+      </div>
+  }
+
   let thisOrchObj;
   let headerString;
   if (livepeer.selectedOrchestrator) {
@@ -164,6 +178,7 @@ const Livepeer = (obj) => {
     </div >
   }
 
+
   return (
     <div style={{ margin: 0, padding: 0, height: '100%', width: '100%', overflow: 'hidden' }}>
       <div id='header'>
@@ -184,25 +199,34 @@ const Livepeer = (obj) => {
           }}>
             <h4>✖️ Clear</h4>
           </button>
-          <button className="homeButton" style={{ padding: 0, paddingRight: '1em', paddingLeft: '1em' }} onClick={() => {
-            setShowSidebar(!showSidebar);
-          }}>
-            <h4>🔎 Sidebar</h4>
-          </button>
-          <button className="homeButton" style={{ padding: 0, paddingRight: '1em', paddingLeft: '1em' }} onClick={() => {
-            setShowFilter(!showFilter);
-          }}>
-            <h4>🛠️ Filter</h4>
-          </button>
+          <p>Tickets</p>
+          <div className="toggle-container" onClick={() => setShowTickets(!showTickets)}>
+            <div className={`dialog-button ${showTickets ? "" : "disabled"}`}>
+              {showTickets ? "Show" : "Hide"}
+            </div>
+          </div>
+          <p>Sidebar</p>
+          <div className="toggle-container" onClick={() => setShowSidebar(!showSidebar)}>
+            <div className={`dialog-button ${showSidebar ? "" : "disabled"}`}>
+              {showSidebar ? "Show" : "Hide"}
+            </div>
+          </div>
+          <p>Filter</p>
+          <div className="toggle-container" onClick={() => setShowFilter(!showFilter)}>
+            <div className={`dialog-button ${showFilter ? "" : "disabled"}`}>
+              {showFilter ? "Show" : "Hide"}
+            </div>
+          </div>
         </div>
       </div>
       <div id='bodyContent'>
         {sidebar}
         <div className="mainContent">
           <EventViewer events={eventsList} searchTerm={searchTerm} setSearchTerm={setSearchTerm}
-          forceVertical={true} showFilter={showFilter} setAmountFilter={setAmountFilter} amountFilter={amountFilter} 
-          maxAmount={maxAmount} setMaxAmount={setMaxAmount}/>
+            forceVertical={true} showFilter={showFilter} setAmountFilter={setAmountFilter} amountFilter={amountFilter}
+            maxAmount={maxAmount} setMaxAmount={setMaxAmount} />
         </div>
+        {ticketBit}
       </div>
     </div >
   );
