@@ -394,7 +394,6 @@ if (!isEventSyncing && !CONF_SIMPLE_MODE && !CONF_DISABLE_SYNC) {
 
 // Splits of raw CMC object into coin quote data
 const parseCmc = async function () {
-  return;
   try {
     cmcCache = await cmcClient.getTickers({ limit: 200 });
     for (var idx = 0; idx < cmcCache.data.length; idx++) {
