@@ -214,10 +214,12 @@ const EventViewer = (obj) => {
   } else {
     showMoreButton =
       <div className="stroke" style={{ width: '100%', padding: 0, margin: 0, marginBottom: '2em', marginTop: '2em' }}>
-        <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", backgroundColor: greyColour, padding: 0, margin: 0, width: '100%' }}>
-          <p className="row withWrap" style={{ maxWidth: '600px' }}>
-            🔄 Scroll to bottom for more
-          </p>
+        <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", padding: 0, margin: 0, width: '100%' }}>
+          <button className="row nonHomeButton" style={{ backgroundColor: greyColour }} onClick={() => {
+            obj.setMaxAmount(obj.maxAmount + defaultIncrementMaxShown);;
+          }}>
+            <h3>🔄 Show More</h3>
+          </button>
         </div>
       </div>
   }
