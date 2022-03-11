@@ -391,11 +391,11 @@ export const getTickets = () => async dispatch => {
           const amount = parseFloat(eventObj.data.faceValue) / 1000000000000000000;
           const txt = " redeemed a winning ticket worth " + amount.toFixed(4) + " Eth";
           finalTicketList.push({
-            eventType: "Withdraw",
+            eventType: "RedeemTicket",
             eventDescription: txt,
             eventCaller: eventObj.data.recipient.toLowerCase(),
-            eventFrom: eventObj.data.sender.toLowerCase(),
-            eventTo: "",
+            eventFrom: "",//eventObj.data.sender.toLowerCase(),
+            eventTo: "",//eventObj.data.recipient.toLowerCase(),
             eventColour: ticketRedeemColour,
             transactionHash: currentTx,
             transactionUrl: currentUrl,
@@ -411,8 +411,8 @@ export const getTickets = () => async dispatch => {
           finalTicketList.push({
             eventType: "TransferTicket",
             eventDescription: txt,
-            eventCaller: eventObj.data.sender.toLowerCase(),
-            eventFrom: "",
+            eventCaller: "",
+            eventFrom: eventObj.data.sender.toLowerCase(),
             eventTo: eventObj.data.recipient.toLowerCase(),
             eventColour: ticketTransferColour,
             transactionHash: currentTx,
