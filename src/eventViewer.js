@@ -30,7 +30,8 @@ const EventViewer = (obj) => {
   console.log("Rendering EventViewer");
   let unfiltered = 0;
   let prevBlock = 0;
-  let limitShown = obj.events.length;
+  let limitShown = obj.events.length + obj.tickets.length;
+  let hasLimited = false;
 
   let filterActivatedColour;
   filterActivatedColour = filterActivated ? activationColour : greyColour;
@@ -50,6 +51,9 @@ const EventViewer = (obj) => {
   unbondActivatedColour = unbondActivated ? unbondColour : greyColour;
 
   const updateOnScroll = () => {
+    if (!hasLimited) {
+      return;
+    }
     if (listInnerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current.container.current;
       if (scrollTop + clientHeight === scrollHeight) {
@@ -95,6 +99,7 @@ const EventViewer = (obj) => {
       break;
     }
     if (unfiltered > obj.maxAmount) {
+      hasLimited = true;
       break;
     }
     // Filter by minimum value
@@ -191,7 +196,30 @@ const EventViewer = (obj) => {
           setSearchTerm={obj.setSearchTerm}
         />);
       }
+    } else {
+      hasLimited = true;
     }
+  }
+
+  let showMoreButton;
+  if (!hasLimited) {
+    showMoreButton =
+      <div className="stroke" style={{ width: '100%', padding: 0, margin: 0, marginBottom: '2em', marginTop: '2em' }}>
+        <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", backgroundColor: greyColour, padding: 0, margin: 0, width: '100%' }}>
+          <p className="row withWrap" style={{ maxWidth: '600px' }}>
+            ☑️ Reached end of results
+          </p>
+        </div>
+      </div>
+  } else {
+    showMoreButton =
+      <div className="stroke" style={{ width: '100%', padding: 0, margin: 0, marginBottom: '2em', marginTop: '2em' }}>
+        <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", backgroundColor: greyColour, padding: 0, margin: 0, width: '100%' }}>
+          <p className="row withWrap" style={{ maxWidth: '600px' }}>
+            🔄 Scroll to bottom for more
+          </p>
+        </div>
+      </div>
   }
 
   let filterBit;
@@ -267,13 +295,7 @@ const EventViewer = (obj) => {
               <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0 }}>
                 <div className={obj.forceVertical ? "flexContainer forceWrap" : "flexContainer"} style={{ margin: 0, textAlign: 'center', alignItems: 'center', justifyContent: 'center' }}>
                   {eventList}
-                  <div className="stroke" style={{ width: '100%', padding: 0, margin: 0, marginBottom: '2em', marginTop: '2em' }}>
-                    <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", backgroundColor: greyColour, padding: 0, margin: 0, width: '100%' }}>
-                      <p className="row withWrap" style={{ maxWidth: '600px' }}>
-                        🔄 Scroll to bottom for more
-                      </p>
-                    </div>
-                  </div>
+                  {showMoreButton}
                 </div>
               </div>
             </ScrollContainer>
