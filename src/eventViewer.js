@@ -29,6 +29,7 @@ const EventViewer = (obj) => {
   const [unbondActivated, setUnbondActivated] = useState(true);
   console.log("Rendering EventViewer");
   let unfiltered = 0;
+  let filtered = 0;
   let prevBlock = 0;
   let limitShown = obj.events.length + obj.tickets.length;
   let hasLimited = false;
@@ -96,10 +97,6 @@ const EventViewer = (obj) => {
       ticketIdx -= 1;
     } else {
       console.log("error, breaky breaky");
-      break;
-    }
-    if (unfiltered > obj.maxAmount) {
-      hasLimited = true;
       break;
     }
     // Filter by minimum value
@@ -196,8 +193,9 @@ const EventViewer = (obj) => {
           setSearchTerm={obj.setSearchTerm}
         />);
       }
-    } else {
-      hasLimited = true;
+    }
+    else {
+      filtered++;
     }
   }
 
@@ -226,64 +224,70 @@ const EventViewer = (obj) => {
 
   let filterBit;
   if (obj.showFilter) {
-    filterBit = <div className="flexContainer roundedOpaque" style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, margin: 0, width: '100%' }}>
-      <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 2 }}>
-        <div className="row" style={{ margin: 0, padding: 0 }}>
-          {searchTermText}
+    filterBit =
+      <div className="strokeSmollLeft roundedOpaque"  style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, margin: 0, width: '100%' }}>
+        <div className="row">
+          <span>Showing {filtered + unfiltered} out of {limitShown} results</span>
         </div>
-        <div className="row" style={{ margin: 0, padding: 0 }}>
-          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
-              obj.setSearchTerm("");
-            }}>
-              <h3>Clear</h3>
-            </button>
+        <div className="flexContainer" style={{margin: 0, width: '100%'}}>
+          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 2 }}>
+            <div className="row" style={{ margin: 0, padding: 0 }}>
+              {searchTermText}
+            </div>
+            <div className="row" style={{ margin: 0, padding: 0 }}>
+              <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+                <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
+                  obj.setSearchTerm("");
+                }}>
+                  <h3>Clear</h3>
+                </button>
+              </div>
+              <input className="searchField" style={{ width: '80%', paddingLeft: '1em', paddingRight: '1em' }}
+                value={obj.searchTerm}
+                onChange={(evt) => obj.setSearchTerm(evt.target.value)}
+                placeholder='Filter by Orchestrator address'
+                type="text"
+              />
+            </div>
           </div>
-          <input className="searchField" style={{ width: '80%', paddingLeft: '1em', paddingRight: '1em' }}
-            value={obj.searchTerm}
-            onChange={(evt) => obj.setSearchTerm(evt.target.value)}
-            placeholder='Filter by Orchestrator address'
-            type="text"
-          />
+          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 2 }}>
+            <div className="row" style={{ margin: 0, padding: 0 }}>
+              <h3>{parseFloat(obj.amountFilter) > 0 ? ("Only showing higher than " + obj.amountFilter) : "Filter by minimum value"}</h3>
+            </div>
+            <div className="row" style={{ margin: 0, padding: 0 }}>
+              <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+                <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
+                  obj.setAmountFilter(0);
+                }}>
+                  <h3>0</h3>
+                </button>
+              </div>
+              <input className="searchField" style={{ margin: 0, padding: 0, height: '2em', width: '80%', paddingLeft: '1em', paddingRight: '1em' }}
+                value={obj.amountFilter}
+                onChange={(evt) => obj.setAmountFilter(evt.target.value)}
+                placeholder='Filter by minimum value'
+                type="number"
+              />
+              <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+                <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '4em' }} onClick={() => {
+                  const curVal = parseFloat(obj.amountFilter);
+                  obj.setAmountFilter(curVal + 100);
+                }}>
+                  <h3>+100</h3>
+                </button>
+              </div>
+              <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
+                <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
+                  const curVal = parseFloat(obj.amountFilter);
+                  obj.setAmountFilter(curVal + 1000);
+                }}>
+                  <h3>+1000</h3>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 2 }}>
-        <div className="row" style={{ margin: 0, padding: 0 }}>
-          <h3>{parseFloat(obj.amountFilter) > 0 ? ("Only showing higher than " + obj.amountFilter) : "Filter by minimum value"}</h3>
-        </div>
-        <div className="row" style={{ margin: 0, padding: 0 }}>
-          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
-              obj.setAmountFilter(0);
-            }}>
-              <h3>0</h3>
-            </button>
-          </div>
-          <input className="searchField" style={{ margin: 0, padding: 0, height: '2em', width: '80%', paddingLeft: '1em', paddingRight: '1em' }}
-            value={obj.amountFilter}
-            onChange={(evt) => obj.setAmountFilter(evt.target.value)}
-            placeholder='Filter by minimum value'
-            type="number"
-          />
-          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '4em' }} onClick={() => {
-              const curVal = parseFloat(obj.amountFilter);
-              obj.setAmountFilter(curVal + 100);
-            }}>
-              <h3>+100</h3>
-            </button>
-          </div>
-          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
-              const curVal = parseFloat(obj.amountFilter);
-              obj.setAmountFilter(curVal + 1000);
-            }}>
-              <h3>+1000</h3>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   }
 
   return (
