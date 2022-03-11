@@ -11,6 +11,7 @@ const withdrawStakeColour = "rgba(115, 110, 22, 0.3)";
 const stakeColour = "rgba(71, 23, 122, 0.3)";
 const claimColour = "rgba(77, 91, 42, 0.3)";
 const unbondColour = "rgba(122, 23, 51, 0.3)";
+const ticketRedeemColour = "rgba(42, 44, 91, 0.3)";
 const greyColour = "rgba(122, 128, 127, 0.3)";
 
 const defaultMaxShown = 100;
@@ -23,6 +24,7 @@ const EventViewer = (obj) => {
   const [withdrawActivated, setWithdrawActivated] = useState(true);
   const [stakeActivated, setStakeActivated] = useState(true);
   const [delegatorRewardActivated, setDelegatorRewardActivated] = useState(true);
+  const [ticketRedemptionActivated, setTicketRedemptionActivated] = useState(true);
   const [unbondActivated, setUnbondActivated] = useState(true);
   console.log("Rendering EventViewer");
   let unfiltered = 0;
@@ -40,6 +42,8 @@ const EventViewer = (obj) => {
   stakeActivatedColour = stakeActivated ? stakeColour : greyColour;
   let delegatorActivatedColour;
   delegatorActivatedColour = delegatorRewardActivated ? claimColour : greyColour;
+  let ticketActivatedColour;
+  ticketActivatedColour = ticketRedemptionActivated ? ticketRedeemColour : greyColour;
   let unbondActivatedColour;
   unbondActivatedColour = unbondActivated ? unbondColour : greyColour;
 
@@ -75,72 +79,101 @@ const EventViewer = (obj) => {
   }
 
   let eventList = [];
-  for (const eventObj of obj.events) {
+  let thisEvent = {};
+  let eventIdx = obj.events.length - 1;
+  let ticketIdx = obj.tickets.length - 1;
+  while (eventIdx >= 0 || ticketIdx >= 0) {
+    const latestEvent = obj.events[eventIdx];
+    let latestEventTime = 0;
+    if (eventIdx >= 0){
+      latestEventTime = latestEvent.transactionTime;
+    }
+    const latestTicket = obj.tickets[ticketIdx];
+    let latestTicketTime = 0;
+    if (ticketIdx >= 0){
+      latestTicketTime = latestTicket.transactionTime;
+    }
+    if (latestEventTime > latestTicketTime){
+      thisEvent = latestEvent;
+      eventIdx -= 1;
+    }else if (latestTicketTime){
+      thisEvent = latestTicket;
+      ticketIdx -= 1;
+    }else{
+      console.log("error, breaky breaky");
+      break;
+    }
     if (unfiltered > obj.maxAmount) {
       break;
     }
     // Filter by minimum value
     if (obj.amountFilter !== "") {
-      if (parseFloat(obj.amountFilter) > eventObj.eventValue) {
+      if (parseFloat(obj.amountFilter) > thisEvent.eventValue) {
         continue;
       }
     }
     // Filter name on from, to, caller
     if (obj.searchTerm !== "") {
       let isFiltered = true;
-      if (eventObj.eventCaller.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
-      if (eventObj.eventFrom.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
-      if (eventObj.eventTo.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+      if (thisEvent.eventCaller.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+      if (thisEvent.eventFrom.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+      if (thisEvent.eventTo.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
       if (isFiltered) continue;
     }
     // Filter Events on filter buttons
     let isFiltered = true;
-    // Check boolean filters on eventObj.eventType
+    // Check boolean filters on thisEvent.eventType
     let count = 0;
     if (filterActivated) {
-      if (eventObj.eventType === "Activate") {
+      if (thisEvent.eventType === "Activate") {
         isFiltered = false;
       }
       count++;
     }
     if (rewardActivated) {
-      if (eventObj.eventType === "Reward") {
+      if (thisEvent.eventType === "Reward") {
         isFiltered = false;
       }
       count++;
     }
     if (updateActivated) {
-      if (eventObj.eventType === "Update") {
+      if (thisEvent.eventType === "Update") {
         isFiltered = false;
       }
       count++;
     }
     if (withdrawActivated) {
-      if (eventObj.eventType === "Withdraw") {
+      if (thisEvent.eventType === "Withdraw") {
         isFiltered = false;
       }
       count++;
     }
     if (stakeActivated) {
-      if (eventObj.eventType === "Stake") {
+      if (thisEvent.eventType === "Stake") {
         isFiltered = false;
       }
       count++;
     }
     if (stakeActivated) {
-      if (eventObj.eventType === "Migrate") {
+      if (thisEvent.eventType === "Migrate") {
         isFiltered = false;
       }
       count++;
     }
     if (unbondActivated) {
-      if (eventObj.eventType === "Unbond") {
+      if (thisEvent.eventType === "Unbond") {
         isFiltered = false;
       }
       count++;
     }
     if (delegatorRewardActivated) {
-      if (eventObj.eventType === "Claim") {
+      if (thisEvent.eventType === "Claim") {
+        isFiltered = false;
+      }
+      count++;
+    }
+    if (ticketRedemptionActivated) {
+      if (thisEvent.eventType === "RedeemTicket") {
         isFiltered = false;
       }
       count++;
@@ -151,19 +184,19 @@ const EventViewer = (obj) => {
 
     if (unfiltered < obj.maxAmount) {
       unfiltered++;
-      if (prevBlock === eventObj.transactionBlock) {
+      if (prevBlock === thisEvent.transactionBlock) {
         eventList.push(<EventButton
-          key={eventObj.transactionHash + unfiltered}
-          eventObj={eventObj}
+          key={thisEvent.transactionHash + unfiltered}
+          eventObj={thisEvent}
           setSearchTerm={obj.setSearchTerm}
         />);
       } else {
-        prevBlock = eventObj.transactionBlock;
+        prevBlock = thisEvent.transactionBlock;
         eventList.push(<EventButton
-          key={eventObj.transactionHash + unfiltered}
-          eventObj={eventObj}
+          key={thisEvent.transactionHash + unfiltered}
+          eventObj={thisEvent}
           isFirstOfBlock={prevBlock}
-          time={eventObj.transactionTime}
+          time={thisEvent.transactionTime}
           setSearchTerm={obj.setSearchTerm}
         />);
       }
@@ -295,6 +328,11 @@ const EventViewer = (obj) => {
                 setUnbondActivated(!unbondActivated);
               }}>
                 <h3>Unbond</h3>
+              </button>
+              <button className={ticketRedemptionActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: ticketActivatedColour }} onClick={() => {
+                setTicketRedemptionActivated(!ticketRedemptionActivated);
+              }}>
+                <h3>Tickets</h3>
               </button>
             </div>
           </div>

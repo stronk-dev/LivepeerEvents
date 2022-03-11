@@ -10,7 +10,7 @@ const unbondColour = "rgba(122, 23, 51, 0.3)";
 const claimColour = "rgba(77, 91, 42, 0.3)";
 
 const ticketTransferColour = "rgba(88, 91, 42, 0.3)";
-const ticketRedeemColour = "rgba(42, 91, 44, 0.3)";
+const ticketRedeemColour = "rgba(42, 44, 91, 0.3)";
 
 const thresholdStaking = 0.001;
 const thresholdFees = 0.00009;
@@ -96,7 +96,7 @@ export const getEvents = () => async dispatch => {
     let tmpWhen = "";
     // Group Events into transactions. Always reset when the transactionID changes
     {
-      for (const eventObj of data.slice(0).reverse()) {
+      for (const eventObj of data) {
         if (currentTx === "") {
           currentTx = eventObj.transactionHash;
           currentUrl = eventObj.transactionUrl;
@@ -370,7 +370,7 @@ export const getTickets = () => async dispatch => {
     let currentTime = 0;
     // Parse Tickets
     {
-      for (const eventObj of data.slice(0).reverse()) {
+      for (const eventObj of data) {
         if (currentTx === "") {
           currentTx = eventObj.transactionHash;
           currentUrl = eventObj.transactionUrl;

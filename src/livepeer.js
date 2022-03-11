@@ -6,7 +6,6 @@ import { getOrchestratorInfo, clearOrchestrator } from "./actions/livepeer";
 import EventViewer from "./eventViewer";
 import Orchestrator from "./orchestratorViewer";
 import Stat from "./statViewer";
-import TicketViewer from './ticketViewer';
 
 // Shows the EventViewer and other Livepeer related info
 const defaultMaxShown = 100;
@@ -16,7 +15,6 @@ const Livepeer = (obj) => {
   const [maxAmount, setMaxAmount] = useState(defaultMaxShown);
   const [prefill, setPrefill] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
-  const [showTickets, setShowTickets] = useState("");
   const dispatch = useDispatch();
   const livepeer = useSelector((state) => state.livepeerstate);
   const [redirectToHome, setRedirectToHome] = useState(false);
@@ -136,12 +134,6 @@ const Livepeer = (obj) => {
   if (livepeer.tickets) {
     ticketList = livepeer.tickets;
   }
-  if (showTickets) {
-    ticketBit =
-      <div className="rightContent">
-        <TicketViewer tickets={ticketList} forceVertical={true} />
-      </div>
-  }
 
   let thisOrchObj;
   let headerString;
@@ -199,12 +191,6 @@ const Livepeer = (obj) => {
           }}>
             <h4>✖️ Clear</h4>
           </button>
-          <p>Tickets</p>
-          <div className="toggle-container" onClick={() => setShowTickets(!showTickets)}>
-            <div className={`dialog-button ${showTickets ? "" : "disabled"}`}>
-              {showTickets ? "Show" : "Hide"}
-            </div>
-          </div>
           <p>Sidebar</p>
           <div className="toggle-container" onClick={() => setShowSidebar(!showSidebar)}>
             <div className={`dialog-button ${showSidebar ? "" : "disabled"}`}>
@@ -224,9 +210,8 @@ const Livepeer = (obj) => {
         <div className="mainContent">
           <EventViewer events={eventsList} searchTerm={searchTerm} setSearchTerm={setSearchTerm}
             forceVertical={true} showFilter={showFilter} setAmountFilter={setAmountFilter} amountFilter={amountFilter}
-            maxAmount={maxAmount} setMaxAmount={setMaxAmount} />
+            maxAmount={maxAmount} setMaxAmount={setMaxAmount} tickets={ticketList} />
         </div>
-        {ticketBit}
       </div>
     </div >
   );
