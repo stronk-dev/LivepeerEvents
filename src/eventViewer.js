@@ -30,9 +30,9 @@ const EventViewer = (obj) => {
   console.log("Rendering EventViewer");
   let unfiltered = 0;
   let filtered = 0;
+  let hidden = 0;
   let prevBlock = 0;
   let limitShown = obj.events.length + obj.tickets.length;
-  let hasLimited = false;
 
   let filterActivatedColour;
   filterActivatedColour = filterActivated ? activationColour : greyColour;
@@ -52,7 +52,7 @@ const EventViewer = (obj) => {
   unbondActivatedColour = unbondActivated ? unbondColour : greyColour;
 
   const updateOnScroll = () => {
-    if (!hasLimited) {
+    if (unfiltered == 0) {
       return;
     }
     if (listInnerRef.current) {
@@ -102,6 +102,7 @@ const EventViewer = (obj) => {
     // Filter by minimum value
     if (obj.amountFilter !== "") {
       if (parseFloat(obj.amountFilter) > thisEvent.eventValue) {
+        filtered++;
         continue;
       }
     }
@@ -111,7 +112,10 @@ const EventViewer = (obj) => {
       if (thisEvent.eventCaller.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
       if (thisEvent.eventFrom.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
       if (thisEvent.eventTo.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
-      if (isFiltered) continue;
+      if (isFiltered) {
+        filtered++;
+        continue;
+      }
     }
     // Filter Events on filter buttons
     let isFiltered = true;
@@ -172,6 +176,7 @@ const EventViewer = (obj) => {
       count++;
     }
     if (isFiltered && count) {
+      filtered++;
       continue;
     }
 
@@ -195,12 +200,12 @@ const EventViewer = (obj) => {
       }
     }
     else {
-      filtered++;
+      hidden++;
     }
   }
 
   let showMoreButton;
-  if (!hasLimited) {
+  if (hidden == 0) {
     showMoreButton =
       <div className="stroke" style={{ width: '100%', padding: 0, margin: 0, marginBottom: '2em', marginTop: '2em' }}>
         <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", backgroundColor: greyColour, padding: 0, margin: 0, width: '100%' }}>
