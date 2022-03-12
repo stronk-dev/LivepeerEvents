@@ -42,9 +42,9 @@ code, pre{
 }
 
 h2, h3, h1, h4, h5, h6 {
-  text-shadow: 0.5px 0.5px 0.8px #948dff;
+  text-shadow: 0.5px 0.5px 0.8px #9493aa;
   color: #1a1b26;
-  cursor: default;
+  cursor: inherit;
   text-align: center;
   justify-content: center;
   align-items: center;
@@ -61,7 +61,7 @@ h2, h3, h1, h4, h5, h6 {
 }
 
 p {
-  text-shadow: 0.5px 0.5px 0.8px #948dff;
+  text-shadow: 0.5px 0.5px 0.8px #9493aa;
   color: #1a1b26;
   font-size: 1.2em;
   margin: 0.3em;
@@ -75,19 +75,19 @@ p {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background-color: rgba(146, 144, 196, 0.9);
+  background-color: rgba(61, 61, 66, 0.3);
   border-radius: 10px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(51, 50, 78, 0.9);
+  background-color: rgba(44, 44, 46, 0.7);
   border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(25, 25, 59, 0.9);
+  background-color: rgba(35, 35, 39, 0.9);
 }
 
 #dvdlogo {
@@ -145,7 +145,7 @@ svg {
   height: 50px;
   display: flex;
   align-items: center;
-  background-color: rgba(180, 175, 252, 0.80);
+  background-color: rgba(214, 214, 214, 0.80);
 }
 #bodyContent {
   height: calc( 100vh - 50px);
@@ -155,9 +155,9 @@ svg {
   overflow: hidden;
 }
 #sideContent {
-  background-color: rgba(180, 175, 252, 0.80);
+  background-color: rgba(214, 214, 214, 0.8);
   backdrop-filter: blur(6px);
-  box-shadow: 9px 13px 8px 8px  rgba(8, 7, 56, 0.692);
+  box-shadow: 9px 13px 8px 8px  rgba(27, 23, 19, 0.692);
   border-bottom-right-radius: 1em;
   width: 400px;
   overflow-y: auto;
@@ -187,7 +187,7 @@ svg {
 }
 
 .lightText {
-  color: rgba(162, 161, 255, 0.5);
+  color: rgba(176, 175, 218, 0.7);
 }
 
 .darkText {
@@ -205,7 +205,7 @@ svg {
   user-select: text;
   font-size: small;
   color: rgba(15, 15, 15, 0.8750);
-  background-color: rgba(148, 154, 184, 0.8);
+  background-color: rgba(206, 206, 206, 0.8);
   -webkit-box-shadow: inset 3px 3px 12px 2px rgba(28, 28, 170, 0.2);
   -moz-box-shadow: inset 3px 3px 12px 2px rgba(28, 28, 170, 0.2);
   box-shadow: inset 3px 3px 12px 2px rgba(28, 28, 170, 0.2);
@@ -328,8 +328,8 @@ svg {
   padding: 8px;
   border: 0;
   border-radius: 5px;
-  background-color: rgba(163, 161, 255, 0.9);
-  box-shadow: 4px 5px 3px 2px rgba(8, 7, 56, 0.692);
+  background-color: rgba(157, 157, 158, 0.9);
+  box-shadow: 4px 5px 3px 2px rgba(20, 20, 19, 0.692);
   text-align: center;
   justify-content: center;
   align-items: center;
@@ -339,7 +339,7 @@ svg {
   backdrop-filter: blur(6px);
 }
 .waveButton:hover {
-  background-color: rgba(122, 121, 207, 0.9);
+  background-color: rgba(192, 195, 200, 0.8);
 }
 .waveButton:disabled {
   cursor: default;
@@ -360,11 +360,11 @@ svg {
   z-index: 10; 
 }
 .homeButton:hover {
-  box-shadow: 4px 5px 3px 2px rgba(8, 7, 56, 0.692);
+  box-shadow: 4px 5px 3px 2px rgba(20, 20, 19, 0.692);
   backdrop-filter: blur(6px);
 }
 .homeButton:active {
-  box-shadow: inset -4px -5px 6px 4px rgba(8, 7, 56, 0.692);
+  box-shadow: inset -4px -5px 6px 4px rgba(20, 20, 19, 0.692);
 }
 .homeButton:disabled {
   cursor: default;
@@ -385,30 +385,29 @@ svg {
   margin-bottom: 0.7em;
 }
 .nonHomeButton:hover {
-  box-shadow: 4px 5px 3px 2px rgba(8, 7, 56, 0.692);
+  box-shadow: 4px 5px 3px 2px rgba(20, 20, 19, 0.692);
   backdrop-filter: blur(6px);
 }
 .nonHomeButton:active {
-  box-shadow: inset -4px -5px 6px 4px rgba(8, 7, 56, 0.692);
+  box-shadow: inset -4px -5px 6px 4px rgba(20, 20, 19, 0.692);
 }
 .active {
-  box-shadow: inset -4px -5px 6px 4px rgba(8, 7, 56, 0.692);
+  box-shadow: inset -4px -5px 6px 4px rgba(20, 20, 19, 0.692);
 }
 .searchField {
   margin: auto;
   display: flex;
-  background-color: rgba(44, 96, 238, 0.199);
+  background-color: rgba(107, 111, 122, 0.199);
   padding: 5px;
   border-radius: 20px;
-  color:rgba(8, 7, 56, 0.747);
+  color:rgba(20, 20, 19, 0.747);
 }
 .searchField::placeholder {
-  color:rgba(8, 7, 56, 0.445);
+  color:rgba(20, 20, 19, 0.445);
 }
 .searchField:focus {
   outline: none !important;
-  border:2px solid rgba(49, 13, 134, 0.459);
-  box-shadow: 0px 0px 3px 2px rgba(53, 118, 138, 0.8);
+  box-shadow: 0px 0px 3px 2px rgba(99, 109, 112, 0.8);
 }
 
 .main-container {
@@ -450,8 +449,8 @@ svg {
 }
 
 .roundedOpaque {
-  background-color: rgba(180, 175, 252, 0.80);
-  box-shadow: 9px 13px 18px 8px  rgba(8, 7, 56, 0.692);
+  background-color: rgba(214, 214, 214, 0.80);
+  box-shadow: 9px 13px 18px 8px  rgba(20, 20, 19, 0.692);
   border-radius: 30px;
   box-sizing: border-box;
   backdrop-filter: blur(6px);
@@ -479,7 +478,7 @@ svg {
 }
 
 .selectOrch, .selectOrch a{
-  text-shadow: 0.5px 0.5px 0.8px #948dff;
+  text-shadow: 0.5px 0.5px 0.8px #9493aa;
   background-color: transparent;
   border: none;
 }
@@ -492,7 +491,7 @@ svg {
 }
 
 .selectOrchLight, .selectOrchLight a{
-  text-shadow: 0.5px 0.5px 0.8px #948dff;
+  text-shadow: 0.5px 0.5px 0.8px #9493aa;
   background-color: transparent;
   border: none;
 }
@@ -501,7 +500,7 @@ svg {
   backdrop-filter: blur(6px);
   text-decoration: none;
   cursor: pointer;
-  background-color: rgba(115, 114, 146, 0.9);
+  background-color: rgba(187, 187, 187, 0.9);
   border-radius: 1em;
 }
 
@@ -541,7 +540,7 @@ svg {
 }
 
 .disabled {
-  background-color: #384e5c;
+  background-color: #495258;
   left: 2px;
 }
 

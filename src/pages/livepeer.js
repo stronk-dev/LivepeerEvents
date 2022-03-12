@@ -76,16 +76,16 @@ const Livepeer = (obj) => {
           }}>
             <h1 style={{ margin: 0, padding: 0 }}>🏠</h1>
           </button>
-          <h4 className="rowAlignLeft withWrap elipsOnMobile">{headerString}</h4>
+          <h4 className="rowAlignLeft withWrap showNeverOnMobile">{headerString}</h4>
         </div>
         <div className='rowAlignRight'>
-          <button className="homeButton" style={{ padding: 0, paddingRight: '1em', paddingLeft: '1em' }} onClick={() => {
+          <button className="homeButton" onClick={() => {
             dispatch(clearOrchestrator());
             setSearchTerm("");
             setAmountFilter(0);
             setMaxAmount(defaultMaxShown);
           }}>
-            <h4>✖️ Clear</h4>
+            <h4 style={{margin: 0, padding: 0}}>✖️ Clear</h4>
           </button>
           <p>Sidebar</p>
           <div className="toggle-container" onClick={() => setShowSidebar(!showSidebar)}>

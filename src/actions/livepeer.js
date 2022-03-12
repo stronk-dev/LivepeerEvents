@@ -1,16 +1,16 @@
 import * as apiUtil from "../util/livepeer";
 import { receiveErrors } from "./error";
 
-const activationColour = "rgba(23, 60, 122, 0.3)";
-const rewardColour = "rgba(20, 99, 29, 0.3)";
-const updateColour = "rgba(122, 63, 23, 0.3)";
-const withdrawStakeColour = "rgba(115, 110, 22, 0.3)";
-const stakeColour = "rgba(56, 23, 122, 0.3)";
-const unbondColour = "rgba(122, 23, 51, 0.3)";
-const claimColour = "rgba(77, 91, 42, 0.3)";
+const claimColour = "rgba(25, 158, 29, 0.3)";
+const stakeColour = "rgba(25, 158, 147, 0.3)";
+const ticketRedeemColour = "rgba(25, 98, 158, 0.3)";
+const rewardColour = "rgba(25, 27, 158, 0.3)";
+const unbondColour = "rgba(105, 25, 158, 0.3)";
+const updateColour = "rgba(158, 25, 52, 0.3)";
+const withdrawStakeColour = "rgba(158, 98, 25, 0.3)";
+const activationColour = "rgba(154, 158, 25, 0.3)";
 
 const ticketTransferColour = "rgba(88, 91, 42, 0.3)";
-const ticketRedeemColour = "rgba(42, 44, 91, 0.3)";
 
 const thresholdStaking = 0.001;
 const thresholdFees = 0.00009;
@@ -117,16 +117,16 @@ export const getEvents = () => async dispatch => {
             eventFrom = "";
             eventTo = "";
             if (eventContainsBond) {
-              eventDescription = "activated with a self stake of " + tmpAmount.toFixed(2) + " LPT and will become active in round " + tmpWhen;
+              eventDescription = "🚀activated with a self stake of " + tmpAmount.toFixed(2) + " LPT and will become active in round " + tmpWhen;
             } else {
-              eventDescription = "reactivated and will become active in round " + tmpWhen;
+              eventDescription = "🚀reactivated and will become active in round " + tmpWhen;
             }
           }
           // Lone Unbond => Unbond Event
           else if (eventContainsUnbond) {
             eventType = "Unbond";
             eventColour = unbondColour;
-            eventDescription = "unbonded " + tmpAmount.toFixed(2) + " LPT starting from round " + tmpWhen;
+            eventDescription = "❌unbonded " + tmpAmount.toFixed(2) + " LPT starting from round " + tmpWhen;
 
           }
           // Lone Bond => Stake Event
@@ -138,18 +138,18 @@ export const getEvents = () => async dispatch => {
           else if (eventContainsRebond) {
             eventType = "Stake";
             eventColour = stakeColour;
-            eventDescription = "is now staking " + tmpAmount.toFixed(2) + " LPT";
+            eventDescription = "⌛is now staking " + tmpAmount.toFixed(2) + " LPT";
           }
 
           // Fill description of Stake Event if it wasn't set yet
           if (eventType === "Stake" && eventDescription === "") {
             if (eventFrom === "0x0000000000000000000000000000000000000000") {
-              eventDescription = "staked " + tmpAmount.toFixed(2) + " LPT";
+              eventDescription = "⌛staked " + tmpAmount.toFixed(2) + " LPT";
             } else if (eventFrom === eventTo) {
               eventFrom = "";
-              eventDescription = "is now staking " + tmpAmount.toFixed(2) + " LPT";
+              eventDescription = "⌛is now staking " + tmpAmount.toFixed(2) + " LPT";
             } else {
-              eventDescription = "moved a " + tmpAmount.toFixed(2) + " LPT stake";
+              eventDescription = "⌛moved a " + tmpAmount.toFixed(2) + " LPT stake";
             }
           }
           // If we have an eventType at this point, we have a completed Event from the previous transaction
@@ -199,7 +199,7 @@ export const getEvents = () => async dispatch => {
           if (amount < thresholdFees) {
             continue;
           }
-          const txt = " withdrew a " + amount.toFixed(2) + " LPT stake in round " + eventObj.data.withdrawRound;
+          const txt = "🏦withdrew a " + amount.toFixed(2) + " LPT stake in round " + eventObj.data.withdrawRound;
           finalEventList.push({
             eventType: "Withdraw",
             eventDescription: txt,
@@ -218,7 +218,7 @@ export const getEvents = () => async dispatch => {
           if (amount < thresholdFees) {
             continue;
           }
-          const txt = " withdrew " + amount.toFixed(2) + " LPT earned fees";
+          const txt = "🏦withdrew " + amount.toFixed(2) + " LPT earned fees";
           finalEventList.push({
             eventType: "Withdraw",
             eventDescription: txt,
@@ -238,7 +238,7 @@ export const getEvents = () => async dispatch => {
           eventContainsTranscoderUpdate = true;
           const amount1 = parseFloat(eventObj.data.rewardCut) / 10000;
           const amount2 = 100 - (eventObj.data.feeShare / 10000);
-          const txt = "changed their reward commission to " + amount1.toFixed(2) + "% and their fee commission to " + amount2.toFixed(2) + "%";
+          const txt = "🔄changed their reward commission to " + amount1.toFixed(2) + "% and their fee commission to " + amount2.toFixed(2) + "%";
           finalEventList.push({
             eventType: "Update",
             eventDescription: txt,
@@ -261,7 +261,7 @@ export const getEvents = () => async dispatch => {
           if (amount1 < thresholdStaking && amount2 < thresholdFees) {
             continue;
           }
-          let txt = "delegator claimed ";
+          let txt = "💰delegator claimed ";
           if (amount1 > thresholdStaking) {
             txt += amount1.toFixed(2) + " LPT staking rewards";
             if (amount2 > thresholdFees) {
@@ -290,7 +290,7 @@ export const getEvents = () => async dispatch => {
         else if (eventObj.name === "Reward") {
           eventContainsReward = true;
           const amount1 = parseFloat(eventObj.data.amount) / 1000000000000000000;
-          let txt = "called reward worth " + amount1.toFixed(2) + " LPT";
+          let txt = "💸called reward worth " + amount1.toFixed(2) + " LPT";
           if (Math.floor(amount1) == 69) {
             txt += "... Nice!";
           }
@@ -389,7 +389,7 @@ export const getTickets = () => async dispatch => {
         // Always split off WithdrawStake as a separate Withdraw Event
         if (eventObj.name === "WinningTicketRedeemed") {
           const amount = parseFloat(eventObj.data.faceValue) / 1000000000000000000;
-          const txt = " redeemed a winning ticket worth " + amount.toFixed(4) + " Eth";
+          const txt = "🎟️winning ticket worth " + amount.toFixed(4) + " Eth";
           finalTicketList.push({
             eventType: "RedeemTicket",
             eventDescription: txt,

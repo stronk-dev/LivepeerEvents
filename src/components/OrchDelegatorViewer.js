@@ -12,12 +12,12 @@ const OrchDelegatorViewer = (obj) => {
             <h3 style={{ padding: 0, margin: 0 }}>{delegators.length} Current Delegators</h3>
           </div>
           <div className="content-wrapper">
-            <ScrollContainer className="overflow-container" hideScrollbars={false}>
-              <div className="overflow-content" style={{ cursor: 'grab', padding: 0, maxHeight: '300px' }}>
+            <ScrollContainer className="overflow-container" hideScrollbars={false} style={{  }}>
+              <div className="overflow-content" style={{ cursor: 'grab', padding: 0, maxHeight: '300px', margin: '0.5em' }}>
                 {
                   delegators.map((delObj, idx) => {
                     return (
-                      <div className="flexContainer forceWrap" key={"delegator" + idx} style={{ margin: 0, textAlign: 'center',alignItems: 'center', justifyContent:'center' }}>
+                      <div className="flexContainer forceWrap" key={"delegator" + idx} style={{ margin: 0, textAlign: 'center', alignItems: 'center', justifyContent: 'center' }}>
                         <Address address={delObj.id} seed={"delegator" + idx + delObj.id} />
                         <div className="rowAlignRight" style={{ margin: 0 }}>
                           <p className="darkText">{parseFloat(delObj.bondedAmount).toFixed(2)} LPT since round {delObj.startRound}</p>

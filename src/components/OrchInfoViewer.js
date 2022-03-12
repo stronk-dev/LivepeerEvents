@@ -1,6 +1,5 @@
 import React from "react";
 import Stat from "./statViewer";
-import ReactTooltip from "react-tooltip";
 import Address from "./OrchAddressViewer";
 
 function updateClipboard(newClip) {
@@ -88,14 +87,11 @@ const OrchInfoViewer = (obj) => {
             <Stat header={"Stake"} title1={"Total"} content1={totalStake + " LPT"} title2={"Self"} content2={selfStake + " LPT (" + selfStakeRatio + ")%"} />
           </div>
           <div className="strokeSmollLeft" style={{ display: "flex" }}>
-            <button style={{ marginBottom: '1em' }} className="selectOrchLight" data-tip data-for="registerTip" onClick={() => {
+            <button style={{ marginBottom: '1em' }} className="selectOrchLight" onClick={() => {
               copyLink(shareUrl);
             }}>
               <img alt="" src="clipboard.svg" width="20em" height="20em" />
             </button>
-            <ReactTooltip id="registerTip" place="top" effect="solid">
-              Copy to clipboard
-            </ReactTooltip>
           </div>
         </div>
       </div>

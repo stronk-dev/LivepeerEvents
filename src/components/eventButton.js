@@ -24,14 +24,14 @@ const EventButton = (obj) => {
   if (obj.eventObj.eventTo || obj.eventObj.eventFrom || obj.eventObj.eventCaller) {
     if (obj.eventObj.eventTo) {
       eventTo =
-        <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
+        <div className="rowAlignLeft" style={{ width: '100%', margin: 0 }}>
           <a className="selectOrch" style={{ cursor: 'alias' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventTo}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventTo) }} >
             <span className="elipsText">🔎</span>
           </button>
-          <span>To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+          <span>To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</span>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventTo)) }} >
             <span className="elipsText elipsOnMobileExtra">{obj.eventObj.eventTo}</span>
           </button>
@@ -39,14 +39,14 @@ const EventButton = (obj) => {
     }
     if (obj.eventObj.eventFrom) {
       eventFrom =
-        <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
+        <div className="rowAlignLeft" style={{ width: '100%', margin: 0 }}>
           <a className="selectOrch" style={{ cursor: 'alias' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventFrom}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventFrom) }} >
             <span className="elipsText">🔎</span>
           </button>
-          <span>From&nbsp;&nbsp;:</span>
+          <span>From&nbsp;&nbsp;:&nbsp;</span>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventFrom)) }}>
             <span className="elipsText elipsOnMobileExtra">{obj.eventObj.eventFrom}</span>
           </button>
@@ -54,14 +54,14 @@ const EventButton = (obj) => {
     }
     if (obj.eventObj.eventCaller) {
       eventCaller =
-        <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
+        <div className="rowAlignLeft" style={{ width: '100%', margin: 0 }}>
           <a className="selectOrch" style={{ cursor: 'alias' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventCaller) }} >
             <span className="elipsText">🔎</span>
           </button>
-          <span>Caller&nbsp;:</span>
+          <span>Caller&nbsp;:&nbsp;</span>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventCaller)) }} >
             <span className="elipsText elipsOnMobileExtra">{obj.eventObj.eventCaller}</span>
           </button>
@@ -86,7 +86,7 @@ const EventButton = (obj) => {
         </div>
         <div className="row">
           <p className="row withWrap" style={{ maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', border: '0.1em solid rgba(54, 46, 46, 0.1)', boxShadow: "4px 2px 3px 2px rgba(54, 46, 46, 0.1)" }}>
-            💬 {obj.eventObj.eventDescription}
+            {obj.eventObj.eventDescription}
           </p>
         </div>
         <div className="rowAlignLeft">
