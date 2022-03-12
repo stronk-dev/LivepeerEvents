@@ -77,19 +77,21 @@ const EventButton = (obj) => {
     blockNumber = <Block block={obj.isFirstOfBlock} time={obj.time} url={obj.eventObj.transactionUrl} />
   }
 
-return (
-  <div className="stroke" style={{ width: '100%', padding: 0, margin: 0, marginBottom: '0.5em' }}>
-    {blockNumber}
-    <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", backgroundColor: obj.eventObj.eventColour, boxShadow: "4px 1px 5px 4px  " + obj.eventObj.eventColour, padding: 0, margin: 0, width: '100%' }}>
-      {eventCaller}
-      <p className="row withWrap" style={{ maxWidth: '600px', textAlign: 'justify', padding: '0.5em', border: '0.1em solid rgba(54, 46, 46, 0.1)', boxShadow: "4px 2px 3px 2px rgba(54, 46, 46, 0.1)" }}>
-        💬 {obj.eventObj.eventDescription}
-      </p>
-      {eventFrom}
-      {eventTo}
+  return (
+    <div className="stroke" style={{ width: '100%', padding: 0, margin: 0, marginBottom: '1.0em' }}>
+      {blockNumber}
+      <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", backgroundColor: obj.eventObj.eventColour, boxShadow: "5px 8px 5px 4px  " + obj.eventObj.eventColour, padding: 0, margin: 0, width: '100%' }}>
+        {eventCaller}
+        <div className="row">
+          <p className="row withWrap" style={{ maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', border: '0.1em solid rgba(54, 46, 46, 0.1)', boxShadow: "4px 2px 3px 2px rgba(54, 46, 46, 0.1)" }}>
+            💬 {obj.eventObj.eventDescription}
+          </p>
+        </div>
+        {eventFrom}
+        {eventTo}
+      </div>
     </div>
-  </div>
-)
+  )
 }
 
 export default EventButton;
