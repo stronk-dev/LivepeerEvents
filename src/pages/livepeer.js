@@ -59,7 +59,9 @@ const Livepeer = (obj) => {
         <div className="row" style={{ alignItems: 'stretch', height: '100%', padding: '0.2em', width: "unset" }}>
           <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} forceVertical={true} />
         </div>
-        <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
+        <div className="row">
+          <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
+        </div>
       </div>
     </div >
   }

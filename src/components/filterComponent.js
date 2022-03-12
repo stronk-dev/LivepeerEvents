@@ -28,7 +28,7 @@ const Filter = (obj) => {
               <h3>Clear</h3>
             </button>
           </div>
-          <input className="searchField" style={{ width: '80%', paddingLeft: '1em', paddingRight: '1em' }}
+          <input className="searchField" style={{  margin: 0, padding: 0, height: '2em', width: '80%', paddingLeft: '1em', paddingRight: '1em', marginRight: '1em' }}
             value={obj.searchTerm}
             onChange={(evt) => obj.setSearchTerm(evt.target.value)}
             placeholder='Filter by Orchestrator address'

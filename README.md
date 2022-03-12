@@ -21,8 +21,8 @@ Orchestrators can be inspected by clicking on their address, showing all of thei
   - Returns a JSON object of top 200 coint data by coin symbol
 - https://nframe.nl/api/livepeer/getEvents
   - Returns a JSON object of the raw data of all events on the Livepeer BondingManager contract
-- https://nframe.nl/api/livepeer/getEvents
-  - Returns a JSON object of the raw data of all events on the Livepeer BondingManager contract
+- https://nframe.nl/api/livepeer/getTickets
+  - Returns a JSON object of the raw data of all events on the Livepeer TicketBroker contract
 - https://nframe.nl/api/livepeer/getOrchestrator
     - POST request with orchAddr in the body
 - https://www.nframe.nl/livepeer/getOrchestrator?orchAddr=0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e
@@ -32,6 +32,8 @@ Orchestrators can be inspected by clicking on their address, showing all of thei
   - Returns a JSON object of the default Orchestrator selected in the backend
 - https://www.nframe.nl/livepeer/prometheus/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e
   - Returns a Prometheus compatible output of all data except blockchain Events
+
+See the wiki for examples of their raw output
 
 # How
 
