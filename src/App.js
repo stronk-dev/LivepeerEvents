@@ -1,8 +1,8 @@
 import * as React from "react";
-import Home from './home.js';
-import Startup from './loadingScreen.js';
-import Grafana from './grafana.js';
-import Livepeer from './livepeer.js';
+import Home from './pages/home.js';
+import Startup from './pages/loadingScreen.js';
+import Grafana from './pages/grafana.js';
+import Livepeer from './pages/livepeer.js';
 
 import {
   BrowserRouter as Router,

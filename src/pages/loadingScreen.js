@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, batch } from 'react-redux'
 import {
   getVisitorStats
-} from "./actions/user";
+} from "../actions/user";
 import {
   getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo, getTickets
-} from "./actions/livepeer";
-import { login } from "./actions/session";
+} from "../actions/livepeer";
+import { login } from "../actions/session";
 
 // Shows a loading screen on first load and gets fresh data every refreshInterval milliseconds
 

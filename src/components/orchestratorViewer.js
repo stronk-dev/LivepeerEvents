@@ -1,8 +1,4 @@
 import React from "react";
-import ScrollContainer from "react-indiana-drag-scroll";
-import Stat from "./statViewer";
-import ReactTooltip from "react-tooltip";
-import Address from "./OrchAddressViewer";
 import OrchDelegatorViewer from "./OrchDelegatorViewer";
 import OrchInfoViewer from "./OrchInfoViewer";
 

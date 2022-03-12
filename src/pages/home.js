@@ -1,31 +1,26 @@
 import React, { useState } from 'react';
-import './style.css';
+import '../style.css';
 import {
   Navigate
 } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import RetroHitCounter from 'react-retro-hit-counter';
-
-// Index of all subpages on this website
+// Index of all sub-pages on this website
 
 const Home = (obj) => {
   const userstate = useSelector((state) => state.userstate);
-  const sessionstate = useSelector((state) => state.session);
   const [redirectToGrafana, setRedirectToGrafana] = useState(false);
   const [redirectToLPT, setRedirectToLPT] = useState(false);
-
   if (redirectToGrafana) {
     return <Navigate push to="/orchestrator" />;
   }
   if (redirectToLPT) {
     return <Navigate push to="/livepeer" />;
   }
-
+  // Get amount of unique IP's which have visited this website
   var totalVisitorCount = 0;
-  var activeVisitorCount = 0;
   if (userstate.visitorStats) {
     totalVisitorCount = userstate.visitorStats.totalVisitorCount;
-    activeVisitorCount = userstate.visitorStats.activeVisitorCount
   }
 
   return (
@@ -80,8 +75,6 @@ const Home = (obj) => {
             glowStrength={0.4}
           />
         </div>
-      </div>
-      <div className="alwaysOnBottomRight" style={{ margin: 0, padding: 0 }}>
         <h6 className="lightText" style={{ margin: 0, padding: 0 }}>
           nframe.nl
         </h6>

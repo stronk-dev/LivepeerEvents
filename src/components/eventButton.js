@@ -1,7 +1,7 @@
 import React from "react";
 import {
   getOrchestratorInfo
-} from "./actions/livepeer";
+} from "../actions/livepeer";
 import { useDispatch } from 'react-redux';
 import Block from "./BlockViewer";
 
@@ -26,7 +26,7 @@ const EventButton = (obj) => {
       eventTo =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
           <span>To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
-          <a className="selectOrch" style={{ cursor: 'alias', marginLeft: '0.5em' }} target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventTo}>
+          <a className="selectOrch" style={{ cursor: 'alias', marginLeft: '0.5em' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventTo}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventTo) }} >
@@ -41,7 +41,7 @@ const EventButton = (obj) => {
       eventFrom =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
           <span>From&nbsp;&nbsp;:</span>
-          <a className="selectOrch" style={{ cursor: 'alias', marginLeft: '0.5em' }} target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventFrom}>
+          <a className="selectOrch" style={{ cursor: 'alias', marginLeft: '0.5em' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventFrom}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventFrom) }} >
@@ -56,7 +56,7 @@ const EventButton = (obj) => {
       eventCaller =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
           <span>Caller&nbsp;:</span>
-          <a className="selectOrch" style={{ cursor: 'alias', marginLeft: '0.5em' }} target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
+          <a className="selectOrch" style={{ cursor: 'alias', marginLeft: '0.5em' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventCaller) }} >

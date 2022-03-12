@@ -1,21 +1,20 @@
 import React, { useState } from 'react'
-import './style.css';
+import '../style.css';
 import {
   Navigate
 } from "react-router-dom";
 import { useSelector } from 'react-redux'
-import Orchestrator from "./orchestratorViewer";
+import Orchestrator from "../components/orchestratorViewer";
 
 // Displays orchestrator info and embedded grafana panels
 
 const Grafana = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [redirectToHome, setRedirectToHome] = useState(false);
-
   if (redirectToHome) {
     return <Navigate push to="/" />;
   }
-
+  // Generate component for displaying LPT and ETH price and price change
   let lptPrice = 0;
   let ethPrice = 0;
   let lptPriceChange24h = 0;
