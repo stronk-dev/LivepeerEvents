@@ -25,14 +25,14 @@ const EventButton = (obj) => {
     if (obj.eventObj.eventTo) {
       eventTo =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
-          <span>To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
-          <a className="selectOrch" style={{ cursor: 'alias', marginLeft: '0.5em' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventTo}>
+          <a className="selectOrch" style={{ cursor: 'alias' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventTo}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventTo) }} >
             <span className="elipsText">🔎</span>
           </button>
-          <button className="selectOrch" style={{ margin: 0, padding: 0, cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventTo)) }} >
+          <span>To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+          <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventTo)) }} >
             <span className="elipsText elipsOnMobileExtra">{obj.eventObj.eventTo}</span>
           </button>
         </div>
@@ -40,14 +40,14 @@ const EventButton = (obj) => {
     if (obj.eventObj.eventFrom) {
       eventFrom =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
-          <span>From&nbsp;&nbsp;:</span>
-          <a className="selectOrch" style={{ cursor: 'alias', marginLeft: '0.5em' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventFrom}>
+          <a className="selectOrch" style={{ cursor: 'alias' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventFrom}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventFrom) }} >
             <span className="elipsText">🔎</span>
           </button>
-          <button className="selectOrch" style={{ margin: 0, padding: 0, cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventFrom)) }}>
+          <span>From&nbsp;&nbsp;:</span>
+          <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventFrom)) }}>
             <span className="elipsText elipsOnMobileExtra">{obj.eventObj.eventFrom}</span>
           </button>
         </div >
@@ -55,14 +55,14 @@ const EventButton = (obj) => {
     if (obj.eventObj.eventCaller) {
       eventCaller =
         <div className="rowAlignLeft" style={{ width: '100%', margin: 0, marginLeft: '0.5em' }}>
-          <span>Caller&nbsp;:</span>
-          <a className="selectOrch" style={{ cursor: 'alias', marginLeft: '0.5em' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
+          <a className="selectOrch" style={{ cursor: 'alias' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.eventObj.eventCaller}>
             <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
           </a>
           <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.eventObj.eventCaller) }} >
             <span className="elipsText">🔎</span>
           </button>
-          <button className="selectOrch" style={{ margin: 0, padding: 0, cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventCaller)) }} >
+          <span>Caller&nbsp;:</span>
+          <button className="selectOrch" style={{ margin: 0, padding: '0.5em', cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.eventObj.eventCaller)) }} >
             <span className="elipsText elipsOnMobileExtra">{obj.eventObj.eventCaller}</span>
           </button>
         </div>
@@ -81,7 +81,7 @@ const EventButton = (obj) => {
     <div className="stroke" style={{ width: '100%', padding: '0', margin: 0, marginBottom: '1.0em' }}>
       {blockNumber}
       <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", backgroundColor: obj.eventObj.eventColour, boxShadow: "5px 8px 5px 4px  " + obj.eventObj.eventColour, padding: '0', margin: 0, width: '100%' }}>
-        <div className="rowAlignLeft" style={{marginTop: '0.5em'}}>
+        <div className="rowAlignLeft" style={{ marginTop: '0.5em' }}>
           {eventCaller}
         </div>
         <div className="row">
