@@ -150,11 +150,13 @@ Set configuration variables
 - `API_L2_HTTP` should be edited to the HTTP url of a L2 ethereum node
 - `API_L2_WS` should be edited to the WS url of an Arbitrum mainnet Alchemy node
 - `CONF_DEFAULT_ORCH` should be edited to the public address of your own Orchestrator. This is the default Orchestrator the backend will return
-- 'CONF_SIMPLE_MODE' if set to true, will disable live smart contract monitoring. Also disabled all MONGO related functionalities. Config flags 'API_L2_WS', 'MONGO_URI', 'MONGO_URI_DEV' and 'MONGO_URI_LOCAL' can be ignored if this flag is set to true.
-- 'CONF_TIMEOUT_CMC' time in milliseconds of how long coinmarketcap data is kept in the cache before a new request is made. Recommended is around 5-6 minutes in order to stay below the default daily soft cap
-- 'CONF_TIMEOUT_ALCHEMY' time in milliseconds of how long blockchain information, like gas prices, is being kept in the cache
-- 'CONF_TIMEOUT_LIVEPEER' time in milliseconds of how long livepeer data, like orchestrator and delegator information, is being kept in the cache
-
+- `CONF_SIMPLE_MODE` if set to true, will disable live smart contract monitoring. Also disabled all MONGO related functionalities. Config flags `API_L2_WS`, `MONGO_URI`, `MONGO_URI_DEV` and `MONGO_URI_LOCAL` can be ignored if this flag is set to true.
+- `CONF_TIMEOUT_CMC` time in milliseconds of how long coinmarketcap data is kept in the cache before a new request is made. Recommended is around 5-6 minutes in order to stay below the default daily soft cap
+- `CONF_TIMEOUT_ALCHEMY` time in milliseconds of how long blockchain information, like gas prices, is being kept in the cache
+- `CONF_TIMEOUT_LIVEPEER` time in milliseconds of how long livepeer data, like orchestrator and delegator information, is being kept in the cache
+- `CONF_DISABLE_SYNC` set to true to disable syncing events and tickets at boot
+- `CONF_DISABLE_DB` set to false to disable persistent storage of events and tickets into a mongodb database
+- `CONF_DISABLE_CMC` set to false to disable coin quotes using CMC
 ## Developing
 Open the directory of your backend and run
 - `npm run dev`

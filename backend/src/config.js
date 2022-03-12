@@ -18,5 +18,6 @@ export const {
     CONF_TIMEOUT_ALCHEMY = 2000,
     CONF_TIMEOUT_LIVEPEER = 60000,
     CONF_DISABLE_SYNC = false,
-    CONF_DISABLE_DB = false
+    CONF_DISABLE_DB = false,
+    CONF_DISABLE_CMC = false
 } = process.env;

@@ -232,7 +232,7 @@ const EventViewer = (obj) => {
     filterBit =
       <div className="strokeSmollLeft roundedOpaque"  style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, margin: 0, width: '100%' }}>
         <div className="row">
-          <span>Showing {filtered + unfiltered} out of {limitShown} results</span>
+          <span>Showing {hidden + unfiltered} out of {limitShown} results</span>
         </div>
         <div className="flexContainer" style={{margin: 0, width: '100%'}}>
           <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 2 }}>
@@ -311,7 +311,7 @@ const EventViewer = (obj) => {
               </div>
             </ScrollContainer>
             <div className="strokeSmollLeft" style={{ marginRight: "1em" }}>
-              <button className={filterActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: filterActivatedColour }} onClick={() => {
+              <button className={filterActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: filterActivatedColour,  marginTop: '0.7em' }} onClick={() => {
                 setFilterActivated(!filterActivated);
               }}>
                 <h3>Activated</h3>

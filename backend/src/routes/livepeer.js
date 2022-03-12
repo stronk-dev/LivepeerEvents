@@ -8,7 +8,8 @@ import {
   API_CMC, API_L1_HTTP, API_L2_HTTP, API_L2_WS,
   CONF_DEFAULT_ORCH, CONF_SIMPLE_MODE, CONF_TIMEOUT_CMC,
   CONF_TIMEOUT_ALCHEMY, CONF_TIMEOUT_LIVEPEER, CONF_DISABLE_SYNC,
-  CONF_DISABLE_DB
+  CONF_DISABLE_DB,
+  CONF_DISABLE_CMC
 } from "../config";
 // Do API requests to other API's
 const https = require('https');
@@ -17,8 +18,20 @@ const fs = require('fs');
 // Used for the livepeer thegraph API
 import { request, gql } from 'graphql-request';
 // Gets ETH, LPT and other coin info
-const CoinMarketCap = require('coinmarketcap-api');
-const cmcClient = new CoinMarketCap(API_CMC);
+let CoinMarketCap = require('coinmarketcap-api');
+let cmcClient = new CoinMarketCap(API_CMC);
+let cmcEnabled = false;
+if(!CONF_DISABLE_CMC){
+  if(API_CMC == ""){
+    console.log("Please provide a CMC api key");
+  }else {
+    CoinMarketCap = require('coinmarketcap-api');
+    cmcClient = new CoinMarketCap(API_CMC);
+    cmcEnabled = true;
+  }
+}else{
+  console.log("Running without CMC api");
+}
 // Gets blockchain data
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 // Gets gas prices
@@ -395,6 +408,9 @@ if (!isEventSyncing && !CONF_SIMPLE_MODE && !CONF_DISABLE_SYNC) {
 // Splits of raw CMC object into coin quote data
 const parseCmc = async function () {
   try {
+    if (!cmcEnabled){
+      return;
+    }
     cmcCache = await cmcClient.getTickers({ limit: 200 });
     for (var idx = 0; idx < cmcCache.data.length; idx++) {
       const coinData = cmcCache.data[idx];
