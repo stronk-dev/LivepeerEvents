@@ -46,6 +46,19 @@ const Startup = (obj) => {
     }
   }, [refreshInterval]);
 
+  const texts = [
+    "Preloading all the things...",
+    "Preloading all the things...",
+    "Preloading all the things...",
+    "Speaking to the NSA...",
+    "Loading...",
+    "Loading...",
+    "Loading...",
+    "Loading...",
+    "Loading...",
+    "Loading..."
+  ]
+
   if (isLoaded) {
     console.log("Rendering Application");
     return obj.children;
@@ -58,7 +71,7 @@ const Startup = (obj) => {
         </div>
         <div className="stroke roundedOpaque" style={{ width: 'unset', padding: '5em' }}>
           <div className="stroke">
-            <h1>Loading...</h1>
+            <h1>{texts[Math.floor(Math.random() * texts.length)]}</h1>
           </div>
         </div>
       </div>

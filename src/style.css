@@ -477,15 +477,6 @@ svg {
   margin: 0 auto;
   user-select: none;
 }
-.alwaysOnBottomRight {
-  z-index: 0;
-  position: fixed;
-  right: 0;
-  bottom: 0px;
-  /* transform: translate(-50%, -50%); */
-  margin: 0 auto;
-  user-select: none;
-}
 
 .selectOrch, .selectOrch a{
   text-shadow: 0.5px 0.5px 0.8px #948dff;
