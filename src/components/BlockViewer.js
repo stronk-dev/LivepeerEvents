@@ -7,14 +7,14 @@ const Block = (obj) => {
   const [thisDate, thisTime] = dateObj.toISOString().split('T');
   return (
     <div className="rowAlignLeft" style={{ width: '100%', marginTop: '1em' }}>
-      <a className="selectOrch" style={{cursor: 'alias'}} target="_blank" rel="noopener noreferrer" href={obj.url}>
+      <a className="selectOrch" style={{ cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={obj.url}>
         <img alt="" src="arb.svg" width="30em" height="30em" />
       </a>
+      <a className="selectOrch" style={{ cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://arbiscan.io/block/" + obj.block}>
+        <h2 style={{ margin: 0, padding: '0.2em', cursor: 'alias' }}>🔗</h2>
+      </a>
       <span className="rowAlignRight elipsText">
-        <a className="selectOrch" style={{cursor: 'alias'}} target="_blank" rel="noopener noreferrer" href={"https://arbiscan.io/block/" + obj.block}>
-          🔗{obj.block}
-        </a>
-        <p className="darkText">📅{thisDate} - {thisTime.split('.')[0]} </p>
+        <p className="darkText">UTC&nbsp;📅{thisDate} - {thisTime.split('.')[0]} </p>
       </span>
     </div>
   )
