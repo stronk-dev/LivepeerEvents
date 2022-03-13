@@ -119,7 +119,7 @@ export const getEvents = () => async dispatch => {
             eventTo = "";
             if (eventContainsBond) {
               eventDescription =
-                <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+                <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
                   <div className="strokeSmollLeft">
                     <div className="row">
                       <h3 style={{ margin: 0, padding: 0 }}>🚀</h3>
@@ -141,7 +141,7 @@ export const getEvents = () => async dispatch => {
                 </div>
             } else {
               eventDescription =
-                <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+                <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
                   <div className="strokeSmollLeft">
                     <div className="row">
                       <h3 style={{ margin: 0, padding: 0 }}>🚀</h3>
@@ -165,7 +165,7 @@ export const getEvents = () => async dispatch => {
             eventType = "Unbond";
             eventColour = unbondColour;
             eventDescription =
-              <div className="row" style={{ justifyContent: 'space-between' }}>
+              <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
                 <div className="strokeSmollLeft">
                   <div className="row">
                     <h3 style={{ margin: 0, padding: 0 }}>❌</h3>
@@ -196,7 +196,7 @@ export const getEvents = () => async dispatch => {
             eventType = "Stake";
             eventColour = stakeColour;
             eventDescription =
-              <div className="row" style={{ justifyContent: 'space-between' }}>
+              <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
                 <div className="strokeSmollLeft">
                   <div className="row">
                     <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
@@ -219,7 +219,7 @@ export const getEvents = () => async dispatch => {
           if (eventType === "Stake" && eventDescription === "") {
             if (eventFrom === "0x0000000000000000000000000000000000000000") {
               eventDescription =
-                <div className="row" style={{ justifyContent: 'space-between' }}>
+                <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
                   <div className="strokeSmollLeft">
                     <div className="row">
                       <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
@@ -239,7 +239,7 @@ export const getEvents = () => async dispatch => {
             } else if (eventFrom === eventTo) {
               eventFrom = "";
               eventDescription =
-                <div className="row" style={{ justifyContent: 'space-between' }}>
+                <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
                   <div className="strokeSmollLeft">
                     <div className="row">
                       <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
@@ -258,7 +258,7 @@ export const getEvents = () => async dispatch => {
                 </div>
             } else {
               eventDescription =
-                <div className="row" style={{ justifyContent: 'space-between' }}>
+                <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
                   <div className="strokeSmollLeft">
                     <div className="row">
                       <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
@@ -326,7 +326,7 @@ export const getEvents = () => async dispatch => {
             continue;
           }
           const txt =
-            <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+            <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
               <div className="strokeSmollLeft">
                 <div className="row">
                   <h3 style={{ margin: 0, padding: 0 }}>🏦</h3>
@@ -365,7 +365,7 @@ export const getEvents = () => async dispatch => {
             continue;
           }
           const txt =
-            <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+            <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
               <div className="strokeSmollLeft">
                 <div className="row">
                   <h3 style={{ margin: 0, padding: 0 }}>🏦</h3>
@@ -405,7 +405,7 @@ export const getEvents = () => async dispatch => {
           const amount1 = parseFloat(eventObj.data.rewardCut) / 10000;
           const amount2 = 100 - (eventObj.data.feeShare / 10000);
           const txt =
-            <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+            <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
               <div className="strokeSmollLeft">
                 <div className="row">
                   <h3 style={{ margin: 0, padding: 0 }}>🔄</h3>
@@ -448,7 +448,7 @@ export const getEvents = () => async dispatch => {
             continue;
           }
           let txt =
-            <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+            <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
               <div className="strokeSmollLeft">
                 <div className="row">
                   <h3 style={{ margin: 0, padding: 0 }}>💰</h3>
@@ -487,7 +487,7 @@ export const getEvents = () => async dispatch => {
           eventContainsReward = true;
           const amount1 = parseFloat(eventObj.data.amount) / 1000000000000000000;
           let txt =
-            <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+            <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
               <div className="strokeSmollLeft">
                 <div className="row">
                   <h3 style={{ margin: 0, padding: 0 }}>💸</h3>
@@ -603,12 +603,12 @@ export const getTickets = () => async dispatch => {
         if (eventObj.name === "WinningTicketRedeemed") {
           const amount = parseFloat(eventObj.data.faceValue) / 1000000000000000000;
           const txt =
-            <div className="row">
+            <div className="row" style={{ justifyContent: 'space-between' }}>
               <div className="strokeSmollLeft">
                 <div className="row">
                   <h3 style={{ margin: 0, padding: 0 }}>🎟️</h3>
                 </div>
-                <div className="strokeSmollLeft">
+                <div className="row">
                   <p style={{ fontSize: 'small' }}>
                     winning ticket
                   </p>

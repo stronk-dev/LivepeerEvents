@@ -222,7 +222,7 @@ svg {
   padding: 0;
   margin: auto;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   flex-direction: row;
   width: auto;
@@ -585,13 +585,13 @@ svg {
   .elipsOnMobile {
     text-overflow: ellipsis;
     overflow: hidden;
-    max-width: 30vw;
+    max-width: 10vw;
     text-align: start;
   }
   .elipsOnMobileExtra {
     text-overflow: ellipsis;
     overflow: hidden;
-    width: 10em;
+    width: 10vw;
     text-align: start;
   }
   .mobileNoPadding {
