@@ -206,9 +206,9 @@ svg {
   font-size: small;
   color: rgba(15, 15, 15, 0.8750);
   background-color: rgba(206, 206, 206, 0.8);
-  -webkit-box-shadow: inset 3px 3px 12px 2px rgba(28, 28, 170, 0.2);
-  -moz-box-shadow: inset 3px 3px 12px 2px rgba(28, 28, 170, 0.2);
-  box-shadow: inset 3px 3px 12px 2px rgba(28, 28, 170, 0.2);
+  -webkit-box-shadow: inset 3px 3px 12px 2px rgba(62, 62, 104, 0.3);
+  -moz-box-shadow: inset 3px 3px 12px 2px rgba(62, 62, 104, 0.3);
+  box-shadow: inset 3px 3px 12px 2px rgba(62, 62, 104, 0.3);
   display: flex;
   flex-direction: row;
   height: 100%;

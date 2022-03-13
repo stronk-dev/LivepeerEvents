@@ -1,5 +1,6 @@
 import * as apiUtil from "../util/livepeer";
 import { receiveErrors } from "./error";
+import React from "react";
 
 const claimColour = "rgba(25, 158, 29, 0.3)";
 const stakeColour = "rgba(25, 158, 147, 0.3)";
@@ -117,17 +118,73 @@ export const getEvents = () => async dispatch => {
             eventFrom = "";
             eventTo = "";
             if (eventContainsBond) {
-              eventDescription = "🚀activated with a self stake of " + tmpAmount.toFixed(2) + " LPT and will become active in round " + tmpWhen;
+              eventDescription =
+                <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+                  <div className="strokeSmollLeft">
+                    <div className="row">
+                      <h3 style={{ margin: 0, padding: 0 }}>🚀</h3>
+                    </div>
+                    <div className="row">
+                      <p style={{ fontSize: 'small' }}>
+                        activated their orchestrator
+                      </p>
+                    </div>
+                  </div>
+                  <div className="strokeSmollLeft">
+                    <p style={{ fontSize: 'small' }}>
+                      {tmpAmount.toFixed(2)} LPT stake
+                    </p>
+                    <p style={{ fontSize: 'small' }}>
+                      round {tmpWhen}
+                    </p>
+                  </div>
+                </div>
             } else {
-              eventDescription = "🚀reactivated and will become active in round " + tmpWhen;
+              eventDescription =
+                <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+                  <div className="strokeSmollLeft">
+                    <div className="row">
+                      <h3 style={{ margin: 0, padding: 0 }}>🚀</h3>
+                    </div>
+                    <div className="row">
+                      <p style={{ fontSize: 'small' }}>
+                        reactivated their orchestrator
+                      </p>
+                    </div>
+                  </div>
+                  <div className="strokeSmollLeft">
+                    <p style={{ fontSize: 'small' }}>
+                      round {tmpWhen}
+                    </p>
+                  </div>
+                </div>
             }
           }
           // Lone Unbond => Unbond Event
           else if (eventContainsUnbond) {
             eventType = "Unbond";
             eventColour = unbondColour;
-            eventDescription = "❌unbonded " + tmpAmount.toFixed(2) + " LPT starting from round " + tmpWhen;
-
+            eventDescription =
+              <div className="row" style={{ justifyContent: 'space-between' }}>
+                <div className="strokeSmollLeft">
+                  <div className="row">
+                    <h3 style={{ margin: 0, padding: 0 }}>❌</h3>
+                  </div>
+                  <div className="row">
+                    <p style={{ fontSize: 'small' }}>
+                      unbonded
+                    </p>
+                  </div>
+                </div>
+                <div className="strokeSmollLeft">
+                  <p style={{ fontSize: 'small' }}>
+                    {tmpAmount.toFixed(2)} LPT
+                  </p>
+                  <p style={{ fontSize: 'small' }}>
+                    round {tmpWhen}
+                  </p>
+                </div>
+              </div>
           }
           // Lone Bond => Stake Event
           else if (eventContainsBond) {
@@ -138,18 +195,87 @@ export const getEvents = () => async dispatch => {
           else if (eventContainsRebond) {
             eventType = "Stake";
             eventColour = stakeColour;
-            eventDescription = "⌛is now staking " + tmpAmount.toFixed(2) + " LPT";
+            eventDescription =
+              <div className="row" style={{ justifyContent: 'space-between' }}>
+                <div className="strokeSmollLeft">
+                  <div className="row">
+                    <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
+                  </div>
+                  <div className="row">
+                    <p style={{ fontSize: 'small' }}>
+                      changed stake amount
+                    </p>
+                  </div>
+                </div>
+                <div className="strokeSmollLeft">
+                  <p style={{ fontSize: 'small' }}>
+                    {tmpAmount.toFixed(2)} LPT
+                  </p>
+                </div>
+              </div>
           }
 
           // Fill description of Stake Event if it wasn't set yet
           if (eventType === "Stake" && eventDescription === "") {
             if (eventFrom === "0x0000000000000000000000000000000000000000") {
-              eventDescription = "⌛staked " + tmpAmount.toFixed(2) + " LPT";
+              eventDescription =
+                <div className="row" style={{ justifyContent: 'space-between' }}>
+                  <div className="strokeSmollLeft">
+                    <div className="row">
+                      <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
+                    </div>
+                    <div className="row">
+                      <p style={{ fontSize: 'small' }}>
+                        is now staking
+                      </p>
+                    </div>
+                  </div>
+                  <div className="strokeSmollLeft">
+                    <p style={{ fontSize: 'small' }}>
+                      {tmpAmount.toFixed(2)} LPT
+                    </p>
+                  </div>
+                </div>
             } else if (eventFrom === eventTo) {
               eventFrom = "";
-              eventDescription = "⌛is now staking " + tmpAmount.toFixed(2) + " LPT";
+              eventDescription =
+                <div className="row" style={{ justifyContent: 'space-between' }}>
+                  <div className="strokeSmollLeft">
+                    <div className="row">
+                      <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
+                    </div>
+                    <div className="row">
+                      <p style={{ fontSize: 'small' }}>
+                        changed stake amount
+                      </p>
+                    </div>
+                  </div>
+                  <div className="strokeSmollLeft">
+                    <p style={{ fontSize: 'small' }}>
+                      {tmpAmount.toFixed(2)} LPT
+                    </p>
+                  </div>
+                </div>
             } else {
-              eventDescription = "⌛moved a " + tmpAmount.toFixed(2) + " LPT stake";
+              eventDescription =
+                <div className="row" style={{ justifyContent: 'space-between' }}>
+                  <div className="strokeSmollLeft">
+                    <div className="row">
+                      <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
+                    </div>
+                    <div className="row">
+                      <p style={{ fontSize: 'small' }}>
+                        moved stake to a new orchestrator
+                      </p>
+                    </div>
+                  </div>
+                  <div className="strokeSmollLeft">
+                    <p style={{ fontSize: 'small' }}>
+                      {tmpAmount.toFixed(2)} LPT
+                    </p>
+                  </div>
+                </div>
+
             }
           }
           // If we have an eventType at this point, we have a completed Event from the previous transaction
@@ -199,7 +325,27 @@ export const getEvents = () => async dispatch => {
           if (amount < thresholdFees) {
             continue;
           }
-          const txt = "🏦withdrew a " + amount.toFixed(2) + " LPT stake in round " + eventObj.data.withdrawRound;
+          const txt =
+            <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+              <div className="strokeSmollLeft">
+                <div className="row">
+                  <h3 style={{ margin: 0, padding: 0 }}>🏦</h3>
+                </div>
+                <div className="row">
+                  <p style={{ fontSize: 'small' }}>
+                    withdrew staking rewards
+                  </p>
+                </div>
+              </div>
+              <div className="strokeSmollLeft">
+                <p style={{ fontSize: 'small' }}>
+                  {amount.toFixed(2)} LPT
+                </p>
+                <p style={{ fontSize: 'small' }}>
+                  round {eventObj.data.withdrawRound}
+                </p>
+              </div>
+            </div>
           finalEventList.push({
             eventType: "Withdraw",
             eventDescription: txt,
@@ -218,7 +364,27 @@ export const getEvents = () => async dispatch => {
           if (amount < thresholdFees) {
             continue;
           }
-          const txt = "🏦withdrew " + amount.toFixed(2) + " LPT earned fees";
+          const txt =
+            <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+              <div className="strokeSmollLeft">
+                <div className="row">
+                  <h3 style={{ margin: 0, padding: 0 }}>🏦</h3>
+                </div>
+                <div className="row">
+                  <p style={{ fontSize: 'small' }}>
+                    withdrew fee rewards
+                  </p>
+                </div>
+              </div>
+              <div className="strokeSmollLeft">
+                <p style={{ fontSize: 'small' }}>
+                  {amount.toFixed(4)} Eth
+                </p>
+                <p style={{ fontSize: 'small' }}>
+                  round {eventObj.data.withdrawRound}
+                </p>
+              </div>
+            </div>
           finalEventList.push({
             eventType: "Withdraw",
             eventDescription: txt,
@@ -238,7 +404,27 @@ export const getEvents = () => async dispatch => {
           eventContainsTranscoderUpdate = true;
           const amount1 = parseFloat(eventObj.data.rewardCut) / 10000;
           const amount2 = 100 - (eventObj.data.feeShare / 10000);
-          const txt = "🔄changed their reward commission to " + amount1.toFixed(2) + "% and their fee commission to " + amount2.toFixed(2) + "%";
+          const txt =
+            <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+              <div className="strokeSmollLeft">
+                <div className="row">
+                  <h3 style={{ margin: 0, padding: 0 }}>🔄</h3>
+                </div>
+                <div className="row">
+                  <p style={{ fontSize: 'small' }}>
+                    changed commission rates
+                  </p>
+                </div>
+              </div>
+              <div className="strokeSmollLeft">
+                <p style={{ fontSize: 'small' }}>
+                  {amount1.toFixed(2)}% on staking rewards
+                </p>
+                <p style={{ fontSize: 'small' }}>
+                  {amount2.toFixed(2)}% on transcoding fees
+                </p>
+              </div>
+            </div>
           finalEventList.push({
             eventType: "Update",
             eventDescription: txt,
@@ -261,17 +447,27 @@ export const getEvents = () => async dispatch => {
           if (amount1 < thresholdStaking && amount2 < thresholdFees) {
             continue;
           }
-          let txt = "💰delegator claimed ";
-          if (amount1 > thresholdStaking) {
-            txt += amount1.toFixed(2) + " LPT staking rewards";
-            if (amount2 > thresholdFees) {
-              txt += " and "
-            }
-          }
-          if (amount2 > thresholdFees) {
-            txt += amount2.toFixed(4) + " Eth fee rewards";
-          }
-          txt += " from rounds " + eventObj.data.startRound + " to " + eventObj.data.endRound;
+          let txt =
+            <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+              <div className="strokeSmollLeft">
+                <div className="row">
+                  <h3 style={{ margin: 0, padding: 0 }}>💰</h3>
+                </div>
+                <div className="row">
+                  <p style={{ fontSize: 'small' }}>
+                    delegator claimed {eventObj.data.endRound - eventObj.data.startRound + 1} rounds of rewards
+                  </p>
+                </div>
+              </div>
+              <div className="strokeSmollLeft">
+                <p style={{ fontSize: 'small' }}>
+                  +{amount1.toFixed(2)} LPT rewards
+                </p>
+                <p style={{ fontSize: 'small' }}>
+                  +{amount2.toFixed(4)} Eth fees
+                </p>
+              </div>
+            </div>
           finalEventList.push({
             eventType: "Claim",
             eventDescription: txt,
@@ -290,7 +486,24 @@ export const getEvents = () => async dispatch => {
         else if (eventObj.name === "Reward") {
           eventContainsReward = true;
           const amount1 = parseFloat(eventObj.data.amount) / 1000000000000000000;
-          let txt = "💸called reward worth " + amount1.toFixed(2) + " LPT";
+          let txt =
+            <div className="rowAlignLeft" style={{ justifyContent: 'space-between' }}>
+              <div className="strokeSmollLeft">
+                <div className="row">
+                  <h3 style={{ margin: 0, padding: 0 }}>💸</h3>
+                </div>
+                <div className="row">
+                  <p style={{ fontSize: 'small' }}>
+                    called reward
+                  </p>
+                </div>
+              </div>
+              <div className="strokeSmollLeft">
+                <p style={{ fontSize: 'small' }}>
+                  +{amount1.toFixed(2)} LPT
+                </p>
+              </div>
+            </div>
           if (Math.floor(amount1) == 69) {
             txt += "... Nice!";
           }
@@ -389,7 +602,22 @@ export const getTickets = () => async dispatch => {
         // Always split off WithdrawStake as a separate Withdraw Event
         if (eventObj.name === "WinningTicketRedeemed") {
           const amount = parseFloat(eventObj.data.faceValue) / 1000000000000000000;
-          const txt = "🎟️winning ticket worth " + amount.toFixed(4) + " Eth";
+          const txt =
+            <div className="row">
+              <div className="strokeSmollLeft">
+                <div className="row">
+                  <h3 style={{ margin: 0, padding: 0 }}>🎟️</h3>
+                </div>
+                <div className="strokeSmollLeft">
+                  <p style={{ fontSize: 'small' }}>
+                    winning ticket
+                  </p>
+                </div>
+              </div>
+              <p style={{ fontSize: 'small' }}>
+                +{amount.toFixed(4)} Eth
+              </p>
+            </div>
           finalTicketList.push({
             eventType: "RedeemTicket",
             eventDescription: txt,
@@ -401,7 +629,7 @@ export const getTickets = () => async dispatch => {
             transactionUrl: currentUrl,
             transactionBlock: currentBlock,
             transactionTime: currentTime,
-            eventValue: amount 
+            eventValue: amount
           });
         } else if (eventObj.name === "WinningTicketTransfer") {
           // For now lets just ignore these, they are boring
