@@ -119,8 +119,8 @@ export const getEvents = () => async dispatch => {
             eventTo = "";
             if (eventContainsBond) {
               eventDescription =
-                <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
-                  <div className="strokeSmollLeft">
+                <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
+                  <div className="strokeSmoll">
                     <div className="row">
                       <h3 style={{ margin: 0, padding: 0 }}>🚀</h3>
                     </div>
@@ -130,7 +130,8 @@ export const getEvents = () => async dispatch => {
                       </p>
                     </div>
                   </div>
-                  <div className="strokeSmollLeft">
+                  <div className="verticalSeparator"></div>
+                  <div className="flexContainer">
                     <p style={{ fontSize: 'small' }}>
                       {tmpAmount.toFixed(2)} LPT stake
                     </p>
@@ -141,8 +142,8 @@ export const getEvents = () => async dispatch => {
                 </div>
             } else {
               eventDescription =
-                <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
-                  <div className="strokeSmollLeft">
+                <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
+                  <div className="strokeSmoll">
                     <div className="row">
                       <h3 style={{ margin: 0, padding: 0 }}>🚀</h3>
                     </div>
@@ -152,7 +153,8 @@ export const getEvents = () => async dispatch => {
                       </p>
                     </div>
                   </div>
-                  <div className="strokeSmollLeft">
+                  <div className="verticalSeparator"></div>
+                  <div className="flexContainer">
                     <p style={{ fontSize: 'small' }}>
                       round {tmpWhen}
                     </p>
@@ -165,8 +167,8 @@ export const getEvents = () => async dispatch => {
             eventType = "Unbond";
             eventColour = unbondColour;
             eventDescription =
-              <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
-                <div className="strokeSmollLeft">
+              <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
+                <div className="strokeSmoll">
                   <div className="row">
                     <h3 style={{ margin: 0, padding: 0 }}>❌</h3>
                   </div>
@@ -176,7 +178,8 @@ export const getEvents = () => async dispatch => {
                     </p>
                   </div>
                 </div>
-                <div className="strokeSmollLeft">
+                <div className="verticalSeparator"></div>
+                <div className="flexContainer">
                   <p style={{ fontSize: 'small' }}>
                     {tmpAmount.toFixed(2)} LPT
                   </p>
@@ -196,8 +199,8 @@ export const getEvents = () => async dispatch => {
             eventType = "Stake";
             eventColour = stakeColour;
             eventDescription =
-              <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
-                <div className="strokeSmollLeft">
+              <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
+                <div className="strokeSmoll">
                   <div className="row">
                     <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
                   </div>
@@ -207,7 +210,8 @@ export const getEvents = () => async dispatch => {
                     </p>
                   </div>
                 </div>
-                <div className="strokeSmollLeft">
+                <div className="verticalSeparator"></div>
+                <div className="flexContainer">
                   <p style={{ fontSize: 'small' }}>
                     {tmpAmount.toFixed(2)} LPT
                   </p>
@@ -219,8 +223,8 @@ export const getEvents = () => async dispatch => {
           if (eventType === "Stake" && eventDescription === "") {
             if (eventFrom === "0x0000000000000000000000000000000000000000") {
               eventDescription =
-                <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
-                  <div className="strokeSmollLeft">
+                <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
+                  <div className="strokeSmoll">
                     <div className="row">
                       <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
                     </div>
@@ -230,7 +234,8 @@ export const getEvents = () => async dispatch => {
                       </p>
                     </div>
                   </div>
-                  <div className="strokeSmollLeft">
+                  <div className="verticalSeparator"></div>
+                  <div className="flexContainer">
                     <p style={{ fontSize: 'small' }}>
                       {tmpAmount.toFixed(2)} LPT
                     </p>
@@ -239,8 +244,8 @@ export const getEvents = () => async dispatch => {
             } else if (eventFrom === eventTo) {
               eventFrom = "";
               eventDescription =
-                <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
-                  <div className="strokeSmollLeft">
+                <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
+                  <div className="strokeSmoll">
                     <div className="row">
                       <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
                     </div>
@@ -250,7 +255,8 @@ export const getEvents = () => async dispatch => {
                       </p>
                     </div>
                   </div>
-                  <div className="strokeSmollLeft">
+                  <div className="verticalSeparator"></div>
+                  <div className="flexContainer">
                     <p style={{ fontSize: 'small' }}>
                       {tmpAmount.toFixed(2)} LPT
                     </p>
@@ -258,8 +264,8 @@ export const getEvents = () => async dispatch => {
                 </div>
             } else {
               eventDescription =
-                <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
-                  <div className="strokeSmollLeft">
+                <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
+                  <div className="strokeSmoll">
                     <div className="row">
                       <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
                     </div>
@@ -269,7 +275,8 @@ export const getEvents = () => async dispatch => {
                       </p>
                     </div>
                   </div>
-                  <div className="strokeSmollLeft">
+                  <div className="verticalSeparator"></div>
+                  <div className="flexContainer">
                     <p style={{ fontSize: 'small' }}>
                       {tmpAmount.toFixed(2)} LPT
                     </p>
@@ -326,18 +333,19 @@ export const getEvents = () => async dispatch => {
             continue;
           }
           const txt =
-            <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
-              <div className="strokeSmollLeft">
+            <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
+              <div className="strokeSmoll">
                 <div className="row">
                   <h3 style={{ margin: 0, padding: 0 }}>🏦</h3>
                 </div>
                 <div className="row">
                   <p style={{ fontSize: 'small' }}>
-                    withdrew staking rewards
+                    withdrew stake
                   </p>
                 </div>
               </div>
-              <div className="strokeSmollLeft">
+              <div className="verticalSeparator"></div>
+              <div className="flexContainer">
                 <p style={{ fontSize: 'small' }}>
                   {amount.toFixed(2)} LPT
                 </p>
@@ -365,8 +373,8 @@ export const getEvents = () => async dispatch => {
             continue;
           }
           const txt =
-            <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
-              <div className="strokeSmollLeft">
+            <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
+              <div className="strokeSmoll">
                 <div className="row">
                   <h3 style={{ margin: 0, padding: 0 }}>🏦</h3>
                 </div>
@@ -376,12 +384,10 @@ export const getEvents = () => async dispatch => {
                   </p>
                 </div>
               </div>
-              <div className="strokeSmollLeft">
+              <div className="verticalSeparator"></div>
+              <div className="flexContainer">
                 <p style={{ fontSize: 'small' }}>
                   {amount.toFixed(4)} Eth
-                </p>
-                <p style={{ fontSize: 'small' }}>
-                  round {eventObj.data.withdrawRound}
                 </p>
               </div>
             </div>
@@ -405,8 +411,8 @@ export const getEvents = () => async dispatch => {
           const amount1 = parseFloat(eventObj.data.rewardCut) / 10000;
           const amount2 = 100 - (eventObj.data.feeShare / 10000);
           const txt =
-            <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
-              <div className="strokeSmollLeft">
+            <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
+              <div className="strokeSmoll">
                 <div className="row">
                   <h3 style={{ margin: 0, padding: 0 }}>🔄</h3>
                 </div>
@@ -416,7 +422,8 @@ export const getEvents = () => async dispatch => {
                   </p>
                 </div>
               </div>
-              <div className="strokeSmollLeft">
+              <div className="verticalSeparator"></div>
+              <div className="flexContainer">
                 <p style={{ fontSize: 'small' }}>
                   {amount1.toFixed(2)}% on staking rewards
                 </p>
@@ -448,8 +455,8 @@ export const getEvents = () => async dispatch => {
             continue;
           }
           let txt =
-            <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
-              <div className="strokeSmollLeft">
+            <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
+              <div className="strokeSmoll">
                 <div className="row">
                   <h3 style={{ margin: 0, padding: 0 }}>💰</h3>
                 </div>
@@ -459,7 +466,8 @@ export const getEvents = () => async dispatch => {
                   </p>
                 </div>
               </div>
-              <div className="strokeSmollLeft">
+              <div className="verticalSeparator"></div>
+              <div className="flexContainer">
                 <p style={{ fontSize: 'small' }}>
                   +{amount1.toFixed(2)} LPT rewards
                 </p>
@@ -487,8 +495,8 @@ export const getEvents = () => async dispatch => {
           eventContainsReward = true;
           const amount1 = parseFloat(eventObj.data.amount) / 1000000000000000000;
           let txt =
-            <div className="flexContainer" style={{ justifyContent: 'space-between' }}>
-              <div className="strokeSmollLeft">
+            <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
+              <div className="strokeSmoll">
                 <div className="row">
                   <h3 style={{ margin: 0, padding: 0 }}>💸</h3>
                 </div>
@@ -498,7 +506,8 @@ export const getEvents = () => async dispatch => {
                   </p>
                 </div>
               </div>
-              <div className="strokeSmollLeft">
+              <div className="verticalSeparator"></div>
+              <div className="flexContainer">
                 <p style={{ fontSize: 'small' }}>
                   +{amount1.toFixed(2)} LPT
                 </p>
@@ -603,8 +612,8 @@ export const getTickets = () => async dispatch => {
         if (eventObj.name === "WinningTicketRedeemed") {
           const amount = parseFloat(eventObj.data.faceValue) / 1000000000000000000;
           const txt =
-            <div className="row" style={{ justifyContent: 'space-between' }}>
-              <div className="strokeSmollLeft">
+            <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
+              <div className="strokeSmoll">
                 <div className="row">
                   <h3 style={{ margin: 0, padding: 0 }}>🎟️</h3>
                 </div>
@@ -614,9 +623,12 @@ export const getTickets = () => async dispatch => {
                   </p>
                 </div>
               </div>
-              <p style={{ fontSize: 'small' }}>
-                +{amount.toFixed(4)} Eth
-              </p>
+              <div className="verticalSeparator"></div>
+              <div className="flexContainer">
+                <p style={{ fontSize: 'small' }}>
+                  +{amount.toFixed(4)} Eth
+                </p>
+              </div>
             </div>
           finalTicketList.push({
             eventType: "RedeemTicket",

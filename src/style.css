@@ -216,6 +216,15 @@ svg {
   border-radius: 1em;
 }
 
+.verticalSeparator {
+  width: 0.2em;
+  border-left: dashed 2px rgba(122, 128, 127, 0.4);
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  display: flex;
+  align-items: stretch;
+}
+
 .flexContainer {
   box-sizing: border-box;
   height: 100%;

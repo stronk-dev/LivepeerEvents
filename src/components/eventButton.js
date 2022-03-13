@@ -85,7 +85,7 @@ const EventButton = (obj) => {
           {eventCaller}
         </div>
         <div className="row">
-          <div className="row" style={{ maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', border: '0.1em solid rgba(54, 46, 46, 0.1)', boxShadow: "4px 2px 3px 2px rgba(54, 46, 46, 0.1)" }}>
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch' ,maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', border: '0.1em solid rgba(54, 46, 46, 0.1)', boxShadow: "4px 2px 3px 2px rgba(54, 46, 46, 0.1)" }}>
             {obj.eventObj.eventDescription}
           </div>
         </div>
