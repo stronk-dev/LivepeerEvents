@@ -1,6 +1,7 @@
 import * as apiUtil from "../util/livepeer";
 import { receiveErrors } from "./error";
 import React from "react";
+import Ticket from "../components/TicketViewer";
 
 const claimColour = "rgba(25, 158, 29, 0.3)";
 const stakeColour = "rgba(25, 158, 147, 0.3)";
@@ -118,76 +119,31 @@ export const getEvents = () => async dispatch => {
             eventFrom = "";
             eventTo = "";
             if (eventContainsBond) {
-              eventDescription =
-                <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
-                  <div className="strokeSmoll">
-                    <div className="row">
-                      <h3 style={{ margin: 0, padding: 0 }}>🚀</h3>
-                    </div>
-                    <div className="row">
-                      <p style={{ fontSize: 'small' }}>
-                        activated their orchestrator
-                      </p>
-                    </div>
-                  </div>
-                  <div className="verticalSeparator"></div>
-                  <div className="flexContainer">
-                    <p style={{ fontSize: 'small' }}>
-                      {tmpAmount.toFixed(2)} LPT stake
-                    </p>
-                    <p style={{ fontSize: 'small' }}>
-                      round {tmpWhen}
-                    </p>
-                  </div>
-                </div>
+              const subtext = "activated their orchestrator";
+              const descriptions = [
+                tmpAmount.toFixed(2) + " LPT stake",
+                "round " + tmpWhen
+              ]
+              eventDescription = <Ticket icon={"🚀"} subtext={subtext} descriptions={descriptions} />
             } else {
-              eventDescription =
-                <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
-                  <div className="strokeSmoll">
-                    <div className="row">
-                      <h3 style={{ margin: 0, padding: 0 }}>🚀</h3>
-                    </div>
-                    <div className="row">
-                      <p style={{ fontSize: 'small' }}>
-                        reactivated their orchestrator
-                      </p>
-                    </div>
-                  </div>
-                  <div className="verticalSeparator"></div>
-                  <div className="flexContainer">
-                    <p style={{ fontSize: 'small' }}>
-                      round {tmpWhen}
-                    </p>
-                  </div>
-                </div>
+              const subtext = "reactivated their orchestrator";
+              const descriptions = [
+                "round " + tmpWhen
+              ]
+              eventDescription = <Ticket icon={"🚀"} subtext={subtext} descriptions={descriptions} />
             }
           }
           // Lone Unbond => Unbond Event
           else if (eventContainsUnbond) {
             eventType = "Unbond";
             eventColour = unbondColour;
+            const subtext = "unbonded";
+            const descriptions = [
+              tmpAmount.toFixed(2) + " LPT",
+              "round " + tmpWhen
+            ]
             eventDescription =
-              <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
-                <div className="strokeSmoll">
-                  <div className="row">
-                    <h3 style={{ margin: 0, padding: 0 }}>❌</h3>
-                  </div>
-                  <div className="row">
-                    <p style={{ fontSize: 'small' }}>
-                      unbonded
-                    </p>
-                  </div>
-                </div>
-                <div className="verticalSeparator"></div>
-                <div className="flexContainer">
-                  <p style={{ fontSize: 'small' }}>
-                    {tmpAmount.toFixed(2)} LPT
-                  </p>
-                  <p style={{ fontSize: 'small' }}>
-                    round {tmpWhen}
-                  </p>
-                </div>
-              </div>
+              <Ticket icon={"❌"} subtext={subtext} descriptions={descriptions} />
           }
           // Lone Bond => Stake Event
           else if (eventContainsBond) {
@@ -198,90 +154,38 @@ export const getEvents = () => async dispatch => {
           else if (eventContainsRebond) {
             eventType = "Stake";
             eventColour = stakeColour;
+            const subtext = "changed stake amount";
+            const descriptions = [
+              tmpAmount.toFixed(2) + " LPT"
+            ]
             eventDescription =
-              <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
-                <div className="strokeSmoll">
-                  <div className="row">
-                    <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
-                  </div>
-                  <div className="row">
-                    <p style={{ fontSize: 'small' }}>
-                      changed stake amount
-                    </p>
-                  </div>
-                </div>
-                <div className="verticalSeparator"></div>
-                <div className="flexContainer">
-                  <p style={{ fontSize: 'small' }}>
-                    {tmpAmount.toFixed(2)} LPT
-                  </p>
-                </div>
-              </div>
+              <Ticket icon={"⌛"} subtext={subtext} descriptions={descriptions} />
           }
 
           // Fill description of Stake Event if it wasn't set yet
           if (eventType === "Stake" && eventDescription === "") {
             if (eventFrom === "0x0000000000000000000000000000000000000000") {
+              const subtext = "is now staking";
+              const descriptions = [
+                tmpAmount.toFixed(2) + " LPT"
+              ]
               eventDescription =
-                <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
-                  <div className="strokeSmoll">
-                    <div className="row">
-                      <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
-                    </div>
-                    <div className="row">
-                      <p style={{ fontSize: 'small' }}>
-                        is now staking
-                      </p>
-                    </div>
-                  </div>
-                  <div className="verticalSeparator"></div>
-                  <div className="flexContainer">
-                    <p style={{ fontSize: 'small' }}>
-                      {tmpAmount.toFixed(2)} LPT
-                    </p>
-                  </div>
-                </div>
+                <Ticket icon={"⌛"} subtext={subtext} descriptions={descriptions} />
             } else if (eventFrom === eventTo) {
               eventFrom = "";
+              const subtext = "changed stake amount";
+              const descriptions = [
+                tmpAmount.toFixed(2) + " LPT"
+              ]
               eventDescription =
-                <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
-                  <div className="strokeSmoll">
-                    <div className="row">
-                      <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
-                    </div>
-                    <div className="row">
-                      <p style={{ fontSize: 'small' }}>
-                        changed stake amount
-                      </p>
-                    </div>
-                  </div>
-                  <div className="verticalSeparator"></div>
-                  <div className="flexContainer">
-                    <p style={{ fontSize: 'small' }}>
-                      {tmpAmount.toFixed(2)} LPT
-                    </p>
-                  </div>
-                </div>
+                <Ticket icon={"⌛"} subtext={subtext} descriptions={descriptions} />
             } else {
+              const subtext = "moved stake to a new orchestrator";
+              const descriptions = [
+                tmpAmount.toFixed(2) + " LPT"
+              ]
               eventDescription =
-                <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
-                  <div className="strokeSmoll">
-                    <div className="row">
-                      <h3 style={{ margin: 0, padding: 0 }}>⌛</h3>
-                    </div>
-                    <div className="row">
-                      <p style={{ fontSize: 'small' }}>
-                        moved stake to a new orchestrator
-                      </p>
-                    </div>
-                  </div>
-                  <div className="verticalSeparator"></div>
-                  <div className="flexContainer">
-                    <p style={{ fontSize: 'small' }}>
-                      {tmpAmount.toFixed(2)} LPT
-                    </p>
-                  </div>
-                </div>
+                <Ticket icon={"⌛"} subtext={subtext} descriptions={descriptions} />
 
             }
           }
@@ -332,28 +236,13 @@ export const getEvents = () => async dispatch => {
           if (amount < thresholdFees) {
             continue;
           }
+          const subtext = "withdrew stake";
+          const descriptions = [
+            amount.toFixed(2) + " LPT",
+            "round " + eventObj.data.withdrawRound
+          ]
           const txt =
-            <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
-              <div className="strokeSmoll">
-                <div className="row">
-                  <h3 style={{ margin: 0, padding: 0 }}>🏦</h3>
-                </div>
-                <div className="row">
-                  <p style={{ fontSize: 'small' }}>
-                    withdrew stake
-                  </p>
-                </div>
-              </div>
-              <div className="verticalSeparator"></div>
-              <div className="flexContainer">
-                <p style={{ fontSize: 'small' }}>
-                  {amount.toFixed(2)} LPT
-                </p>
-                <p style={{ fontSize: 'small' }}>
-                  round {eventObj.data.withdrawRound}
-                </p>
-              </div>
-            </div>
+            <Ticket icon={"🏦"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Withdraw",
             eventDescription: txt,
@@ -372,25 +261,12 @@ export const getEvents = () => async dispatch => {
           if (amount < thresholdFees) {
             continue;
           }
+          const subtext = "withdrew fee rewards";
+          const descriptions = [
+            amount.toFixed(4) + " Eth"
+          ]
           const txt =
-            <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
-              <div className="strokeSmoll">
-                <div className="row">
-                  <h3 style={{ margin: 0, padding: 0 }}>🏦</h3>
-                </div>
-                <div className="row">
-                  <p style={{ fontSize: 'small' }}>
-                    withdrew fee rewards
-                  </p>
-                </div>
-              </div>
-              <div className="verticalSeparator"></div>
-              <div className="flexContainer">
-                <p style={{ fontSize: 'small' }}>
-                  {amount.toFixed(4)} Eth
-                </p>
-              </div>
-            </div>
+            <Ticket icon={"🏦"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Withdraw",
             eventDescription: txt,
@@ -410,28 +286,13 @@ export const getEvents = () => async dispatch => {
           eventContainsTranscoderUpdate = true;
           const amount1 = parseFloat(eventObj.data.rewardCut) / 10000;
           const amount2 = 100 - (eventObj.data.feeShare / 10000);
+          const subtext = "changed commission rates";
+          const descriptions = [
+            amount1.toFixed(2) + "% on staking rewards",
+            amount2.toFixed(2) + "% on transcoding fees"
+          ]
           const txt =
-            <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
-              <div className="strokeSmoll">
-                <div className="row">
-                  <h3 style={{ margin: 0, padding: 0 }}>🔄</h3>
-                </div>
-                <div className="row">
-                  <p style={{ fontSize: 'small' }}>
-                    changed commission rates
-                  </p>
-                </div>
-              </div>
-              <div className="verticalSeparator"></div>
-              <div className="flexContainer">
-                <p style={{ fontSize: 'small' }}>
-                  {amount1.toFixed(2)}% on staking rewards
-                </p>
-                <p style={{ fontSize: 'small' }}>
-                  {amount2.toFixed(2)}% on transcoding fees
-                </p>
-              </div>
-            </div>
+            <Ticket icon={"🔄"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Update",
             eventDescription: txt,
@@ -454,28 +315,13 @@ export const getEvents = () => async dispatch => {
           if (amount1 < thresholdStaking && amount2 < thresholdFees) {
             continue;
           }
+          const subtext = "delegator claimed " + (eventObj.data.endRound - eventObj.data.startRound + 1) + " rounds of rewards";
+          const descriptions = [
+            "+" + amount1.toFixed(2) + " LPT rewards",
+            "+" + amount2.toFixed(4) + " Eth fees"
+          ]
           let txt =
-            <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
-              <div className="strokeSmoll">
-                <div className="row">
-                  <h3 style={{ margin: 0, padding: 0 }}>💰</h3>
-                </div>
-                <div className="row">
-                  <p style={{ fontSize: 'small' }}>
-                    delegator claimed {eventObj.data.endRound - eventObj.data.startRound + 1} rounds of rewards
-                  </p>
-                </div>
-              </div>
-              <div className="verticalSeparator"></div>
-              <div className="flexContainer">
-                <p style={{ fontSize: 'small' }}>
-                  +{amount1.toFixed(2)} LPT rewards
-                </p>
-                <p style={{ fontSize: 'small' }}>
-                  +{amount2.toFixed(4)} Eth fees
-                </p>
-              </div>
-            </div>
+            <Ticket icon={"💰"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Claim",
             eventDescription: txt,
@@ -494,25 +340,12 @@ export const getEvents = () => async dispatch => {
         else if (eventObj.name === "Reward") {
           eventContainsReward = true;
           const amount1 = parseFloat(eventObj.data.amount) / 1000000000000000000;
-          let txt =
-            <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
-              <div className="strokeSmoll">
-                <div className="row">
-                  <h3 style={{ margin: 0, padding: 0 }}>💸</h3>
-                </div>
-                <div className="row">
-                  <p style={{ fontSize: 'small' }}>
-                    called reward
-                  </p>
-                </div>
-              </div>
-              <div className="verticalSeparator"></div>
-              <div className="flexContainer">
-                <p style={{ fontSize: 'small' }}>
-                  +{amount1.toFixed(2)} LPT
-                </p>
-              </div>
-            </div>
+          const subtext = "called reward";
+          const descriptions = [
+            "+" + amount1.toFixed(2) + " LPT"
+          ]
+          const txt =
+            <Ticket icon={"💸"} subtext={subtext} descriptions={descriptions} />
           if (Math.floor(amount1) == 69) {
             txt += "... Nice!";
           }
@@ -611,25 +444,12 @@ export const getTickets = () => async dispatch => {
         // Always split off WithdrawStake as a separate Withdraw Event
         if (eventObj.name === "WinningTicketRedeemed") {
           const amount = parseFloat(eventObj.data.faceValue) / 1000000000000000000;
+          const subtext = "winning ticket";
+          const descriptions = [
+            "+" + amount.toFixed(4) + " Eth"
+          ]
           const txt =
-            <div className="flexContainer" style={{ justifyContent: 'space-between', alignItems: "stretch", width: "100%" }}>
-              <div className="strokeSmoll">
-                <div className="row">
-                  <h3 style={{ margin: 0, padding: 0 }}>🎟️</h3>
-                </div>
-                <div className="row">
-                  <p style={{ fontSize: 'small' }}>
-                    winning ticket
-                  </p>
-                </div>
-              </div>
-              <div className="verticalSeparator"></div>
-              <div className="flexContainer">
-                <p style={{ fontSize: 'small' }}>
-                  +{amount.toFixed(4)} Eth
-                </p>
-              </div>
-            </div>
+            <Ticket icon={"🎟️"} subtext={subtext} descriptions={descriptions} />
           finalTicketList.push({
             eventType: "RedeemTicket",
             eventDescription: txt,

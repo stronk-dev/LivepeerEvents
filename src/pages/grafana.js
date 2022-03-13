@@ -42,7 +42,7 @@ const Grafana = (obj) => {
       <div className="stroke" style={{ margin: 0, padding: 0 }}>
         <div className="flexContainer">
           <div className="stroke" style={{ marginTop: 0, marginBottom: 5, paddingBottom: 0 }}>
-            <div className="stroke roundedOpaque" style={{}}>
+            <div className="stroke roundedOpaque">
               <div className="flexContainer" style={{ margin: 0, textAlign: 'center',alignItems: 'center', justifyContent:'center' }}>
                 <div className="row">
                   <img alt="" src="livepeer.png" width="30" height="30" />

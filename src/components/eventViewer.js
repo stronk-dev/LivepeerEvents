@@ -232,7 +232,7 @@ const EventViewer = (obj) => {
     <div className="strokeSmollLeft" style={{ padding: 0, margin: 0, height: 'calc( 100vh - 50px)' }}>
       {filterBit}
       <div className="row" style={{ padding: 0, margin: 0, width: '100%', height: '100%' }}>
-        <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, width: 'unset', height: '100%', marginRight: '1em', overflow: 'hidden', marginTop: '1em', overflowX: 'scroll' }}>
+        <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, width: 'unset', minWidth: "350px", height: '100%', marginRight: '1em', overflow: 'hidden', marginTop: '1em', overflowX: 'scroll' }}>
           <div className="content-wrapper" style={{ width: '100%' }}>
             <ScrollContainer activationDistance={1} className="overflow-container"
               hideScrollbars={false} onEndScroll={updateOnScroll} ref={listInnerRef}>

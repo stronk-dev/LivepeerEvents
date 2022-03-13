@@ -151,15 +151,16 @@ svg {
   height: calc( 100vh - 50px);
   max-height: calc( 100vh - 50px);
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   overflow: hidden;
+  overflow-y: auto;
 }
 #sideContent {
   background-color: rgba(214, 214, 214, 0.8);
   backdrop-filter: blur(6px);
   box-shadow: 9px 13px 8px 8px  rgba(27, 23, 19, 0.692);
   border-bottom-right-radius: 1em;
-  width: 400px;
+  max-width: 400px;
   overflow-y: auto;
   overflow-x: hidden;
 }
