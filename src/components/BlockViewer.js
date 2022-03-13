@@ -14,7 +14,7 @@ const Block = (obj) => {
         <h2 style={{ margin: 0, padding: '0.2em', cursor: 'alias' }}>🔗</h2>
       </a>
       <span className="rowAlignRight elipsText">
-        <p className="darkText">UTC&nbsp;📅{thisDate} - {thisTime.split('.')[0]} </p>
+        <p className="darkText mobileSmallerFont">UTC&nbsp;📅{thisDate} - {thisTime.split('.')[0]} </p>
       </span>
     </div>
   )
