@@ -180,7 +180,7 @@ export const getEvents = () => async dispatch => {
               eventDescription =
                 <Ticket icon={"⌛"} subtext={subtext} descriptions={descriptions} />
             } else {
-              const subtext = "moved stake to a new orchestrator";
+              const subtext = "moved stake";
               const descriptions = [
                 tmpAmount.toFixed(2) + " LPT"
               ]
@@ -315,8 +315,9 @@ export const getEvents = () => async dispatch => {
           if (amount1 < thresholdStaking && amount2 < thresholdFees) {
             continue;
           }
-          const subtext = "delegator claimed " + (eventObj.data.endRound - eventObj.data.startRound + 1) + " rounds of rewards";
+          const subtext = "delegator claimed rewards";
           const descriptions = [
+            "of " + (eventObj.data.endRound - eventObj.data.startRound + 1) + " rounds",
             "+" + amount1.toFixed(2) + " LPT rewards",
             "+" + amount2.toFixed(4) + " Eth fees"
           ]
