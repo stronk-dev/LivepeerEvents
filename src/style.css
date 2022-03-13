@@ -613,4 +613,8 @@ svg {
   .main-container {
     height: calc(100vh - 60px);
   }
+  #sideContent {
+    max-width: 100%;
+    width: 100%;
+  }
 }
