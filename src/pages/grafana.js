@@ -31,26 +31,29 @@ const Grafana = (obj) => {
   }
 
   return (
-    <div className="stroke" style={{ margin: 0, padding: 0 }}>
-      <div className="row" style={{ margin: 0, padding: 0 }}>
+    <div className="stroke" >
+      <div className="verticalDivider"/>
+      <div className="row" >
         <button className="homeButton" onClick={() => {
           setRedirectToHome(true);
         }}>
           <img alt="" src="/livepeer.png" width="100em" height="100em" />
         </button>
       </div>
-      <div className="stroke" style={{ margin: 0, padding: 0 }}>
+      <div className="verticalDivider"/>
+      <div className="stroke" >
         <div className="flexContainer">
-          <div className="stroke" style={{ marginTop: 0, marginBottom: 5, paddingBottom: 0 }}>
+          <div className="stroke">
             <div className="stroke roundedOpaque">
-              <div className="flexContainer" style={{ margin: 0, textAlign: 'center',alignItems: 'center', justifyContent:'center' }}>
+            <div className="verticalDivider"/>
+              <div className="flexContainer">
                 <div className="row">
                   <img alt="" src="livepeer.png" width="30" height="30" />
                   <p>${lptPrice}</p>
                   <p>({lptPriceChange24h}%)</p>
                 </div>
-                <div className="row selectOrch">
-                  <h2> <a href="https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/">Livepeer Orchestrator</a></h2>
+                <div className="row">
+                  <h2>Livepeer Orchestrator</h2>
                 </div>
                 <div className="row">
                   <img alt="" src="eth.png" width="30" height="30" />
@@ -58,35 +61,40 @@ const Grafana = (obj) => {
                   <p>({ethPriceChange24h}%)</p>
                 </div>
               </div>
-              <div className="stroke roundedOpaque" style={{ borderRadius: "1em", backgroundColor: "#111217" }}>
-                <div className="flexContainer" style={{ justifyContent: "center" }}>
+              <div className="verticalDivider"/>
+              <div className="stroke roundedOpaqueDark">
+                <div className="flexContainer fullMargin">
                   <Orchestrator thisOrchestrator={livepeer.thisOrchestrator} rootOnly={true} />
                 </div>
-                <div className="flexContainer" style={{ justifyContent: "stretch", padding: '20px', width: '100%' }}>
+                <div className="flexContainer stretchAndPad">
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark&panelId=23763572056" height="200" frameBorder="0"></iframe>
                 </div>
-                <div className="flexContainer" style={{ justifyContent: "stretch", padding: '20px', width: '100%' }}>
+                <div className="flexContainer stretchAndPad">
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark&panelId=23763572077" height="400" frameBorder="0"></iframe>
                 </div>
-                <div className="flexContainer" style={{ justifyContent: "stretch", padding: '20px', width: '100%' }}>
+                <div className="flexContainer stretchAndPad">
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark&panelId=23763572032" height="200" frameBorder="0"></iframe>
                 </div>
-                <div className="flexContainer" style={{ justifyContent: "stretch", padding: '20px', width: '100%' }}>
+                <div className="flexContainer stretchAndPad">
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&from=now-2d&to=now&refresh=5s&theme=dark&panelId=23763572040" height="400" frameBorder="0"></iframe>
                 </div>
-                <div className="row">
-                  <a href="https://grafana.stronk.tech/d/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark">
-                    <button className="waveButton">
-                      <img alt="" src="grafana.png" width="30" height="30" />
-                      <p>Full Statistics</p>
-                    </button>
-                  </a>
-                </div>
               </div>
+              <div className="verticalDivider"/>
+              <div className="row">
+                <a href="https://grafana.stronk.tech/d/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark">
+                  <button className="waveButton">
+                    <img alt="" src="grafana.png" width="30" height="30" />
+                    <p>Full Statistics</p>
+                  </button>
+                </a>
+              </div>
+              <div className="verticalDivider"/>
             </div>
           </div>
+          <div className="smallVerticalDivider" />
         </div>
       </div>
+      <div className="verticalDivider" />
     </div>
   );
 }

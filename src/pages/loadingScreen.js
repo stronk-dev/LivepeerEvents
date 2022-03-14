@@ -66,13 +66,13 @@ const Startup = (obj) => {
     console.log("Rendering Loading Screen");
     return (
       <div className="stroke">
+        <div className="verticalDivider" />
         <div className="row">
-          <img alt="" src="livepeer.png" width="200em" height="200em" style={{ zIndex: 10 }} />
+          <img alt="" src="livepeer.png" width="100em" height="100em" style={{ zIndex: 10 }} />
         </div>
+        <div className="verticalDivider" />
         <div className="stroke roundedOpaque" style={{ width: 'unset', padding: '5em' }}>
-          <div className="stroke">
             <h1>{texts[Math.floor(Math.random() * texts.length)]}</h1>
-          </div>
         </div>
       </div>
     )

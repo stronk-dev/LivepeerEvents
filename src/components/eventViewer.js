@@ -207,7 +207,7 @@ const EventViewer = (obj) => {
     showMoreButton =
       <div className="stroke" style={{ width: '100%', padding: 0, margin: 0, marginBottom: '2em', marginTop: '2em' }}>
         <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", padding: 0, margin: 0, width: '100%' }}>
-          <button className="row nonHomeButton" style={{ backgroundColor: greyColour }} onClick={() => {
+          <button className="row nonHomeButton buttonPadding" style={{ backgroundColor: greyColour }} onClick={() => {
             obj.setMaxAmount(obj.maxAmount + defaultIncrementMaxShown);
           }}>
             <h3>🔄 Show More</h3>
@@ -232,7 +232,7 @@ const EventViewer = (obj) => {
     <div className="strokeSmollLeft" style={{ padding: 0, margin: 0, height: 'calc( 100vh - 50px)' }}>
       {filterBit}
       <div className="row" style={{ padding: 0, margin: 0, width: '100%', height: '100%' }}>
-        <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, width: 'unset', minWidth: "350px", height: '100%', marginRight: '1em', overflow: 'hidden', marginTop: '1em', overflowX: 'scroll' }}>
+        <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, width: 'unset', minWidth: "400px", height: '100%', marginRight: '1em', overflow: 'hidden', marginTop: '1em', overflowX: 'scroll' }}>
           <div className="content-wrapper" style={{ width: '100%' }}>
             <ScrollContainer activationDistance={1} className="overflow-container"
               hideScrollbars={false} onEndScroll={updateOnScroll} ref={listInnerRef}>
@@ -243,43 +243,44 @@ const EventViewer = (obj) => {
                 </div>
               </div>
             </ScrollContainer>
-            <div className="strokeSmollLeft" style={{ marginRight: "1em" }}>
-              <button className={delegatorRewardActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: delegatorActivatedColour, marginTop: '0.7em' }} onClick={() => {
+            <div className="strokeSmollLeft sideMargin">
+              <div className="verticalDivider"/>
+              <button className={delegatorRewardActivated ? "row nonHomeButton buttonPadding active" : "row nonHomeButton buttonPadding"} style={{ backgroundColor: delegatorActivatedColour}} onClick={() => {
                 setDelegatorRewardActivated(!delegatorRewardActivated);
               }}>
                 <h3>Claim</h3>
               </button>
-              <button className={stakeActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: stakeActivatedColour }} onClick={() => {
+              <button className={stakeActivated ? "row nonHomeButton buttonPadding active" : "row nonHomeButton buttonPadding"} style={{ backgroundColor: stakeActivatedColour }} onClick={() => {
                 setStakeActivated(!stakeActivated);
               }}>
                 <h3>Stake</h3>
               </button>
-              <button className={ticketRedemptionActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: ticketActivatedColour }} onClick={() => {
+              <button className={ticketRedemptionActivated ? "row nonHomeButton buttonPadding active" : "row nonHomeButton buttonPadding"} style={{ backgroundColor: ticketActivatedColour }} onClick={() => {
                 setTicketRedemptionActivated(!ticketRedemptionActivated);
               }}>
                 <h3>Tickets</h3>
               </button>
-              <button className={rewardActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: rewardActivatedColour }} onClick={() => {
+              <button className={rewardActivated ? "row nonHomeButton buttonPadding active" : "row nonHomeButton buttonPadding"} style={{ backgroundColor: rewardActivatedColour }} onClick={() => {
                 setRewardActivated(!rewardActivated);
               }}>
                 <h3>Reward</h3>
               </button>
-              <button className={unbondActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: unbondActivatedColour }} onClick={() => {
+              <button className={unbondActivated ? "row nonHomeButton buttonPadding active" : "row nonHomeButton buttonPadding"} style={{ backgroundColor: unbondActivatedColour }} onClick={() => {
                 setUnbondActivated(!unbondActivated);
               }}>
                 <h3>Unbond</h3>
               </button>
-              <button className={updateActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: updateActivatedColour }} onClick={() => {
+              <button className={updateActivated ? "row nonHomeButton buttonPadding active" : "row nonHomeButton buttonPadding"} style={{ backgroundColor: updateActivatedColour }} onClick={() => {
                 setUpdateActivated(!updateActivated);
               }}>
                 <h3>Update</h3>
               </button>
-              <button className={withdrawActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: withdrawActivatedColour }} onClick={() => {
+              <button className={withdrawActivated ? "row nonHomeButton buttonPadding active" : "row nonHomeButton buttonPadding"} style={{ backgroundColor: withdrawActivatedColour }} onClick={() => {
                 setWithdrawActivated(!withdrawActivated);
               }}>
                 <h3>Withdraw</h3>
               </button>
-              <button className={filterActivated ? "row nonHomeButton active" : "row nonHomeButton"} style={{ backgroundColor: filterActivatedColour }} onClick={() => {
+              <button className={filterActivated ? "row nonHomeButton buttonPadding active" : "row nonHomeButton buttonPadding"} style={{ backgroundColor: filterActivatedColour }} onClick={() => {
                 setFilterActivated(!filterActivated);
               }}>
                 <h3>Activated</h3>

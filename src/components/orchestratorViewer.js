@@ -27,7 +27,7 @@ const Orchestrator = (obj) => {
   if (obj.thisOrchestrator) {
     if (obj.forceVertical) {
       return (
-        <div className="hostInfo">
+        <div className="hostInfo sideMargin">
           <div className="flexContainer" style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column' }}>
             <OrchInfoViewer
               rewardCut={obj.thisOrchestrator.rewardCut}
@@ -41,10 +41,10 @@ const Orchestrator = (obj) => {
           </div>
         </div>
       )
-    }else{
+    } else {
       return (
-        <div className="hostInfo">
-          <div className="flexContainer" style={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
+        <div className="hostInfo sideMargin">
+          <div className="flexContainer" style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column' }}>
             <OrchInfoViewer
               rewardCut={obj.thisOrchestrator.rewardCut}
               feeShare={obj.thisOrchestrator.feeShare}
@@ -62,7 +62,7 @@ const Orchestrator = (obj) => {
   if (obj.forceVertical) {
     return (
       <div className="hostInfo">
-        <div className="flexContainer" style={{ alignItems: 'center', flexDirection: 'column' }}>
+        <div className="flexContainer fullMargin">
           <div className="rowAlignLeft">
             <img alt="" src="livepeer.png" width="30" height="30" />
             <h3>Orchestrator Info</h3>
@@ -76,7 +76,7 @@ const Orchestrator = (obj) => {
   } else {
     return (
       <div className="hostInfo">
-        <div className="flexContainer" style={{ alignItems: 'center' }}>
+        <div className="flexContainer fullMargin">
           <div className="rowAlignLeft">
             <img alt="" src="livepeer.png" width="30" height="30" />
             <h3>Orchestrator Info</h3>

@@ -55,10 +55,14 @@ const Livepeer = (obj) => {
   let sidebar;
   if (showSidebar) {
     sidebar = <div id='sideContent'>
-      <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, width: '100%', marginTop: '1em' }}>
-        <div className="row" style={{ alignItems: 'stretch', height: '100%', padding: '0.2em', width: "unset" }}>
-          <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} forceVertical={true} />
+      <div className="verticalDivider" />
+      <div className="strokeSmollLeft sideMargin">
+        <div className="row">
+          <div className="row">
+            <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} forceVertical={true} />
+          </div>
         </div>
+        <div className="verticalDivider" />
         <div className="row">
           <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
         </div>
@@ -74,7 +78,7 @@ const Livepeer = (obj) => {
           <button className="homeButton" onClick={() => {
             setRedirectToHome(true);
           }}>
-            <h1 style={{ margin: 0, padding: 0 }}>🏠</h1>
+            <h1>🏠</h1>
           </button>
           <h4 className="rowAlignLeft withWrap showNeverOnMobile">{headerString}</h4>
         </div>
@@ -85,7 +89,7 @@ const Livepeer = (obj) => {
             setAmountFilter(0);
             setMaxAmount(defaultMaxShown);
           }}>
-            <h4 style={{margin: 0, padding: 0}}>✖️ Clear</h4>
+            <h4>✖️ Clear</h4>
           </button>
           <p>Sidebar</p>
           <div className="toggle-container" onClick={() => setShowSidebar(!showSidebar)}>

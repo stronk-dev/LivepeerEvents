@@ -6,20 +6,20 @@ const OrchDelegatorViewer = (obj) => {
   let delegators = obj.delegators;
   if (delegators && delegators.length) {
     return (
-      <div className="row" style={{ width: 'unset', marginBottom: '1em', marginTop: '1em' }}>
-        <div className="strokeSmollLeft" style={{ display: "flex" }}>
-          <div className="row" style={{ margin: '0' }}>
-            <h3 style={{ padding: 0, margin: 0 }}>{delegators.length} Current Delegators</h3>
+      <div className="row">
+        <div className="strokeSmollLeft fullMargin">
+          <div className="row">
+            <h3>{delegators.length} Current Delegators</h3>
           </div>
           <div className="content-wrapper">
-            <ScrollContainer className="overflow-container" hideScrollbars={false} style={{  }}>
-              <div className="overflow-content" style={{ cursor: 'grab', padding: 0, maxHeight: '300px', margin: '0.5em' }}>
+            <ScrollContainer className="overflow-container" hideScrollbars={false} style={{}}>
+              <div className="overflow-content" style={{ cursor: 'grab', maxHeight: '300px' }}>
                 {
                   delegators.map((delObj, idx) => {
                     return (
-                      <div className="flexContainer forceWrap" key={"delegator" + idx} style={{ margin: 0, textAlign: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                      <div className="flexContainer forceWrap" key={"delegator" + idx}>
                         <Address address={delObj.id} seed={"delegator" + idx + delObj.id} />
-                        <div className="rowAlignRight" style={{ margin: 0 }}>
+                        <div className="rowAlignRight">
                           <p className="darkText">{parseFloat(delObj.bondedAmount).toFixed(2)} LPT since round {delObj.startRound}</p>
                         </div>
                       </div>
@@ -34,13 +34,13 @@ const OrchDelegatorViewer = (obj) => {
     )
   }
   return (
-    <div className="row" style={{ width: 'unset', marginBottom: '1em', marginTop: '1em' }}>
-      <div className="strokeSmollLeft" style={{ display: "flex" }}>
-        <div className="row" style={{ margin: '0' }}>
-          <h3 style={{ padding: 0, margin: 0 }}>The selected Orchestrator has no Delegators</h3>
+    <div className="row">
+      <div className="strokeSmollLeft">
+        <div className="row">
+          <h3>The selected Orchestrator has no Delegators</h3>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 

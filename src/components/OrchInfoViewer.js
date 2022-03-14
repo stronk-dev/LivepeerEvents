@@ -69,41 +69,43 @@ const OrchInfoViewer = (obj) => {
     }
 
     return (
-      <div className="row" style={{ width: 'unset', }}>
-        <div className="strokeSmollLeft" style={{ display: "flex" }}>
-          <div style={{ flexDirection: 'row', display: "flex", borderBottom: '2px solid rgba(15,15,15,0.05)', marginTop: '1em' }}>
+      <div className="row sideMargin">
+        <div className="stroke stretchAndBetween sideMargin">
+          <div className="verticalDivider" />
+          <div className="row" style={{ borderBottom: '2px solid rgba(15,15,15,0.05)' }}>
             <a href={thisUrl}>
-              <h3 style={{ padding: 0, margin: 0 }}>Orchestrator Info</h3>
+              <h3 >Orchestrator Info</h3>
               <Address address={thisID} />
             </a>
           </div>
-          <div className="row" style={{ margin: 0 }}>
+          <div className="stretchAndBetween sideMargin" >
             <Stat header={"Earned Fees"} content1={totalVolumeETH + " Eth"} content2={"$" + totalVolumeUSD} />
           </div>
-          <div className="row" style={{ margin: 0 }}>
+          <div className="stretchAndBetween sideMargin" >
             <Stat header={"Commission"} title1={"Reward"} content1={rewardCut + "%"} title2={"Fee"} content2={feeCut + "%"} />
           </div>
-          <div className="row" style={{ margin: 0 }}>
+          <div className="stretchAndBetween sideMargin" >
             <Stat header={"Stake"} title1={"Total"} content1={totalStake + " LPT"} title2={"Self"} content2={selfStake + " LPT (" + selfStakeRatio + ")%"} />
           </div>
-          <div className="strokeSmollLeft" style={{ display: "flex" }}>
-            <button style={{ marginBottom: '1em' }} className="selectOrchLight" onClick={() => {
+          <div className="stretchAndBetween strokeSmollLeft">
+            <button className="selectOrchLight" onClick={() => {
               copyLink(shareUrl);
             }}>
               <img alt="" src="clipboard.svg" width="20em" height="20em" />
             </button>
           </div>
         </div>
+        <div className="verticalDivider" />
       </div>
     )
   }
   return (
-    <div className="row" style={{ width: 'unset', marginBottom: '1em', marginTop: '1em' }}>
-      <div className="strokeSmollLeft" style={{ display: "flex" }}>
-        <div className="row" style={{ margin: '0' }}>
-          <h3 style={{ padding: 0, margin: 0 }}>The selected Orchestrator is currently inactive</h3>
-        </div>
+    <div className="stroke stretchAndBetween sideMargin">
+      <div className="verticalDivider" />
+      <div className="stretchAndBetween sideMargin" >
+        <h3 >The selected Orchestrator is currently inactive</h3>
       </div>
+      <div className="verticalDivider" />
     </div>
   )
 }

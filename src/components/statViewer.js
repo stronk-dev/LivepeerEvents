@@ -11,20 +11,24 @@ const Stat = (obj) => {
   }
 
   return (
-    <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, width: '100%' }}>
-      <div className="rowAlignLeft" style={{ margin: 0, padding: 0 }}>
-        <h3 style={{ margin: 0, padding: 0 }}>{obj.header}</h3>
+    <div className="strokeSmollLeft">
+      <div className="rowAlignLeft" >
+        <h3 >{obj.header}</h3>
       </div>
-      <div className="row" style={{ margin: 0 }}>
-        <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-          <h4 style={{ margin: 0, padding: 0 }}>{obj.title1}</h4>
-          <div className="rowAlignLeft" style={{ margin: 0, padding: 0 }}>
+      <div className="row">
+        <div className="strokeSmollLeft" >
+          <div className="rowAlignLeft" >
+            <h4 >{obj.title1}</h4>
+          </div>
+          <div className="rowAlignRight" >
             <p className="darkText">{obj.content1}</p>
           </div>
         </div>
-        <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-          <h4 style={{ margin: 0, padding: 0 }}>{obj.title2}</h4>
-          <div className="rowAlignLeft" style={{ margin: 0, padding: 0 }}>
+        <div className="strokeSmollLeft" >
+          <div className="rowAlignLeft" >
+            <h4 >{obj.title2}</h4>
+          </div>
+          <div className="rowAlignRight" >
             <p className="darkText">{obj.content2}</p>
           </div>
         </div>

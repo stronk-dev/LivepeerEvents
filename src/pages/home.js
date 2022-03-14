@@ -24,12 +24,15 @@ const Home = (obj) => {
   }
 
   return (
-    <div className="stroke" style={{ padding: 0 }}>
-      <div className="row" style={{ margin: 0, padding: 0 }}>
+    <div className="stroke">
+      <div className="verticalDivider"/>
+      <div className="row">
         <img alt="" src="livepeer.png" width="100em" height="100em" style={{ zIndex: 10 }} />
       </div>
+      <div className="verticalDivider" />
       <div className="flexContainer">
         <div className="stroke roundedOpaque">
+          <div className="verticalDivider" />
           <div className="row">
             <h3>Home</h3>
           </div>
@@ -54,10 +57,11 @@ const Home = (obj) => {
               <p>🔎 Blockchain 🕵️</p>
             </button>
           </div>
+          <div className="verticalDivider" />
         </div>
       </div>
-      <div className="alwaysOnBottom showNeverOnMobile" style={{ margin: 0, padding: 0 }}>
-        <div className="row" style={{ margin: 0, padding: 0 }}>
+      <div className="alwaysOnBottom showNeverOnMobile">
+        <div className="row">
           <RetroHitCounter
             hits={totalVisitorCount}
             withBorder={true}
@@ -75,7 +79,7 @@ const Home = (obj) => {
             glowStrength={0.4}
           />
         </div>
-        <h6 className="lightText" style={{ margin: 0, padding: 0 }}>
+        <h6 className="lightText">
           nframe.nl
         </h6>
       </div>

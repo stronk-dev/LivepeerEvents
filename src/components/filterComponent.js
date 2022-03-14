@@ -15,20 +15,20 @@ const Filter = (obj) => {
   }
 
   return (
-    <div className="flexContainer" style={{ margin: 0, width: '100%' }}>
-      <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 2 }}>
-        <div className="row" style={{ margin: 0, padding: 0 }}>
+    <div className="flexContainer" style={{  width: '100%' }}>
+      <div className="strokeSmollLeft" style={{ flex: 2 }}>
+        <div className="row">
           {searchTermText}
         </div>
-        <div className="row" style={{ margin: 0, padding: 0 }}>
-          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
+        <div className="row">
+          <div className="strokeSmollLeft">
+            <button className={"nonHomeButton buttonPadding"} style={{ backgroundColor: greyColour, width: '5em' }} onClick={() => {
               obj.setSearchTerm("");
             }}>
               <h3>Clear</h3>
             </button>
           </div>
-          <input className="searchField" style={{  margin: 0, padding: 0, height: '2em', width: '80%', paddingLeft: '1em', paddingRight: '1em', marginRight: '1em' }}
+          <input className="searchField" style={{ height: '2em', width: '100%' }}
             value={obj.searchTerm}
             onChange={(evt) => obj.setSearchTerm(evt.target.value)}
             placeholder='Filter by Orchestrator address'
@@ -36,34 +36,35 @@ const Filter = (obj) => {
           />
         </div>
       </div>
-      <div className="strokeSmollLeft" style={{ margin: 0, padding: 0, flex: 2 }}>
-        <div className="row" style={{ margin: 0, padding: 0 }}>
+      <div className="verticalSeparator"/>
+      <div className="strokeSmollLeft" style={{ flex: 2 }}>
+        <div className="row">
           <h3>{parseFloat(obj.amountFilter) > 0 ? ("Only showing higher than " + obj.amountFilter) : "Filter by minimum value"}</h3>
         </div>
-        <div className="row" style={{ margin: 0, padding: 0 }}>
-          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
+        <div className="row">
+          <div className="strokeSmollLeft">
+            <button className={"nonHomeButton buttonPadding"} style={{ backgroundColor: greyColour, width: '5em' }} onClick={() => {
               obj.setAmountFilter(0);
             }}>
               <h3>0</h3>
             </button>
           </div>
-          <input className="searchField" style={{ margin: 0, padding: 0, height: '2em', width: '80%', paddingLeft: '1em', paddingRight: '1em' }}
+          <input className="searchField" style={{ height: '2em', width: '100%' }}
             value={obj.amountFilter}
             onChange={(evt) => obj.setAmountFilter(evt.target.value)}
             placeholder='Filter by minimum value'
             type="number"
           />
-          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '4em' }} onClick={() => {
+          <div className="strokeSmollLeft">
+            <button className={"nonHomeButton buttonPadding"} style={{ backgroundColor: greyColour, width: '4em' }} onClick={() => {
               const curVal = parseFloat(obj.amountFilter);
               obj.setAmountFilter(curVal + 100);
             }}>
               <h3>+100</h3>
             </button>
           </div>
-          <div className="strokeSmollLeft" style={{ margin: 0, padding: 0 }}>
-            <button className={"nonHomeButton"} style={{ backgroundColor: greyColour, margin: 0, padding: '0', width: '5em' }} onClick={() => {
+          <div className="strokeSmollLeft">
+            <button className={"nonHomeButton buttonPadding"} style={{ backgroundColor: greyColour, width: '5em' }} onClick={() => {
               const curVal = parseFloat(obj.amountFilter);
               obj.setAmountFilter(curVal + 1000);
             }}>
@@ -72,6 +73,7 @@ const Filter = (obj) => {
           </div>
         </div>
       </div>
+      <div className="verticalDivider" />
     </div>
   )
 }

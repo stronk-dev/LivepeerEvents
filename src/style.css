@@ -49,6 +49,8 @@ h2, h3, h1, h4, h5, h6 {
   justify-content: center;
   align-items: center;
   display: flex;
+  margin: 0;
+  padding: 0;
   justify-content: space-evenly;
 }
 
@@ -160,7 +162,8 @@ svg {
   backdrop-filter: blur(6px);
   box-shadow: 9px 13px 8px 8px  rgba(27, 23, 19, 0.692);
   border-bottom-right-radius: 1em;
-  max-width: 400px;
+  max-width: 500px;
+  width: 500px;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -217,11 +220,27 @@ svg {
   border-radius: 1em;
 }
 
+.smallTxt {
+  font-size: small;
+}
+
 .verticalSeparator {
   width: 0.2em;
-  border-left: dashed 2px rgba(122, 128, 127, 0.4);
+  border-left: dashed 2px rgba(72, 80, 79, 0.4);
   margin-left: 0.5em;
   margin-right: 0.5em;
+  display: flex;
+  align-items: stretch;
+}
+
+.verticalDivider {
+  height: 20px;
+  display: flex;
+  align-items: stretch;
+}
+
+.smallVerticalDivider {
+  height: 5px;
   display: flex;
   align-items: stretch;
 }
@@ -238,15 +257,30 @@ svg {
   width: auto;
 }
 
+.forceVertical {
+  flex-direction: column;
+}
+
 .forceWrap{
   flex-direction: column;
 }
 
+.stretchAndPad {
+  justify-content: stretch;
+  padding: 20px;
+  width: 100%;
+}
+
+.stretchAndBetween {
+  align-items: stretch;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .stroke {
   box-sizing: border-box;
-  padding-bottom: 20px;
-  padding-top: 20px;
-  margin: 10px;
+  padding: 0;
+  margin: 0;
   width: 100%;
   display: flex;
   align-items: center;
@@ -288,8 +322,17 @@ svg {
   display: flex;
   justify-content: space-evenly;
   vertical-align: middle;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.sideMargin {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.fullMargin {
+  margin: 2em;
 }
 
 .withWrap {
@@ -401,6 +444,9 @@ svg {
 .nonHomeButton:active {
   box-shadow: inset -4px -5px 6px 4px rgba(20, 20, 19, 0.692);
 }
+.buttonPadding {
+  padding: 1em;
+}
 .active {
   box-shadow: inset -4px -5px 6px 4px rgba(20, 20, 19, 0.692);
 }
@@ -450,7 +496,8 @@ svg {
 }
 .overflow-content {
   color: black;
-  padding: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 
@@ -461,9 +508,17 @@ svg {
 .roundedOpaque {
   background-color: rgba(214, 214, 214, 0.80);
   box-shadow: 9px 13px 18px 8px  rgba(20, 20, 19, 0.692);
-  border-radius: 30px;
   box-sizing: border-box;
   backdrop-filter: blur(6px);
+  border-radius: 1em;
+}
+
+.roundedOpaqueDark {
+  background-color: rgba(17, 18, 23, 0.95);
+  box-shadow: 9px 13px 18px 8px  rgba(20, 20, 19, 0.692);
+  box-sizing: border-box;
+  backdrop-filter: blur(6px);
+  border-radius: 1em;
 }
 
 .header {
@@ -554,7 +609,7 @@ svg {
   left: 2px;
 }
 
-@media (max-aspect-ratio: 3/2) {
+@media (max-aspect-ratio: 4/3) {
   .mobileSmallerFont{
     font-size: xx-small;
   }
@@ -569,11 +624,12 @@ svg {
   }
   .flexContainer {
     height: 100%;
+    width: 100%;
     padding: 0;
     margin: 0;
     display: flex;
-    align-items: flex-start;
-    justify-content: center;
+    align-items: stretch;
+    justify-content: space-between;
     flex-direction: column;
   }
   .roundedOpaque {
@@ -612,9 +668,5 @@ svg {
   }
   .main-container {
     height: calc(100vh - 60px);
-  }
-  #sideContent {
-    max-width: 100%;
-    width: 100%;
   }
 }
