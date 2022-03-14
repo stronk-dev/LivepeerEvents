@@ -8,7 +8,7 @@ import Orchestrator from "../components/orchestratorViewer";
 import ContractPrices from '../components/ContractPrices';
 
 // Shows the EventViewer and other Livepeer related info
-const defaultMaxShown = 100;
+const defaultMaxShown = 50;
 
 const Livepeer = (obj) => {
   const [amountFilter, setAmountFilter] = useState("0");

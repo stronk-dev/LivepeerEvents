@@ -15,7 +15,7 @@ const withdrawStakeColour = "rgba(158, 98, 25, 0.4)";
 const activationColour = "rgba(154, 158, 25, 0.4)";
 const greyColour = "rgba(122, 128, 127, 0.4)";
 
-const defaultIncrementMaxShown = 100;
+const defaultIncrementMaxShown = 50;
 
 const EventViewer = (obj) => {
   const listInnerRef = useRef();
