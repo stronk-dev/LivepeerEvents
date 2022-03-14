@@ -196,20 +196,21 @@ const EventViewer = (obj) => {
   let showMoreButton;
   if (hidden == 0) {
     showMoreButton =
-      <div className="stroke" style={{ width: '100%', padding: 0, margin: 0, marginBottom: '2em', marginTop: '2em' }}>
-        <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", backgroundColor: greyColour, padding: 0, margin: 0, width: '100%' }}>
-          <p className="row withWrap" style={{ maxWidth: '600px' }}>
+      <div className="row">
+        <div className="strokeSmollLeft" style={{ width: '100%' }}>
+          <p className="row buttonPadding" style={{ borderRadius: "1.2em", backgroundColor: greyColour, maxWidth: '600px' }}>
             ☑️ Reached end of results
           </p>
         </div>
       </div>
   } else {
     showMoreButton =
-      <div className="stroke" style={{ width: '100%', padding: 0, margin: 0, marginBottom: '2em', marginTop: '2em' }}>
-        <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", padding: 0, margin: 0, width: '100%' }}>
-          <button className="row nonHomeButton buttonPadding" style={{ backgroundColor: greyColour }} onClick={() => {
-            obj.setMaxAmount(obj.maxAmount + defaultIncrementMaxShown);
-          }}>
+      <div className="row">
+        <div className="strokeSmollLeft" style={{ width: '100%' }}>
+          <button className="row nonHomeButton buttonPadding" style={{ borderRadius: "1.2em", backgroundColor: greyColour, maxWidth: '600px' }}
+            onClick={() => {
+              obj.setMaxAmount(obj.maxAmount + defaultIncrementMaxShown);
+            }}>
             <h3>🔄 Show More</h3>
           </button>
         </div>
@@ -219,7 +220,7 @@ const EventViewer = (obj) => {
   let filterBit;
   if (obj.showFilter) {
     filterBit =
-      <div className="strokeSmollLeft roundedOpaque" style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, margin: 0, width: '100%' }}>
+      <div className="strokeSmollLeft roundedOpaque" style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, width: '100%' }}>
         <div className="row">
           <span>Showing {hidden + unfiltered} out of {limitShown} results</span>
         </div>
@@ -229,23 +230,25 @@ const EventViewer = (obj) => {
   }
 
   return (
-    <div className="strokeSmollLeft" style={{ padding: 0, margin: 0, height: 'calc( 100vh - 50px)' }}>
+    <div className="strokeSmollLeft" style={{ height: 'calc( 100vh - 50px)' }}>
       {filterBit}
-      <div className="row" style={{ padding: 0, margin: 0, width: '100%', height: '100%' }}>
-        <div className="stroke roundedOpaque" style={{ padding: 0, margin: 0, width: 'unset', minWidth: "400px", height: '100%', marginRight: '1em', overflow: 'hidden', marginTop: '1em', overflowX: 'scroll' }}>
+      <div className="row" style={{ width: '100%', height: '100%' }}>
+        <div className="stroke roundedOpaque onlyVerticalScroll" style={{ width: '40vw', minWidth: '400px', height: 'calc( 100vh - 50px - 2em)', marginTop: '2em' }}>
           <div className="content-wrapper" style={{ width: '100%' }}>
             <ScrollContainer activationDistance={1} className="overflow-container"
               hideScrollbars={false} onEndScroll={updateOnScroll} ref={listInnerRef}>
               <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0 }}>
-                <div className={obj.forceVertical ? "flexContainer forceWrap" : "flexContainer"} style={{ margin: 0, textAlign: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                <div className={obj.forceVertical ? "flexContainer forceWrap" : "flexContainer"} >
                   {eventList}
+                  <div className="verticalDivider" />
                   {showMoreButton}
+                  <div className="verticalDivider" />
                 </div>
               </div>
             </ScrollContainer>
             <div className="strokeSmollLeft sideMargin">
-              <div className="verticalDivider"/>
-              <button className={delegatorRewardActivated ? "row nonHomeButton buttonPadding active" : "row nonHomeButton buttonPadding"} style={{ backgroundColor: delegatorActivatedColour}} onClick={() => {
+              <div className="verticalDivider" />
+              <button className={delegatorRewardActivated ? "row nonHomeButton buttonPadding active" : "row nonHomeButton buttonPadding"} style={{ backgroundColor: delegatorActivatedColour }} onClick={() => {
                 setDelegatorRewardActivated(!delegatorRewardActivated);
               }}>
                 <h3>Claim</h3>

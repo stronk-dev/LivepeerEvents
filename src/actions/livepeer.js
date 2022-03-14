@@ -119,14 +119,14 @@ export const getEvents = () => async dispatch => {
             eventFrom = "";
             eventTo = "";
             if (eventContainsBond) {
-              const subtext = "activated their orchestrator";
+              const subtext = "activated";
               const descriptions = [
                 tmpAmount.toFixed(2) + " LPT stake",
                 "round " + tmpWhen
               ]
               eventDescription = <Ticket icon={"🚀"} subtext={subtext} descriptions={descriptions} />
             } else {
-              const subtext = "reactivated their orchestrator";
+              const subtext = "reactivated";
               const descriptions = [
                 "round " + tmpWhen
               ]
@@ -154,7 +154,7 @@ export const getEvents = () => async dispatch => {
           else if (eventContainsRebond) {
             eventType = "Stake";
             eventColour = stakeColour;
-            const subtext = "changed stake amount";
+            const subtext = "changed stake";
             const descriptions = [
               tmpAmount.toFixed(2) + " LPT"
             ]
@@ -173,7 +173,7 @@ export const getEvents = () => async dispatch => {
                 <Ticket icon={"⌛"} subtext={subtext} descriptions={descriptions} />
             } else if (eventFrom === eventTo) {
               eventFrom = "";
-              const subtext = "changed stake amount";
+              const subtext = "changed stake";
               const descriptions = [
                 tmpAmount.toFixed(2) + " LPT"
               ]
@@ -261,7 +261,7 @@ export const getEvents = () => async dispatch => {
           if (amount < thresholdFees) {
             continue;
           }
-          const subtext = "withdrew fee rewards";
+          const subtext = "withdrew fees";
           const descriptions = [
             amount.toFixed(4) + " Eth"
           ]
@@ -286,7 +286,7 @@ export const getEvents = () => async dispatch => {
           eventContainsTranscoderUpdate = true;
           const amount1 = parseFloat(eventObj.data.rewardCut) / 10000;
           const amount2 = 100 - (eventObj.data.feeShare / 10000);
-          const subtext = "changed commission rates";
+          const subtext = "changed commission";
           const descriptions = [
             amount1.toFixed(2) + "% on staking rewards",
             amount2.toFixed(2) + "% on transcoding fees"
@@ -315,9 +315,9 @@ export const getEvents = () => async dispatch => {
           if (amount1 < thresholdStaking && amount2 < thresholdFees) {
             continue;
           }
-          const subtext = "delegator claimed rewards";
+          const subtext = "delegator claimed";
           const descriptions = [
-            "of " + (eventObj.data.endRound - eventObj.data.startRound + 1) + " rounds",
+            (eventObj.data.endRound - eventObj.data.startRound + 1) + " rounds",
             "+" + amount1.toFixed(2) + " LPT rewards",
             "+" + amount2.toFixed(4) + " Eth fees"
           ]

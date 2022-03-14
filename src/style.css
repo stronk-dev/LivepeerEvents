@@ -239,6 +239,12 @@ svg {
   align-items: stretch;
 }
 
+.halfVerticalDivider {
+  height: 10px;
+  display: flex;
+  align-items: stretch;
+}
+
 .smallVerticalDivider {
   height: 5px;
   display: flex;
@@ -254,7 +260,10 @@ svg {
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  width: auto;
+}
+
+.makeItWide {
+  width: 50vw;
 }
 
 .forceVertical {
@@ -500,6 +509,11 @@ svg {
   padding-right: 1em;
 }
 
+.onlyVerticalScroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 
 .noCursor {
   cursor: default;
@@ -514,8 +528,8 @@ svg {
 }
 
 .roundedOpaqueDark {
-  background-color: rgba(17, 18, 23, 0.95);
-  box-shadow: 9px 13px 18px 8px  rgba(20, 20, 19, 0.692);
+  background-color: rgba(5, 5, 10, 0.95);
+  box-shadow: 9px 13px 18px 8px  rgba(5, 5, 10, 0.6);
   box-sizing: border-box;
   backdrop-filter: blur(6px);
   border-radius: 1em;

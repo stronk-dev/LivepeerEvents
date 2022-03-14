@@ -39,6 +39,7 @@ const OrchDelegatorViewer = (obj) => {
         <div className="row">
           <h3>The selected Orchestrator has no Delegators</h3>
         </div>
+        <div className="verticalDivider"/>
       </div>
     </div >
   )

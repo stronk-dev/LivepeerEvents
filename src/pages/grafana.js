@@ -42,7 +42,7 @@ const Grafana = (obj) => {
       </div>
       <div className="verticalDivider"/>
       <div className="stroke" >
-        <div className="flexContainer">
+        <div className="flexContainer makeItWide">
           <div className="stroke">
             <div className="stroke roundedOpaque">
             <div className="verticalDivider"/>

@@ -69,22 +69,22 @@ const OrchInfoViewer = (obj) => {
     }
 
     return (
-      <div className="row sideMargin">
-        <div className="stroke stretchAndBetween sideMargin">
+      <div className="row">
+        <div className="stroke sideMargin">
           <div className="verticalDivider" />
-          <div className="row" style={{ borderBottom: '2px solid rgba(15,15,15,0.05)' }}>
+          <div className="row">
             <a href={thisUrl}>
               <h3 >Orchestrator Info</h3>
               <Address address={thisID} />
             </a>
           </div>
-          <div className="stretchAndBetween sideMargin" >
+          <div className="stretchAndBetween" style={{ borderTop: '2px solid rgba(15,15,15,0.05)', marginTop: '0.2em' }} >
             <Stat header={"Earned Fees"} content1={totalVolumeETH + " Eth"} content2={"$" + totalVolumeUSD} />
           </div>
-          <div className="stretchAndBetween sideMargin" >
+          <div className="stretchAndBetween" >
             <Stat header={"Commission"} title1={"Reward"} content1={rewardCut + "%"} title2={"Fee"} content2={feeCut + "%"} />
           </div>
-          <div className="stretchAndBetween sideMargin" >
+          <div className="stretchAndBetween" >
             <Stat header={"Stake"} title1={"Total"} content1={totalStake + " LPT"} title2={"Self"} content2={selfStake + " LPT (" + selfStakeRatio + ")%"} />
           </div>
           <div className="stretchAndBetween strokeSmollLeft">

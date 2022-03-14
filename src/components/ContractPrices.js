@@ -94,11 +94,11 @@ const ContractPrices = (obj) => {
   }
 
   return (
-    <div className="stroke metaSidebar" style={{ padding: 0, maxWidth: "300px" }}>
-      <div className="row" style={{ margin: 0, padding: 0 }}>
-        <h3 style={{ margin: 0, padding: 0 }}>Smart contract prices</h3>
+    <div className="stroke" style={{ maxWidth: "300px" }}>
+      <div className="row">
+        <h3>Smart contract prices</h3>
       </div>
-      <div className="stroke" style={{ margin: 0, padding: 0 }}>
+      <div className="stroke">
         <div className='rowAlignRight'>
           <Stat header={"Reward Call"} content1={"$" + redeemRewardCostL2USD + " ($" + redeemRewardCostL1USD + " on L1)"} />
           <Stat header={"Claim Ticket"} content1={"$" + claimTicketCostL2USD + " ($" + claimTicketCostL1USD + " on L1)"} />
