@@ -17,15 +17,15 @@ const EventButton = (obj) => {
   if (obj.eventObj.eventTo || obj.eventObj.eventFrom || obj.eventObj.eventCaller) {
     if (obj.eventObj.eventTo) {
       eventTo =
-        <EventButtonAddress name="To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;" address={obj.eventObj.eventTo} />
+        <EventButtonAddress name="To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;" address={obj.eventObj.eventTo} setSearchTerm={obj.setSearchTerm} />
     }
     if (obj.eventObj.eventFrom) {
       eventFrom =
-        <EventButtonAddress name="From&nbsp;&nbsp;:&nbsp;" address={obj.eventObj.eventFrom} />
+        <EventButtonAddress name="From&nbsp;&nbsp;:&nbsp;" address={obj.eventObj.eventFrom} setSearchTerm={obj.setSearchTerm} />
     }
     if (obj.eventObj.eventCaller) {
       eventCaller =
-        <EventButtonAddress name="Caller&nbsp;:&nbsp;" address={obj.eventObj.eventCaller} />
+        <EventButtonAddress name="Caller&nbsp;:&nbsp;" address={obj.eventObj.eventCaller} setSearchTerm={obj.setSearchTerm} />
     }
   }
 
