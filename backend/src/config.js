@@ -1,4 +1,3 @@
-//Server configuration variables
 export const {
     NODE_PORT = 42609,
     NODE_ENV = 'local',
@@ -17,7 +16,10 @@ export const {
     CONF_TIMEOUT_CMC = 360000,
     CONF_TIMEOUT_ALCHEMY = 2000,
     CONF_TIMEOUT_LIVEPEER = 60000,
+    CONF_TIMEOUT_ENS_DOMAIN = 86400000,
+    CONF_TIMEOUT_ENS_INFO = 3600000,
     CONF_DISABLE_SYNC = false,
     CONF_DISABLE_DB = false,
-    CONF_DISABLE_CMC = false
+    CONF_DISABLE_CMC = false,
+    CONF_DISABLE_ENS = false
 } = process.env;

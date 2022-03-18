@@ -35,9 +35,9 @@ const EventButton = (obj) => {
   }
 
   return (
-    <div className="strokeSmollLeft">
+    <div className="strokeSmollLeft" style={{ width: '100%', minWidth: '200px', maxWidth: '500px'}}>
       {blockNumber}
-      <div className="strokeSmollLeft" style={{ borderRadius: "1.2em", backgroundColor: obj.eventObj.eventColour, opacity: 0.9, border: '0.1em solid rgba(54, 46, 46, 0.1)', boxShadow: "4px 2px 3px 2px rgba(54, 46, 46, 0.1)" }}>
+      <div className="strokeSmollLeft" style={{ width: "100%", borderRadius: "1.2em", backgroundColor: obj.eventObj.eventColour, opacity: 0.9, border: '0.1em solid rgba(54, 46, 46, 0.1)', boxShadow: "4px 2px 3px 2px rgba(54, 46, 46, 0.1)" }}>
         <div className="halfVerticalDivider" />
         <div className="rowAlignLeft">
           {eventCaller}

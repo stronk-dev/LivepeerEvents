@@ -62,3 +62,30 @@ export const getOrchestratorByDelegator = (delAddr) => (
     }
   })
 );
+
+export const getAllEnsDomains = () => (
+  fetch("api/livepeer/getEnsDomains/", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllEnsInfo = () => (
+  fetch("api/livepeer/getEnsInfo/", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getEnsInfo = (addr) => (
+  fetch("api/livepeer/getENS/" + addr, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);

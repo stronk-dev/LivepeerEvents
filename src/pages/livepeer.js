@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import '../style.css';
 import { Navigate, useSearchParams } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux';
 import { getOrchestratorInfo, clearOrchestrator } from "../actions/livepeer";
 import EventViewer from "../components/eventViewer";
 import Orchestrator from "../components/orchestratorViewer";

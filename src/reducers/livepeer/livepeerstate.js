@@ -5,10 +5,21 @@ import {
   RECEIVE_ORCHESTRATOR,
   RECEIVE_CURRENT_ORCHESTRATOR,
   CLEAR_ORCHESTRATOR,
-  RECEIVE_TICKETS
+  RECEIVE_TICKETS,
+  SET_ALL_ENS_INFO,
+  SET_ALL_ENS_DOMAINS
 } from "../../actions/livepeer";
 
-export default (state = {}, { type, message }) => {
+export default (state = {
+  quotes: [],
+  blockchains: [],
+  events: [],
+  thisOrchestrator: null,
+  selectedOrchestrator: null,
+  tickets: [],
+  ensInfoMapping: [],
+  ensDomainMapping: []
+}, { type, message }) => {
   Object.freeze(state);
   switch (type) {
     case RECEIVE_QUOTES:
@@ -25,6 +36,10 @@ export default (state = {}, { type, message }) => {
       return { ...state, selectedOrchestrator: null };
     case RECEIVE_TICKETS:
       return { ...state, tickets: message };
+    case SET_ALL_ENS_INFO:
+      return { ...state, ensInfoMapping: message };
+    case SET_ALL_ENS_DOMAINS:
+      return { ...state, ensDomainMapping: message };
     default:
       return { ...state };
   }

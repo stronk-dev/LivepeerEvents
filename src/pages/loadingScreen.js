@@ -4,7 +4,8 @@ import {
   getVisitorStats
 } from "../actions/user";
 import {
-  getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo, getTickets
+  getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo, getTickets,
+  getAllEnsDomains, getAllEnsInfo
 } from "../actions/livepeer";
 import { login } from "../actions/session";
 
@@ -18,7 +19,7 @@ const Startup = (obj) => {
   const dispatch = useDispatch();
 
   const refreshAllZeData = () => {
-    console.log("Refreshing data...");
+    console.log("Refreshing Livepeer data...");
     batch(() => {
       dispatch(getQuotes());
       dispatch(getEvents());
@@ -35,10 +36,19 @@ const Startup = (obj) => {
       dispatch(getVisitorStats());
     });
   }
+
+  const refreshENS = () => {
+    console.log("Refreshing ENS data...");
+    batch(() => {
+      dispatch(getAllEnsDomains());
+      dispatch(getAllEnsInfo());
+    });
+  }
   
   useEffect(() => {
     refreshLogin();
     refreshAllZeData();
+    refreshENS();
     setIsLoaded(true);
     if (refreshInterval) {
       const interval = setInterval(refreshAllZeData, refreshInterval);

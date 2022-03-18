@@ -24,6 +24,8 @@ export const RECEIVE_CURRENT_ORCHESTRATOR = "RECEIVE_CURRENT_ORCHESTRATOR";
 export const RECEIVE_ORCHESTRATOR = "RECEIVE_ORCHESTRATOR";
 export const CLEAR_ORCHESTRATOR = "CLEAR_ORCHESTRATOR";
 export const RECEIVE_TICKETS = "RECEIVE_TICKETS";
+export const SET_ALL_ENS_INFO = "SET_ALL_ENS_INFO";
+export const SET_ALL_ENS_DOMAINS = "SET_ALL_ENS_DOMAINS";
 
 const setQuotes = message => ({
   type: RECEIVE_QUOTES, message
@@ -46,6 +48,13 @@ const clearOrchestratorInfo = () => ({
 const setTickets = message => ({
   type: RECEIVE_TICKETS, message
 });
+const setAllEnsInfo = message => ({
+  type: SET_ALL_ENS_INFO, message
+});
+const setAllEnsDomains = message => ({
+  type: SET_ALL_ENS_DOMAINS, message
+});
+
 
 export const getQuotes = () => async dispatch => {
   const response = await apiUtil.getQuotes();
@@ -523,3 +532,27 @@ export const getOrchestratorInfo = (orchAddr) => async dispatch => {
 export const clearOrchestrator = () => async dispatch => {
   return dispatch(clearOrchestratorInfo({}));
 };
+
+export const getAllEnsDomains = () => async dispatch => {
+  const response = await apiUtil.getAllEnsDomains();
+  const data = await response.json();
+  if (response.ok) {
+    return dispatch(setAllEnsDomains(data));
+  }
+  return dispatch(receiveErrors(data));
+};
+
+export const getAllEnsInfo = () => async dispatch => {
+  const response = await apiUtil.getAllEnsInfo();
+  const data = await response.json();
+  if (response.ok) {
+    return dispatch(setAllEnsInfo(data));
+  }
+  return dispatch(receiveErrors(data));
+};
+  
+export const getEnsInfo = async (addr) => {
+  const response = await apiUtil.getEnsInfo(addr);
+  const data = await response.json();
+};
+  

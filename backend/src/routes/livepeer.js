@@ -8,9 +8,10 @@ import {
   API_CMC, API_L1_HTTP, API_L2_HTTP, API_L2_WS,
   CONF_DEFAULT_ORCH, CONF_SIMPLE_MODE, CONF_TIMEOUT_CMC,
   CONF_TIMEOUT_ALCHEMY, CONF_TIMEOUT_LIVEPEER, CONF_DISABLE_SYNC,
-  CONF_DISABLE_DB,
-  CONF_DISABLE_CMC
+  CONF_DISABLE_DB, CONF_DISABLE_CMC, CONF_TIMEOUT_ENS_DOMAIN,
+  CONF_TIMEOUT_ENS_INFO, CONF_DISABLE_ENS
 } from "../config";
+
 // Do API requests to other API's
 const https = require('https');
 // Read ABI files
@@ -45,8 +46,14 @@ if (!CONF_SIMPLE_MODE) {
 }
 // For listening to blockchain events
 
+// ENS stuff TODO: CONF_DISABLE_ENS
+const { ethers } = require("ethers");
+const provider = new ethers.providers.JsonRpcProvider(API_L1_HTTP);
+// const ens = new ENS({ provider: web3layer1, ensAddress: getEnsAddress('1') });
+let ensDomainCache = [];
+let ensInfoCache = [];
+
 // Update CoinMarketCap related api calls every 5 minutes
-const timeoutCMC = CONF_TIMEOUT_CMC;
 let cmcPriceGet = 0;
 let ethPrice = 0;
 let lptPrice = 0;
@@ -54,7 +61,6 @@ let cmcQuotes = {};
 let cmcCache = {};
 
 // Update Alchemy related API calls every 2 seconds
-const timeoutAlchemy = CONF_TIMEOUT_ALCHEMY;
 let l2Gwei = 0;
 let l1Gwei = 0;
 let l2block = 0;
@@ -82,8 +88,6 @@ let commissionFeeCostL2 = 0;
 let serviceUriFeeCostL1 = 0;
 let serviceUriFeeCostL2 = 0;
 
-// Update O info from thegraph every 1 minute
-const timeoutTheGraph = CONF_TIMEOUT_LIVEPEER;
 // Will contain addr, lastGet, and obj of any requested O's
 let orchestratorCache = [];
 // Contains delegator addr and the address of the O they are bounded to
@@ -461,12 +465,12 @@ apiRouter.get("/grafana", async (req, res) => {
   try {
     const now = new Date().getTime();
     // Update blockchain data if the cached data has expired
-    if (now - arbGet > timeoutAlchemy) {
+    if (now - arbGet > CONF_TIMEOUT_ALCHEMY) {
       await parseEthBlockchain();
       arbGet = now;
     }
     // Update coin prices once their data has expired
-    if (now - cmcPriceGet > timeoutCMC) {
+    if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
       await parseCmc();
       cmcPriceGet = now;
     }
@@ -502,7 +506,7 @@ apiRouter.get("/cmc", async (req, res) => {
   try {
     const now = new Date().getTime();
     // Update cmc once their data has expired
-    if (now - cmcPriceGet > timeoutCMC) {
+    if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
       cmcPriceGet = now;
       await parseCmc();
     }
@@ -517,7 +521,7 @@ apiRouter.get("/blockchains", async (req, res) => {
   try {
     const now = new Date().getTime();
     // Update blockchain data if the cached data has expired
-    if (now - arbGet > timeoutAlchemy) {
+    if (now - arbGet > CONF_TIMEOUT_ALCHEMY) {
       arbGet = now;
       await parseEthBlockchain();
     }
@@ -551,7 +555,7 @@ apiRouter.get("/quotes", async (req, res) => {
   try {
     const now = new Date().getTime();
     // Update cmc once their data has expired
-    if (now - cmcPriceGet > timeoutCMC) {
+    if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
       cmcPriceGet = now;
       await parseCmc();
     }
@@ -596,17 +600,18 @@ const parseOrchestrator = async function (reqAddr) {
     }
   }
   if (wasCached) {
-    if (now - orchestratorObj.lastGet < timeoutTheGraph) {
+    if (now - orchestratorObj.lastGet < CONF_TIMEOUT_LIVEPEER) {
       needsUpdate = false;
     }
   }
   if (!wasCached || needsUpdate) {
     const orchQuery = gql`{
-    transcoders(where: {id: "${reqAddr}"}) {
+    transcoder(id: "${reqAddr}") {
         id
         activationRound
         deactivationRound
         active
+        status
         lastRewardRound {
           id
           length
@@ -629,7 +634,7 @@ const parseOrchestrator = async function (reqAddr) {
         totalVolumeETH
         totalVolumeUSD
         serviceURI
-        delegators {
+        delegators(first: 1000) {
           id
           bondedAmount
           startRound
@@ -643,20 +648,22 @@ const parseOrchestrator = async function (reqAddr) {
     }
   `;
     orchestratorObj = await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", orchQuery);
-    orchestratorObj = orchestratorObj.transcoders[0];
+    orchestratorObj = orchestratorObj.transcoder;
     // Not found
     if (!orchestratorObj) {
       return {};
     }
     orchestratorObj.lastGet = now;
     if (wasCached) {
-      for (var orch of orchestratorCache) {
-        if (orch.id == reqAddr) {
-          orch = orchestratorObj;
+      for (var idx = 0; idx < orchestratorCache.length; idx++) {
+        if (orchestratorCache[idx].id == reqAddr) {
+          console.log("Updating outdated orchestrator " + orchestratorObj.id + " @ " + now);
+          orchestratorCache[idx] = orchestratorObj;
           break;
         }
       }
     } else {
+      console.log("Pushing new orchestrator " + orchestratorObj.id + " @ " + now);
       orchestratorCache.push(orchestratorObj);
     }
   }
@@ -714,7 +721,7 @@ const parseDelegator = async function (reqAddr) {
     }
   }
   if (wasCached) {
-    if (now - delegatorObj.lastGet < timeoutTheGraph) {
+    if (now - delegatorObj.lastGet < CONF_TIMEOUT_LIVEPEER) {
       needsUpdate = false;
     }
   }
@@ -738,13 +745,15 @@ const parseDelegator = async function (reqAddr) {
     }
     delegatorObj.lastGet = now;
     if (wasCached) {
-      for (var delegator of delegatorCache) {
-        if (delegator.id == reqAddr) {
-          delegator = delegatorObj;
+      for (var idx = 0; idx < delegatorCache.length; idx++) {
+        if (delegatorCache[idx].id == reqAddr) {
+          console.log("Updating outdated delegator " + delegatorObj.id + " @ " + now);
+          delegatorCache[idx] = delegatorObj;
           break;
         }
       }
     } else {
+      console.log("Pushing new delegator " + delegatorObj.id + " @ " + now);
       delegatorCache.push(delegatorObj);
     }
   }
@@ -804,12 +813,12 @@ apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
   try {
     const now = new Date().getTime();
     // Update blockchain data if the cached data has expired
-    if (now - arbGet > timeoutAlchemy) {
+    if (now - arbGet > CONF_TIMEOUT_ALCHEMY) {
       await parseEthBlockchain();
       arbGet = now;
     }
     // Update coin prices once their data has expired
-    if (now - cmcPriceGet > timeoutCMC) {
+    if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
       await parseCmc();
       cmcPriceGet = now;
     }
@@ -945,6 +954,123 @@ apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
     }
     res.setHeader('Content-type', "text/plain; version=0.0.4");
     res.send(outputString);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+const getEnsDomain = async function (addr) {
+  const now = new Date().getTime();
+  let wasInCache = false;
+  // See if it is cached
+  for (const thisAddr of ensDomainCache) {
+    if (thisAddr.address === addr) {
+      // Check timeout
+      if (now - thisAddr.timestamp < CONF_TIMEOUT_ENS_DOMAIN ){
+        return thisAddr.domain;
+      }
+      wasInCache = true;
+    }
+  }
+  // Else get it and cache it
+  const ensDomain = await provider.lookupAddress(addr.toLowerCase());
+  let ensObj;
+  if (!ensDomain){
+    ensObj = {
+      domain: null,
+      address: addr,
+      timestamp: now
+    };
+  } else {
+    ensObj = {
+      domain: ensDomain,
+      address: addr,
+      timestamp: now
+    };
+  }
+  if (wasInCache){
+    for (var idx = 0; idx < ensDomainCache.length; idx++) {
+      if (ensDomainCache[idx].address == addr) {
+        console.log("Updating outdated domain " + ensObj.domain + " owned by " + ensObj.address + " @ " + ensObj.timestamp);
+        ensDomainCache[idx] = ensObj;
+        break;
+      }
+    }
+  } else {
+    console.log("Caching new domain " + ensObj.domain + " owned by " + ensObj.address + " @ " + ensObj.timestamp);
+    ensDomainCache.push(ensObj);
+  }
+  return ensObj.domain;
+}
+
+const getEnsInfo = async function (addr) {
+  const now = new Date().getTime();
+  let wasInCache = false;
+  // See if it is cached
+  for (const thisAddr of ensInfoCache) {
+    if (thisAddr.domain === addr) {
+      // Check timeout
+      if (now - thisAddr.timestamp < CONF_TIMEOUT_ENS_INFO ){
+        return thisAddr;
+      }
+      wasInCache = true;
+    }
+  }
+  // Else get it and cache it
+  const resolver = await provider.getResolver(addr);
+  const description = await resolver.getText("description");
+  const url = await resolver.getText("url");
+  const avatar = await resolver.getAvatar();
+  const ensObj = {
+    domain: addr,
+    description,
+    url,
+    avatar,
+    timestamp: now
+  };
+  if (wasInCache){
+    for (var idx = 0; idx < ensInfoCache.length; idx++) {
+      if (ensInfoCache[idx].domain == addr) {
+        console.log("Updating outdated info " + ensObj.domain + " @ " + ensObj.timestamp);
+        ensInfoCache[idx] = ensObj;
+        break;
+      }
+    }
+  } else {
+    console.log("Caching new info " + ensObj.domain + " @ " + ensObj.timestamp);
+    ensInfoCache.push(ensObj);
+  }
+  return ensObj;
+}
+
+// Gets and caches info for a single address
+apiRouter.get("/getENS/:orch", async (req, res) => {
+  try {
+    // First resolve addr => domain name
+    const ensDomain = await getEnsDomain(req.params.orch);
+    if (!ensDomain){
+      res.send({domain: null});
+      return;
+    }
+    // Then resolve address to info
+    const ensInfo = await getEnsInfo(ensDomain);
+    res.send(ensInfo);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+// Returns entire ENS domain mapping cache
+apiRouter.get("/getEnsDomains", async (req, res) => {
+  try {
+    res.send(ensDomainCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+// Returns entire ENS info mapping cache
+apiRouter.get("/getEnsInfo", async (req, res) => {
+  try {
+    res.send(ensInfoCache);
   } catch (err) {
     res.status(400).send(err);
   }
