@@ -65,12 +65,12 @@ const EventButtonAddress = (obj) => {
     thisName = <h4 className="elipsText elipsOnMobileExtra">{thisInfo.domain}</h4>;
     if (thisInfo.avatar) {
       thisIcon =
-        <a className="selectOrch" style={{ cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
+        <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
           <img alt="" src={thisInfo.avatar} width="20em" height="20em" style={{ margin: 0 }} />
         </a >
     } else {
       thisIcon =
-        <a className="selectOrch" style={{ cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
+        <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
           <img alt="" src="ens.png" width="20em" height="20em" style={{ margin: 0 }} />
         </a >
     }
@@ -81,10 +81,10 @@ const EventButtonAddress = (obj) => {
 
   return (
     <div className="rowAlignLeft" style={{ width: '100%' }}>
-      {thisIcon}
-      <a className="selectOrch" style={{ cursor: 'alias' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.address}>
+      <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.address}>
         <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
       </a>
+      {thisIcon}
       <button className="selectOrch" style={{ padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.address) }} >
         <span className="elipsText">🔎</span>
       </button>

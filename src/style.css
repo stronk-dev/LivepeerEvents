@@ -59,7 +59,6 @@ h2, h3, h1, h4, h5, h6 {
   white-space: nowrap;
   display: block;
   text-overflow: ellipsis;
-  width: 100%;
 }
 
 p {

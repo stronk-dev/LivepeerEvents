@@ -101,11 +101,11 @@ const OrchInfoViewer = (obj) => {
       }
       if (thisInfo.url) {
         ensUrl =
-        <a className="selectOrchLight" style={{cursor: 'alias'}} target="_blank" rel="noopener noreferrer" href={"https://" + thisInfo.url} >
-          <div className="rowAlignLeft">
-          <span>{thisInfo.url}</span>
-          </div>
-        </a >
+          <a className="selectOrchLight" style={{ cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://" + thisInfo.url} >
+            <div className="rowAlignLeft">
+              <span>{thisInfo.url}</span>
+            </div>
+          </a >
       }
     }
 
@@ -114,10 +114,10 @@ const OrchInfoViewer = (obj) => {
         <div className="stroke sideMargin">
           <div className="verticalDivider" />
           <div className="row">
-            <a href={thisUrl}>
-              <h3 >Orchestrator Info</h3>
-              <Address address={thisID} />
-            </a>
+            <h3 >Orchestrator Info</h3>
+          </div>
+          <div className="row">
+            <Address address={thisID} />
           </div>
           {ensUrl}
           {ensDescription}

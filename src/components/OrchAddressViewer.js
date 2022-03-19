@@ -9,11 +9,11 @@ const Address = (obj) => {
   let thisInfo = null;
   const now = new Date().getTime();
   // Lookup domain in cache
-  if (livepeer.ensDomainMapping){
-      for (const thisAddr of livepeer.ensDomainMapping) {
-        if (thisAddr.address === obj.address) {
-          thisDomain = thisAddr;
-          // Check timeout
+  if (livepeer.ensDomainMapping) {
+    for (const thisAddr of livepeer.ensDomainMapping) {
+      if (thisAddr.address === obj.address) {
+        thisDomain = thisAddr;
+        // Check timeout
         if (now - thisAddr.timestamp < 86400000) {
           break;
         }
@@ -61,17 +61,13 @@ const Address = (obj) => {
     thisName = thisInfo.domain;
     if (thisInfo.avatar) {
       thisIcon =
-        <a className="selectOrchLight" style={{cursor: 'alias'}} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
-          <div className="rowAlignLeft">
-            <img alt="" src={thisInfo.avatar} width="20" height="20" />
-          </div>
+        <a className="selectOrchLight" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
+          <img alt="" src={thisInfo.avatar} width="20em" height="20em" />
         </a >
     } else {
       thisIcon =
-        <a className="selectOrchLight" style={{cursor: 'alias'}} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
-          <div className="rowAlignLeft">
-            <img alt="" src="ens.png" width="20" height="20" />
-          </div>
+        <a className="selectOrchLight" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
+          <img alt="" src="ens.png" width="20em" height="20em" />
         </a >
     }
   } else {
@@ -81,10 +77,8 @@ const Address = (obj) => {
 
   return (
     <div className="rowAlignLeft">
-      <a className="selectOrchLight" style={{cursor: 'alias'}} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/" + obj.address} >
-        <div className="rowAlignLeft">
-          <img alt="" src="livepeer.png" width="20" height="20" />
-        </div>
+      <a className="selectOrchLight" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/" + obj.address} >
+        <img alt="" src="livepeer.png" width="20em" height="20em" />
       </a>
       {thisIcon}
       <span className="elipsText elipsOnMobile">{thisName}</span>
