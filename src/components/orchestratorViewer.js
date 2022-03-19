@@ -2,27 +2,6 @@ import React from "react";
 import OrchDelegatorViewer from "./OrchDelegatorViewer";
 import OrchInfoViewer from "./OrchInfoViewer";
 
-function updateClipboard(newClip) {
-  navigator.clipboard.writeText(newClip).then(
-    () => {
-      console.log("Copied!");
-    },
-    () => {
-      console.log("Copy failed!");
-    }
-  );
-}
-
-function copyLink(addr) {
-  navigator.permissions
-    .query({ name: "clipboard-write" })
-    .then((result) => {
-      if (result.state === "granted" || result.state === "prompt") {
-        updateClipboard(addr);
-      }
-    });
-}
-
 const Orchestrator = (obj) => {
   if (obj.thisOrchestrator) {
     if (obj.forceVertical) {

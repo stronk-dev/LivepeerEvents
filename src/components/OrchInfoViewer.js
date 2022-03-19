@@ -1,6 +1,7 @@
 import React from "react";
 import Stat from "./statViewer";
 import Address from "./OrchAddressViewer";
+import { useSelector } from 'react-redux';
 
 function updateClipboard(newClip) {
   navigator.clipboard.writeText(newClip).then(
@@ -24,6 +25,7 @@ function copyLink(addr) {
 }
 
 const OrchInfoViewer = (obj) => {
+  const livepeer = useSelector((state) => state.livepeerstate);
   let rewardCut = 0;
   let feeCut = 0;
   let totalStake = 0;
@@ -68,6 +70,45 @@ const OrchInfoViewer = (obj) => {
       shareUrl = thisFullPath + "?orchAddr=" + thisID;
     }
 
+    let thisDomain = null;
+    let thisInfo = null;
+    // Lookup domain in cache
+    if (livepeer.ensDomainMapping) {
+      for (const thisAddr of livepeer.ensDomainMapping) {
+        if (thisAddr.address === thisID) {
+          thisDomain = thisAddr;
+          break;
+        }
+      }
+    }
+    // Lookup current info in cache only if this addr has a mapped ENS domain
+    if (thisDomain && thisDomain.domain) {
+      for (const thisAddr of livepeer.ensInfoMapping) {
+        if (thisAddr.domain === thisDomain.domain) {
+          thisInfo = thisAddr;
+          break;
+        }
+      }
+    }
+    let ensDescription;
+    let ensUrl;
+    if (thisInfo) {
+      if (thisInfo.description) {
+        ensDescription =
+          <div className="row">
+            <span>{thisInfo.description}</span>
+          </div>
+      }
+      if (thisInfo.url) {
+        ensUrl =
+        <a className="selectOrchLight" style={{cursor: 'alias'}} target="_blank" rel="noopener noreferrer" href={"https://" + thisInfo.url} >
+          <div className="rowAlignLeft">
+          <span>{thisInfo.url}</span>
+          </div>
+        </a >
+      }
+    }
+
     return (
       <div className="row">
         <div className="stroke sideMargin">
@@ -78,6 +119,8 @@ const OrchInfoViewer = (obj) => {
               <Address address={thisID} />
             </a>
           </div>
+          {ensUrl}
+          {ensDescription}
           <div className="stretchAndBetween" style={{ borderTop: '2px solid rgba(15,15,15,0.05)', marginTop: '0.2em' }} >
             <Stat header={"Earned Fees"} content1={totalVolumeETH + " Eth"} content2={"$" + totalVolumeUSD} />
           </div>

@@ -26,6 +26,7 @@ const EventButtonAddress = (obj) => {
           getEnsInfo(obj.address);
           setRefresh(true);
         }
+        break;
       }
     }
     // If it was not cached at all
@@ -48,6 +49,7 @@ const EventButtonAddress = (obj) => {
           getEnsInfo(obj.address);
           setRefresh(true);
         }
+        break;
       }
     }
     // If it was not cached at all

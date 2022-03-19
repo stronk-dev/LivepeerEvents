@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from 'react-redux';
 import { getEnsInfo } from "../actions/livepeer";
-import {
-  getOrchestratorInfo
-} from "../actions/livepeer";
 
 const Address = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
@@ -25,6 +22,7 @@ const Address = (obj) => {
           getEnsInfo(obj.address);
           setRefresh(true);
         }
+        break;
       }
     }
     // If it was not cached at all
@@ -47,6 +45,7 @@ const Address = (obj) => {
           getEnsInfo(obj.address);
           setRefresh(true);
         }
+        break;
       }
     }
     // If it was not cached at all
