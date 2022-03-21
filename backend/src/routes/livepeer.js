@@ -22,15 +22,15 @@ import { request, gql } from 'graphql-request';
 let CoinMarketCap = require('coinmarketcap-api');
 let cmcClient = new CoinMarketCap(API_CMC);
 let cmcEnabled = false;
-if(!CONF_DISABLE_CMC){
-  if(API_CMC == ""){
+if (!CONF_DISABLE_CMC) {
+  if (API_CMC == "") {
     console.log("Please provide a CMC api key");
-  }else {
+  } else {
     CoinMarketCap = require('coinmarketcap-api');
     cmcClient = new CoinMarketCap(API_CMC);
     cmcEnabled = true;
   }
-}else{
+} else {
   console.log("Running without CMC api");
 }
 // Gets blockchain data
@@ -373,10 +373,10 @@ const handleSync = async function () {
   syncEvents();
   while (isEventSyncing || isTicketSyncing) {
     await sleep(3000);
-    if (isEventSyncing){
+    if (isEventSyncing) {
       console.log("Parsed " + lastBlockEvents + " out of " + latestBlockInChain + " blocks for Event sync");
     }
-    if (isTicketSyncing){
+    if (isTicketSyncing) {
       console.log("Parsed " + lastBlockTickets + " out of " + latestBlockInChain + " blocks for Ticket sync");
     }
   }
@@ -412,7 +412,7 @@ if (!isEventSyncing && !CONF_SIMPLE_MODE && !CONF_DISABLE_SYNC) {
 // Splits of raw CMC object into coin quote data
 const parseCmc = async function () {
   try {
-    if (!cmcEnabled){
+    if (!cmcEnabled) {
       return;
     }
     cmcCache = await cmcClient.getTickers({ limit: 200 });
@@ -585,27 +585,28 @@ apiRouter.get("/getTickets", async (req, res) => {
 
 // Gets info on a given Orchestrator
 const parseOrchestrator = async function (reqAddr) {
-  reqAddr = reqAddr.toLowerCase();
-  const now = new Date().getTime();
-  // Default assume it's the first time we request this Orchestrator
-  let wasCached = false;
-  let needsUpdate = true;
-  let orchestratorObj = {};
-  // First get cached object
-  for (var orch of orchestratorCache) {
-    if (orch.id == reqAddr) {
-      wasCached = true;
-      orchestratorObj = orch;
-      break;
+  try {
+    reqAddr = reqAddr.toLowerCase();
+    const now = new Date().getTime();
+    // Default assume it's the first time we request this Orchestrator
+    let wasCached = false;
+    let needsUpdate = true;
+    let orchestratorObj = {};
+    // First get cached object
+    for (var orch of orchestratorCache) {
+      if (orch.id == reqAddr) {
+        wasCached = true;
+        orchestratorObj = orch;
+        break;
+      }
     }
-  }
-  if (wasCached) {
-    if (now - orchestratorObj.lastGet < CONF_TIMEOUT_LIVEPEER) {
-      needsUpdate = false;
+    if (wasCached) {
+      if (now - orchestratorObj.lastGet < CONF_TIMEOUT_LIVEPEER) {
+        needsUpdate = false;
+      }
     }
-  }
-  if (!wasCached || needsUpdate) {
-    const orchQuery = gql`{
+    if (!wasCached || needsUpdate) {
+      const orchQuery = gql`{
     transcoder(id: "${reqAddr}") {
         id
         activationRound
@@ -647,27 +648,40 @@ const parseOrchestrator = async function (reqAddr) {
       }
     }
   `;
-    orchestratorObj = await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", orchQuery);
-    orchestratorObj = orchestratorObj.transcoder;
-    // Not found
-    if (!orchestratorObj) {
-      return {};
+      orchestratorObj = await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", orchQuery);
+      orchestratorObj = orchestratorObj.transcoder;
+      // Not found
+      if (!orchestratorObj) {
+        return {};
+      }
+      orchestratorObj.lastGet = now;
+      if (wasCached) {
+        for (var idx = 0; idx < orchestratorCache.length; idx++) {
+          if (orchestratorCache[idx].id == reqAddr) {
+            console.log("Updating outdated orchestrator " + orchestratorObj.id + " @ " + now);
+            orchestratorCache[idx] = orchestratorObj;
+            break;
+          }
+        }
+      } else {
+        console.log("Pushing new orchestrator " + orchestratorObj.id + " @ " + now);
+        orchestratorCache.push(orchestratorObj);
+      }
     }
-    orchestratorObj.lastGet = now;
+    return orchestratorObj;
+  } catch (err) {
     if (wasCached) {
+      console.log("Thegraph is probably acting up. Returning cached value...");
       for (var idx = 0; idx < orchestratorCache.length; idx++) {
         if (orchestratorCache[idx].id == reqAddr) {
-          console.log("Updating outdated orchestrator " + orchestratorObj.id + " @ " + now);
-          orchestratorCache[idx] = orchestratorObj;
-          break;
+          return orchestratorCache[idx];
         }
       }
-    } else {
-      console.log("Pushing new orchestrator " + orchestratorObj.id + " @ " + now);
-      orchestratorCache.push(orchestratorObj);
+    } else{
+      console.log("Thegraph is probably acting up, but there is no cached value. Returning null...");
+      return {};
     }
   }
-  return orchestratorObj;
 }
 
 // Exports info on a given Orchestrator
@@ -678,7 +692,7 @@ apiRouter.get("/getOrchestrator", async (req, res) => {
       reqOrch = CONF_DEFAULT_ORCH;
     }
     const reqObj = await parseOrchestrator(reqOrch);
-    res.send(JSON.stringify(reqObj));
+    res.send(reqObj);
   } catch (err) {
     console.log(err);
     res.status(400).send(err);
@@ -687,7 +701,7 @@ apiRouter.get("/getOrchestrator", async (req, res) => {
 apiRouter.get("/getOrchestrator/:orch", async (req, res) => {
   try {
     const reqObj = await parseOrchestrator(req.params.orch);
-    res.send(JSON.stringify(reqObj));
+    res.send(reqObj);
   } catch (err) {
     console.log(err);
     res.status(400).send(err);
@@ -696,7 +710,7 @@ apiRouter.get("/getOrchestrator/:orch", async (req, res) => {
 apiRouter.post("/getOrchestrator", async (req, res) => {
   try {
     const reqObj = await parseOrchestrator(req.body.orchAddr);
-    res.send(JSON.stringify(reqObj));
+    res.send(reqObj);
   } catch (err) {
     console.log(err);
     res.status(400).send(err);
@@ -966,7 +980,7 @@ const getEnsDomain = async function (addr) {
   for (const thisAddr of ensDomainCache) {
     if (thisAddr.address === addr) {
       // Check timeout
-      if (now - thisAddr.timestamp < CONF_TIMEOUT_ENS_DOMAIN ){
+      if (now - thisAddr.timestamp < CONF_TIMEOUT_ENS_DOMAIN) {
         return thisAddr.domain;
       }
       wasInCache = true;
@@ -975,7 +989,7 @@ const getEnsDomain = async function (addr) {
   // Else get it and cache it
   const ensDomain = await provider.lookupAddress(addr.toLowerCase());
   let ensObj;
-  if (!ensDomain){
+  if (!ensDomain) {
     ensObj = {
       domain: null,
       address: addr,
@@ -988,7 +1002,7 @@ const getEnsDomain = async function (addr) {
       timestamp: now
     };
   }
-  if (wasInCache){
+  if (wasInCache) {
     for (var idx = 0; idx < ensDomainCache.length; idx++) {
       if (ensDomainCache[idx].address == addr) {
         console.log("Updating outdated domain " + ensObj.domain + " owned by " + ensObj.address + " @ " + ensObj.timestamp);
@@ -1010,7 +1024,7 @@ const getEnsInfo = async function (addr) {
   for (const thisAddr of ensInfoCache) {
     if (thisAddr.domain === addr) {
       // Check timeout
-      if (now - thisAddr.timestamp < CONF_TIMEOUT_ENS_INFO ){
+      if (now - thisAddr.timestamp < CONF_TIMEOUT_ENS_INFO) {
         return thisAddr;
       }
       wasInCache = true;
@@ -1028,7 +1042,7 @@ const getEnsInfo = async function (addr) {
     avatar,
     timestamp: now
   };
-  if (wasInCache){
+  if (wasInCache) {
     for (var idx = 0; idx < ensInfoCache.length; idx++) {
       if (ensInfoCache[idx].domain == addr) {
         console.log("Updating outdated info " + ensObj.domain + " @ " + ensObj.timestamp);
@@ -1048,8 +1062,8 @@ apiRouter.get("/getENS/:orch", async (req, res) => {
   try {
     // First resolve addr => domain name
     const ensDomain = await getEnsDomain(req.params.orch);
-    if (!ensDomain){
-      res.send({domain: null});
+    if (!ensDomain) {
+      res.send({ domain: null });
       return;
     }
     // Then resolve address to info
