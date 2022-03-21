@@ -32,7 +32,7 @@ const Grafana = (obj) => {
 
   return (
     <div className="stroke" >
-      <div className="verticalDivider"/>
+      <div className="verticalDivider" />
       <div className="row" >
         <button className="homeButton" onClick={() => {
           setRedirectToHome(true);
@@ -40,12 +40,12 @@ const Grafana = (obj) => {
           <img alt="" src="/livepeer.png" width="100em" height="100em" />
         </button>
       </div>
-      <div className="verticalDivider"/>
+      <div className="verticalDivider" />
       <div className="stroke" >
         <div className="flexContainer makeItWide">
           <div className="stroke">
             <div className="stroke roundedOpaque">
-            <div className="verticalDivider"/>
+              <div className="verticalDivider" />
               <div className="flexContainer">
                 <div className="row">
                   <img alt="" src="livepeer.png" width="30" height="30" />
@@ -61,7 +61,7 @@ const Grafana = (obj) => {
                   <p>({ethPriceChange24h}%)</p>
                 </div>
               </div>
-              <div className="verticalDivider"/>
+              <div className="verticalDivider" />
               <div className="stroke roundedOpaqueDark">
                 <div className="flexContainer fullMargin">
                   <Orchestrator thisOrchestrator={livepeer.thisOrchestrator} rootOnly={true} />
@@ -82,7 +82,7 @@ const Grafana = (obj) => {
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&from=now-12h&to=now&refresh=15s&theme=dark&panelId=33" height="400" frameBorder="0"></iframe>
                 </div>
               </div>
-              <div className="verticalDivider"/>
+              <div className="verticalDivider" />
               <div className="row">
                 <a href="https://grafana.stronk.tech/d/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark">
                   <button className="waveButton">
@@ -90,8 +90,14 @@ const Grafana = (obj) => {
                     <p>Full Statistics</p>
                   </button>
                 </a>
+                <a href="https://calendly.com/stronk-dev/30min">
+                  <button className="waveButton">
+                    <img alt="" src="calendly.png" width="30" height="30" />
+                    <p>Book a meeting</p>
+                  </button>
+                </a>
               </div>
-              <div className="verticalDivider"/>
+              <div className="verticalDivider" />
             </div>
           </div>
           <div className="smallVerticalDivider" />
