@@ -352,13 +352,10 @@ export const getEvents = () => async dispatch => {
           const amount1 = parseFloat(eventObj.data.amount) / 1000000000000000000;
           const subtext = "called reward";
           const descriptions = [
-            "+" + amount1.toFixed(2) + " LPT"
+            "+" + amount1.toFixed(2) + " LPT" + (Math.floor(amount1) == 69 ? "... Nice!" : "")
           ]
           const txt =
             <Ticket icon={"💸"} subtext={subtext} descriptions={descriptions} />
-          if (Math.floor(amount1) == 69) {
-            txt += "... Nice!";
-          }
           finalEventList.push({
             eventType: "Reward",
             eventDescription: txt,
