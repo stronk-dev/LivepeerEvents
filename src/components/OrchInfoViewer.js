@@ -100,8 +100,11 @@ const OrchInfoViewer = (obj) => {
           </div>
       }
       if (thisInfo.url) {
+        if (!thisInfo.url.startsWith('http')){
+          thisInfo.url = "https://" + thisInfo.url;
+        }
         ensUrl =
-          <a className="selectOrchLight" style={{ cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://" + thisInfo.url} >
+          <a className="selectOrchLight" style={{ cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={thisInfo.url} >
             <div className="rowAlignLeft">
               <span>{thisInfo.url}</span>
             </div>
