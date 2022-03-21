@@ -18,7 +18,9 @@ const OrchDelegatorViewer = (obj) => {
                   delegators.map((delObj, idx) => {
                     return (
                       <div className="flexContainer forceWrap" key={"delegator" + idx}>
-                        <Address address={delObj.id} seed={"delegator" + idx + delObj.id} />
+                        <div className="rowAlignLeft">
+                          <Address address={delObj.id} seed={"delegator" + idx + delObj.id} />
+                        </div>
                         <div className="rowAlignRight">
                           <p className="darkText">{parseFloat(delObj.bondedAmount).toFixed(2)} LPT since round {delObj.startRound}</p>
                         </div>
@@ -39,7 +41,7 @@ const OrchDelegatorViewer = (obj) => {
         <div className="row">
           <h3>The selected Orchestrator has no Delegators</h3>
         </div>
-        <div className="verticalDivider"/>
+        <div className="verticalDivider" />
       </div>
     </div >
   )

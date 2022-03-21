@@ -95,20 +95,23 @@ const OrchInfoViewer = (obj) => {
     if (thisInfo) {
       if (thisInfo.description) {
         ensDescription =
-          <div className="row">
+          <div className="stroke">
+            <div className="verticalDivider" />
             <span>{thisInfo.description}</span>
           </div>
       }
       if (thisInfo.url) {
-        if (!thisInfo.url.startsWith('http')){
+        if (!thisInfo.url.startsWith('http')) {
           thisInfo.url = "https://" + thisInfo.url;
         }
         ensUrl =
-          <a className="selectOrchLight" style={{ cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={thisInfo.url} >
-            <div className="rowAlignLeft">
-              <span>{thisInfo.url}</span>
-            </div>
-          </a >
+          <div className="stroke">
+            <a className="selectOrchLight" style={{ cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={thisInfo.url} >
+              <div className="rowAlignLeft">
+                <span>{thisInfo.url}</span>
+              </div>
+            </a >
+          </div>
       }
     }
 
@@ -119,11 +122,8 @@ const OrchInfoViewer = (obj) => {
           <div className="row">
             <h3 >Orchestrator Info</h3>
           </div>
-          <div className="row">
-            <Address address={thisID} />
-          </div>
+          <Address address={thisID} />
           {ensUrl}
-          <div className="verticalDivider" />
           {ensDescription}
           <div className="stretchAndBetween" style={{ borderTop: '2px solid rgba(15,15,15,0.05)', marginTop: '0.2em' }} >
             <Stat header={"Earned Fees"} content1={totalVolumeETH + " Eth"} content2={"$" + totalVolumeUSD} />

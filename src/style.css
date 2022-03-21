@@ -679,6 +679,13 @@ svg {
   .mobileNoPadding {
     padding: 0;
   }
+  .mobileNoMargin {
+    margin: 0;
+  }
+  .mobileNoSideMargin {
+    margin-left: 0;
+    margin-right: 0;
+  }
   .main-container {
     height: calc(100vh - 60px);
   }

@@ -77,7 +77,7 @@ const Address = (obj) => {
   }
 
   return (
-    <div className="rowAlignLeft">
+    <div className="row" style={{width: 'unset'}}>
       <a className="selectOrchLight" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/" + obj.address} >
         <img alt="" src="livepeer.png" width="20em" height="20em" />
       </a>
