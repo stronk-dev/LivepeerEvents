@@ -66,7 +66,7 @@ const EventButtonAddress = (obj) => {
     if (thisInfo.avatar) {
       thisIcon =
         <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
-          <img alt="" src={thisInfo.avatar} width="20em" height="20em" style={{ margin: 0 }} />
+          <img alt="" src={thisInfo.avatar.url} width="20em" height="20em" style={{ margin: 0 }} />
         </a >
     } else {
       thisIcon =

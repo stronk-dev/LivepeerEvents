@@ -59,10 +59,11 @@ const Address = (obj) => {
   let thisIcon;
   if (thisInfo) {
     thisName = thisInfo.domain;
+    console.log(thisInfo.avatar);
     if (thisInfo.avatar) {
       thisIcon =
         <a className="selectOrchLight" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
-          <img alt="" src={thisInfo.avatar} width="20em" height="20em" />
+          <img alt="" src={thisInfo.avatar.url} width="20em" height="20em" />
         </a >
     } else {
       thisIcon =
