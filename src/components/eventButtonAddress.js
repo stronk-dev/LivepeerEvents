@@ -92,17 +92,12 @@ const EventButtonAddress = (obj) => {
   let thisName;
   let thisIcon;
   if (hasENS) {
-    if (thisInfo) {
-      thisName = <h4 className="elipsText elipsOnMobileExtra">{thisInfo.domain}</h4>;
-      if (thisInfo.avatar) {
-        thisIcon =
-          <a className="selectOrch" style={{ padding: '0', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
-            <img alt="" src={thisInfo.avatar.url} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
-          </a >
-      }
-    } else {
-      thisName = <span className="elipsText elipsOnMobileExtra">{obj.address}</span>;
-      thisIcon = null;
+    thisName = <h4 className="elipsText elipsOnMobileExtra">{thisInfo.domain}</h4>;
+    if (thisInfo.avatar) {
+      thisIcon =
+        <a className="selectOrch" style={{ padding: '0', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
+          <img alt="" src={thisInfo.avatar.url} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
+        </a >
     }
   } else if (hasThreeBox) {
     if (thisInfo.name) {
@@ -115,6 +110,9 @@ const EventButtonAddress = (obj) => {
     } else {
       thisIcon = null;
     }
+  } else {
+    thisName = <span className="elipsText elipsOnMobileExtra">{obj.address}</span>;
+    thisIcon = null;
   }
 
 
