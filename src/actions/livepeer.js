@@ -26,6 +26,7 @@ export const CLEAR_ORCHESTRATOR = "CLEAR_ORCHESTRATOR";
 export const RECEIVE_TICKETS = "RECEIVE_TICKETS";
 export const SET_ALL_ENS_INFO = "SET_ALL_ENS_INFO";
 export const SET_ALL_ENS_DOMAINS = "SET_ALL_ENS_DOMAINS";
+export const SET_ALL_THREEBOX_INFO = "SET_ALL_THREEBOX_INFO";
 
 const setQuotes = message => ({
   type: RECEIVE_QUOTES, message
@@ -53,6 +54,9 @@ const setAllEnsInfo = message => ({
 });
 const setAllEnsDomains = message => ({
   type: SET_ALL_ENS_DOMAINS, message
+});
+const setAllThreeBoxInfo = message => ({
+  type: SET_ALL_THREEBOX_INFO, message
 });
 
 
@@ -550,6 +554,21 @@ export const getAllEnsInfo = () => async dispatch => {
   
 export const getEnsInfo = async (addr) => {
   const response = await apiUtil.getEnsInfo(addr);
+  const data = await response.json();
+};
+  
+
+export const getAllThreeBoxInfo = () => async dispatch => {
+  const response = await apiUtil.getAllThreeBox();
+  const data = await response.json();
+  if (response.ok) {
+    return dispatch(setAllThreeBoxInfo(data));
+  }
+  return dispatch(receiveErrors(data));
+};
+
+export const getThreeBoxInfo = async (addr) => {
+  const response = await apiUtil.getThreeBox(addr);
   const data = await response.json();
 };
   

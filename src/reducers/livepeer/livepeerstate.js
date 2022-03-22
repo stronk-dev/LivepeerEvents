@@ -7,7 +7,8 @@ import {
   CLEAR_ORCHESTRATOR,
   RECEIVE_TICKETS,
   SET_ALL_ENS_INFO,
-  SET_ALL_ENS_DOMAINS
+  SET_ALL_ENS_DOMAINS,
+  SET_ALL_THREEBOX_INFO
 } from "../../actions/livepeer";
 
 export default (state = {
@@ -40,6 +41,8 @@ export default (state = {
       return { ...state, ensInfoMapping: message };
     case SET_ALL_ENS_DOMAINS:
       return { ...state, ensDomainMapping: message };
+    case SET_ALL_THREEBOX_INFO:
+      return { ...state, threeBoxInfo: message };
     default:
       return { ...state };
   }

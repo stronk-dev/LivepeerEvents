@@ -5,7 +5,7 @@ import {
 } from "../actions/user";
 import {
   getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo, getTickets,
-  getAllEnsDomains, getAllEnsInfo
+  getAllEnsDomains, getAllEnsInfo, getAllThreeBoxInfo
 } from "../actions/livepeer";
 import { login } from "../actions/session";
 
@@ -40,6 +40,7 @@ const Startup = (obj) => {
   const refreshENS = () => {
     console.log("Refreshing ENS data...");
     batch(() => {
+      dispatch(getAllThreeBoxInfo());
       dispatch(getAllEnsDomains());
       dispatch(getAllEnsInfo());
     });

@@ -52,6 +52,7 @@ const provider = new ethers.providers.JsonRpcProvider(API_L1_HTTP);
 // const ens = new ENS({ provider: web3layer1, ensAddress: getEnsAddress('1') });
 let ensDomainCache = [];
 let ensInfoCache = [];
+let threeboxCache = [];
 
 // Update CoinMarketCap related api calls every 5 minutes
 let cmcPriceGet = 0;
@@ -677,7 +678,7 @@ const parseOrchestrator = async function (reqAddr) {
           return orchestratorCache[idx];
         }
       }
-    } else{
+    } else {
       console.log("Thegraph is probably acting up, but there is no cached value. Returning null...");
       return {};
     }
@@ -1056,7 +1057,6 @@ const getEnsInfo = async function (addr) {
   }
   return ensObj;
 }
-
 // Gets and caches info for a single address
 apiRouter.get("/getENS/:orch", async (req, res) => {
   try {
@@ -1085,6 +1085,77 @@ apiRouter.get("/getEnsDomains", async (req, res) => {
 apiRouter.get("/getEnsInfo", async (req, res) => {
   try {
     res.send(ensInfoCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+
+const getThreeBoxInfo = async function (addr) {
+  const now = new Date().getTime();
+  let wasInCache = false;
+  // See if it is cached
+  for (const thisAddr of threeboxCache) {
+    if (thisAddr.address === addr) {
+      // Check timeout
+      if (now - thisAddr.timestamp < CONF_TIMEOUT_ENS_INFO) {
+        return thisAddr;
+      }
+      wasInCache = true;
+    }
+  }
+  // Else get it and cache it
+  const url = "https://explorer.livepeer.org/api/3box?account=" + addr;
+  await https.get(url, (res) => {
+    let body = "";
+    res.on("data", (chunk) => {
+      body += chunk;
+    });
+    res.on("end", () => {
+      try {
+        const data = JSON.parse(body);
+        const threeBoxObj = {
+          address: data.id,
+          name: data.name,
+          website: data.website,
+          description: data.description,
+          image: data.image,
+          timestamp: now
+        }
+        if (wasInCache) {
+          for (var idx = 0; idx < threeboxCache.length; idx++) {
+            if (threeboxCache[idx].address == addr) {
+              console.log("Updating outdated 3box info " + threeBoxObj.address + " @ " + threeBoxObj.timestamp);
+              threeboxCache[idx] = threeBoxObj;
+              break;
+            }
+          }
+        } else {
+          console.log("Caching new 3box info " + threeBoxObj.address + " @ " + threeBoxObj.timestamp);
+          threeboxCache.push(threeBoxObj);
+        }
+      } catch (error) {
+        console.error(error.message);
+      };
+    });
+  }).on("error", (error) => {
+    console.error(error.message);
+  });
+}
+// Gets and caches info for a single address
+apiRouter.get("/getThreeBox/:orch", async (req, res) => {
+  try {
+    // First resolve addr => domain name
+    const threeBoxInfo = await getThreeBoxInfo(req.params.orch);
+    res.send(threeBoxInfo);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+// Returns entire 3box info mapping cache
+apiRouter.get("/getAllThreeBox", async (req, res) => {
+  try {
+    res.send(threeboxCache);
   } catch (err) {
     res.status(400).send(err);
   }

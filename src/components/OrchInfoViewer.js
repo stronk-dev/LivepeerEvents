@@ -26,6 +26,8 @@ function copyLink(addr) {
 
 const OrchInfoViewer = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
+  let hasENS = false;
+  let hasThreeBox = false;
   let rewardCut = 0;
   let feeCut = 0;
   let totalStake = 0;
@@ -86,13 +88,28 @@ const OrchInfoViewer = (obj) => {
       for (const thisAddr of livepeer.ensInfoMapping) {
         if (thisAddr.domain === thisDomain.domain) {
           thisInfo = thisAddr;
+          hasENS = true;
           break;
         }
       }
     }
+
+    // Ugly shit, but temporary for now to quickly enable threebox. Sorry!
+    if (!hasENS) {
+      if (livepeer.threeBoxInfo) {
+        for (const thisAddr of livepeer.threeBoxInfo) {
+          if (thisAddr.address === thisID) {
+            thisInfo = thisAddr;
+            hasThreeBox = true;
+            break;
+          }
+        }
+      }
+    }
+
     let ensDescription;
     let ensUrl;
-    if (thisInfo) {
+    if (hasENS) {
       if (thisInfo.description) {
         ensDescription =
           <div className="stroke">
@@ -109,6 +126,27 @@ const OrchInfoViewer = (obj) => {
             <a className="selectOrchLight" style={{ cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={thisInfo.url} >
               <div className="rowAlignLeft">
                 <span>{thisInfo.url}</span>
+              </div>
+            </a >
+          </div>
+      }
+    } else if (hasThreeBox) {
+      if (thisInfo.description) {
+        ensDescription =
+          <div className="stroke">
+            <div className="verticalDivider" />
+            <span>{thisInfo.description}</span>
+          </div>
+      }
+      if (thisInfo.website) {
+        if (!thisInfo.website.startsWith('http')) {
+          thisInfo.website = "https://" + thisInfo.website;
+        }
+        ensUrl =
+          <div className="stroke">
+            <a className="selectOrchLight" style={{ cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={thisInfo.website} >
+              <div className="rowAlignLeft">
+                <span>{thisInfo.website}</span>
               </div>
             </a >
           </div>

@@ -89,3 +89,21 @@ export const getEnsInfo = (addr) => (
     }
   })
 );
+
+export const getAllThreeBox = () => (
+  fetch("api/livepeer/getAllThreeBox/", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getThreeBox = (addr) => (
+  fetch("api/livepeer/getThreeBox/" + addr, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);

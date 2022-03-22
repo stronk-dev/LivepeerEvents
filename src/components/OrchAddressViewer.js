@@ -5,6 +5,8 @@ import { getEnsInfo } from "../actions/livepeer";
 const Address = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [hasRefreshed, setRefresh] = useState(false);
+  let hasENS = false;
+  let hasThreeBox = false;
   let thisDomain = null;
   let thisInfo = null;
   const now = new Date().getTime();
@@ -36,6 +38,7 @@ const Address = (obj) => {
     for (const thisAddr of livepeer.ensInfoMapping) {
       if (thisAddr.domain === thisDomain.domain) {
         thisInfo = thisAddr;
+        hasENS = true;
         // Check timeout
         if (now - thisAddr.timestamp < 86400000) {
           break;
@@ -55,9 +58,22 @@ const Address = (obj) => {
     }
   }
 
+  // Ugly shit, but temporary for now to quickly enable threebox. Sorry!
+  if (!hasENS) {
+    if (livepeer.threeBoxInfo) {
+      for (const thisAddr of livepeer.threeBoxInfo) {
+        if (thisAddr.address === obj.address) {
+          thisInfo = thisAddr;
+          hasThreeBox = true;
+          break;
+        }
+      }
+    }
+  }
+
   let thisName;
   let thisIcon;
-  if (thisInfo) {
+  if (hasENS) {
     thisName = thisInfo.domain;
     console.log(thisInfo.avatar);
     if (thisInfo.avatar) {
@@ -71,13 +87,24 @@ const Address = (obj) => {
           <img alt="" src="ens.png" width="20em" height="20em" />
         </a >
     }
+  } else if (hasThreeBox) {
+    if (thisInfo.name) {
+      thisName = <h4 className="elipsText elipsOnMobileExtra">{thisInfo.name}</h4>;
+    } else {
+      thisName = <span className="elipsText elipsOnMobileExtra">{obj.address}</span>;
+    }
+    if (thisInfo.image) {
+      thisIcon = <img alt="" src={"https://ipfs.livepeer.com/ipfs/" + thisInfo.image} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
+    } else {
+      thisIcon = null;
+    }
   } else {
     thisName = obj.address;
     thisIcon = null;
   }
 
   return (
-    <div className="row" style={{width: 'unset'}}>
+    <div className="row" style={{ width: 'unset' }}>
       <a className="selectOrchLight" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/" + obj.address} >
         <img alt="" src="livepeer.png" width="20em" height="20em" />
       </a>

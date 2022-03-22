@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import {
-  getOrchestratorInfo
+  getOrchestratorInfo, getEnsInfo, getThreeBoxInfo
 } from "../actions/livepeer";
 import { useDispatch, useSelector } from 'react-redux';
-import { getEnsInfo } from "../actions/livepeer";
 
 const EventButtonAddress = (obj) => {
   const dispatch = useDispatch();
   const livepeer = useSelector((state) => state.livepeerstate);
   const [hasRefreshed, setRefresh] = useState(false);
+  const [hasThreeBoxRefreshed, setThreeBoxRefresh] = useState(false);
   let thisDomain = null;
   let thisInfo = null;
+  let hasENS = false;
+  let hasThreeBox = false;
   const now = new Date().getTime();
   // Lookup domain in cache
   if (livepeer.ensDomainMapping) {
@@ -40,6 +42,7 @@ const EventButtonAddress = (obj) => {
     for (const thisAddr of livepeer.ensInfoMapping) {
       if (thisAddr.domain === thisDomain.domain) {
         thisInfo = thisAddr;
+        hasENS = true;
         // Check timeout
         if (now - thisAddr.timestamp < 86400000) {
           break;
@@ -59,20 +62,61 @@ const EventButtonAddress = (obj) => {
     }
   }
 
+  // Ugly shit, but temporary for now to quickly enable threebox. Sorry!
+  if (!hasENS) {
+    if (livepeer.threeBoxInfo) {
+      for (const thisAddr of livepeer.threeBoxInfo) {
+        if (thisAddr.address === obj.address) {
+          thisInfo = thisAddr;
+          hasThreeBox = true;
+          // Check timeout
+          if (now - thisAddr.timestamp < 86400000) {
+            break;
+          }
+          // Is outdated
+          if (!hasThreeBoxRefreshed) {
+            getThreeBoxInfo(obj.address);
+            setThreeBoxRefresh(true);
+          }
+          break;
+        }
+      }
+      // If it was not cached at all
+      if (thisDomain == null && !hasThreeBoxRefreshed) {
+        setThreeBoxRefresh(true);
+        getThreeBoxInfo(obj.address);
+      }
+    }
+  }
+
   let thisName;
   let thisIcon;
-  if (thisInfo) {
-    thisName = <h4 className="elipsText elipsOnMobileExtra">{thisInfo.domain}</h4>;
-    if (thisInfo.avatar) {
-      thisIcon =
-        <a className="selectOrch" style={{ padding: '0', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
-          <img alt="" src={thisInfo.avatar.url} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
-        </a >
+  if (hasENS) {
+    if (thisInfo) {
+      thisName = <h4 className="elipsText elipsOnMobileExtra">{thisInfo.domain}</h4>;
+      if (thisInfo.avatar) {
+        thisIcon =
+          <a className="selectOrch" style={{ padding: '0', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
+            <img alt="" src={thisInfo.avatar.url} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
+          </a >
+      }
+    } else {
+      thisName = <span className="elipsText elipsOnMobileExtra">{obj.address}</span>;
+      thisIcon = null;
     }
-  } else {
-    thisName = <span className="elipsText elipsOnMobileExtra">{obj.address}</span>;
-    thisIcon = null;
+  } else if (hasThreeBox) {
+    if (thisInfo.name) {
+      thisName = <h4 className="elipsText elipsOnMobileExtra">{thisInfo.name}</h4>;
+    } else {
+      thisName = <span className="elipsText elipsOnMobileExtra">{obj.address}</span>;
+    }
+    if (thisInfo.image) {
+      thisIcon = <img alt="" src={"https://ipfs.livepeer.com/ipfs/" + thisInfo.image} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
+    } else {
+      thisIcon = null;
+    }
   }
+
 
   return (
     <div className="rowAlignLeft" style={{ width: '100%' }}>
