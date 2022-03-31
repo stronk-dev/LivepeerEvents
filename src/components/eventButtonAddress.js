@@ -106,7 +106,7 @@ const EventButtonAddress = (obj) => {
       thisName = <span className="elipsText elipsOnMobileExtra">{obj.address}</span>;
     }
     if (thisInfo.image) {
-      thisIcon = <img alt="" src={"https://ipfs.livepeer.com/ipfs/" + thisInfo.image} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
+      thisIcon = <img alt="" src={"https://cloudflare-ipfs.com/ipfs/" + thisInfo.image} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
     } else {
       thisIcon = null;
     }
