@@ -1182,14 +1182,15 @@ const getScoreAtMonthYear = async function (month, year) {
   const fromString = year + '-' + zeroPad(month, 2) + '-01T00:00:00.000Z';
   let endString;
   if (month > 10) {
-    endString = year + '-' + zeroPad((month + 1), 2) + '-01T00:00:00.000Z';
+    endString = (year + 1) + '-' + '01-01T00:00:00.000Z';
   } else {
-    endString = (year + 1) + '-' + zeroPad(0, 2) + '-01T00:00:00.000Z';
+    endString = year + '-' + zeroPad((month + 1), 2) + '-01T00:00:00.000Z';
   }
   const startTime = parseInt(Date.parse(fromString) / 1000);
   const endTime = parseInt(Date.parse(endString) / 1000)
   // Else get it and cache it
   const url = "https://leaderboard-serverless.vercel.app/api/aggregated_stats?since=" + startTime + "&until=" + endTime;
+  console.log(url);
   await https.get(url, (res) => {
     let body = "";
     res.on("data", (chunk) => {
