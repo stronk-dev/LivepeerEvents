@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import Address from '../components/OrchAddressViewer';
+import { Popover } from '@mantine/core';
+import ScoreView from './scoreViewer';
 
 const Winner = (obj) => {
   const [thisScore, setThisScore] = useState(0);
+  const [opened, setOpened] = useState(false);
 
   useEffect(() => {
     // Get score of this Orch
@@ -22,14 +25,26 @@ const Winner = (obj) => {
 
   let scoreObj = null;
   if (thisScore) {
-    scoreObj = <div className="strokeSmollLeft" style={{ minWidth: '100px' }} >
-      <div className="rowAlignLeft" >
-        <h4>Global Score</h4>
-      </div>
-      <div className="rowAlignRight" >
-        <span>{(thisScore * 10).toFixed(1)}</span>
-      </div>
-    </div>
+    scoreObj =
+      <Popover className="strokeSmollLeft" style={{ minWidth: '100px', cursor: 'pointer' }}
+        opened={opened}
+        onClose={() => setOpened(false)}
+        target={
+          <div className="strokeSmollLeft" onClick={() => setOpened((o) => !o)} >
+            <div className="rowAlignLeft" >
+              <h4>Global Score</h4>
+            </div>
+            <div className="rowAlignRight" >
+              <span>{(thisScore * 10).toFixed(1)}</span>
+            </div>
+          </div>
+        }
+        width={260}
+        position="bottom"
+        withArrow
+      >
+        <ScoreView score={obj.stats.scores[obj.address]} />
+      </Popover>
   }
 
   return (
