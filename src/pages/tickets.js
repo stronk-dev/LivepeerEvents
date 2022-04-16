@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Accordion } from '@mantine/core';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import Address from '../components/OrchAddressViewer';
+import { VictoryPie } from 'victory';
 
 const Tickets = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
@@ -12,6 +13,43 @@ const Tickets = (obj) => {
   const [redirectToHome, setRedirectToHome] = useState(false);
 
   console.log("Rendering Winning Ticket Viewer");
+
+  const getName = (address) => {
+    let hasThreeBox = false;
+    let thisDomain = null;
+    // Lookup domain in cache
+    if (livepeer.ensDomainMapping) {
+      for (const thisAddr of livepeer.ensDomainMapping) {
+        if (thisAddr.address === address) {
+          thisDomain = thisAddr;
+          break;
+        }
+      }
+    }
+    // Lookup current info in cache only if this addr has a mapped ENS domain
+    if (thisDomain && thisDomain.domain) {
+      for (const thisAddr of livepeer.ensInfoMapping) {
+        if (thisAddr.domain === thisDomain.domain) {
+          return thisAddr.domain;
+        }
+      }
+    }
+
+    if (livepeer.threeBoxInfo) {
+      for (const thisAddr of livepeer.threeBoxInfo) {
+        if (thisAddr.address === address) {
+          if (thisAddr.name) {
+            return thisAddr.name;
+          } else {
+            return address;
+          }
+          break;
+        }
+      }
+    }
+
+    return address;
+  }
 
   useEffect(() => {
     // Process Winning tickets as: 
@@ -28,7 +66,6 @@ const Tickets = (obj) => {
       const thisTime = new Date(thisTicket.transactionTime * 1000);
       const thisYear = thisTime.getFullYear();
       const thisMonth = thisTime.getMonth();
-      console.log(thisMonth);
       ticketIdx -= 1;
 
       // On a new month
@@ -37,6 +74,7 @@ const Tickets = (obj) => {
         if (currentOrchCounter.length) {
           // Sort this months data
           let sortedList = []
+          let currentSum = 0;
           while (currentOrchCounter.length) {
             let ticketIdx2 = currentOrchCounter.length - 1;
             let largestIdx = 0;
@@ -50,6 +88,7 @@ const Tickets = (obj) => {
               }
               ticketIdx2 -= 1;
             }
+            currentSum += largestValue;
             // Push current biggest list
             sortedList.push(currentOrchCounter[largestIdx]);
             // Remove from list
@@ -59,7 +98,8 @@ const Tickets = (obj) => {
             {
               year: currentYear,
               month: currentMonth,
-              orchestrators: sortedList
+              orchestrators: sortedList,
+              total: currentSum
             }
           );
         }
@@ -92,9 +132,12 @@ const Tickets = (obj) => {
         currentOrchCounter[thisIdx].sum += thisTicket.eventValue;
       }
     }
+
+
     if (currentOrchCounter.length) {
       // Sort this months data
       let sortedList = []
+      let currentSum = 0;
       while (currentOrchCounter.length) {
         let ticketIdx2 = currentOrchCounter.length - 1;
         let largestIdx = 0;
@@ -108,6 +151,7 @@ const Tickets = (obj) => {
           }
           ticketIdx2 -= 1;
         }
+        currentSum += largestValue;
         // Push current biggest list
         sortedList.push(currentOrchCounter[largestIdx]);
         // Remove from list
@@ -117,10 +161,13 @@ const Tickets = (obj) => {
         {
           year: currentYear,
           month: currentMonth,
-          orchestrators: sortedList
+          orchestrators: sortedList,
+          total: currentSum
         }
       );
     }
+
+
 
     setTicketsPerMonth(ticketsPerMonth);
   }, [livepeer.winningTickets]);
@@ -151,16 +198,16 @@ const Tickets = (obj) => {
                     <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0 }}>
                       <div className={obj.forceVertical ? "flexContainer forceWrap" : "flexContainer"} >
                         <Accordion initialItem={0} className="stroke"
-                        styles={{
-                          item: { padding: 0 },
-                          itemOpened: { padding: 0 },
-                          itemTitle: { padding: 0 },
-                          control: { padding: 0 },
-                          label: { padding: 0 },
-                          icon: { padding: 0 },
-                          content: { padding: 0 },
-                          contentInner: { padding: 0 },
-                        }}>
+                          styles={{
+                            item: { padding: 0 },
+                            itemOpened: { padding: 0 },
+                            itemTitle: { padding: 0 },
+                            control: { padding: 0 },
+                            label: { padding: 0 },
+                            icon: { padding: 0 },
+                            content: { padding: 0 },
+                            contentInner: { padding: 0 },
+                          }}>
                           <div className="verticalDivider" />
                           {
                             ticketsPerMonth.map(function (data) {
@@ -191,8 +238,33 @@ const Tickets = (obj) => {
                               } else if (monthAsNum == 11) {
                                 thisMonth = "December";;
                               }
+                              let pieList = [];
+                              let otherSum = 0;
+                              let ticketIdx = data.orchestrators.length - 1;
+                              while (ticketIdx >= 0) {
+                                const thisTicket = data.orchestrators[ticketIdx];
+                                ticketIdx -= 1;
+                                if ((thisTicket.sum / data.total) < 0.04) {
+                                  otherSum += thisTicket.sum;
+                                } else {
+                                  pieList.push({
+                                    address: getName(thisTicket.address).substring(0, 24),
+                                    sum: thisTicket.sum
+                                  });
+                                }
+                              }
+                              pieList.push({
+                                address: "Other",
+                                sum: otherSum
+                              });
+
+                              console.log(pieList);
+
                               return (
-                                <Accordion.Item label={data.year + "-" + thisMonth + ": " + data.orchestrators.length + " orchestrators"} className="stroke" key={data.year + "-" + thisMonth}>
+                                <Accordion.Item label={data.year + "-" + thisMonth + ": " + data.orchestrators.length + " orchestrators earned " + data.total.toFixed(4) + " Eth"} className="stroke" key={data.year + "-" + thisMonth}>
+                                  <div className="row">
+                                    <VictoryPie padding={100} data={pieList} x="address" y="sum" colorScale="qualitative" />
+                                  </div>
                                   <div className="flexContainer forceWrap">
                                     {
                                       data.orchestrators.map(function (orch) {
@@ -202,7 +274,7 @@ const Tickets = (obj) => {
                                               <Address address={orch.address} seed={"delegator" + orch.address + orch.sum} />
                                             </div>
                                             <div className="rowAlignRight">
-                                              <h4>{orch.sum} Eth</h4>
+                                              <h4>{orch.sum.toFixed(4)} Eth ({((orch.sum / data.total) * 100).toFixed(2)} %)</h4>
                                             </div>
                                           </div>
                                         )
