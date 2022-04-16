@@ -90,12 +90,6 @@ const Grafana = (obj) => {
                     <p>Full Statistics</p>
                   </button>
                 </a>
-                <a href="https://calendly.com/stronk-dev/30min">
-                  <button className="waveButton">
-                    <img alt="" src="calendly.png" width="30" height="30" />
-                    <p>Book a meeting</p>
-                  </button>
-                </a>
               </div>
               <div className="verticalDivider" />
             </div>

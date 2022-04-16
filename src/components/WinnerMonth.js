@@ -92,6 +92,8 @@ const WinnerMonth = (obj) => {
     <div className="stroke">
       <div className="row">
         <VictoryPie padding={100} data={pieList} x="address" y="sum"
+          sortOrder="descending"
+          sortKey = "sum"
           colorScale={[
             "#003f5c",
             "#2f4b7c",
