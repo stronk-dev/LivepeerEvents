@@ -11,11 +11,15 @@ const Home = (obj) => {
   const userstate = useSelector((state) => state.userstate);
   const [redirectToGrafana, setRedirectToGrafana] = useState(false);
   const [redirectToLPT, setRedirectToLPT] = useState(false);
+  const [redirectToTickets, setRedirectToTickets] = useState(false);
   if (redirectToGrafana) {
     return <Navigate push to="/orchestrator" />;
   }
   if (redirectToLPT) {
     return <Navigate push to="/livepeer" />;
+  }
+  if (redirectToTickets) {
+    return <Navigate push to="/tickets" />;
   }
   // Get amount of unique IP's which have visited this website
   var totalVisitorCount = 0;
@@ -55,6 +59,13 @@ const Home = (obj) => {
               setRedirectToLPT(true);
             }}>
               <p>🔎 Blockchain 🕵️</p>
+            </button>
+          </div>
+          <div className="row">
+            <button className="waveButton" onClick={() => {
+              setRedirectToTickets(true);
+            }}>
+              <p>💵 Tickets 💰</p>
             </button>
           </div>
           <div className="verticalDivider" />

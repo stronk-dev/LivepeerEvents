@@ -24,6 +24,7 @@ export const RECEIVE_CURRENT_ORCHESTRATOR = "RECEIVE_CURRENT_ORCHESTRATOR";
 export const RECEIVE_ORCHESTRATOR = "RECEIVE_ORCHESTRATOR";
 export const CLEAR_ORCHESTRATOR = "CLEAR_ORCHESTRATOR";
 export const RECEIVE_TICKETS = "RECEIVE_TICKETS";
+export const RECEIVE_WINNING_TICKETS = "RECEIVE_WINNING_TICKETS";
 export const SET_ALL_ENS_INFO = "SET_ALL_ENS_INFO";
 export const SET_ALL_ENS_DOMAINS = "SET_ALL_ENS_DOMAINS";
 export const SET_ALL_THREEBOX_INFO = "SET_ALL_THREEBOX_INFO";
@@ -48,6 +49,9 @@ const clearOrchestratorInfo = () => ({
 })
 const setTickets = message => ({
   type: RECEIVE_TICKETS, message
+});
+const setWinningTickets = message => ({
+  type: RECEIVE_WINNING_TICKETS, message
 });
 const setAllEnsInfo = message => ({
   type: SET_ALL_ENS_INFO, message
@@ -428,6 +432,7 @@ export const getTickets = () => async dispatch => {
   // Combine raw list of events into a list of useful Events
   if (response.ok) {
     let finalTicketList = [];
+    let winningTicketList = [];
     // Current transaction we are processing
     let txCounter = 0;
     let currentTx = "";
@@ -475,11 +480,9 @@ export const getTickets = () => async dispatch => {
             eventValue: amount
           });
         } else if (eventObj.name === "WinningTicketTransfer") {
-          // For now lets just ignore these, they are boring
-          continue;
           const amount = parseFloat(eventObj.data.amount) / 1000000000000000000;
           const txt = " broadcaster payed out  " + amount.toFixed(4) + " Eth";
-          finalTicketList.push({
+          winningTicketList.push({
             eventType: "TransferTicket",
             eventDescription: txt,
             eventCaller: "",
@@ -499,6 +502,7 @@ export const getTickets = () => async dispatch => {
     }
     // NOTE: We are throwing away the very oldest Ticket now, which should be fine.
     // We can fix this once above wall of text becomes a separate function
+    dispatch(setWinningTickets(winningTicketList));
     return dispatch(setTickets(finalTicketList));
   }
   return dispatch(receiveErrors(data));

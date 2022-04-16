@@ -3,6 +3,7 @@ import Home from './pages/home.js';
 import Startup from './pages/loadingScreen.js';
 import Grafana from './pages/grafana.js';
 import Livepeer from './pages/livepeer.js';
+import Tickets  from './pages/tickets.js';
 
 import {
   BrowserRouter as Router,
@@ -16,6 +17,7 @@ export default function App() {
       <Router>
         <Routes>
           <Route exact path='/livepeer' element={<Livepeer />} />
+          <Route exact path='/tickets' element={<Tickets />} />
           <Route exact path='/orchestrator' element={<Grafana />} />
           <Route path='/' element={<Home />} />
         </Routes>

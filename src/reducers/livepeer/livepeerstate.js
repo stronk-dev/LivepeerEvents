@@ -6,6 +6,7 @@ import {
   RECEIVE_CURRENT_ORCHESTRATOR,
   CLEAR_ORCHESTRATOR,
   RECEIVE_TICKETS,
+  RECEIVE_WINNING_TICKETS,
   SET_ALL_ENS_INFO,
   SET_ALL_ENS_DOMAINS,
   SET_ALL_THREEBOX_INFO
@@ -19,7 +20,8 @@ export default (state = {
   selectedOrchestrator: null,
   tickets: [],
   ensInfoMapping: [],
-  ensDomainMapping: []
+  ensDomainMapping: [],
+  winningTickets: []
 }, { type, message }) => {
   Object.freeze(state);
   switch (type) {
@@ -37,6 +39,8 @@ export default (state = {
       return { ...state, selectedOrchestrator: null };
     case RECEIVE_TICKETS:
       return { ...state, tickets: message };
+    case RECEIVE_WINNING_TICKETS:
+      return { ...state, winningTickets: message };
     case SET_ALL_ENS_INFO:
       return { ...state, ensInfoMapping: message };
     case SET_ALL_ENS_DOMAINS:
