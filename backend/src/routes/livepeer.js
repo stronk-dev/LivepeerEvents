@@ -1189,7 +1189,7 @@ const getScoreAtMonthYear = async function (month, year) {
   const startTime = parseInt(Date.parse(fromString) / 1000);
   const endTime = parseInt(Date.parse(endString) / 1000)
   // Else get it and cache it
-  const url = "https://leaderboard-serverless.vercel.app/api/aggregated_stats?since=" + startTime + "&to=" + endTime;
+  const url = "https://leaderboard-serverless.vercel.app/api/aggregated_stats?since=" + startTime + "&until=" + endTime;
   await https.get(url, (res) => {
     let body = "";
     res.on("data", (chunk) => {
