@@ -1179,12 +1179,12 @@ const getScoreAtMonthYear = async function (month, year) {
     }
   }
   // Calculate UTC timestamps for this month
-  const fromString = year + '-' + zeroPad(month, 2) + '-01T00:00:00.000Z';
+  const fromString = year + '-' + zeroPad(month + 1, 2) + '-01T00:00:00.000Z';
   let endString;
-  if (month > 10) {
+  if (month > 11) {
     endString = (year + 1) + '-' + '01-01T00:00:00.000Z';
   } else {
-    endString = year + '-' + zeroPad((month + 1), 2) + '-01T00:00:00.000Z';
+    endString = year + '-' + zeroPad((month + 2), 2) + '-01T00:00:00.000Z';
   }
   const startTime = parseInt(Date.parse(fromString) / 1000);
   const endTime = parseInt(Date.parse(endString) / 1000)
@@ -1231,7 +1231,7 @@ apiRouter.post("/getOrchestratorScores", async (req, res) => {
     const { month, year } = req.body;
     if (month && year) {
       // Since months get counted starting at 0
-      const reqObj = await getScoreAtMonthYear(month + 1, year);
+      const reqObj = await getScoreAtMonthYear(month, year);
       res.send(reqObj);
       return;
     }
