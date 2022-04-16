@@ -1190,7 +1190,6 @@ const getScoreAtMonthYear = async function (month, year) {
   const endTime = parseInt(Date.parse(endString) / 1000)
   // Else get it and cache it
   const url = "https://leaderboard-serverless.vercel.app/api/aggregated_stats?since=" + startTime + "&until=" + endTime;
-  console.log(url);
   await https.get(url, (res) => {
     let body = "";
     res.on("data", (chunk) => {
@@ -1231,7 +1230,8 @@ apiRouter.post("/getOrchestratorScores", async (req, res) => {
   try {
     const { month, year } = req.body;
     if (month && year) {
-      const reqObj = await getScoreAtMonthYear(month, year);
+      // Since months get counted starting at 0
+      const reqObj = await getScoreAtMonthYear(month + 1, year);
       res.send(reqObj);
       return;
     }
