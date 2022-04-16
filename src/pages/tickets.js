@@ -163,11 +163,11 @@ const Tickets = (obj) => {
                           styles={{
                             item: { padding: 0 },
                             itemOpened: { padding: 0 },
-                            itemTitle: { padding: 0 },
+                            itemTitle: { padding: 0, paddingTop: '1em', paddingBottom: '1em' },
                             control: { padding: 0 },
                             label: { padding: 0 },
                             icon: { padding: 0 },
-                            content: { padding: 0 },
+                            content: { padding: 0, paddingTop: '1em', paddingBottom: '1em' },
                             contentInner: { padding: 0 },
                           }}>
                           {

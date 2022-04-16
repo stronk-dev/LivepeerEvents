@@ -21,12 +21,12 @@ const WinnerMonth = (obj) => {
         if (now - thisScore.timestamp < 360000) {
           wasInCache = true;
         }
-        if (!thisScores){
+        if (!thisScores) {
           setThisScores(thisScore);
         }
       }
     }
-    if (!wasInCache){
+    if (!wasInCache) {
       dispatch(getOrchestratorScores(obj.year, obj.month));
     }
   }, [livepeer.orchScores]);
@@ -57,14 +57,14 @@ const WinnerMonth = (obj) => {
           if (thisAddr.name) {
             return thisAddr.name;
           } else {
-            return address;
+            return (address.substring(0, 10) + "..");
           }
           break;
         }
       }
     }
 
-    return address;
+    return (address.substring(0, 10) + "..");
   }
 
   let pieList = [];
@@ -77,7 +77,7 @@ const WinnerMonth = (obj) => {
       otherSum += thisTicket.sum;
     } else {
       pieList.push({
-        address: getName(thisTicket.address).substring(0, 24),
+        address: getName(thisTicket.address),
         sum: thisTicket.sum
       });
     }
@@ -91,7 +91,30 @@ const WinnerMonth = (obj) => {
   return (
     <div className="stroke">
       <div className="row">
-        <VictoryPie padding={100} data={pieList} x="address" y="sum" colorScale="qualitative" />
+        <VictoryPie padding={100} data={pieList} x="address" y="sum"
+          colorScale={[
+            "#003f5c",
+            "#2f4b7c",
+            "#665191",
+            "#ff7c43",
+            "#ffa600",
+            "#5c3446",
+            "#83424e",
+            "#a6544e",
+            "#c16d46",
+            "#d18d3c",
+            "#d3b136",
+            "#c5d843",
+            "#a3ff69",
+          ]}
+          style={{
+            data: {
+              fillOpacity: 0.9, stroke: "#636363", strokeWidth: 2
+            },
+            labels: {
+              fontSize: 10, zIndex: 999
+            }
+          }} />
       </div>
       <div className="flexContainer forceWrap">
         {
