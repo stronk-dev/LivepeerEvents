@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import Address from '../components/OrchAddressViewer';
 import { Popover } from '@mantine/core';
 import ScoreView from './scoreViewer';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 const Winner = (obj) => {
   const [thisScore, setThisScore] = useState(0);
@@ -26,21 +28,37 @@ const Winner = (obj) => {
   let scoreObj = null;
   if (thisScore) {
     scoreObj =
-      <Popover className="strokeSmollLeft" style={{ minWidth: '100px', cursor: 'pointer' }}
+      <Popover className="strokeSmollLeft" style={{ cursor: 'pointer', marginTop:  '0.2em', marginBottom:  '0.2em' }}
         opened={opened}
         onClose={() => setOpened(false)}
         target={
-          <div className="strokeSmollLeft" onClick={() => setOpened((o) => !o)} >
-            <div className="rowAlignLeft" >
-              <h4>Global Score</h4>
-            </div>
-            <div className="rowAlignRight" >
-              <span>{(thisScore * 10).toFixed(1)}</span>
-            </div>
+          <div className="strokeSmollLeft" style={{ width: '4em', height: '4em', marginLeft: '2em' }} onClick={() => setOpened((o) => !o)} >
+            <CircularProgressbar value={thisScore} maxValue={1} text={`${((thisScore * 10).toFixed(1))}`} 
+            styles={{
+              root: {},
+              path: {
+                stroke: `rgba(20, 153, 53, ${thisScore})`,
+                strokeLinecap: 'round',
+                transition: 'stroke-dashoffset 0.5s ease 0s',
+                transformOrigin: 'center center',
+              },
+              trail: {
+                stroke: '#d66400',
+                strokeLinecap: 'rounnd',
+                transformOrigin: 'center center',
+              },
+              text: {
+                fill: 'rgba(0, 0, 0, 0.875)',
+                fontSize: '32px',
+              },
+              background: {
+                fill: '#3e98c7',
+              },
+            }}/>
           </div>
         }
         width={260}
-        position="bottom"
+        position="right"
         withArrow
       >
         <ScoreView score={obj.stats.scores[obj.address]} />
