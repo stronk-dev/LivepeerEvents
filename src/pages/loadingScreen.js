@@ -5,7 +5,7 @@ import {
 } from "../actions/user";
 import {
   getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo, getTickets,
-  getAllEnsDomains, getAllEnsInfo, getAllThreeBoxInfo
+  getAllEnsDomains, getAllEnsInfo, getAllThreeBoxInfo, getAllOrchScores
 } from "../actions/livepeer";
 import { login } from "../actions/session";
 
@@ -43,6 +43,7 @@ const Startup = (obj) => {
       dispatch(getAllThreeBoxInfo());
       dispatch(getAllEnsDomains());
       dispatch(getAllEnsInfo());
+      dispatch(getAllOrchScores());
     });
   }
   

@@ -9,7 +9,8 @@ import {
   RECEIVE_WINNING_TICKETS,
   SET_ALL_ENS_INFO,
   SET_ALL_ENS_DOMAINS,
-  SET_ALL_THREEBOX_INFO
+  SET_ALL_THREEBOX_INFO,
+  SET_ALL_ORCH_SCORES
 } from "../../actions/livepeer";
 
 export default (state = {
@@ -21,7 +22,8 @@ export default (state = {
   tickets: [],
   ensInfoMapping: [],
   ensDomainMapping: [],
-  winningTickets: []
+  winningTickets: [],
+  orchScores: []
 }, { type, message }) => {
   Object.freeze(state);
   switch (type) {
@@ -47,6 +49,8 @@ export default (state = {
       return { ...state, ensDomainMapping: message };
     case SET_ALL_THREEBOX_INFO:
       return { ...state, threeBoxInfo: message };
+    case SET_ALL_ORCH_SCORES:
+      return { ...state, orchScores: message };
     default:
       return { ...state };
   }

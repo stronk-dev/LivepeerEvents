@@ -107,3 +107,22 @@ export const getThreeBox = (addr) => (
     }
   })
 );
+
+export const getOrchestratorScores = (year, month) => (
+  fetch("api/livepeer/getOrchestratorScores", {
+    method: "POST",
+    body: JSON.stringify({ year, month }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+);
+
+export const getAllOrchScores = () => (
+  fetch("api/livepeer/getAllOrchScores", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);

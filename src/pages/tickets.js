@@ -4,8 +4,7 @@ import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { Accordion } from '@mantine/core';
 import ScrollContainer from 'react-indiana-drag-scroll';
-import Address from '../components/OrchAddressViewer';
-import { VictoryPie } from 'victory';
+import WinnerMonth from '../components/WinnerMonth';
 
 const Tickets = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
@@ -13,43 +12,6 @@ const Tickets = (obj) => {
   const [redirectToHome, setRedirectToHome] = useState(false);
 
   console.log("Rendering Winning Ticket Viewer");
-
-  const getName = (address) => {
-    let hasThreeBox = false;
-    let thisDomain = null;
-    // Lookup domain in cache
-    if (livepeer.ensDomainMapping) {
-      for (const thisAddr of livepeer.ensDomainMapping) {
-        if (thisAddr.address === address) {
-          thisDomain = thisAddr;
-          break;
-        }
-      }
-    }
-    // Lookup current info in cache only if this addr has a mapped ENS domain
-    if (thisDomain && thisDomain.domain) {
-      for (const thisAddr of livepeer.ensInfoMapping) {
-        if (thisAddr.domain === thisDomain.domain) {
-          return thisAddr.domain;
-        }
-      }
-    }
-
-    if (livepeer.threeBoxInfo) {
-      for (const thisAddr of livepeer.threeBoxInfo) {
-        if (thisAddr.address === address) {
-          if (thisAddr.name) {
-            return thisAddr.name;
-          } else {
-            return address;
-          }
-          break;
-        }
-      }
-    }
-
-    return address;
-  }
 
   useEffect(() => {
     // Process Winning tickets as: 
@@ -208,7 +170,6 @@ const Tickets = (obj) => {
                             content: { padding: 0 },
                             contentInner: { padding: 0 },
                           }}>
-                          <div className="verticalDivider" />
                           {
                             ticketsPerMonth.map(function (data) {
                               let thisMonth = "";
@@ -238,50 +199,18 @@ const Tickets = (obj) => {
                               } else if (monthAsNum == 11) {
                                 thisMonth = "December";;
                               }
-                              let pieList = [];
-                              let otherSum = 0;
-                              let ticketIdx = data.orchestrators.length - 1;
-                              while (ticketIdx >= 0) {
-                                const thisTicket = data.orchestrators[ticketIdx];
-                                ticketIdx -= 1;
-                                if ((thisTicket.sum / data.total) < 0.04) {
-                                  otherSum += thisTicket.sum;
-                                } else {
-                                  pieList.push({
-                                    address: getName(thisTicket.address).substring(0, 24),
-                                    sum: thisTicket.sum
-                                  });
-                                }
-                              }
-                              pieList.push({
-                                address: "Other",
-                                sum: otherSum
-                              });
-
-                              console.log(pieList);
 
                               return (
-                                <Accordion.Item label={data.year + "-" + thisMonth + ": " + data.orchestrators.length + " orchestrators earned " + data.total.toFixed(4) + " Eth"} className="stroke" key={data.year + "-" + thisMonth}>
-                                  <div className="row">
-                                    <VictoryPie padding={100} data={pieList} x="address" y="sum" colorScale="qualitative" />
-                                  </div>
-                                  <div className="flexContainer forceWrap">
-                                    {
-                                      data.orchestrators.map(function (orch) {
-                                        return (
-                                          <div className="row" key={"delegator" + orch.address}>
-                                            <div className="rowAlignLeft">
-                                              <Address address={orch.address} seed={"delegator" + orch.address + orch.sum} />
-                                            </div>
-                                            <div className="rowAlignRight">
-                                              <h4>{orch.sum.toFixed(4)} Eth ({((orch.sum / data.total) * 100).toFixed(2)} %)</h4>
-                                            </div>
-                                          </div>
-                                        )
-                                      })
-                                    }
-                                  </div>
-                                  <div className="verticalDivider" />
+                                <Accordion.Item
+                                  label={data.year + "-" + thisMonth + ": " + data.orchestrators.length + " orchestrators earned " + data.total.toFixed(4) + " Eth"}
+                                  className="stroke"
+                                  key={data.year + "-" + data.month + "-" + data.total}>
+                                  <WinnerMonth
+                                    year={data.year}
+                                    month={data.month}
+                                    orchestrators={data.orchestrators}
+                                    total={data.total}
+                                  />
                                 </Accordion.Item>
                               )
                             })

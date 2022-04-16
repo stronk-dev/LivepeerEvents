@@ -93,6 +93,8 @@ let serviceUriFeeCostL2 = 0;
 let orchestratorCache = [];
 // Contains delegator addr and the address of the O they are bounded to
 let delegatorCache = [];
+// Will contain scores for a given year and month
+let orchScoreCache = [];
 
 // Listen to smart contract emitters. Only re-syncs on boot!
 let eventsCache = [];
@@ -1160,5 +1162,94 @@ apiRouter.get("/getAllThreeBox", async (req, res) => {
     res.status(400).send(err);
   }
 });
+
+
+const zeroPad = (num, places) => String(num).padStart(places, '0')
+const getScoreAtMonthYear = async function (month, year) {
+  const now = new Date().getTime();
+  let wasInCache = false;
+  // See if it is cached
+  for (const thisAddr of orchScoreCache) {
+    if (thisAddr.year === year && thisAddr.month === month) {
+      // Check timeout
+      if (now - thisAddr.timestamp < 360000) {
+        return thisAddr;
+      }
+      wasInCache = true;
+    }
+  }
+  // Calculate UTC timestamps for this month
+  const fromString = year + '-' + zeroPad(month, 2) + '-01T00:00:00.000Z';
+  let endString;
+  if (month > 10) {
+    endString = year + '-' + zeroPad((month + 1), 2) + '-01T00:00:00.000Z';
+  } else {
+    endString = (year + 1) + '-' + zeroPad(0, 2) + '-01T00:00:00.000Z';
+  }
+  const startTime = parseInt(Date.parse(fromString) / 1000);
+  const endTime = parseInt(Date.parse(endString) / 1000)
+  // Else get it and cache it
+  const url = "https://leaderboard-serverless.vercel.app/api/aggregated_stats?since=" + startTime + "&to=" + endTime;
+  await https.get(url, (res) => {
+    let body = "";
+    res.on("data", (chunk) => {
+      body += chunk;
+    });
+    res.on("end", () => {
+      try {
+        const data = JSON.parse(body);
+        const scoreObj = {
+          timestamp: now,
+          year: year,
+          month: month,
+          scores: data
+        }
+        if (wasInCache) {
+          for (var idx = 0; idx < orchScoreCache.length; idx++) {
+            if (orchScoreCache[idx].year == year && orchScoreCache[idx].month == month) {
+              console.log("Updating outdated orch score info " + year + "-" + month + " @ " + scoreObj.timestamp);
+              orchScoreCache[idx] = scoreObj;
+              break;
+            }
+          }
+        } else {
+          console.log("Caching new orch score info " + year + "-" + month + " @ " + scoreObj.timestamp);
+          orchScoreCache.push(scoreObj);
+        }
+      } catch (error) {
+        console.error(error.message);
+      };
+    });
+  }).on("error", (error) => {
+    console.error(error.message);
+  });
+}
+
+// Exports info on a given Orchestrator
+apiRouter.post("/getOrchestratorScores", async (req, res) => {
+  try {
+    const { month, year } = req.body;
+    if (month && year) {
+      const reqObj = await getScoreAtMonthYear(month, year);
+      res.send(reqObj);
+      return;
+    }
+    res.send({});
+    return;
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+});
+// Returns entire orch score mapping cache
+apiRouter.get("/getAllOrchScores", async (req, res) => {
+  try {
+    res.send(orchScoreCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+
 
 export default apiRouter;
