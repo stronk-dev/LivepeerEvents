@@ -28,6 +28,7 @@ const Tickets = (obj) => {
       const thisTime = new Date(thisTicket.transactionTime * 1000);
       const thisYear = thisTime.getFullYear();
       const thisMonth = thisTime.getMonth();
+      console.log(thisMonth);
       ticketIdx -= 1;
 
       // On a new month
@@ -90,6 +91,35 @@ const Tickets = (obj) => {
         // Else update that entry
         currentOrchCounter[thisIdx].sum += thisTicket.eventValue;
       }
+    }
+    if (currentOrchCounter.length) {
+      // Sort this months data
+      let sortedList = []
+      while (currentOrchCounter.length) {
+        let ticketIdx2 = currentOrchCounter.length - 1;
+        let largestIdx = 0;
+        let largestValue = 0;
+        // Find current O with most ticket wins in Eth
+        while (ticketIdx2 >= 0) {
+          const currentOrch = currentOrchCounter[ticketIdx2];
+          if (currentOrch.sum > largestValue) {
+            largestIdx = ticketIdx2;
+            largestValue = currentOrch.sum;
+          }
+          ticketIdx2 -= 1;
+        }
+        // Push current biggest list
+        sortedList.push(currentOrchCounter[largestIdx]);
+        // Remove from list
+        currentOrchCounter.splice(largestIdx, 1);
+      }
+      ticketsPerMonth.push(
+        {
+          year: currentYear,
+          month: currentMonth,
+          orchestrators: sortedList
+        }
+      );
     }
 
     setTicketsPerMonth(ticketsPerMonth);
