@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  getOrchestratorInfo, getEnsInfo, getThreeBoxInfo
+  getOrchestratorInfo, getEnsInfo, getThreeBoxInfo, setCachedOrch
 } from "../actions/livepeer";
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -126,7 +126,22 @@ const EventButtonAddress = (obj) => {
       </button>
       <span>{obj.name}</span>
       {thisIcon}
-      <button className="selectOrch" style={{ padding: '0.5em', cursor: 'help' }} onClick={() => { dispatch(getOrchestratorInfo(obj.address)) }} >
+      <button className="selectOrch" style={{ padding: '0.5em', cursor: 'help' }} onClick={() => {
+        // Check if cached as an orchestrator
+        if (livepeer.orchInfo) {
+          for (const thisOrch of livepeer.orchInfo) {
+            if (thisOrch.id === obj.address) {
+              const now = new Date().getTime();
+              if (now - thisOrch.lastGet < 120000) {
+                dispatch(setCachedOrch(thisOrch));
+                return;
+              }
+              break;
+            }
+          }
+        }
+        dispatch(getOrchestratorInfo(obj.address));
+      }} >
         {thisName}
       </button>
     </div>

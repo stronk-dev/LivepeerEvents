@@ -126,3 +126,21 @@ export const getAllOrchScores = () => (
     }
   })
 );
+
+export const getAllOrchInfo = () => (
+  fetch("api/livepeer/getAllOrchInfo", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllDelInfo = () => (
+  fetch("api/livepeer/getAllDelInfo", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);

@@ -1251,6 +1251,25 @@ apiRouter.get("/getAllOrchScores", async (req, res) => {
   }
 });
 
+// Returns entire orch info cache
+apiRouter.get("/getAllOrchInfo", async (req, res) => {
+  try {
+    res.send(orchestratorCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// Returns entire delegator info cache
+apiRouter.get("/getAllDelInfo", async (req, res) => {
+  try {
+    res.send(delegatorCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+
 
 
 export default apiRouter;

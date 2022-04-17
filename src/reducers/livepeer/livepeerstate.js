@@ -10,7 +10,10 @@ import {
   SET_ALL_ENS_INFO,
   SET_ALL_ENS_DOMAINS,
   SET_ALL_THREEBOX_INFO,
-  SET_ALL_ORCH_SCORES
+  SET_ALL_ORCH_SCORES,
+  SET_ALL_ORCH_INFO,
+  SET_ALL_DEL_INFO,
+  CACHE_ORCHESTRATOR
 } from "../../actions/livepeer";
 
 export default (state = {
@@ -51,6 +54,41 @@ export default (state = {
       return { ...state, threeBoxInfo: message };
     case SET_ALL_ORCH_SCORES:
       return { ...state, orchScores: message };
+    case SET_ALL_ORCH_INFO:
+      return { ...state, orchInfo: message };
+    case CACHE_ORCHESTRATOR:
+      let isCached = false;
+      // Check to see if it is already cached
+      if (state.orchInfo) {
+        for (const thisOrch of state.orchInfo) {
+          if (thisOrch.id === message.id) {
+            isCached = true;
+            break;
+          }
+        }
+      }
+      // If cached, lookup and modify existing entry
+      if (isCached) {
+        return {
+          ...state,
+          contents: state.orchInfo.map(
+            (content) => {
+              if (content.id == message.id) {
+                return message;
+              } else {
+                return content;
+              }
+            }
+          )
+        }
+      } else {
+        return {
+          ...state,
+          orchInfo: [...state.orchInfo, message]
+        };
+      }
+    case SET_ALL_DEL_INFO:
+      return { ...state, delInfo: message };
     default:
       return { ...state };
   }

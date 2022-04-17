@@ -21,6 +21,7 @@ export const RECEIVE_QUOTES = "RECEIVE_QUOTES";
 export const RECEIVE_BLOCKCHAIN_DATA = "RECEIVE_BLOCKCHAIN_DATA";
 export const RECEIVE_EVENTS = "RECEIVE_EVENTS";
 export const RECEIVE_CURRENT_ORCHESTRATOR = "RECEIVE_CURRENT_ORCHESTRATOR";
+export const CACHE_ORCHESTRATOR = "CACHE_ORCHESTRATOR";
 export const RECEIVE_ORCHESTRATOR = "RECEIVE_ORCHESTRATOR";
 export const CLEAR_ORCHESTRATOR = "CLEAR_ORCHESTRATOR";
 export const RECEIVE_TICKETS = "RECEIVE_TICKETS";
@@ -29,6 +30,8 @@ export const SET_ALL_ENS_INFO = "SET_ALL_ENS_INFO";
 export const SET_ALL_ENS_DOMAINS = "SET_ALL_ENS_DOMAINS";
 export const SET_ALL_THREEBOX_INFO = "SET_ALL_THREEBOX_INFO";
 export const SET_ALL_ORCH_SCORES = "SET_ALL_ORCH_SCORES";
+export const SET_ALL_ORCH_INFO = "SET_ALL_ORCH_INFO";
+export const SET_ALL_DEL_INFO = "SET_ALL_DEL_INFO";
 
 const setQuotes = message => ({
   type: RECEIVE_QUOTES, message
@@ -41,6 +44,9 @@ const setEvents = message => ({
 });
 const setCurrentOrchestratorInfo = message => ({
   type: RECEIVE_CURRENT_ORCHESTRATOR, message
+});
+const cacheNewOrch = message => ({
+  type: CACHE_ORCHESTRATOR, message
 });
 const setOrchestratorInfo = message => ({
   type: RECEIVE_ORCHESTRATOR, message
@@ -66,6 +72,14 @@ const setAllThreeBoxInfo = message => ({
 const setAllOrchScores = message => ({
   type: SET_ALL_ORCH_SCORES, message
 });
+const setAllOrchInfo = message => ({
+  type: SET_ALL_ORCH_INFO, message
+});
+
+const setAllDelInfo = message => ({
+  type: SET_ALL_DEL_INFO, message
+});
+
 
 
 export const getQuotes = () => async dispatch => {
@@ -145,13 +159,13 @@ export const getEvents = () => async dispatch => {
                 tmpAmount.toFixed(2) + " LPT stake",
                 "round " + tmpWhen
               ]
-              eventDescription = <Ticket icon={"🚀"} subtext={subtext} descriptions={descriptions} />
+              eventDescription = <Ticket seed={currentTx+descriptions} icon={"🚀"} subtext={subtext} descriptions={descriptions} />
             } else {
               const subtext = "reactivated";
               const descriptions = [
                 "round " + tmpWhen
               ]
-              eventDescription = <Ticket icon={"🚀"} subtext={subtext} descriptions={descriptions} />
+              eventDescription = <Ticket seed={currentTx+descriptions} icon={"🚀"} subtext={subtext} descriptions={descriptions} />
             }
           }
           // Lone Unbond => Unbond Event
@@ -164,7 +178,7 @@ export const getEvents = () => async dispatch => {
               "round " + tmpWhen
             ]
             eventDescription =
-              <Ticket icon={"❌"} subtext={subtext} descriptions={descriptions} />
+              <Ticket seed={currentTx+descriptions} icon={"❌"} subtext={subtext} descriptions={descriptions} />
           }
           // Lone Bond => Stake Event
           else if (eventContainsBond) {
@@ -180,7 +194,7 @@ export const getEvents = () => async dispatch => {
               tmpAmount.toFixed(2) + " LPT"
             ]
             eventDescription =
-              <Ticket icon={"⌛"} subtext={subtext} descriptions={descriptions} />
+              <Ticket seed={currentTx+descriptions} icon={"⌛"} subtext={subtext} descriptions={descriptions} />
           }
 
           // Fill description of Stake Event if it wasn't set yet
@@ -191,7 +205,7 @@ export const getEvents = () => async dispatch => {
                 tmpAmount.toFixed(2) + " LPT"
               ]
               eventDescription =
-                <Ticket icon={"⌛"} subtext={subtext} descriptions={descriptions} />
+                <Ticket seed={currentTx+descriptions} icon={"⌛"} subtext={subtext} descriptions={descriptions} />
             } else if (eventFrom === eventTo) {
               eventFrom = "";
               const subtext = "changed stake";
@@ -199,14 +213,14 @@ export const getEvents = () => async dispatch => {
                 tmpAmount.toFixed(2) + " LPT"
               ]
               eventDescription =
-                <Ticket icon={"⌛"} subtext={subtext} descriptions={descriptions} />
+                <Ticket seed={currentTx+descriptions} icon={"⌛"} subtext={subtext} descriptions={descriptions} />
             } else {
               const subtext = "moved stake";
               const descriptions = [
                 tmpAmount.toFixed(2) + " LPT"
               ]
               eventDescription =
-                <Ticket icon={"⌛"} subtext={subtext} descriptions={descriptions} />
+                <Ticket seed={currentTx+descriptions} icon={"⌛"} subtext={subtext} descriptions={descriptions} />
 
             }
           }
@@ -263,7 +277,7 @@ export const getEvents = () => async dispatch => {
             "round " + eventObj.data.withdrawRound
           ]
           const txt =
-            <Ticket icon={"🏦"} subtext={subtext} descriptions={descriptions} />
+            <Ticket seed={currentTx+descriptions} icon={"🏦"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Withdraw",
             eventDescription: txt,
@@ -287,7 +301,7 @@ export const getEvents = () => async dispatch => {
             amount.toFixed(4) + " Eth"
           ]
           const txt =
-            <Ticket icon={"🏦"} subtext={subtext} descriptions={descriptions} />
+            <Ticket seed={currentTx+descriptions} icon={"🏦"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Withdraw",
             eventDescription: txt,
@@ -313,7 +327,7 @@ export const getEvents = () => async dispatch => {
             amount2.toFixed(2) + "% on transcoding fees"
           ]
           const txt =
-            <Ticket icon={"🔄"} subtext={subtext} descriptions={descriptions} />
+            <Ticket seed={currentTx+descriptions} icon={"🔄"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Update",
             eventDescription: txt,
@@ -343,7 +357,7 @@ export const getEvents = () => async dispatch => {
             "+" + amount2.toFixed(4) + " Eth fees"
           ]
           let txt =
-            <Ticket icon={"💰"} subtext={subtext} descriptions={descriptions} />
+            <Ticket seed={currentTx+descriptions} icon={"💰"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Claim",
             eventDescription: txt,
@@ -367,7 +381,7 @@ export const getEvents = () => async dispatch => {
             "+" + amount1.toFixed(2) + " LPT" + (Math.floor(amount1) == 69 ? "... Nice!" : "")
           ]
           const txt =
-            <Ticket icon={"💸"} subtext={subtext} descriptions={descriptions} />
+            <Ticket seed={currentTx+descriptions} icon={"💸"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Reward",
             eventDescription: txt,
@@ -469,7 +483,7 @@ export const getTickets = () => async dispatch => {
             "+" + amount.toFixed(4) + " Eth"
           ]
           const txt =
-            <Ticket icon={"🎟️"} subtext={subtext} descriptions={descriptions} />
+            <Ticket seed={currentTx+descriptions} icon={"🎟️"} subtext={subtext} descriptions={descriptions} />
           finalTicketList.push({
             eventType: "RedeemTicket",
             eventDescription: txt,
@@ -526,16 +540,23 @@ export const getOrchestratorInfo = (orchAddr) => async dispatch => {
   const data = await response.json();
   if (response.ok) {
     if (data && data.id) {
+      console.log(data);
+      dispatch(cacheNewOrch(data));
       return dispatch(setOrchestratorInfo(data));
     } else {
       const response = await apiUtil.getOrchestratorByDelegator(orchAddr);
       const data = await response.json();
       if (response.ok) {
+        dispatch(cacheNewOrch(data));
         return dispatch(setOrchestratorInfo(data));
       }
     }
   }
   return dispatch(receiveErrors(data));
+};
+
+export const setCachedOrch = (orchObj) => async dispatch => {
+    return dispatch(setOrchestratorInfo(orchObj));
 };
 
 export const clearOrchestrator = () => async dispatch => {
@@ -587,9 +608,26 @@ export const getOrchestratorScores = (year, month) => async dispatch => {
 export const getAllOrchScores = () => async dispatch => {
   const response = await apiUtil.getAllOrchScores();
   const data = await response.json();
-  console.log(data);
   if (response.ok) {
     return dispatch(setAllOrchScores(data));
+  }
+  return dispatch(receiveErrors(data));
+};
+
+export const getAllOrchInfo = () => async dispatch => {
+  const response = await apiUtil.getAllOrchInfo();
+  const data = await response.json();
+  if (response.ok) {
+    return dispatch(setAllOrchInfo(data));
+  }
+  return dispatch(receiveErrors(data));
+};
+
+export const getAllDelInfo = () => async dispatch => {
+  const response = await apiUtil.getAllDelInfo();
+  const data = await response.json();
+  if (response.ok) {
+    return dispatch(setAllDelInfo(data));
   }
   return dispatch(receiveErrors(data));
 };

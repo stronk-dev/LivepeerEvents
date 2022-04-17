@@ -5,7 +5,8 @@ import {
 } from "../actions/user";
 import {
   getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo, getTickets,
-  getAllEnsDomains, getAllEnsInfo, getAllThreeBoxInfo, getAllOrchScores
+  getAllEnsDomains, getAllEnsInfo, getAllThreeBoxInfo, getAllOrchScores,  getAllOrchInfo,
+  getAllDelInfo
 } from "../actions/livepeer";
 import { login } from "../actions/session";
 
@@ -43,6 +44,14 @@ const Startup = (obj) => {
       dispatch(getAllThreeBoxInfo());
       dispatch(getAllEnsDomains());
       dispatch(getAllEnsInfo());
+    });
+  }
+  
+  const refreshStaticProps = () => {
+    console.log("Refreshing global data...");
+    batch(() => {
+      dispatch(getAllOrchInfo());
+      dispatch(getAllDelInfo());
       dispatch(getAllOrchScores());
     });
   }
@@ -51,6 +60,7 @@ const Startup = (obj) => {
     refreshLogin();
     refreshAllZeData();
     refreshENS();
+    refreshStaticProps();
     setIsLoaded(true);
     if (refreshInterval) {
       const interval = setInterval(refreshAllZeData, refreshInterval);

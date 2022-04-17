@@ -202,7 +202,7 @@ const Tickets = (obj) => {
 
                               return (
                                 <Accordion.Item
-                                  label={data.year + "-" + thisMonth + ": " + data.orchestrators.length + " orchestrators earned " + data.total.toFixed(4) + " Eth"}
+                                  label={data.year + "-" + thisMonth + ": " + data.orchestrators.length + " orchestrators earned " + data.total.toFixed(2) + " Eth"}
                                   className="stroke"
                                   key={data.year + "-" + data.month + "-" + data.total}>
                                   <WinnerMonth
