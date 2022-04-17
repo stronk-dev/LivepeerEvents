@@ -97,8 +97,8 @@ const StakeOverview = (obj) => {
       let idx = orchList.length - 1;
       while (idx >= 0) {
         const sel = orchList[idx];
-        idx--;
         if (sel.sum < thisStake) {
+          idx--;
           continue;
         } else {
           break;
