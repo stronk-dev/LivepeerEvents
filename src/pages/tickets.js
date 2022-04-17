@@ -5,13 +5,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Accordion } from '@mantine/core';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import WinnerMonth from '../components/WinnerMonth';
+import StakeOverview from '../components/StakeOverview';
 import { VictoryPie } from 'victory';
 
 const Tickets = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [ticketsPerMonth, setTicketsPerMonth] = useState([]);
   const [redirectToHome, setRedirectToHome] = useState(false);
-  const [removeOnlyStakers, setRemoveOnlyStakers] = useState(false);
 
   console.log("Rendering Winning Ticket Viewer");
 
@@ -176,81 +176,6 @@ const Tickets = (obj) => {
     return (address.substring(0, 10) + "..");
   }
 
-  let pieList = [];
-  let otherSum = 0;
-  let pieObj = null;
-  if (livepeer.orchInfo) {
-    let orchIdx = livepeer.orchInfo.length - 1;
-    // calc sum of stake
-    let totalStake = 0;
-    while (orchIdx >= 0) {
-      const thisOrch = livepeer.orchInfo[orchIdx];
-      orchIdx -= 1;
-      if (removeOnlyStakers && !parseInt(thisOrch.totalVolumeUSD)) {
-        continue;
-      }
-      totalStake += parseInt(thisOrch.totalStake);
-    }
-    // create slices
-    orchIdx = livepeer.orchInfo.length - 1;
-    while (orchIdx >= 0) {
-      const thisOrch = livepeer.orchInfo[orchIdx];
-      orchIdx -= 1;
-      if (removeOnlyStakers && !parseInt(thisOrch.totalVolumeUSD)) {
-        continue;
-      }
-      if ((thisOrch.totalStake / totalStake) < 0.04) {
-        otherSum += thisOrch.totalStake;
-      } else {
-        pieList.push({
-          address: getName(thisOrch.id),
-          sum: thisOrch.totalStake
-        });
-      }
-    }
-    pieList.push({
-      address: "Other",
-      sum: otherSum
-    });
-    pieObj = <div className="stroke">
-      <h4>Active Orchestrators by Stake</h4>
-      <div className='row'>
-        <p>Show non-transcoding Orchestrators?</p>
-        <div className="toggle-container" onClick={() => setRemoveOnlyStakers(!removeOnlyStakers)}>
-          <div className={`dialog-button ${removeOnlyStakers ? "" : "disabled"}`}>
-            {removeOnlyStakers ? "Show" : "Hide"}
-          </div>
-        </div>
-      </div>
-      <VictoryPie padding={100} data={pieList} x="address" y="sum"
-        sortOrder="descending"
-        sortKey="sum"
-        colorScale={[
-          "#003f5c",
-          "#2f4b7c",
-          "#665191",
-          "#ff7c43",
-          "#ffa600",
-          "#5c3446",
-          "#83424e",
-          "#a6544e",
-          "#c16d46",
-          "#d18d3c",
-          "#d3b136",
-          "#c5d843",
-          "#a3ff69",
-        ]}
-        style={{
-          data: {
-            fillOpacity: 0.9, stroke: "#636363", strokeWidth: 2
-          },
-          labels: {
-            fontSize: 10, zIndex: 999
-          }
-        }} />
-    </div>
-  }
-
   return (
     <div style={{ margin: 0, padding: 0, height: '100%', width: '100%', overflow: 'hidden' }}>
       <div id='header'>
@@ -272,7 +197,6 @@ const Tickets = (obj) => {
                   <ScrollContainer activationDistance={1} className="overflow-container" hideScrollbars={false}>
                     <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0 }}>
                       <div className="flexContainer forceWrap" >
-                        {pieObj}
                         <Accordion initialItem={0} className="stroke"
                           styles={{
                             item: { padding: 0 },
@@ -284,6 +208,11 @@ const Tickets = (obj) => {
                             content: { padding: 0, paddingTop: '1em', paddingBottom: '1em' },
                             contentInner: { padding: 0 },
                           }}>
+                          <Accordion.Item
+                            label={"Current Stake Overview"}
+                            className="stroke">
+                            <StakeOverview />
+                          </Accordion.Item>
                           {
                             ticketsPerMonth.map(function (data) {
                               let thisMonth = "";

@@ -8,16 +8,15 @@ const EventButtonAddress = (obj) => {
   const dispatch = useDispatch();
   const livepeer = useSelector((state) => state.livepeerstate);
   const [hasRefreshed, setRefresh] = useState(false);
-  const [hasENS, setHasENS] = useState(false);
-  const [hasThreeBox, setHasThreeBox] = useState(false);
   const [hasThreeBoxRefreshed, setThreeBoxRefresh] = useState(false);
-  const [hasOrchInfo, setHasOrchInfo] = useState(false);
   const [orchInfo, setOrchInfo] = useState(null);
   const now = new Date().getTime();
   
   useEffect(() => {
     let thisInfo = null;
     let thisDomain = null;
+    let hasENS = null;
+    let hasThreeBox = null
     // Lookup domain in cache
     if (livepeer.ensDomainMapping && !hasRefreshed) {
       for (const thisAddr of livepeer.ensDomainMapping) {
@@ -29,6 +28,7 @@ const EventButtonAddress = (obj) => {
           }
           // Is outdated
           if (!hasRefreshed) {
+            console.log("Refresh due to old ENS domain");
             getEnsInfo(obj.address);
             setRefresh(true);
           }
@@ -37,6 +37,7 @@ const EventButtonAddress = (obj) => {
       }
       // If it was not cached at all
       if (thisDomain == null && !hasRefreshed) {
+        console.log("Refresh due to non-existing ENS domain");
         setRefresh(true);
         getEnsInfo(obj.address);
       }
@@ -46,13 +47,14 @@ const EventButtonAddress = (obj) => {
       for (const thisAddr of livepeer.ensInfoMapping) {
         if (thisAddr.domain === thisDomain.domain) {
           thisInfo = thisAddr;
-          setHasENS(true);
+          hasENS = true;
           // Check timeout
           if (now - thisAddr.timestamp < 86400000) {
             break;
           }
           // Is outdated
           if (!hasRefreshed) {
+            console.log("Refresh due to old ENS info");
             getEnsInfo(obj.address);
             setRefresh(true);
           }
@@ -61,6 +63,7 @@ const EventButtonAddress = (obj) => {
       }
       // If it was not cached at all
       if (thisInfo == null && !hasRefreshed) {
+        console.log("Refresh due to non-existing ENS info");
         getEnsInfo(obj.address);
         setRefresh(true);
       }
@@ -72,51 +75,41 @@ const EventButtonAddress = (obj) => {
         for (const thisAddr of livepeer.threeBoxInfo) {
           if (thisAddr.address === obj.address) {
             thisInfo = thisAddr;
-            setHasThreeBox(true);
-            // Check timeout
-            if (now - thisAddr.timestamp < 86400000) {
-              break;
-            }
-            // Is outdated
-            if (!hasThreeBoxRefreshed) {
-              getThreeBoxInfo(obj.address);
-              setThreeBoxRefresh(true);
-            }
+            hasThreeBox = true;
             break;
           }
         }
         // If it was not cached at all
-        if (thisDomain == null && !hasThreeBoxRefreshed) {
+        if (!hasThreeBox && !hasThreeBoxRefreshed) {
+          console.log("Refresh due to non-existing 3BOX info");
           setThreeBoxRefresh(true);
           getThreeBoxInfo(obj.address);
         }
       }
     }
     if (thisInfo && thisInfo != orchInfo){
+      console.log("Setting INFO obj");
       setOrchInfo(thisInfo);
     }
-  }, [livepeer.ensDomainMapping, livepeer.threeBoxInfo, hasRefreshed, hasENS, hasThreeBoxRefreshed]);
+  }, [livepeer.ensDomainMapping, livepeer.threeBoxInfo]);
 
   useEffect(() => {
     // Check if cached as an orchestrator
-    if (livepeer.orchInfo && !hasOrchInfo) {
+    if (livepeer.orchInfo) {
       for (const thisOrch of livepeer.orchInfo) {
         if (thisOrch.id === obj.address) {
-          setHasOrchInfo(true);
-          break;
+          return;
         }
       }
       // Preload Orch info
-      if (!hasOrchInfo) {
-        dispatch(getOrchestratorInfoSilent(obj.address));
-        setHasOrchInfo(true);
-      }
+      console.log("Refresh due to non-existing orch in global state");
+      dispatch(getOrchestratorInfoSilent(obj.address));
     }
-  }, [livepeer.orchInfo, hasOrchInfo]);
+  }, [livepeer.orchInfo]);
 
   let thisName;
   let thisIcon;
-  if (hasENS) {
+  if (orchInfo && orchInfo.domain) {
     thisName = <h4 className="elipsText elipsOnMobileExtra">{orchInfo.domain}</h4>;
     if (orchInfo.avatar) {
       thisIcon =
@@ -124,7 +117,7 @@ const EventButtonAddress = (obj) => {
           <img alt="" src={orchInfo.avatar.url} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
         </a >
     }
-  } else if (hasThreeBox) {
+  } else if (orchInfo && (orchInfo.name || orchInfo.image)) {
     if (orchInfo.name) {
       thisName = <h4 className="elipsText elipsOnMobileExtra">{orchInfo.name}</h4>;
     } else {
