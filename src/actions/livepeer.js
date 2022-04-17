@@ -159,13 +159,13 @@ export const getEvents = () => async dispatch => {
                 tmpAmount.toFixed(2) + " LPT stake",
                 "round " + tmpWhen
               ]
-              eventDescription = <Ticket seed={currentTx+descriptions} icon={"🚀"} subtext={subtext} descriptions={descriptions} />
+              eventDescription = <Ticket seed={currentTx+"-"+txCounter} icon={"🚀"} subtext={subtext} descriptions={descriptions} />
             } else {
               const subtext = "reactivated";
               const descriptions = [
                 "round " + tmpWhen
               ]
-              eventDescription = <Ticket seed={currentTx+descriptions} icon={"🚀"} subtext={subtext} descriptions={descriptions} />
+              eventDescription = <Ticket seed={currentTx+"-"+txCounter} icon={"🚀"} subtext={subtext} descriptions={descriptions} />
             }
           }
           // Lone Unbond => Unbond Event
@@ -178,7 +178,7 @@ export const getEvents = () => async dispatch => {
               "round " + tmpWhen
             ]
             eventDescription =
-              <Ticket seed={currentTx+descriptions} icon={"❌"} subtext={subtext} descriptions={descriptions} />
+              <Ticket seed={currentTx+"-"+txCounter} icon={"❌"} subtext={subtext} descriptions={descriptions} />
           }
           // Lone Bond => Stake Event
           else if (eventContainsBond) {
@@ -194,7 +194,7 @@ export const getEvents = () => async dispatch => {
               tmpAmount.toFixed(2) + " LPT"
             ]
             eventDescription =
-              <Ticket seed={currentTx+descriptions} icon={"⌛"} subtext={subtext} descriptions={descriptions} />
+              <Ticket seed={currentTx+"-"+txCounter} icon={"⌛"} subtext={subtext} descriptions={descriptions} />
           }
 
           // Fill description of Stake Event if it wasn't set yet
@@ -205,7 +205,7 @@ export const getEvents = () => async dispatch => {
                 tmpAmount.toFixed(2) + " LPT"
               ]
               eventDescription =
-                <Ticket seed={currentTx+descriptions} icon={"⌛"} subtext={subtext} descriptions={descriptions} />
+                <Ticket seed={currentTx+"-"+txCounter} icon={"⌛"} subtext={subtext} descriptions={descriptions} />
             } else if (eventFrom === eventTo) {
               eventFrom = "";
               const subtext = "changed stake";
@@ -213,14 +213,14 @@ export const getEvents = () => async dispatch => {
                 tmpAmount.toFixed(2) + " LPT"
               ]
               eventDescription =
-                <Ticket seed={currentTx+descriptions} icon={"⌛"} subtext={subtext} descriptions={descriptions} />
+                <Ticket seed={currentTx+"-"+txCounter} icon={"⌛"} subtext={subtext} descriptions={descriptions} />
             } else {
               const subtext = "moved stake";
               const descriptions = [
                 tmpAmount.toFixed(2) + " LPT"
               ]
               eventDescription =
-                <Ticket seed={currentTx+descriptions} icon={"⌛"} subtext={subtext} descriptions={descriptions} />
+                <Ticket seed={currentTx+"-"+txCounter} icon={"⌛"} subtext={subtext} descriptions={descriptions} />
 
             }
           }
@@ -277,7 +277,7 @@ export const getEvents = () => async dispatch => {
             "round " + eventObj.data.withdrawRound
           ]
           const txt =
-            <Ticket seed={currentTx+descriptions} icon={"🏦"} subtext={subtext} descriptions={descriptions} />
+            <Ticket seed={currentTx+"-"+txCounter} icon={"🏦"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Withdraw",
             eventDescription: txt,
@@ -301,7 +301,7 @@ export const getEvents = () => async dispatch => {
             amount.toFixed(4) + " Eth"
           ]
           const txt =
-            <Ticket seed={currentTx+descriptions} icon={"🏦"} subtext={subtext} descriptions={descriptions} />
+            <Ticket seed={currentTx+"-"+txCounter} icon={"🏦"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Withdraw",
             eventDescription: txt,
@@ -327,7 +327,7 @@ export const getEvents = () => async dispatch => {
             amount2.toFixed(2) + "% on transcoding fees"
           ]
           const txt =
-            <Ticket seed={currentTx+descriptions} icon={"🔄"} subtext={subtext} descriptions={descriptions} />
+            <Ticket seed={currentTx+"-"+txCounter} icon={"🔄"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Update",
             eventDescription: txt,
@@ -357,7 +357,7 @@ export const getEvents = () => async dispatch => {
             "+" + amount2.toFixed(4) + " Eth fees"
           ]
           let txt =
-            <Ticket seed={currentTx+descriptions} icon={"💰"} subtext={subtext} descriptions={descriptions} />
+            <Ticket seed={currentTx+"-"+txCounter} icon={"💰"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Claim",
             eventDescription: txt,
@@ -381,7 +381,7 @@ export const getEvents = () => async dispatch => {
             "+" + amount1.toFixed(2) + " LPT" + (Math.floor(amount1) == 69 ? "... Nice!" : "")
           ]
           const txt =
-            <Ticket seed={currentTx+descriptions} icon={"💸"} subtext={subtext} descriptions={descriptions} />
+            <Ticket seed={currentTx+"-"+txCounter} icon={"💸"} subtext={subtext} descriptions={descriptions} />
           finalEventList.push({
             eventType: "Reward",
             eventDescription: txt,
@@ -483,7 +483,7 @@ export const getTickets = () => async dispatch => {
             "+" + amount.toFixed(4) + " Eth"
           ]
           const txt =
-            <Ticket seed={currentTx+descriptions} icon={"🎟️"} subtext={subtext} descriptions={descriptions} />
+            <Ticket seed={currentTx+descriptions+currentTime} icon={"🎟️"} subtext={subtext} descriptions={descriptions} />
           finalTicketList.push({
             eventType: "RedeemTicket",
             eventDescription: txt,
@@ -535,12 +535,21 @@ export const getCurrentOrchestratorInfo = () => async dispatch => {
   return dispatch(receiveErrors(data));
 };
 
+export const getOrchestratorInfoSilent = (orchAddr) => async dispatch => {
+  const response = await apiUtil.getOrchestratorInfo(orchAddr);
+  const data = await response.json();
+  if (response.ok) {
+    if (data && data.id) {
+      return dispatch(cacheNewOrch(data));
+    }
+  }
+};
+
 export const getOrchestratorInfo = (orchAddr) => async dispatch => {
   const response = await apiUtil.getOrchestratorInfo(orchAddr);
   const data = await response.json();
   if (response.ok) {
     if (data && data.id) {
-      console.log(data);
       dispatch(cacheNewOrch(data));
       return dispatch(setOrchestratorInfo(data));
     } else {
@@ -598,7 +607,9 @@ export const getAllThreeBoxInfo = () => async dispatch => {
 
 export const getThreeBoxInfo = async (addr) => {
   const response = await apiUtil.getThreeBox(addr);
-  const data = await response.json();
+  if (response.ok) {
+    const data = await response.json();
+  }
 };
 
 export const getOrchestratorScores = (year, month) => async dispatch => {

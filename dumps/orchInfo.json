@@ -1,0 +1,57 @@
+{
+  "id": "0x1a196b031ea1a74a53ecbe6148772648e02f9d51",
+  "activationRound": "2467",
+  "deactivationRound": "57896044618658097711785492504343953926634992332820282019728792003956564819967",
+  "active": true,
+  "status": "Registered",
+  "lastRewardRound": {
+      "id": "2535",
+      "length": "5760",
+      "startBlock": "14601600",
+      "endBlock": "14607360",
+      "mintableTokens": "6289.390217651615209644",
+      "volumeETH": "0",
+      "volumeUSD": "0",
+      "totalActiveStake": "12660572.689057253001431262",
+      "totalSupply": "25315641.406774142960762968",
+      "participationRate": "0.5001087069304688888807674462863896",
+      "movedStake": "0",
+      "newStake": "0"
+  },
+  "rewardCut": "2500",
+  "feeShare": "100000",
+  "pendingFeeShare": "0",
+  "pendingRewardCut": "0",
+  "totalStake": "10359.571442424819689212",
+  "totalVolumeETH": "0",
+  "totalVolumeUSD": "0",
+  "serviceURI": "https://lpt.4v1.in:8935",
+  "delegators": [
+      {
+          "id": "0x1a196b031ea1a74a53ecbe6148772648e02f9d51",
+          "bondedAmount": "33.050240717610249021",
+          "startRound": "2467"
+      },
+      {
+          "id": "0x683fc3000a300575657713124fcf84adc53f9f90",
+          "bondedAmount": "11.81774",
+          "startRound": "2468"
+      },
+      {
+          "id": "0x9785c9c3258573810c69ddf93221b6a8dea1c777",
+          "bondedAmount": "0.000000000000000001",
+          "startRound": "2467"
+      },
+      {
+          "id": "0xfb9849b0b53f66b747bfa47396964a3fa22400a0",
+          "bondedAmount": "10071.316871799952124909",
+          "startRound": "2487"
+      }
+  ],
+  "delegator": {
+      "id": "0x1a196b031ea1a74a53ecbe6148772648e02f9d51",
+      "bondedAmount": "33.050240717610249021",
+      "startRound": "2467"
+  },
+  "lastGet": 1650188936614
+}

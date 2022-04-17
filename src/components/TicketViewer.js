@@ -17,7 +17,7 @@ const Ticket = (obj) => {
       <div className="stroke" style={{ flex: 2 }}>
         {obj.descriptions.map(function (thisTextItem, i) {
           return (
-            <p className="smallTxt" key={obj.seed}>
+            <p className="smallTxt" key={obj.seed + i}>
               {thisTextItem}
             </p>
           )
