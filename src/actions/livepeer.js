@@ -591,8 +591,7 @@ export const getAllEnsInfo = () => async dispatch => {
 };
 
 export const getEnsInfo = async (addr) => {
-  const response = await apiUtil.getEnsInfo(addr);
-  const data = await response.json();
+  const response = apiUtil.getEnsInfo(addr);
 };
 
 
@@ -606,10 +605,7 @@ export const getAllThreeBoxInfo = () => async dispatch => {
 };
 
 export const getThreeBoxInfo = async (addr) => {
-  const response = await apiUtil.getThreeBox(addr);
-  if (response.ok) {
-    const data = await response.json();
-  }
+  const response = apiUtil.getThreeBox(addr);
 };
 
 export const getOrchestratorScores = (year, month) => async dispatch => {

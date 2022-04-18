@@ -65,7 +65,7 @@ const Home = (obj) => {
             <button className="waveButton" onClick={() => {
               setRedirectToTickets(true);
             }}>
-              <p>💵 Tickets 💰</p>
+              <p>📈 Statistics 💰</p>
             </button>
           </div>
           <div className="verticalDivider" />

@@ -13,7 +13,7 @@ const Tickets = (obj) => {
   const [ticketsPerMonth, setTicketsPerMonth] = useState([]);
   const [redirectToHome, setRedirectToHome] = useState(false);
 
-  console.log("Rendering Winning Ticket Viewer");
+  console.log("Rendering Stats Viewer");
 
   useEffect(() => {
     // Process Winning tickets as: 
@@ -185,7 +185,7 @@ const Tickets = (obj) => {
           }}>
             <h1>🏠</h1>
           </button>
-          <h4 className="rowAlignLeft withWrap showNeverOnMobile">Winning Tickets</h4>
+          <h4 className="rowAlignLeft withWrap showNeverOnMobile">Statistics</h4>
         </div>
       </div>
       <div id='bodyContent'>

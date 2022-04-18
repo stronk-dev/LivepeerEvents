@@ -76,21 +76,24 @@ const StakeOverview = (obj) => {
     let orchIdx = livepeer.orchInfo.length - 1;
     // calc sum of stake
     let totalStake = 0;
+    let totalEarnings = 0;
     while (orchIdx >= 0) {
       const thisOrch = livepeer.orchInfo[orchIdx];
       orchIdx -= 1;
-      if (removeOnlyStakers && !parseInt(thisOrch.totalVolumeUSD)) {
+      if (removeOnlyStakers && !parseFloat(thisOrch.totalVolumeUSD)) {
         continue;
       }
-      totalStake += parseInt(thisOrch.totalStake);
+      totalStake += parseFloat(thisOrch.totalStake);
+      totalEarnings += parseFloat(thisOrch.totalVolumeETH);
     }
     // create slices
     orchIdx = livepeer.orchInfo.length - 1;
     while (orchIdx >= 0) {
       const thisOrch = livepeer.orchInfo[orchIdx];
-      const thisStake = parseInt(thisOrch.totalStake);
+      const thisStake = parseFloat(thisOrch.totalStake);
+      const thisEarnings = parseFloat(thisOrch.totalVolumeETH);
       orchIdx -= 1;
-      if (removeOnlyStakers && !parseInt(thisOrch.totalVolumeUSD)) {
+      if (removeOnlyStakers && !parseFloat(thisOrch.totalVolumeUSD)) {
         continue;
       }
       // Add orch stat descending
@@ -108,13 +111,17 @@ const StakeOverview = (obj) => {
         orchList.push({
           address: thisOrch.id,
           sum: thisStake,
-          ratio: (thisStake / totalStake) * 100
+          ratio: (thisStake / totalStake) * 100,
+          earnings: thisEarnings,
+          earningsRatio: (thisEarnings / totalEarnings) * 100
         });
       } else {
         orchList.splice(idx + 1, 0, {
           address: thisOrch.id,
           sum: thisStake,
-          ratio: (thisStake / totalStake) * 100
+          ratio: (thisStake / totalStake) * 100,
+          earnings: thisEarnings,
+          earningsRatio: (thisEarnings / totalEarnings) * 100
         });
       }
       // Add slice
@@ -175,6 +182,21 @@ const StakeOverview = (obj) => {
     <div className="stroke">
       {pieObj}
       <div className="flexContainer forceWrap">
+        <div className="row">
+          <div className="rowAlignLeft">
+           <h4>Orchestrator</h4>
+          </div>
+          <div className="strokeSmollLeft" style={{ minWidth: '100px' }} >
+          <div className="rowAlignLeft" >
+              <h4>Stake</h4>
+            </div>
+          </div>
+          <div className="strokeSmollLeft" style={{ minWidth: '100px' }} >
+            <div className="rowAlignLeft" >
+              <h4>Earnings</h4>
+            </div>
+          </div>
+        </div>
         {
           orchList.map(function (orch) {
             return (
@@ -188,6 +210,14 @@ const StakeOverview = (obj) => {
                   </div>
                   <div className="rowAlignRight" >
                     <span>({orch.ratio.toFixed(2)} %)</span>
+                  </div>
+                </div>
+                <div className="strokeSmollLeft" style={{ minWidth: '100px' }} >
+                  <div className="rowAlignLeft" >
+                    <h4>{orch.earnings.toFixed(2)} Eth</h4>
+                  </div>
+                  <div className="rowAlignRight" >
+                    <span>({orch.earningsRatio.toFixed(2)} %)</span>
                   </div>
                 </div>
               </div>
