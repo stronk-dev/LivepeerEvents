@@ -148,8 +148,13 @@ const MonthlyStatSchema = new mongoose.Schema({
     required: false,
     default: []
   },
-  // Dynamic stats (until the month has passed) containing latest commission, latest totalStake
-  orchestratorStats: {
+  // History for theGraph current data for that month
+  latestCommission: {
+    type: [Object],
+    required: false,
+    default: null
+  },
+  latestTotalStake: {
     type: [Object],
     required: false,
     default: null

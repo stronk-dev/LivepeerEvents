@@ -491,6 +491,8 @@ const updateMonthlyTicketReceived = async function (blockTime, amount, from, to)
       // If so, update that entry in winningTicketsReceived
       if (eventObj.address == to) {
         await MonthlyStat.updateOne({
+          year: thisYear,
+          month: thisMonth,
           'winningTicketsReceived.address': { '$ne': to }
         }, {
           $inc: {
@@ -507,6 +509,8 @@ const updateMonthlyTicketReceived = async function (blockTime, amount, from, to)
     // Else push new data to winningTicketsReceived
     if (!hasModified) {
       await MonthlyStat.updateOne({
+        year: thisYear,
+        month: thisMonth,
         'winningTicketsReceived.address': { '$ne': to }
       }, {
         $push: {
@@ -524,6 +528,8 @@ const updateMonthlyTicketReceived = async function (blockTime, amount, from, to)
       // If so, update that entry in winningTicketsSent
       if (eventObj.address == from) {
         await MonthlyStat.updateOne({
+          year: thisYear,
+          month: thisMonth,
           'winningTicketsSent.address': { '$ne': from }
         }, {
           $inc: {
@@ -540,6 +546,8 @@ const updateMonthlyTicketReceived = async function (blockTime, amount, from, to)
     // Else push new data to winningTicketsSent
     if (!hasModified) {
       await MonthlyStat.updateOne({
+        year: thisYear,
+        month: thisMonth,
         'winningTicketsSent.address': { '$ne': from }
       }, {
         $push: {
@@ -605,6 +613,8 @@ const updateMonthlyTicketRedeemed = async function (blockTime, amount, address) 
       // If so, update that entry in winningTicketsReceived
       if (eventObj.address == address) {
         await MonthlyStat.updateOne({
+          year: thisYear,
+          month: thisMonth,
           'winningTicketsRedeemed.address': { '$ne': address }
         }, {
           $inc: {
@@ -621,6 +631,8 @@ const updateMonthlyTicketRedeemed = async function (blockTime, amount, address) 
     // Else push new data to winningTicketsReceived
     if (!hasModified) {
       await MonthlyStat.updateOne({
+        year: thisYear,
+        month: thisMonth,
         'winningTicketsRedeemed.address': { '$ne': address }
       }, {
         $push: {
@@ -1438,6 +1450,188 @@ Latest commission and totalStake stored in mongoDB (monthlyStat.js) and all in l
 
 let orchestratorCache = [];
 
+const mutateNewCommissionRates = async function (address, feeCommission, rewardCommission) {
+  const now = new Date().getTime();
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  // Convert weird format to actual percentages
+  rewardCommission = (rewardCommission / 10000).toFixed(2);
+  feeCommission = (100 - (feeCommission / 10000)).toFixed(2);
+  // Create new data point
+  if (!CONF_DISABLE_DB) {
+    const dbObj = new Event({
+      address: address,
+      feeCommission: feeCommission,
+      rewardCommission: rewardCommission,
+      timestamp: now
+    });
+    await dbObj.save();
+  }
+  // Mutate monthly stats
+  // Get DB entry
+  const doc = await MonthlyStat.findOne({
+    year: thisYear,
+    month: thisMonth
+  }, {
+    latestCommission: 1
+  });
+  // Check to see if the doc's embedded latestCommission already contains this address
+  let hasModified = false;
+  for (const eventObj of doc.latestCommission) {
+    // If so, update existing entry
+    if (eventObj.address == address) {
+      await MonthlyStat.updateOne({
+        year: thisYear,
+        month: thisMonth,
+        'latestCommission.address': { '$ne': address }
+      }, {
+        $set: {
+          'latestCommission': {
+            feeCommission: feeCommission,
+            rewardCommission: rewardCommission,
+            timestamp: now
+          }
+        }
+      });
+      hasModified = true;
+      break;
+    }
+  }
+  // Else push new data to latestCommission
+  if (!hasModified) {
+    await MonthlyStat.updateOne({
+      year: thisYear,
+      month: thisMonth,
+      'latestCommission.address': { '$ne': address }
+    }, {
+      $push: {
+        'latestCommission': {
+          address: address,
+          feeCommission: feeCommission,
+          rewardCommission: rewardCommission,
+          timestamp: now
+        }
+      }
+    });
+  }
+}
+
+const mutateNewGlobalStake = async function (address, globalStake) {
+  const now = new Date().getTime();
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  // Create new data point
+  if (!CONF_DISABLE_DB) {
+    const dbObj = new Event({
+      address: address,
+      totalStake: globalStake,
+      timestamp: now
+    });
+    await dbObj.save();
+  }
+  // Mutate monthly stats
+  // Get DB entry
+  const doc = await MonthlyStat.findOne({
+    year: thisYear,
+    month: thisMonth
+  }, {
+    latestTotalStake: 1
+  });
+  // Check to see if the doc's embedded latestTotalStake already contains this address
+  let hasModified = false;
+  for (const eventObj of doc.latestTotalStake) {
+    // If so, update existing entry
+    if (eventObj.address == address) {
+      await MonthlyStat.updateOne({
+        year: thisYear,
+        month: thisMonth,
+        'latestTotalStake.address': { '$ne': address }
+      }, {
+        $set: {
+          'latestTotalStake': {
+            totalStake: globalStake,
+            timestamp: now
+          }
+        }
+      });
+      hasModified = true;
+      break;
+    }
+  }
+  // Else push new data to latestTotalStake
+  if (!hasModified) {
+    await MonthlyStat.updateOne({
+      year: thisYear,
+      month: thisMonth,
+      'latestTotalStake.address': { '$ne': address }
+    }, {
+      $push: {
+        'latestTotalStake': {
+          address: address,
+          totalStake: globalStake,
+          timestamp: now
+        }
+      }
+    });
+  }
+}
+
+const mutateDynamicStatsFromDB = async function (orchestratorObj) {
+  const now = new Date().getTime();
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  // Compare with latest entry in monthly statistics for the current month
+  const doc = await MonthlyStat.findOne({
+    year: thisYear,
+    month: thisMonth
+  }, {
+    latestCommission: 1,
+    latestTotalStake: 1
+  });
+  let oldFeeCommission = -1;
+  let oldRewardCommission = -1;
+  let oldTotalStake = -1;
+  // Determine latest commission rates
+  for (var orch of doc.latestCommission) {
+    if (orch.address == orchestratorObj.id) {
+      oldFeeCommission = orch.feeCommission;
+      oldRewardCommission = orch.rewardCommission;
+      break;
+    }
+  }
+  // Determine latest total stake
+  for (var orch of doc.latestTotalStake) {
+    if (orch.address == orchestratorObj.id) {
+      oldTotalStake = orch.totalStake;
+      break;
+    }
+  }
+  // Convert weird format to actual percentages
+  let newRewardCommission = (orchestratorObj.rewardCut / 10000).toFixed(2);
+  let newFeeCommission = (100 - (orchestratorObj.feeShare / 10000)).toFixed(2);
+  // If data changed, mutate
+  if (oldRewardCommission != newRewardCommission) {
+    mutateNewCommissionRates(orchestratorObj.id, orchestratorObj.feeShare, orchestratorObj.rewardCut);
+  } else if (oldFeeCommission != newFeeCommission) {
+    mutateNewCommissionRates(orchestratorObj.id, orchestratorObj.feeShare, orchestratorObj.rewardCut);
+  }
+  if (oldTotalStake != orchestratorObj.totalStake) {
+    mutateNewGlobalStake(orchestratorObj.id, orchestratorObj.totalStake);
+  }
+}
+
+const mutateDynamicStatsFromCache = async function (oldOrchestratorObj, newOrchestratorObj) {
+  // Check with monthly stats in cache to see if it differs
+  if (oldOrchestratorObj.rewardCut != newOrchestratorObj.rewardCut) {
+    mutateNewCommissionRates(newOrchestratorObj.id, newOrchestratorObj.feeShare, newOrchestratorObj.rewardCut);
+  } else if (oldOrchestratorObj.feeShare != newOrchestratorObj.feeShare) {
+    mutateNewCommissionRates(newOrchestratorObj.id, newOrchestratorObj.feeShare, newOrchestratorObj.rewardCut);
+  }
+  if (oldOrchestratorObj.totalStake != newOrchestratorObj.totalStake) {
+    mutateNewGlobalStake(newOrchestratorObj.id, newOrchestratorObj.totalStake);
+  }
+}
+
 // Gets info on a given Orchestrator
 const parseOrchestrator = async function (reqAddr) {
   try {
@@ -1514,12 +1708,14 @@ const parseOrchestrator = async function (reqAddr) {
         for (var idx = 0; idx < orchestratorCache.length; idx++) {
           if (orchestratorCache[idx].id == reqAddr) {
             console.log("Updating outdated orchestrator " + orchestratorObj.id + " @ " + now);
+            mutateDynamicStatsFromCache(orchestratorObj, orchestratorCache[idx]);
             orchestratorCache[idx] = orchestratorObj;
             break;
           }
         }
       } else {
         console.log("Pushing new orchestrator " + orchestratorObj.id + " @ " + now);
+        mutateDynamicStatsFromDB(orchestratorObj);
         orchestratorCache.push(orchestratorObj);
       }
     }
