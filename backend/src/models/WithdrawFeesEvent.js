@@ -5,10 +5,6 @@ const WithdrawEventSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  from: {
-    type: String,
-    required: true
-  },
   amount: {
     type: Number,
     required: true

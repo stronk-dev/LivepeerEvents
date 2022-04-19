@@ -7,12 +7,12 @@ const ActivateEventSchema = new mongoose.Schema({
   },
   initialStake: {
     type: Number,
-    required: true
+    required: false
   },
   round: {
     type: Number,
     required: false,
-    default: null
+    default: true
   },
   transactionHash: {
     type: String,

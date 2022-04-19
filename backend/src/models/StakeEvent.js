@@ -7,11 +7,11 @@ const StakeEventSchema = new mongoose.Schema({
   },
   from: {
     type: String,
-    required: false
+    required: true
   },
   to: {
     type: String,
-    required: false
+    required: true
   },
   stake: {
     type: Number,

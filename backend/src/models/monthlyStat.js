@@ -10,13 +10,15 @@ const MonthlyStatSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  name: {
-    type: String,
-    required: true
-  },
   // Counters based on Smart Contract Events
   // Any TranscoderUpdate event: commission rates are done with thegraph query of current data, no historical data
   // Any TranscoderActivated event
+  reactivationCount: {
+    type: Number,
+    required: false,
+    default: 0
+  },
+  // Bond -> TranscoderActivated event
   activationCount: {
     type: Number,
     required: false,
@@ -120,6 +122,16 @@ const MonthlyStatSchema = new mongoose.Schema({
     required: false,
     default: 0
   },
+  winningTicketsReceived: {
+    type: [Object],
+    required: false,
+    default: []
+  },
+  winningTicketsSent: {
+    type: [Object],
+    required: false,
+    default: []
+  },
   // Any RedeemTicket event
   winningTicketsRedeemedCount: {
     type: Number,
@@ -131,7 +143,12 @@ const MonthlyStatSchema = new mongoose.Schema({
     required: false,
     default: 0
   },
-  // Dynamic stats (until the month has passed)
+  winningTicketsRedeemed: {
+    type: [Object],
+    required: false,
+    default: []
+  },
+  // Dynamic stats (until the month has passed) containing latest commission, latest totalStake
   orchestratorStats: {
     type: [Object],
     required: false,

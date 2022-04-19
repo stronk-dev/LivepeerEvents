@@ -1,7 +1,18 @@
 import express from "express";
 import Event from '../models/event';
 import Block from '../models/block';
-import Ticket from '../models/ticketEvent'
+import Ticket from '../models/ticketEvent';
+
+import ActivateEvent from "../models/ActivateEvent";
+import ClaimEvent from "../models/ClaimEvent";
+import RedeemEvent from "../models/RedeemEvent";
+import RewardEvent from "../models/RewardEvent";
+import StakeEvent from "../models/StakeEvent";
+import TransferEvent from "../models/TransferEvent";
+import UnbondEvent from "../models/UnbondEvent";
+import UpdateEvent from "../models/UpdateEvent";
+import WithdrawFeesEvent from "../models/WithdrawFeesEvent";
+import WithdrawStakeEvent from "../models/WithdrawStakeEvent";
 
 const apiRouter = express.Router();
 import {
@@ -14,10 +25,14 @@ import {
 
 // Do API requests to other API's
 const https = require('https');
+
 // Read ABI files
 const fs = require('fs');
+
 // Used for the livepeer thegraph API
 import { request, gql } from 'graphql-request';
+import MonthlyStat from "../models/monthlyStat";
+
 // Gets ETH, LPT and other coin info
 let CoinMarketCap = require('coinmarketcap-api');
 let cmcClient = new CoinMarketCap(API_CMC);
@@ -33,77 +48,21 @@ if (!CONF_DISABLE_CMC) {
 } else {
   console.log("Running without CMC api");
 }
+
 // Gets blockchain data
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
-// Gets gas prices
 const web3layer1 = createAlchemyWeb3(API_L1_HTTP);
 const web3layer2 = createAlchemyWeb3(API_L2_HTTP);
-
 let web3layer2WS;
-// Skip if running in basic mode
 if (!CONF_SIMPLE_MODE) {
   web3layer2WS = createAlchemyWeb3(API_L2_WS);
 }
-// For listening to blockchain events
 
 // ENS stuff TODO: CONF_DISABLE_ENS
 const { ethers } = require("ethers");
 const provider = new ethers.providers.JsonRpcProvider(API_L1_HTTP);
-// const ens = new ENS({ provider: web3layer1, ensAddress: getEnsAddress('1') });
-let ensDomainCache = [];
-let ensInfoCache = [];
-let threeboxCache = [];
 
-// Update CoinMarketCap related api calls every 5 minutes
-let cmcPriceGet = 0;
-let ethPrice = 0;
-let lptPrice = 0;
-let cmcQuotes = {};
-let cmcCache = {};
-
-// Update Alchemy related API calls every 2 seconds
-let l2Gwei = 0;
-let l1Gwei = 0;
-let l2block = 0;
-let l1block = 0;
-let arbGet = 0;
-
-// Gas limits on common contract interactions
-// 50000 gas for approval when creating a new O
-const redeemRewardGwei = 1053687;
-const claimTicketGwei = 1333043;
-const withdrawFeeGwei = 688913;
-const stakeFeeGwei = 680000;
-const commissionFeeGwei = 140000;
-const serviceUriFee = 51000;
-let redeemRewardCostL1 = 0;
-let redeemRewardCostL2 = 0;
-let claimTicketCostL1 = 0;
-let claimTicketCostL2 = 0;
-let withdrawFeeCostL1 = 0;
-let withdrawFeeCostL2 = 0;
-let stakeFeeCostL1 = 0;
-let stakeFeeCostL2 = 0;
-let commissionFeeCostL1 = 0;
-let commissionFeeCostL2 = 0;
-let serviceUriFeeCostL1 = 0;
-let serviceUriFeeCostL2 = 0;
-
-// Will contain addr, lastGet, and obj of any requested O's
-let orchestratorCache = [];
-// Contains delegator addr and the address of the O they are bounded to
-let delegatorCache = [];
-// Will contain scores for a given year and month
-let orchScoreCache = [];
-
-// Listen to smart contract emitters. Only re-syncs on boot!
-let eventsCache = [];
-let latestBlockInChain = 0;
-let lastBlockEvents = 0;
-let lastBlockTickets = 0;
-let syncCache = [];
-let ticketsCache = [];
-let ticketsSyncCache = [];
+// Smart contract event stuff
 // https://arbiscan.io/address/0x35Bcf3c30594191d53231E4FF333E8A770453e40#events
 let BondingManagerTargetJson;
 let BondingManagerTargetAbi;
@@ -125,6 +84,19 @@ if (!CONF_SIMPLE_MODE) {
   TicketBrokerTargetAddr = "0xa8bB618B1520E284046F3dFc448851A1Ff26e41B";
   ticketBrokerContract = new web3layer2WS.eth.Contract(TicketBrokerTargetAbi.abi, TicketBrokerTargetAddr);
 }
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+/*
+
+BLOCKCHAIN BLOCKS
+Stored in mongoDB (block.js) and local cache
+
+*/
 
 let blockCache = [];
 const getBlock = async function (blockNumber) {
@@ -153,6 +125,9 @@ const getBlock = async function (blockNumber) {
 /*
 
 SMART CONTRACT EVENTS
+(Almost) raw ticket data stored in mongoDB (event.js) and local cache
+Parsed events stored in mongoDB as *Event.js and local cache
+Summarized stats stored in mongoDB as monthlyStat.js and local cache
 
 */
 
@@ -160,9 +135,839 @@ SMART CONTRACT EVENTS
 let isSyncing = true;
 let isEventSyncing = false;
 let isTicketSyncing = false;
-// Start Listening for live updates
+// Listening for live updates
 var BondingManagerProxyListener;
 var TicketBrokerProxyListener;
+
+let eventsCache = [];
+let latestBlockInChain = 0;
+let lastBlockEvents = 0;
+let lastBlockTickets = 0;
+let syncCache = [];
+let ticketsCache = [];
+let ticketsSyncCache = [];
+
+let updateEventCache = [];
+let rewardEventCache = [];
+let claimEventCache = [];
+let withdrawStakeEventCache = [];
+let withdrawFeesEventCache = [];
+let transferTicketEventCache = [];
+let redeemTicketEventCache = [];
+let activateEventCache = [];
+let unbondEventCache = [];
+let stakeEventCache = [];
+
+let monthlyStatCache = [];
+
+/*
+
+SMART CONTRACT EVENTS - MONTHLY STATS UPDATING
+
+*/
+
+const updateMonthlyReward = async function (blockTime, amount) {
+  var dateObj = new Date(0);
+  dateObj.setUTCSeconds(blockTime);
+  // Determine year, month and name
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  console.log("Updating monthly Reward stats for " + thisYear + "-" + thisMonth + 1);
+  if (!CONF_DISABLE_DB) {
+    // Update DB entry
+    const doc = await MonthlyStat.findOneAndUpdate({
+      year: thisYear,
+      month: thisMonth
+    }, {
+      $inc: {
+        rewardCount: 1,
+        rewardAmountSum: amount
+      }
+    }, {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true
+    });
+  }
+  // Update cached entry if it is cached
+  for (var idx = 0; idx < monthlyStatCache.length; idx++) {
+    if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
+      monthlyStatCache[idx].rewardCount += 1;
+      monthlyStatCache[idx].rewardAmountSum += amount;
+      break;
+    }
+  }
+}
+
+const updateMonthlyClaim = async function (blockTime, fees, rewards) {
+  var dateObj = new Date(0);
+  dateObj.setUTCSeconds(blockTime);
+  // Determine year, month and name
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  console.log("Updating monthly Claim stats for " + thisYear + "-" + thisMonth + 1);
+  if (!CONF_DISABLE_DB) {
+    // Update DB entry
+    const doc = await MonthlyStat.findOneAndUpdate({
+      year: thisYear,
+      month: thisMonth
+    }, {
+      $inc: {
+        claimCount: 1,
+        claimRewardSum: rewards,
+        claimFeeSum: fees
+      }
+    }, {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true
+    });
+  }
+  // Update cached entry if it is cached
+  for (var idx = 0; idx < monthlyStatCache.length; idx++) {
+    if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
+      monthlyStatCache[idx].claimCount += 1;
+      monthlyStatCache[idx].claimRewardSum += rewards;
+      monthlyStatCache[idx].claimFeeSum += fees;
+      break;
+    }
+  }
+}
+
+const updateMonthlyWithdrawStake = async function (blockTime, amount) {
+  var dateObj = new Date(0);
+  dateObj.setUTCSeconds(blockTime);
+  // Determine year, month and name
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  console.log("Updating monthly WithdrawStake stats for " + thisYear + "-" + thisMonth + 1);
+  if (!CONF_DISABLE_DB) {
+    // Update DB entry
+    const doc = await MonthlyStat.findOneAndUpdate({
+      year: thisYear,
+      month: thisMonth
+    }, {
+      $inc: {
+        withdrawStakeCount: 1,
+        withdrawStakeAmountSum: amount
+      }
+    }, {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true
+    });
+  }
+  // Update cached entry if it is cached
+  for (var idx = 0; idx < monthlyStatCache.length; idx++) {
+    if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
+      monthlyStatCache[idx].withdrawStakeCount += 1;
+      monthlyStatCache[idx].withdrawStakeAmountSum += amount;
+      break;
+    }
+  }
+}
+
+const updateMonthlyWithdrawFees = async function (blockTime, amount) {
+  var dateObj = new Date(0);
+  dateObj.setUTCSeconds(blockTime);
+  // Determine year, month and name
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  console.log("Updating monthly WithdrawFees stats for " + thisYear + "-" + thisMonth + 1);
+  if (!CONF_DISABLE_DB) {
+    // Update DB entry
+    const doc = await MonthlyStat.findOneAndUpdate({
+      year: thisYear,
+      month: thisMonth
+    }, {
+      $inc: {
+        withdrawFeesCount: 1,
+        withdrawFeesAmountSum: amount
+      }
+    }, {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true
+    });
+  }
+  // Update cached entry if it is cached
+  for (var idx = 0; idx < monthlyStatCache.length; idx++) {
+    if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
+      monthlyStatCache[idx].withdrawFeesCount += 1;
+      monthlyStatCache[idx].withdrawFeesAmountSum += amount;
+      break;
+    }
+  }
+}
+
+const updateMonthlyNewDelegator = async function (blockTime, amount) {
+  var dateObj = new Date(0);
+  dateObj.setUTCSeconds(blockTime);
+  // Determine year, month and name
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  console.log("Updating monthly new Delegator stats for " + thisYear + "-" + thisMonth + 1);
+  if (!CONF_DISABLE_DB) {
+    // Update DB entry
+    const doc = await MonthlyStat.findOneAndUpdate({
+      year: thisYear,
+      month: thisMonth
+    }, {
+      $inc: {
+        bondCount: 1,
+        bondStakeSum: amount
+      }
+    }, {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true
+    });
+  }
+  // Update cached entry if it is cached
+  for (var idx = 0; idx < monthlyStatCache.length; idx++) {
+    if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
+      monthlyStatCache[idx].bondCount += 1;
+      monthlyStatCache[idx].bondStakeSum += amount;
+      break;
+    }
+  }
+}
+
+const updateMonthlyUnbond = async function (blockTime, amount) {
+  var dateObj = new Date(0);
+  dateObj.setUTCSeconds(blockTime);
+  // Determine year, month and name
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  console.log("Updating monthly new Unbond stats for " + thisYear + "-" + thisMonth + 1);
+  if (!CONF_DISABLE_DB) {
+    // Update DB entry
+    const doc = await MonthlyStat.findOneAndUpdate({
+      year: thisYear,
+      month: thisMonth
+    }, {
+      $inc: {
+        unbondCount: 1,
+        unbondStakeSum: amount
+      }
+    }, {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true
+    });
+  }
+  // Update cached entry if it is cached
+  for (var idx = 0; idx < monthlyStatCache.length; idx++) {
+    if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
+      monthlyStatCache[idx].unbondCount += 1;
+      monthlyStatCache[idx].unbondStakeSum += amount;
+      break;
+    }
+  }
+}
+
+const updateMonthlyReactivated = async function (blockTime, amount) {
+  var dateObj = new Date(0);
+  dateObj.setUTCSeconds(blockTime);
+  // Determine year, month and name
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  console.log("Updating monthly new reactivation stats for " + thisYear + "-" + thisMonth + 1);
+  if (!CONF_DISABLE_DB) {
+    // Update DB entry
+    const doc = await MonthlyStat.findOneAndUpdate({
+      year: thisYear,
+      month: thisMonth
+    }, {
+      $inc: {
+        reactivationCount: 1
+      }
+    }, {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true
+    });
+  }
+  // Update cached entry if it is cached
+  for (var idx = 0; idx < monthlyStatCache.length; idx++) {
+    if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
+      monthlyStatCache[idx].reactivationCount += 1;
+      break;
+    }
+  }
+}
+
+const updateMonthlyActivation = async function (blockTime, amount) {
+  var dateObj = new Date(0);
+  dateObj.setUTCSeconds(blockTime);
+  // Determine year, month and name
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  console.log("Updating monthly new activation stats for " + thisYear + "-" + thisMonth + 1);
+  if (!CONF_DISABLE_DB) {
+    // Update DB entry
+    const doc = await MonthlyStat.findOneAndUpdate({
+      year: thisYear,
+      month: thisMonth
+    }, {
+      $inc: {
+        activationCount: 1,
+        activationInitialSum: amount
+      }
+    }, {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true
+    });
+  }
+  // Update cached entry if it is cached
+  for (var idx = 0; idx < monthlyStatCache.length; idx++) {
+    if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
+      monthlyStatCache[idx].activationCount += 1;
+      monthlyStatCache[idx].activationInitialSum += amount;
+      break;
+    }
+  }
+}
+
+const updateMonthlyMoveStake = async function (blockTime, amount) {
+  var dateObj = new Date(0);
+  dateObj.setUTCSeconds(blockTime);
+  // Determine year, month and name
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  console.log("Updating monthly stake movement stats for " + thisYear + "-" + thisMonth + 1);
+  if (!CONF_DISABLE_DB) {
+    // Update DB entry
+    const doc = await MonthlyStat.findOneAndUpdate({
+      year: thisYear,
+      month: thisMonth
+    }, {
+      $inc: {
+        moveStakeCount: 1,
+        moveStakeSum: amount
+      }
+    }, {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true
+    });
+  }
+  // Update cached entry if it is cached
+  for (var idx = 0; idx < monthlyStatCache.length; idx++) {
+    if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
+      monthlyStatCache[idx].moveStakeCount += 1;
+      monthlyStatCache[idx].moveStakeSum += amount;
+      break;
+    }
+  }
+}
+
+const updateMonthlyTicketReceived = async function (blockTime, amount, from, to) {
+  var dateObj = new Date(0);
+  dateObj.setUTCSeconds(blockTime);
+  // Determine year, month and name
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  console.log("Updating monthly ticket received stats for " + thisYear + "-" + thisMonth + 1);
+  if (!CONF_DISABLE_DB) {
+    // Update DB entry
+    const doc = await MonthlyStat.findOneAndUpdate({
+      year: thisYear,
+      month: thisMonth
+    }, {
+      $inc: {
+        winningTicketsReceivedCount: 1,
+        winningTicketsReceivedSum: amount
+      }
+    }, {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true
+    });
+    // Check to see if the doc's embedded winningTicketsReceived already contains this address
+    let hasModified = false;
+    for (const eventObj of doc.winningTicketsReceived) {
+      // If so, update that entry in winningTicketsReceived
+      if (eventObj.address == to) {
+        await MonthlyStat.updateOne({
+          'winningTicketsReceived.address': { '$ne': to }
+        }, {
+          $inc: {
+            'winningTicketsReceived': {
+              sum: amount,
+              count: 1
+            }
+          }
+        });
+        hasModified = true;
+        break;
+      }
+    }
+    // Else push new data to winningTicketsReceived
+    if (!hasModified) {
+      await MonthlyStat.updateOne({
+        'winningTicketsReceived.address': { '$ne': to }
+      }, {
+        $push: {
+          'winningTicketsReceived': {
+            address: to,
+            sum: amount,
+            count: 1
+          }
+        }
+      });
+    }
+    // Check to see if the doc's embedded winningTicketsSent already contains this address
+    hasModified = false;
+    for (const eventObj of doc.winningTicketsSent) {
+      // If so, update that entry in winningTicketsSent
+      if (eventObj.address == from) {
+        await MonthlyStat.updateOne({
+          'winningTicketsSent.address': { '$ne': from }
+        }, {
+          $inc: {
+            'winningTicketsSent': {
+              sum: amount,
+              count: 1
+            }
+          }
+        });
+        hasModified = true;
+        break;
+      }
+    }
+    // Else push new data to winningTicketsSent
+    if (!hasModified) {
+      await MonthlyStat.updateOne({
+        'winningTicketsSent.address': { '$ne': from }
+      }, {
+        $push: {
+          'winningTicketsSent': {
+            address: from,
+            sum: amount,
+            count: 1
+          }
+        }
+      });
+    }
+  }
+}
+// Update cached entry if it is cached
+for (var idx = 0; idx < monthlyStatCache.length; idx++) {
+  if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
+    monthlyStatCache[idx].winningTicketsReceivedCount += 1;
+    monthlyStatCache[idx].winningTicketsReceivedSum += amount;
+    // Check to see if the doc's embedded winningTicketsReceived already contains this address
+    for (var idx2 = 0; idx2 < monthlyStatCache[idx].winningTicketsReceived.length; idx2++) {
+      if (monthlyStatCache[idx].winningTicketsReceived[idx2].address == to) {
+        monthlyStatCache[idx].winningTicketsReceived[idx2].count += 1;
+        monthlyStatCache[idx].winningTicketsReceived[idx2].sum += amount;
+        break;
+      }
+    }
+    // Check to see if the doc's embedded winningTicketsSent already contains this address
+    for (var idx2 = 0; idx2 < monthlyStatCache[idx].winningTicketsSent.length; idx2++) {
+      if (monthlyStatCache[idx].winningTicketsSent[idx2].address == from) {
+        monthlyStatCache[idx].winningTicketsSent[idx2].count += 1;
+        monthlyStatCache[idx].winningTicketsSent[idx2].sum += amount;
+        break;
+      }
+    }
+  }
+}
+
+const updateMonthlyTicketRedeemed = async function (blockTime, amount, address) {
+  var dateObj = new Date(0);
+  dateObj.setUTCSeconds(blockTime);
+  // Determine year, month and name
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  console.log("Updating monthly ticket redeemed stats for " + thisYear + "-" + thisMonth + 1);
+  if (!CONF_DISABLE_DB) {
+    // Update DB entry
+    const doc = await MonthlyStat.findOneAndUpdate({
+      year: thisYear,
+      month: thisMonth
+    }, {
+      $inc: {
+        winningTicketsRedeemedCount: 1,
+        winningTicketsRedeemedSum: amount
+      }
+    }, {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true
+    });
+    // Check to see if the doc's embedded winningTicketsRedeemed already contains this address
+    let hasModified = false;
+    for (const eventObj of doc.winningTicketsRedeemed) {
+      // If so, update that entry in winningTicketsReceived
+      if (eventObj.address == address) {
+        await MonthlyStat.updateOne({
+          'winningTicketsRedeemed.address': { '$ne': address }
+        }, {
+          $inc: {
+            'winningTicketsRedeemed': {
+              sum: amount,
+              count: 1
+            }
+          }
+        });
+        hasModified = true;
+        break;
+      }
+    }
+    // Else push new data to winningTicketsReceived
+    if (!hasModified) {
+      await MonthlyStat.updateOne({
+        'winningTicketsRedeemed.address': { '$ne': address }
+      }, {
+        $push: {
+          'winningTicketsRedeemed': {
+            address: address,
+            sum: amount,
+            count: 1
+          }
+        }
+      });
+    }
+  }
+}
+// Update cached entry if it is cached
+for (var idx = 0; idx < monthlyStatCache.length; idx++) {
+  if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
+    monthlyStatCache[idx].winningTicketsRedeemedCount += 1;
+    monthlyStatCache[idx].winningTicketsRedeemedSum += amount;
+    // Check to see if the doc's embedded winningTicketsRedeemed already contains this address
+    for (var idx2 = 0; idx2 < monthlyStatCache[idx].winningTicketsRedeemed.length; idx2++) {
+      if (monthlyStatCache[idx].winningTicketsRedeemed[idx2].address == address) {
+        monthlyStatCache[idx].winningTicketsRedeemed[idx2].count += 1;
+        monthlyStatCache[idx].winningTicketsRedeemed[idx2].sum += amount;
+        break;
+      }
+    }
+  }
+}
+
+/*
+
+SMART CONTRACT EVENTS - RAW EVENT PARSING
+
+*/
+
+// Parse any raw event into mongoDB object
+const parseAnyEvent = async function (thisEvent) {
+  const thisName = thisEvent.name;
+  console.log('Parsing any event of name ' + thisName);
+  if (thisName === "TranscoderUpdate") {
+    const eventObj = {
+      address: thisEvent.data.transcoder.toLowerCase(),
+      rewardCommission: parseFloat(thisEvent.data.rewardCut) / 10000,
+      feeCommission: 100 - (thisEvent.data.feeShare / 10000),
+      transactionHash: thisEvent.transactionHash,
+      blockNumber: thisEvent.blockNumber,
+      blockTime: thisEvent.blockTime
+    }
+    if (!CONF_DISABLE_DB) {
+      const dbObj = new UpdateEvent(eventObj);
+      await dbObj.save();
+    }
+    // No monthly stats
+    updateEventCache.push(eventObj);
+  } else if (thisName === "Reward") {
+    const eventObj = {
+      address: thisEvent.data.transcoder.toLowerCase(),
+      amount: parseFloat(thisEvent.data.amount) / 1000000000000000000,
+      transactionHash: thisEvent.transactionHash,
+      blockNumber: thisEvent.blockNumber,
+      blockTime: thisEvent.blockTime
+    }
+    if (!CONF_DISABLE_DB) {
+      const dbObj = new RewardEvent(eventObj);
+      await dbObj.save();
+    }
+    updateMonthlyReward(eventObj.blockTime, eventObj.amount);
+    rewardEventCache.push(eventObj);
+  } else if (thisName === "EarningsClaimed") {
+    const eventObj = {
+      address: thisEvent.data.delegator.toLowerCase(),
+      fees: parseFloat(thisEvent.data.rewards) / 1000000000000000000,
+      rewards: parseFloat(thisEvent.data.fees) / 1000000000000000000,
+      transactionHash: thisEvent.transactionHash,
+      blockNumber: thisEvent.blockNumber,
+      blockTime: thisEvent.blockTime
+    }
+    if (!CONF_DISABLE_DB) {
+      const dbObj = new ClaimEvent(eventObj);
+      await dbObj.save();
+    }
+    updateMonthlyClaim(eventObj.blockTime, eventObj.fees, eventObj.rewards);
+    claimEventCache.push(eventObj);
+  } else if (thisName === "WithdrawStake") {
+    const eventObj = {
+      address: thisEvent.data.delegator.toLowerCase(),
+      round: thisEvent.data.withdrawRound,
+      amount: parseFloat(thisEvent.data.amount) / 1000000000000000000,
+      transactionHash: thisEvent.transactionHash,
+      blockNumber: thisEvent.blockNumber,
+      blockTime: thisEvent.blockTime
+    }
+    if (!CONF_DISABLE_DB) {
+      const dbObj = new WithdrawStakeEvent(eventObj);
+      await dbObj.save();
+    }
+    updateMonthlyWithdrawStake(eventObj.blockTime, eventObj.amount);
+    withdrawStakeEventCache.push(eventObj);
+  } else if (thisName === "WithdrawFees") {
+    const eventObj = {
+      address: thisEvent.data.delegator.toLowerCase(),
+      amount: parseFloat(thisEvent.data.amount) / 1000000000000000000,
+      transactionHash: thisEvent.transactionHash,
+      blockNumber: thisEvent.blockNumber,
+      blockTime: thisEvent.blockTime
+    }
+    if (!CONF_DISABLE_DB) {
+      const dbObj = new WithdrawFeesEvent(eventObj);
+      await dbObj.save();
+    }
+    updateMonthlyWithdrawFees(eventObj.blockTime, eventObj.amount);
+    withdrawFeesEventCache.push(eventObj);
+  } else if (thisName === "WinningTicketTransfer") {
+    const eventObj = {
+      address: thisEvent.data.sender.toLowerCase(),
+      to: thisEvent.data.recipient.toLowerCase(),
+      amount: parseFloat(thisEvent.data.amount) / 1000000000000000000,
+      transactionHash: thisEvent.transactionHash,
+      blockNumber: thisEvent.blockNumber,
+      blockTime: thisEvent.blockTime
+    }
+    if (!CONF_DISABLE_DB) {
+      const dbObj = new TransferEvent(eventObj);
+      await dbObj.save();
+    }
+    updateMonthlyTicketReceived(eventObj.blockTime, eventObj.amount, eventObj.address, eventObj.to);
+    transferTicketEventCache.push(eventObj);
+  } else if (thisName === "WinningTicketRedeemed") {
+    const eventObj = {
+      address: thisEvent.data.recipient.toLowerCase(),
+      amount: parseFloat(thisEvent.data.faceValue) / 1000000000000000000,
+      transactionHash: thisEvent.transactionHash,
+      blockNumber: thisEvent.blockNumber,
+      blockTime: thisEvent.blockTime
+    }
+    if (!CONF_DISABLE_DB) {
+      const dbObj = new RedeemEvent(eventObj);
+      await dbObj.save();
+    }
+    updateMonthlyTicketRedeemed(eventObj.blockTime, eventObj.amount, eventObj.address);
+    redeemTicketEventCache.push(eventObj);
+  } else {
+    console.log("Skipping unknown event of type " + thisName);
+  }
+}
+
+// Parse [Bond, Rebond, Unbond, TransferBond, TranscoderActivated] raw events into mongoDB object
+let parseTimeout = 3000;
+let lastTx = "";
+let lastTxTime = 0;
+let parseCache = [];
+
+const parseSequenceEvent = async function () {
+  let eventCaller = "";           // address we will display on the left side
+  let eventFrom = "";             // address from which X gets taken
+  let eventTo = "";               // address to which X gets sent
+  let eventAmount = 0;
+  let eventWhen = "";
+  let eventContainsBond = false;
+  let eventContainsTranscoderActivated = false;
+  let eventContainsUnbond = false;
+  let eventContainsRebond = false;
+  let eventContainsTransferBond = false;
+  // Temp vars for the current Event we are processing
+  console.log('Parsing sequence of events');
+  // Copy cache in case new events come in while we are still parsing this set of events
+  const eventSequence = parseCache.slice();
+  parseCache = [];
+  // Go through each event and merge their data
+  for (const eventObj of eventSequence) {
+    const thisName = eventObj.name;
+    if (thisName === "Unbond") {
+      eventContainsUnbond = true;
+      eventCaller = eventObj.data.delegator.toLowerCase();
+      eventFrom = eventObj.data.delegate.toLowerCase();
+      eventAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
+      eventWhen = eventObj.data.withdrawRound;
+    } else if (thisName === "Bond") {
+      eventContainsBond = true;
+      eventCaller = eventObj.data.delegator.toLowerCase();
+      eventFrom = eventObj.data.oldDelegate.toLowerCase();
+      eventTo = eventObj.data.newDelegate.toLowerCase();
+      eventAmount = parseFloat(eventObj.data.bondedAmount) / 1000000000000000000;
+      // ignore eventObj.data.additionalAmount
+    } else if (thisName === "Rebond") {
+      eventContainsRebond = true;
+      eventCaller = eventObj.data.delegator.toLowerCase();
+      eventTo = eventObj.data.delegate.toLowerCase();
+      eventAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
+    } else if (thisName === "TransferBond") {
+      eventContainsTransferBond = true;
+      // Only set the from and to fields, if it wasn't set by other events in this TX
+      if (!eventContainsUnbond) {
+        eventFrom = eventObj.data.oldDelegator.toLowerCase();
+      }
+      if (!eventContainsRebond) {
+        eventTo = eventObj.data.newDelegator.toLowerCase();
+      }
+      eventAmount = parseFloat(eventObj.data.amount) / 1000000000000000000;
+    } else if (thisName === "TranscoderActivated") {
+      eventContainsTranscoderActivated = true;
+      eventCaller = eventObj.data.transcoder.toLowerCase();
+      eventWhen = eventObj.data.activationRound;
+    } else {
+      console.log("Skipping unknown event of type " + thisName);
+    }
+  }
+
+  if (eventContainsUnbond && eventContainsTransferBond && eventContainsRebond) {
+    console.log('Parsing move stake sequence event');
+    // Unbond -> TransferBond -> (eventContainsEarningsClaimed) -> Rebond: delegator moved stake
+    const eventObj = {
+      address: eventCaller,
+      from: eventFrom,
+      to: eventTo,
+      stake: eventAmount,
+      transactionHash: thisEvent.transactionHash,
+      blockNumber: thisEvent.blockNumber,
+      blockTime: thisEvent.blockTime
+    }
+    if (!CONF_DISABLE_DB) {
+      const dbObj = new StakeEvent(eventObj);
+      await dbObj.save();
+    }
+    updateMonthlyMoveStake(eventObj.blockTime, eventObj.amount);
+    stakeEventCache.push(eventObj);
+  } else if (eventContainsBond && eventContainsTranscoderActivated) {
+    console.log('Parsing TranscoderActivated sequence event');
+    // Bond -> TranscoderActivated: activation in Round #
+    const eventObj = {
+      address: eventCaller,
+      initialStake: eventAmount,
+      round: eventWhen,
+      transactionHash: thisEvent.transactionHash,
+      blockNumber: thisEvent.blockNumber,
+      blockTime: thisEvent.blockTime
+    }
+    if (!CONF_DISABLE_DB) {
+      const dbObj = new ActivateEvent(eventObj);
+      await dbObj.save();
+    }
+    updateMonthlyActivation(eventObj.blockTime, eventObj.amount);
+    activateEventCache.push(eventObj);
+  } else if (eventContainsTranscoderActivated) {
+    console.log('Parsing lone TranscoderActivated sequence event');
+    // Lone TranscoderActivated: reactivation
+    const eventObj = {
+      address: eventCaller,
+      round: eventWhen,
+      transactionHash: thisEvent.transactionHash,
+      blockNumber: thisEvent.blockNumber,
+      blockTime: thisEvent.blockTime
+    }
+    if (!CONF_DISABLE_DB) {
+      const dbObj = new ActivateEvent(eventObj);
+      await dbObj.save();
+    }
+    updateMonthlyReactivated(eventObj.blockTime);
+    activateEventCache.push(eventObj);
+  } else if (eventContainsUnbond) {
+    console.log('Parsing lone unbond sequence event');
+    // Lone Unbond: delegator unstaked
+    const eventObj = {
+      address: eventCaller,
+      from: eventFrom,
+      stake: eventAmount,
+      round: eventWhen,
+      transactionHash: thisEvent.transactionHash,
+      blockNumber: thisEvent.blockNumber,
+      blockTime: thisEvent.blockTime
+    }
+    if (!CONF_DISABLE_DB) {
+      const dbObj = new UnbondEvent(eventObj);
+      await dbObj.save();
+    }
+    updateMonthlyUnbond(eventObj.blockTime, eventObj.amount);
+    unbondEventCache.push(eventObj);
+  } else if (eventContainsBond) {
+    console.log('Parsing lone bond sequence event');
+    // Lone Bond: new delegator (Stake event)
+    const eventObj = {
+      address: eventCaller,
+      from: eventFrom, // Should be 0x0000000000000000000000000000000000000000
+      to: eventTo,
+      stake: eventAmount,
+      transactionHash: thisEvent.transactionHash,
+      blockNumber: thisEvent.blockNumber,
+      blockTime: thisEvent.blockTime
+    }
+    if (!CONF_DISABLE_DB) {
+      const dbObj = new StakeEvent(eventObj);
+      await dbObj.save();
+    }
+    updateMonthlyNewDelegator(eventObj.blockTime, eventObj.amount);
+    stakeEventCache.push(eventObj);
+  } else if (eventContainsRebond) {
+    console.log('Parsing lone rebond sequence event');
+    // Lone Rebond: delegator increased their stake (Stake event)
+    const eventObj = {
+      address: eventCaller,
+      from: eventFrom, // Should be the same as eventTo
+      to: eventTo,
+      stake: eventAmount,
+      transactionHash: thisEvent.transactionHash,
+      blockNumber: thisEvent.blockNumber,
+      blockTime: thisEvent.blockTime
+    }
+    if (!CONF_DISABLE_DB) {
+      const dbObj = new StakeEvent(eventObj);
+      await dbObj.save();
+      // No monthly stats
+    }
+    stakeEventCache.push(eventObj);
+  } else {
+    console.log('Skipping unknown sequence event');
+  }
+}
+
+// Angel process which calls parseSequenceEvent after parseTimeout and if lastTime > 0
+const watchSequenceEvents = async function () {
+  while (true) {
+    if (lastTxTime > 0) {
+      const now = new Date().getTime();
+      if (now - lastTxTime > parseTimeout) {
+        parseSequenceEvent();
+      }
+    }
+    sleep(1000);
+  }
+}
+if (!CONF_SIMPLE_MODE) {
+  watchSequenceEvents();
+}
+
+// Passes incoming event into parseAnyEvent or into parseCache
+const onNewEvent = async function (thisEvent) {
+  const thisName = thisEvent.name;
+  // If [Bond, Rebond, Unbond, TransferBond], pass to cache and set timeouts
+  if (thisName === "Bond" || thisName === "Rebond" || thisName === "TranscoderActivated"
+    || thisName === "Unbond" || thisName === "TransferBond") {
+    parseCache.push(thisEvent);
+    lastTxTime = new Date().getTime();
+    // Else pass to any-event-parser
+  } else {
+    parseAnyEvent(thisEvent);
+  }
+}
 
 /*
 
@@ -198,6 +1003,15 @@ if (!CONF_SIMPLE_MODE) {
           await dbObj.save();
         }
         eventsCache.push(eventObj);
+
+        // Parse old sequence events if TX changes
+        if (lastTx != event.transactionHash && parseCache.length) {
+          parseSequenceEvent();
+        }
+        lastTx = event.transactionHash;
+        // Parse current Event
+        onNewEvent(eventObj);
+
       } else {
         syncCache.push(eventObj);
       }
@@ -234,6 +1048,15 @@ if (!CONF_SIMPLE_MODE) {
           await dbObj.save();
         }
         ticketsCache.push(eventObj);
+
+        // Parse old sequence events if TX changes
+        if (lastTx != event.transactionHash && parseCache.length) {
+          parseSequenceEvent();
+        }
+        lastTx = event.transactionHash;
+        // Parse current Event
+        onNewEvent(eventObj);
+
       } else {
         ticketsSyncCache.push(eventObj);
       }
@@ -329,11 +1152,6 @@ const syncTickets = function () {
     isTicketSyncing = false;
   });
 }
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
 
 const handleSync = async function () {
   // First collection -> cache
@@ -403,7 +1221,7 @@ const handleSync = async function () {
     }
   }
   while (syncCache.length || ticketsSyncCache.length) {
-    const liveEvents = syncCache;
+    const liveEvents = syncCache.slice();
     syncCache = [];
     for (const eventObj of liveEvents) {
       console.log("Parsing event received while syncing");
@@ -413,7 +1231,7 @@ const handleSync = async function () {
       }
       eventsCache.push(eventObj);
     }
-    const liveTickets = ticketsSyncCache;
+    const liveTickets = ticketsSyncCache.slice();
     ticketsSyncCache = [];
     for (const eventObj of liveTickets) {
       console.log("Parsing ticket received while syncing");
@@ -431,7 +1249,7 @@ if (!isEventSyncing && !CONF_SIMPLE_MODE && !CONF_DISABLE_SYNC) {
   handleSync();
 }
 
-// Exports list of smart contract events
+// Exports cache of raw smart contract events
 apiRouter.get("/getEvents", async (req, res) => {
   try {
     res.send(eventsCache);
@@ -440,7 +1258,7 @@ apiRouter.get("/getEvents", async (req, res) => {
   }
 });
 
-// Exports list of smart contract ticket events
+// Exports cache of raw smart contract ticket events
 apiRouter.get("/getTickets", async (req, res) => {
   try {
     res.send(ticketsCache);
@@ -452,8 +1270,15 @@ apiRouter.get("/getTickets", async (req, res) => {
 /*
 
 COINMARKETCAP
+Only stored locally in cache
 
 */
+
+let cmcPriceGet = 0;
+let ethPrice = 0;
+let lptPrice = 0;
+let cmcQuotes = {};
+let cmcCache = {};
 
 // Splits of raw CMC object into coin quote data
 const parseCmc = async function () {
@@ -512,8 +1337,36 @@ apiRouter.get("/quotes", async (req, res) => {
 /*
 
 ARBITRUM DATA
+Only stored locally in cache
 
 */
+
+let l2Gwei = 0;
+let l1Gwei = 0;
+let l2block = 0;
+let l1block = 0;
+let arbGet = 0;
+
+// Gas limits on common contract interactions
+// 50000 gas for approval when creating a new O
+const redeemRewardGwei = 1053687;
+const claimTicketGwei = 1333043;
+const withdrawFeeGwei = 688913;
+const stakeFeeGwei = 680000;
+const commissionFeeGwei = 140000;
+const serviceUriFee = 51000;
+let redeemRewardCostL1 = 0;
+let redeemRewardCostL2 = 0;
+let claimTicketCostL1 = 0;
+let claimTicketCostL2 = 0;
+let withdrawFeeCostL1 = 0;
+let withdrawFeeCostL2 = 0;
+let stakeFeeCostL1 = 0;
+let stakeFeeCostL2 = 0;
+let commissionFeeCostL1 = 0;
+let commissionFeeCostL2 = 0;
+let serviceUriFeeCostL1 = 0;
+let serviceUriFeeCostL2 = 0;
 
 // Queries Alchemy for block info and gas fees
 const parseL1Blockchain = async function () {
@@ -579,8 +1432,11 @@ apiRouter.get("/blockchains", async (req, res) => {
 /*
 
 THEGRAPH - ORCHESTRATOR
+Latest commission and totalStake stored in mongoDB (monthlyStat.js) and all in local cache
 
 */
+
+let orchestratorCache = [];
 
 // Gets info on a given Orchestrator
 const parseOrchestrator = async function (reqAddr) {
@@ -728,8 +1584,11 @@ apiRouter.get("/getAllOrchInfo", async (req, res) => {
 /*
 
 THEGRAPH - DELEGATOR
+Only stored in local cache
 
 */
+
+let delegatorCache = [];
 
 // Gets info on a given Delegator
 const parseDelegator = async function (reqAddr) {
@@ -1045,8 +1904,12 @@ apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
 /*
 
 ENS DATA
+Only stored in local cache
 
 */
+
+let ensDomainCache = [];
+let ensInfoCache = [];
 
 const getEnsDomain = async function (addr) {
   const now = new Date().getTime();
@@ -1168,8 +2031,11 @@ apiRouter.get("/getEnsInfo", async (req, res) => {
 /*
 
 3BOX DATA
+Only stored in local cache
 
 */
+
+let threeboxCache = [];
 
 const getThreeBoxInfo = async function (addr) {
   const now = new Date().getTime();
@@ -1229,8 +2095,11 @@ apiRouter.get("/getAllThreeBox", async (req, res) => {
 /*
 
 LEADERBOARD TEST SCORES
+Elapsed test scores stored in mongoDB (monthlyStat.js) and all in local cache
 
 */
+
+let orchScoreCache = [];
 
 const zeroPad = (num, places) => String(num).padStart(places, '0')
 const getScoreAtMonthYear = async function (month, year) {
@@ -1318,14 +2187,6 @@ apiRouter.get("/getAllOrchScores", async (req, res) => {
     res.status(400).send(err);
   }
 });
-
-
-/*
-
-RESERVED
-
-*/
-
 
 
 

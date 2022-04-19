@@ -5,7 +5,15 @@ const UnbondEventSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  from: {
+    type: String,
+    required: true
+  },
   stake: {
+    type: Number,
+    required: true
+  },
+  round: {
     type: Number,
     required: true
   },
