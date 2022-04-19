@@ -1451,7 +1451,8 @@ Latest commission and totalStake stored in mongoDB (monthlyStat.js) and all in l
 let orchestratorCache = [];
 
 const mutateNewCommissionRates = async function (address, feeCommission, rewardCommission) {
-  const now = new Date().getTime();
+  const dateObj = new Date();
+  const now = dateObj.getTime();
   const thisMonth = dateObj.getMonth();
   const thisYear = dateObj.getFullYear();
   // Convert weird format to actual percentages
@@ -1517,7 +1518,8 @@ const mutateNewCommissionRates = async function (address, feeCommission, rewardC
 }
 
 const mutateNewGlobalStake = async function (address, globalStake) {
-  const now = new Date().getTime();
+  const dateObj = new Date();
+  const now = dateObj.getTime();
   const thisMonth = dateObj.getMonth();
   const thisYear = dateObj.getFullYear();
   // Create new data point
@@ -1577,7 +1579,7 @@ const mutateNewGlobalStake = async function (address, globalStake) {
 }
 
 const mutateDynamicStatsFromDB = async function (orchestratorObj) {
-  const now = new Date().getTime();
+  const dateObj = new Date();
   const thisMonth = dateObj.getMonth();
   const thisYear = dateObj.getFullYear();
   // Compare with latest entry in monthly statistics for the current month
@@ -2297,6 +2299,29 @@ Elapsed test scores stored in mongoDB (monthlyStat.js) and all in local cache
 
 let orchScoreCache = [];
 
+const mutateTestScoresToDB = async function (scoreObj, month, year) {
+  const dateObj = new Date();
+  const thisMonth = dateObj.getMonth();
+  const thisYear = dateObj.getFullYear();
+  // If the test stream result is not in the past, return immediately
+  if (thisYear == year && thisMonth == month){
+    return;
+  }
+  // Immediately mutate Monthly statistics object
+  const doc = await MonthlyStat.findOneAndUpdate({
+    year: thisYear,
+    month: thisMonth
+  }, {
+    $set: {
+      testScores: scoreObj
+    }
+  }, {
+    upsert: true,
+    new: true,
+    setDefaultsOnInsert: true
+  });
+}
+
 const zeroPad = (num, places) => String(num).padStart(places, '0')
 const getScoreAtMonthYear = async function (month, year) {
   const now = new Date().getTime();
@@ -2349,6 +2374,8 @@ const getScoreAtMonthYear = async function (month, year) {
           console.log("Caching new orch score info " + year + "-" + month + " @ " + scoreObj.timestamp);
           orchScoreCache.push(scoreObj);
         }
+        // Also update monthly stats
+        mutateTestScoresToDB(scoreObj, month, year);
       } catch (error) {
         console.error(error.message);
       };
