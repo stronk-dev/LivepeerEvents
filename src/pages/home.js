@@ -58,7 +58,7 @@ const Home = (obj) => {
             <button className="waveButton" onClick={() => {
               setRedirectToLPT(true);
             }}>
-              <p>🔎 Blockchain 🕵️</p>
+              <p>🔎 Contract Events 🕵️</p>
             </button>
           </div>
           <div className="row">

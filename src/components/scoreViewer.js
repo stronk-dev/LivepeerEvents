@@ -1,8 +1,6 @@
 import React from "react";
 
 const ScoreView = (obj) => {
-
-  console.log(obj.score);
   return (
     <div className="row">
       <div className="stroke">

@@ -150,6 +150,12 @@ const getBlock = async function (blockNumber) {
   return thisBlock;
 }
 
+/*
+
+SMART CONTRACT EVENTS
+
+*/
+
 // Set special flag to make sure also get blocks that pass us by while we are syncing
 let isSyncing = true;
 let isEventSyncing = false;
@@ -157,6 +163,13 @@ let isTicketSyncing = false;
 // Start Listening for live updates
 var BondingManagerProxyListener;
 var TicketBrokerProxyListener;
+
+/*
+
+SMART CONTRACT EVENTS - LIVE DATA
+
+*/
+
 if (!CONF_SIMPLE_MODE) {
   BondingManagerProxyListener = bondingManagerContract.events.allEvents(async (error, event) => {
     try {
@@ -231,6 +244,12 @@ if (!CONF_SIMPLE_MODE) {
   });
   console.log("Listening for tickets on " + TicketBrokerTargetAddr);
 }
+
+/*
+
+SMART CONTRACT EVENTS - SYNC OF MISSED BLOCKS
+
+*/
 
 // Syncs events database
 const syncEvents = function () {
@@ -412,6 +431,30 @@ if (!isEventSyncing && !CONF_SIMPLE_MODE && !CONF_DISABLE_SYNC) {
   handleSync();
 }
 
+// Exports list of smart contract events
+apiRouter.get("/getEvents", async (req, res) => {
+  try {
+    res.send(eventsCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// Exports list of smart contract ticket events
+apiRouter.get("/getTickets", async (req, res) => {
+  try {
+    res.send(ticketsCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+/*
+
+COINMARKETCAP
+
+*/
+
 // Splits of raw CMC object into coin quote data
 const parseCmc = async function () {
   try {
@@ -435,6 +478,42 @@ const parseCmc = async function () {
     res.status(400).send(err);
   }
 }
+
+// Exports raw CoinMarketCap info
+apiRouter.get("/cmc", async (req, res) => {
+  try {
+    const now = new Date().getTime();
+    // Update cmc once their data has expired
+    if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
+      cmcPriceGet = now;
+      await parseCmc();
+    }
+    res.send(cmcCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// Exports top 200 coin quotes
+apiRouter.get("/quotes", async (req, res) => {
+  try {
+    const now = new Date().getTime();
+    // Update cmc once their data has expired
+    if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
+      cmcPriceGet = now;
+      await parseCmc();
+    }
+    res.send(cmcQuotes);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+/*
+
+ARBITRUM DATA
+
+*/
 
 // Queries Alchemy for block info and gas fees
 const parseL1Blockchain = async function () {
@@ -462,62 +541,6 @@ const parseL2Blockchain = async function () {
 const parseEthBlockchain = async function () {
   await Promise.all([parseL1Blockchain(), parseL2Blockchain()]);
 }
-
-// Export livepeer and eth coin prices and L1 Eth gas price
-apiRouter.get("/grafana", async (req, res) => {
-  try {
-    const now = new Date().getTime();
-    // Update blockchain data if the cached data has expired
-    if (now - arbGet > CONF_TIMEOUT_ALCHEMY) {
-      await parseEthBlockchain();
-      arbGet = now;
-    }
-    // Update coin prices once their data has expired
-    if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
-      await parseCmc();
-      cmcPriceGet = now;
-    }
-    res.send({
-      timestamp: now,
-      cmcTime: cmcPriceGet,
-      blockchainTime: arbGet,
-      l1GasFeeInGwei: l1Gwei,
-      l2GasFeeInGwei: l2Gwei,
-      ethPriceInDollar: ethPrice,
-      lptPriceInDollar: lptPrice,
-      redeemRewardCostL1,
-      redeemRewardCostL2,
-      claimTicketCostL1,
-      claimTicketCostL2,
-      withdrawFeeCostL1,
-      withdrawFeeCostL2,
-      stakeFeeCostL1,
-      stakeFeeCostL2,
-      commissionFeeCostL1,
-      commissionFeeCostL2,
-      serviceUriFeeCostL1,
-      serviceUriFeeCostL2,
-      quotes: cmcQuotes
-    });
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-// Exports raw CoinMarketCap info
-apiRouter.get("/cmc", async (req, res) => {
-  try {
-    const now = new Date().getTime();
-    // Update cmc once their data has expired
-    if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
-      cmcPriceGet = now;
-      await parseCmc();
-    }
-    res.send(cmcCache);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
 
 // Exports gas fees and contract prices
 apiRouter.get("/blockchains", async (req, res) => {
@@ -553,38 +576,11 @@ apiRouter.get("/blockchains", async (req, res) => {
   }
 });
 
-// Exports top 200 coin quotes
-apiRouter.get("/quotes", async (req, res) => {
-  try {
-    const now = new Date().getTime();
-    // Update cmc once their data has expired
-    if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
-      cmcPriceGet = now;
-      await parseCmc();
-    }
-    res.send(cmcQuotes);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
+/*
 
-// Exports list of smart contract events
-apiRouter.get("/getEvents", async (req, res) => {
-  try {
-    res.send(eventsCache);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
+THEGRAPH - ORCHESTRATOR
 
-// Exports list of smart contract ticket events
-apiRouter.get("/getTickets", async (req, res) => {
-  try {
-    res.send(ticketsCache);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
+*/
 
 // Gets info on a given Orchestrator
 const parseOrchestrator = async function (reqAddr) {
@@ -720,6 +716,20 @@ apiRouter.post("/getOrchestrator", async (req, res) => {
   }
 });
 
+// Returns entire orch info cache
+apiRouter.get("/getAllOrchInfo", async (req, res) => {
+  try {
+    res.send(orchestratorCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+/*
+
+THEGRAPH - DELEGATOR
+
+*/
 
 // Gets info on a given Delegator
 const parseDelegator = async function (reqAddr) {
@@ -824,6 +834,61 @@ apiRouter.post("/getOrchestratorByDelegator", async (req, res) => {
   }
 });
 
+// Returns entire delegator info cache
+apiRouter.get("/getAllDelInfo", async (req, res) => {
+  try {
+    res.send(delegatorCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+/*
+
+PROMETHEUS - GRAFANA
+
+*/
+
+// Export livepeer and eth coin prices and L1 Eth gas price
+apiRouter.get("/grafana", async (req, res) => {
+  try {
+    const now = new Date().getTime();
+    // Update blockchain data if the cached data has expired
+    if (now - arbGet > CONF_TIMEOUT_ALCHEMY) {
+      await parseEthBlockchain();
+      arbGet = now;
+    }
+    // Update coin prices once their data has expired
+    if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
+      await parseCmc();
+      cmcPriceGet = now;
+    }
+    res.send({
+      timestamp: now,
+      cmcTime: cmcPriceGet,
+      blockchainTime: arbGet,
+      l1GasFeeInGwei: l1Gwei,
+      l2GasFeeInGwei: l2Gwei,
+      ethPriceInDollar: ethPrice,
+      lptPriceInDollar: lptPrice,
+      redeemRewardCostL1,
+      redeemRewardCostL2,
+      claimTicketCostL1,
+      claimTicketCostL2,
+      withdrawFeeCostL1,
+      withdrawFeeCostL2,
+      stakeFeeCostL1,
+      stakeFeeCostL2,
+      commissionFeeCostL1,
+      commissionFeeCostL2,
+      serviceUriFeeCostL1,
+      serviceUriFeeCostL2,
+      quotes: cmcQuotes
+    });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
 
 // Export livepeer and eth coin prices and L1 Eth gas price
 apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
@@ -976,6 +1041,13 @@ apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
   }
 });
 
+
+/*
+
+ENS DATA
+
+*/
+
 const getEnsDomain = async function (addr) {
   const now = new Date().getTime();
   let wasInCache = false;
@@ -1093,17 +1165,18 @@ apiRouter.get("/getEnsInfo", async (req, res) => {
 });
 
 
+/*
+
+3BOX DATA
+
+*/
+
 const getThreeBoxInfo = async function (addr) {
   const now = new Date().getTime();
-  let wasInCache = false;
   // See if it is cached
   for (const thisAddr of threeboxCache) {
     if (thisAddr.address === addr) {
-      // Check timeout
-      if (now - thisAddr.timestamp < CONF_TIMEOUT_ENS_INFO) {
-        return thisAddr;
-      }
-      wasInCache = true;
+      return thisAddr;
     }
   }
   // Else get it and cache it
@@ -1124,18 +1197,8 @@ const getThreeBoxInfo = async function (addr) {
           image: data.image,
           timestamp: now
         }
-        if (wasInCache) {
-          for (var idx = 0; idx < threeboxCache.length; idx++) {
-            if (threeboxCache[idx].address == addr) {
-              console.log("Updating outdated 3box info " + threeBoxObj.address + " @ " + threeBoxObj.timestamp);
-              threeboxCache[idx] = threeBoxObj;
-              break;
-            }
-          }
-        } else {
-          console.log("Caching new 3box info " + threeBoxObj.address + " @ " + threeBoxObj.timestamp);
-          threeboxCache.push(threeBoxObj);
-        }
+        console.log("Caching new 3box info " + threeBoxObj.address + " @ " + threeBoxObj.timestamp);
+        threeboxCache.push(threeBoxObj);
       } catch (error) {
         console.error(error.message);
       };
@@ -1163,6 +1226,11 @@ apiRouter.get("/getAllThreeBox", async (req, res) => {
   }
 });
 
+/*
+
+LEADERBOARD TEST SCORES
+
+*/
 
 const zeroPad = (num, places) => String(num).padStart(places, '0')
 const getScoreAtMonthYear = async function (month, year) {
@@ -1251,23 +1319,12 @@ apiRouter.get("/getAllOrchScores", async (req, res) => {
   }
 });
 
-// Returns entire orch info cache
-apiRouter.get("/getAllOrchInfo", async (req, res) => {
-  try {
-    res.send(orchestratorCache);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
 
-// Returns entire delegator info cache
-apiRouter.get("/getAllDelInfo", async (req, res) => {
-  try {
-    res.send(delegatorCache);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
+/*
+
+RESERVED
+
+*/
 
 
 

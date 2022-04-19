@@ -124,8 +124,6 @@ export const getEvents = () => async dispatch => {
     let eventContainsUnbond = false;
     let eventContainsRebond = false;
     let eventContainsTransferBond = false;
-    let eventContainsTranscoderUpdate = false;
-    let eventContainsEarningsClaimed = false;
     let eventContainsReward = false;
     // Temp vars for the current Event we are processing
     let tmpAmount = 0;
@@ -256,8 +254,6 @@ export const getEvents = () => async dispatch => {
           eventContainsUnbond = false;
           eventContainsRebond = false;
           eventContainsTransferBond = false;
-          eventContainsTranscoderUpdate = false;
-          eventContainsEarningsClaimed = false;
           eventContainsReward = false;
           txCounter++;
           currentTx = eventObj.transactionHash;
@@ -318,7 +314,6 @@ export const getEvents = () => async dispatch => {
         }
         // Always split off TranscoderUpdate as a separate Update Event
         else if (eventObj.name === "TranscoderUpdate") {
-          eventContainsTranscoderUpdate = true;
           const amount1 = parseFloat(eventObj.data.rewardCut) / 10000;
           const amount2 = 100 - (eventObj.data.feeShare / 10000);
           const subtext = "changed commission";
@@ -344,7 +339,6 @@ export const getEvents = () => async dispatch => {
         }
         // Always split off EarningsClaimed as a separate Claim Event
         else if (eventObj.name === "EarningsClaimed") {
-          eventContainsEarningsClaimed = true;
           const amount1 = parseFloat(eventObj.data.rewards) / 1000000000000000000;
           const amount2 = parseFloat(eventObj.data.fees) / 1000000000000000000;
           if (amount1 < thresholdStaking && amount2 < thresholdFees) {
