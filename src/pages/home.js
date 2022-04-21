@@ -11,15 +11,15 @@ const Home = (obj) => {
   const userstate = useSelector((state) => state.userstate);
   const [redirectToGrafana, setRedirectToGrafana] = useState(false);
   const [redirectToLPT, setRedirectToLPT] = useState(false);
-  const [redirectToTickets, setRedirectToTickets] = useState(false);
+  const [redirectToStats, setRedirectToStats] = useState(false);
   if (redirectToGrafana) {
     return <Navigate push to="/orchestrator" />;
   }
   if (redirectToLPT) {
     return <Navigate push to="/livepeer" />;
   }
-  if (redirectToTickets) {
-    return <Navigate push to="/tickets" />;
+  if (redirectToStats) {
+    return <Navigate push to="/stats" />;
   }
   // Get amount of unique IP's which have visited this website
   var totalVisitorCount = 0;
@@ -63,7 +63,7 @@ const Home = (obj) => {
           </div>
           <div className="row">
             <button className="waveButton" onClick={() => {
-              setRedirectToTickets(true);
+              setRedirectToStats(true);
             }}>
               <p>📈 Statistics 💰</p>
             </button>
