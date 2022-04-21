@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Accordion } from '@mantine/core';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import WinnerMonth from '../components/WinnerMonth';
+// import Graphs from '../components/Graphs';
 
 const Stats = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
@@ -57,6 +58,7 @@ const Stats = (obj) => {
                             content: { padding: 0, paddingTop: '1em', paddingBottom: '1em' },
                             contentInner: { padding: 0 },
                           }}>
+                          {/* <Graphs commissions={livepeer.allCommissions} stakes={livepeer.allTotalStakes} /> */}
                           {
                             livepeer.monthlyStats.slice(0).reverse().map(function (data, i) {
                               let thisMonth = "";

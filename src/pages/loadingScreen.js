@@ -9,7 +9,7 @@ import {
   getAllDelInfo, getAllMonthlyStats, getAllUpdateEvents, getAllRewardEvents,
   getAllClaimEvents, getAllWithdrawStakeEvents, getAllWithdrawFeesEvents,
   getAllTransferTicketEvents, getAllRedeemTicketEvents, getAllActivateEvents,
-  getAllUnbondEvents, getAllStakeEvents,
+  getAllUnbondEvents, getAllStakeEvents, getAllCommissions, getAllTotalStakes
 } from "../actions/livepeer";
 import { login } from "../actions/session";
 
@@ -55,6 +55,8 @@ const Startup = (obj) => {
       dispatch(getAllDelInfo());
       dispatch(getAllOrchScores());
       dispatch(getAllMonthlyStats());
+      dispatch(getAllCommissions());
+      dispatch(getAllTotalStakes());
       dispatch(getAllUpdateEvents());
       dispatch(getAllRewardEvents());
       dispatch(getAllClaimEvents());

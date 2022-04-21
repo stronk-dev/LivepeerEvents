@@ -154,6 +154,24 @@ export const getAllMonthlyStats = () => (
   })
 );
 
+export const getAllCommissions = () => (
+  fetch("api/livepeer/getAllCommissions", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllTotalStakes = () => (
+  fetch("api/livepeer/getAllTotalStakes", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
 export const getAllUpdateEvents = () => (
   fetch("api/livepeer/getAllUpdateEvents", {
     method: "GET",

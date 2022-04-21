@@ -17,6 +17,8 @@ export const SET_ALL_ORCH_SCORES = "SET_ALL_ORCH_SCORES";
 export const SET_ALL_ORCH_INFO = "SET_ALL_ORCH_INFO";
 export const SET_ALL_DEL_INFO = "SET_ALL_DEL_INFO";
 export const SET_ALL_MONTHLY_STATS = "SET_ALL_MONTHLY_STATS";
+export const SET_ALL_COMMISSIONS = "SET_ALL_COMMISSIONS";
+export const SET_ALL_TOTAL_STAKES = "SET_ALL_TOTAL_STAKES";
 export const SET_ALL_UPDATE_EVENTS = "SET_ALL_UPDATE_EVENTS";
 export const SET_ALL_REWARD_EVENTS = "SET_ALL_REWARD_EVENTS";
 export const SET_ALL_CLAIM_EVENTS = "SET_ALL_CLAIM_EVENTS";
@@ -77,6 +79,14 @@ const setAllDelInfo = message => ({
 
 const setAllMonthlyStats = message => ({
   type: SET_ALL_MONTHLY_STATS, message
+});
+
+const setAllCommissions = message => ({
+  type: SET_ALL_COMMISSIONS, message
+});
+
+const setAllTotalStakes = message => ({
+  type: SET_ALL_TOTAL_STAKES, message
 });
 
 const setAllUpdateEvents = message => ({
@@ -253,6 +263,24 @@ export const getAllMonthlyStats = () => async dispatch => {
   const data = await response.json();
   if (response.ok) {
     return dispatch(setAllMonthlyStats(data));
+  }
+  return dispatch(receiveErrors(data));
+};
+
+export const getAllCommissions = () => async dispatch => {
+  const response = await apiUtil.getAllCommissions();
+  const data = await response.json();
+  if (response.ok) {
+    return dispatch(setAllCommissions(data));
+  }
+  return dispatch(receiveErrors(data));
+};
+
+export const getAllTotalStakes = () => async dispatch => {
+  const response = await apiUtil.getAllTotalStakes();
+  const data = await response.json();
+  if (response.ok) {
+    return dispatch(setAllTotalStakes(data));
   }
   return dispatch(receiveErrors(data));
 };

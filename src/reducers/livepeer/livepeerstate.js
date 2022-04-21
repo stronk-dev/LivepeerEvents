@@ -15,6 +15,8 @@ import {
   SET_ALL_DEL_INFO,
   CACHE_ORCHESTRATOR,
   SET_ALL_MONTHLY_STATS,
+  SET_ALL_COMMISSIONS,
+  SET_ALL_TOTAL_STAKES,
   SET_ALL_UPDATE_EVENTS,
   SET_ALL_REWARD_EVENTS,
   SET_ALL_CLAIM_EVENTS,
@@ -109,6 +111,10 @@ export default (state = {
       return { ...state, delInfo: message };
     case SET_ALL_MONTHLY_STATS:
       return { ...state, monthlyStats: message };
+    case SET_ALL_COMMISSIONS:
+      return { ...state, allCommissions: message };
+    case SET_ALL_TOTAL_STAKES:
+      return { ...state, allTotalStakes: message };
     case SET_ALL_UPDATE_EVENTS:
       return { ...state, updateEvents: message };
     case SET_ALL_REWARD_EVENTS:

@@ -13,6 +13,9 @@ import UnbondEvent from "../models/UnbondEvent";
 import UpdateEvent from "../models/UpdateEvent";
 import WithdrawFeesEvent from "../models/WithdrawFeesEvent";
 import WithdrawStakeEvent from "../models/WithdrawStakeEvent";
+import MonthlyStat from "../models/monthlyStat";
+import CommissionDataPoint from "../models/CommissionDataPoint";
+import TotalStakeDataPoint from "../models/TotalStakeDataPoint";
 
 const apiRouter = express.Router();
 import {
@@ -38,9 +41,6 @@ const fs = require('fs');
 
 // Used for the livepeer thegraph API
 import { request, gql } from 'graphql-request';
-import MonthlyStat from "../models/monthlyStat";
-import CommissionDataPoint from "../models/CommissionDataPoint";
-import TotalStakeDataPoint from "../models/TotalStakeDataPoint";
 
 // Gets ETH, LPT and other coin info
 let CoinMarketCap = require('coinmarketcap-api');
@@ -173,10 +173,28 @@ let unbondEventCache = [];
 let stakeEventCache = [];
 
 let monthlyStatCache = [];
+let commissionDataPointCache = [];
+let totalStakeDataPoint = [];
 
 apiRouter.get("/getAllMonthlyStats", async (req, res) => {
   try {
     res.send(monthlyStatCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getAllCommissions", async (req, res) => {
+  try {
+    res.send(commissionDataPointCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getAllTotalStakes", async (req, res) => {
+  try {
+    res.send(totalStakeDataPoint);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -1366,6 +1384,20 @@ const initSync = async function () {
     latestCommission: 1,
     latestTotalStake: 1,
     testScores: 1,
+    _id: 0
+  });
+  // Get all graph data points
+  commissionDataPointCache = await CommissionDataPoint.find({}, {
+    address: 1,
+    feeCommission: 1,
+    rewardCommission: 1,
+    timestamp: 1,
+    _id: 0
+  });
+  totalStakeDataPoint = await TotalStakeDataPoint.find({}, {
+    address: 1,
+    totalStake: 1,
+    timestamp: 1,
     _id: 0
   });
 }
