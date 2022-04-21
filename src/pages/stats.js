@@ -6,135 +6,13 @@ import { Accordion } from '@mantine/core';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import WinnerMonth from '../components/WinnerMonth';
 import StakeOverview from '../components/StakeOverview';
-import { VictoryPie } from 'victory';
 
-const Tickets = (obj) => {
+const Stats = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [ticketsPerMonth, setTicketsPerMonth] = useState([]);
   const [redirectToHome, setRedirectToHome] = useState(false);
 
   console.log("Rendering Stats Viewer");
-
-  useEffect(() => {
-    // Process Winning tickets as: 
-    // List of Months containing
-    // List of Orchestrators (sorted by earnings) containing
-    // List of winning tickets
-    let ticketsPerMonth = [];
-    let ticketIdx = livepeer.winningTickets.length - 1;
-    let currentMonth = 99;
-    let currentYear = 99;
-    let currentOrchCounter = [];
-    while (ticketIdx >= 0) {
-      const thisTicket = livepeer.winningTickets[ticketIdx];
-      const thisTime = new Date(thisTicket.transactionTime * 1000);
-      const thisYear = thisTime.getFullYear();
-      const thisMonth = thisTime.getMonth();
-      ticketIdx -= 1;
-
-      // On a new month
-      if (thisMonth != currentMonth) {
-        // Push this months data
-        if (currentOrchCounter.length) {
-          // Sort this months data
-          let sortedList = []
-          let currentSum = 0;
-          while (currentOrchCounter.length) {
-            let ticketIdx2 = currentOrchCounter.length - 1;
-            let largestIdx = 0;
-            let largestValue = 0;
-            // Find current O with most ticket wins in Eth
-            while (ticketIdx2 >= 0) {
-              const currentOrch = currentOrchCounter[ticketIdx2];
-              if (currentOrch.sum > largestValue) {
-                largestIdx = ticketIdx2;
-                largestValue = currentOrch.sum;
-              }
-              ticketIdx2 -= 1;
-            }
-            currentSum += largestValue;
-            // Push current biggest list
-            sortedList.push(currentOrchCounter[largestIdx]);
-            // Remove from list
-            currentOrchCounter.splice(largestIdx, 1);
-          }
-          ticketsPerMonth.push(
-            {
-              year: currentYear,
-              month: currentMonth,
-              orchestrators: sortedList,
-              total: currentSum
-            }
-          );
-        }
-        // clear data
-        currentMonth = thisMonth;
-        currentYear = thisYear;
-        currentOrchCounter = [];
-      }
-      // Find orch in list
-      let thisIdx = 0;
-      let thisFound = false;
-      let ticketIdx2 = currentOrchCounter.length - 1;
-      while (ticketIdx2 >= 0) {
-        const currentOrch = currentOrchCounter[ticketIdx2];
-        if (currentOrch.address == thisTicket.eventTo) {
-          thisFound = true;
-          thisIdx = ticketIdx2;
-          break;
-        }
-        ticketIdx2 -= 1;
-      }
-      // If not in list, append at the end
-      if (!thisFound) {
-        currentOrchCounter.push({
-          address: thisTicket.eventTo,
-          sum: thisTicket.eventValue
-        });
-      } else {
-        // Else update that entry
-        currentOrchCounter[thisIdx].sum += thisTicket.eventValue;
-      }
-    }
-
-
-    if (currentOrchCounter.length) {
-      // Sort this months data
-      let sortedList = []
-      let currentSum = 0;
-      while (currentOrchCounter.length) {
-        let ticketIdx2 = currentOrchCounter.length - 1;
-        let largestIdx = 0;
-        let largestValue = 0;
-        // Find current O with most ticket wins in Eth
-        while (ticketIdx2 >= 0) {
-          const currentOrch = currentOrchCounter[ticketIdx2];
-          if (currentOrch.sum > largestValue) {
-            largestIdx = ticketIdx2;
-            largestValue = currentOrch.sum;
-          }
-          ticketIdx2 -= 1;
-        }
-        currentSum += largestValue;
-        // Push current biggest list
-        sortedList.push(currentOrchCounter[largestIdx]);
-        // Remove from list
-        currentOrchCounter.splice(largestIdx, 1);
-      }
-      ticketsPerMonth.push(
-        {
-          year: currentYear,
-          month: currentMonth,
-          orchestrators: sortedList,
-          total: currentSum
-        }
-      );
-    }
-
-
-
-    setTicketsPerMonth(ticketsPerMonth);
-  }, [livepeer.winningTickets]);
 
   if (redirectToHome) {
     return <Navigate push to="/" />;
@@ -272,4 +150,4 @@ const Tickets = (obj) => {
   );
 }
 
-export default Tickets;
+export default Stats;

@@ -13,20 +13,40 @@ import {
   SET_ALL_ORCH_SCORES,
   SET_ALL_ORCH_INFO,
   SET_ALL_DEL_INFO,
-  CACHE_ORCHESTRATOR
+  CACHE_ORCHESTRATOR,
+  SET_ALL_MONTHLY_STATS,
+  SET_ALL_UPDATE_EVENTS,
+  SET_ALL_REWARD_EVENTS,
+  SET_ALL_CLAIM_EVENTS,
+  SET_ALL_WITHDRAW_STAKE_EVENTS,
+  SET_ALL_WITHDRAW_FEES_EVENTS,
+  SET_ALL_TRANSFER_TICKET_EVENTS,
+  SET_ALL_REDEEM_TICKET_EVENTS,
+  SET_ALL_ACTIVATE_EVENTS,
+  SET_ALL_UNBOND_EVENTS,
+  SET_ALL_STAKE_EVENTS
 } from "../../actions/livepeer";
 
 export default (state = {
   quotes: [],
   blockchains: [],
-  events: [],
   thisOrchestrator: null,
   selectedOrchestrator: null,
-  tickets: [],
   ensInfoMapping: [],
   ensDomainMapping: [],
   winningTickets: [],
-  orchScores: []
+  orchScores: [],
+  monthlyStats: [],
+  updateEvents: [],
+  rewardEvents: [],
+  claimEvents: [],
+  withdrawStakeEvents: [],
+  withdrawFeesEvents: [],
+  transferTicketEvents: [],
+  redeemTicketEvents: [],
+  activateEvents: [],
+  unbondEvents: [],
+  stakeEvents: [],
 }, { type, message }) => {
   Object.freeze(state);
   switch (type) {
@@ -89,6 +109,28 @@ export default (state = {
       }
     case SET_ALL_DEL_INFO:
       return { ...state, delInfo: message };
+    case SET_ALL_MONTHLY_STATS:
+      return { ...state, monthlyStats: message };
+    case SET_ALL_UPDATE_EVENTS:
+      return { ...state, updateEvents: message };
+    case SET_ALL_REWARD_EVENTS:
+      return { ...state, rewardEvents: message };
+    case SET_ALL_CLAIM_EVENTS:
+      return { ...state, claimEvents: message };
+    case SET_ALL_WITHDRAW_STAKE_EVENTS:
+      return { ...state, withdrawStakeEvents: message };
+    case SET_ALL_WITHDRAW_FEES_EVENTS:
+      return { ...state, withdrawFeesEvents: message };
+    case SET_ALL_TRANSFER_TICKET_EVENTS:
+      return { ...state, transferTicketEvents: message };
+    case SET_ALL_REDEEM_TICKET_EVENTS:
+      return { ...state, redeemTicketEvents: message };
+    case SET_ALL_ACTIVATE_EVENTS:
+      return { ...state, activateEvents: message };
+    case SET_ALL_UNBOND_EVENTS:
+      return { ...state, unbondEvents: message };
+    case SET_ALL_STAKE_EVENTS:
+      return { ...state, stakeEvents: message };
     default:
       return { ...state };
   }

@@ -13,6 +13,14 @@ const ClaimEventSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  startRound: {
+    type: Number,
+    required: true
+  },
+  endRound: {
+    type: Number,
+    required: true
+  },
   transactionHash: {
     type: String,
     required: true

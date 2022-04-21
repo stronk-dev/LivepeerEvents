@@ -144,3 +144,102 @@ export const getAllDelInfo = () => (
     }
   })
 );
+
+export const getAllMonthlyStats = () => (
+  fetch("api/livepeer/getAllMonthlyStats", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllUpdateEvents = () => (
+  fetch("api/livepeer/getAllUpdateEvents", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllRewardEvents = () => (
+  fetch("api/livepeer/getAllRewardEvents", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllClaimEvents = () => (
+  fetch("api/livepeer/getAllClaimEvents", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllWithdrawStakeEvents = () => (
+  fetch("api/livepeer/getAllWithdrawStakeEvents", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllWithdrawFeesEvents = () => (
+  fetch("api/livepeer/getAllWithdrawFeesEvents", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllTransferTicketEvents = () => (
+  fetch("api/livepeer/getAllTransferTicketEvents", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllRedeemTicketEvents = () => (
+  fetch("api/livepeer/getAllRedeemTicketEvents", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllActivateEvents = () => (
+  fetch("api/livepeer/getAllActivateEvents", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllUnbondEvents = () => (
+  fetch("api/livepeer/getAllUnbondEvents", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllStakeEvents = () => (
+  fetch("api/livepeer/getAllStakeEvents", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);

@@ -6,7 +6,7 @@ import {
 import {
   getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo, getTickets,
   getAllEnsDomains, getAllEnsInfo, getAllThreeBoxInfo, getAllOrchScores,  getAllOrchInfo,
-  getAllDelInfo
+  getAllDelInfo, getAllMonthlyStats
 } from "../actions/livepeer";
 import { login } from "../actions/session";
 
@@ -23,10 +23,18 @@ const Startup = (obj) => {
     console.log("Refreshing Livepeer data...");
     batch(() => {
       dispatch(getQuotes());
-      dispatch(getEvents());
       dispatch(getBlockchainData());
       dispatch(getCurrentOrchestratorInfo());
-      dispatch(getTickets());
+      dispatch(getAllUpdateEvents());
+      dispatch(getAllRewardEvents());
+      dispatch(getAllClaimEvents());
+      dispatch(getAllWithdrawStakeEvents());
+      dispatch(getAllWithdrawFeesEvents());
+      dispatch(getAllTransferTicketEvents());
+      dispatch(getAllRedeemTicketEvents());
+      dispatch(getAllActivateEvents());
+      dispatch(getAllUnbondEvents());
+      dispatch(getAllStakeEvents());
     });
   }
   
@@ -53,6 +61,7 @@ const Startup = (obj) => {
       dispatch(getAllOrchInfo());
       dispatch(getAllDelInfo());
       dispatch(getAllOrchScores());
+      dispatch(getAllMonthlyStats());
     });
   }
   

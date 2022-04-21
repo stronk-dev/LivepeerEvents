@@ -2,8 +2,9 @@ import React, { useState, useRef } from "react";
 import EventButton from "./eventButton";
 import ScrollContainer from 'react-indiana-drag-scroll';
 import Filter from './filterComponent';
-import ReactPaginate from 'react-paginate';
-/// A scrollable and filterable list of EventButtons
+
+const thresholdStaking = 0.001;
+const thresholdFees = 0.00009;
 
 const claimColour = "rgba(25, 158, 29, 0.4)";
 const stakeColour = "rgba(25, 158, 147, 0.4)";
@@ -13,6 +14,7 @@ const unbondColour = "rgba(105, 25, 158, 0.4)";
 const updateColour = "rgba(158, 25, 52, 0.4)";
 const withdrawStakeColour = "rgba(158, 98, 25, 0.4)";
 const activationColour = "rgba(154, 158, 25, 0.4)";
+const ticketTransferColour = "rgba(88, 91, 42, 0.3)";
 const greyColour = "rgba(122, 128, 127, 0.4)";
 
 const defaultIncrementMaxShown = 50;
@@ -65,123 +67,383 @@ const EventViewer = (obj) => {
 
   let eventList = [];
   let thisEvent = {};
-  let eventIdx = obj.events.length - 1;
-  let ticketIdx = obj.tickets.length - 1;
-  while (eventIdx >= 0 || ticketIdx >= 0) {
-    const latestEvent = obj.events[eventIdx];
-    let latestEventTime = 0;
-    if (eventIdx >= 0) {
-      latestEventTime = latestEvent.transactionTime;
+  let updateEventsIdx = obj.updateEvents.length - 1;
+  let rewardEventsIdx = obj.rewardEvents.length - 1;
+  let claimEventsIdx = obj.claimEvents.length - 1;
+  let withdrawStakeEventsIdx = obj.withdrawStakeEvents.length - 1;
+  let withdrawFeesEventsIdx = obj.withdrawFeesEvents.length - 1;
+  let activateEventsIdx = obj.activateEvents.length - 1;
+  let stakeEventsIdx = obj.stakeEvents.length - 1;
+  let unbondEventsIdx = obj.unbondEvents.length - 1;
+  let transferTicketEventsIdx = obj.transferTicketEvents.length - 1;
+  let redeemTicketEventsIdx = obj.redeemTicketEvents.length - 1;
+
+  if (!filterActivated) {
+    filtered += activateEventsIdx + 1;
+    activateEventsIdx = -1;
+  }
+  if (!rewardActivated) {
+    filtered += rewardEventsIdx + 1;
+    rewardEventsIdx = -1;
+  }
+  if (!updateActivated) {
+    filtered += updateEventsIdx + 1;
+    updateEventsIdx = -1;
+  }
+  if (!withdrawActivated) {
+    filtered += withdrawStakeEventsIdx + 1;
+    filtered += withdrawFeesEventsIdx + 1;
+    withdrawStakeEventsIdx = -1;
+    withdrawFeesEventsIdx = -1;
+  }
+  if (!stakeActivated) {
+    filtered += stakeEventsIdx + 1;
+    stakeEventsIdx = -1;
+  }
+  if (!unbondActivated) {
+    filtered += unbondEventsIdx + 1;
+    unbondEventsIdx = -1;
+  }
+  if (!delegatorRewardActivated) {
+    filtered += rewardEventsIdx + 1;
+    rewardEventsIdx = -1;
+  }
+  if (!rewardActivated) {
+    filtered += claimEventsIdx + 1;
+    claimEventsIdx = -1;
+  }
+  if (!ticketRedemptionActivated) {
+    filtered += transferTicketEventsIdx + 1;
+    filtered += redeemTicketEventsIdx + 1;
+    transferTicketEventsIdx = -1;
+    redeemTicketEventsIdx = -1;
+  }
+
+
+  while (updateEventsIdx >= 0 ||
+    rewardEventsIdx >= 0 ||
+    claimEventsIdx >= 0 ||
+    withdrawStakeEventsIdx >= 0 ||
+    withdrawFeesEventsIdx >= 0 ||
+    transferTicketEventsIdx >= 0 ||
+    redeemTicketEventsIdx >= 0 ||
+    activateEventsIdx >= 0 ||
+    unbondEventsIdx >= 0 ||
+    stakeEventsIdx >= 0) {
+
+    let latestTime = 0;
+    let thisEvent;
+    let latestType;
+
+    // Find latest event of enabled lists
+    if (updateEventsIdx >= 0) {
+      const thisObj = obj.updateEvents[updateEventsIdx];
+      if (thisObj.blockTime > latestTime) {
+        latestTime = thisObj.blockTime;
+        thisEvent = thisObj;
+        latestType = "update"
+      }
     }
-    const latestTicket = obj.tickets[ticketIdx];
-    let latestTicketTime = 0;
-    if (ticketIdx >= 0) {
-      latestTicketTime = latestTicket.transactionTime;
+    if (rewardEventsIdx >= 0) {
+      const thisObj = obj.rewardEvents[rewardEventsIdx];
+      if (thisObj.blockTime > latestTime) {
+        latestTime = thisObj.blockTime;
+        thisEvent = thisObj;
+        latestType = "reward"
+      }
     }
-    if (latestEventTime > latestTicketTime) {
-      thisEvent = latestEvent;
-      eventIdx -= 1;
-    } else if (latestTicketTime) {
-      thisEvent = latestTicket;
-      ticketIdx -= 1;
+    if (claimEventsIdx >= 0) {
+      const thisObj = obj.claimEvents[claimEventsIdx];
+      if (thisObj.blockTime > latestTime) {
+        latestTime = thisObj.blockTime;
+        thisEvent = thisObj;
+        latestType = "claim"
+      }
+    }
+    if (withdrawStakeEventsIdx >= 0) {
+      const thisObj = obj.withdrawStakeEvents[withdrawStakeEventsIdx];
+      if (thisObj.blockTime > latestTime) {
+        latestTime = thisObj.blockTime;
+        thisEvent = thisObj;
+        latestType = "withdrawStake"
+      }
+    }
+    if (withdrawFeesEventsIdx >= 0) {
+      const thisObj = obj.withdrawFeesEvents[withdrawFeesEventsIdx];
+      if (thisObj.blockTime > latestTime) {
+        latestTime = thisObj.blockTime;
+        thisEvent = thisObj;
+        latestType = "withdrawFees"
+      }
+    }
+    if (activateEventsIdx >= 0) {
+      const thisObj = obj.activateEvents[activateEventsIdx];
+      if (thisObj.blockTime > latestTime) {
+        latestTime = thisObj.blockTime;
+        thisEvent = thisObj;
+        latestType = "activate"
+      }
+    }
+    if (updateEventsIdx >= 0) {
+      const thisObj = obj.updateEvents[updateEventsIdx];
+      if (thisObj.blockTime > latestTime) {
+        latestTime = thisObj.blockTime;
+        thisEvent = thisObj;
+        latestType = "update"
+      }
+    }
+    if (stakeEventsIdx >= 0) {
+      const thisObj = obj.stakeEvents[stakeEventsIdx];
+      if (thisObj.blockTime > latestTime) {
+        latestTime = thisObj.blockTime;
+        thisEvent = thisObj;
+        latestType = "stake"
+      }
+    }
+    if (unbondEventsIdx >= 0) {
+      const thisObj = obj.unbondEvents[unbondEventsIdx];
+      if (thisObj.blockTime > latestTime) {
+        latestTime = thisObj.blockTime;
+        thisEvent = thisObj;
+        latestType = "unbond"
+      }
+    }
+    if (transferTicketEventsIdx >= 0) {
+      const thisObj = obj.transferTicketEvents[transferTicketEventsIdx];
+      if (thisObj.blockTime > latestTime) {
+        latestTime = thisObj.blockTime;
+        thisEvent = thisObj;
+        latestType = "transferTicket"
+      }
+    }
+    if (redeemTicketEventsIdx >= 0) {
+      const thisObj = obj.redeemTicketEvents[redeemTicketEventsIdx];
+      if (thisObj.blockTime > latestTime) {
+        latestTime = thisObj.blockTime;
+        thisEvent = thisObj;
+        latestType = "redeemTicket"
+      }
+    }
+
+    // Decrement IDX and check filter
+    if (latestType == "update") {
+      updateEventsIdx--;
+      // Filter name on from, to, caller
+      if (obj.searchTerm !== "") {
+        let isFiltered = true;
+        if (thisEvent.address.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (isFiltered) {
+          filtered++;
+          continue;
+        }
+      }
+    } else if (latestType == "reward") {
+      rewardEventsIdx--;
+      // Filter by minimum value
+      if (obj.amountFilter !== "") {
+        if (parseFloat(obj.amountFilter) > thisEvent.amount) {
+          filtered++;
+          continue;
+        }
+      }
+      // Filter name on from, to, caller
+      if (obj.searchTerm !== "") {
+        let isFiltered = true;
+        if (thisEvent.address.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (isFiltered) {
+          filtered++;
+          continue;
+        }
+      }
+    } else if (latestType == "claim") {
+      claimEventsIdx--;
+      // Filter by minimum value
+      if (obj.amountFilter !== "") {
+        if (parseFloat(obj.amountFilter) > thisEvent.fees ||
+          parseFloat(obj.amountFilter) > thisEvent.rewards) {
+          filtered++;
+          continue;
+        }
+      }
+      // Filter name on from, to, caller
+      if (obj.searchTerm !== "") {
+        let isFiltered = true;
+        if (thisEvent.address.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (isFiltered) {
+          filtered++;
+          continue;
+        }
+      }
+    } else if (latestType == "withdrawStake") {
+      withdrawStakeEventsIdx--;
+      // Filter by minimum value
+      if (obj.amountFilter !== "") {
+        if (parseFloat(obj.amountFilter) > thisEvent.amount) {
+          filtered++;
+          continue;
+        }
+      }
+      // Filter name on from, to, caller
+      if (obj.searchTerm !== "") {
+        let isFiltered = true;
+        if (thisEvent.address.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (isFiltered) {
+          filtered++;
+          continue;
+        }
+      }
+    } else if (latestType == "withdrawFees") {
+      withdrawFeesEventsIdx--;
+      // Filter by minimum value
+      if (obj.amountFilter !== "") {
+        if (parseFloat(obj.amountFilter) > thisEvent.amount) {
+          filtered++;
+          continue;
+        }
+      }
+      // Filter name on from, to, caller
+      if (obj.searchTerm !== "") {
+        let isFiltered = true;
+        if (thisEvent.address.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (isFiltered) {
+          filtered++;
+          continue;
+        }
+      }
+    } else if (latestType == "activate") {
+      activateEventsIdx--;
+      // Filter by minimum value
+      if (obj.amountFilter !== "") {
+        if (parseFloat(obj.amountFilter) > thisEvent.initialStake) {
+          filtered++;
+          continue;
+        }
+      }
+      // Filter name on from, to, caller
+      if (obj.searchTerm !== "") {
+        let isFiltered = true;
+        if (thisEvent.address.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (isFiltered) {
+          filtered++;
+          continue;
+        }
+      }
+    } else if (latestType == "update") {
+      updateEventsIdx--;
+      // Filter by minimum value
+      if (obj.amountFilter !== "") {
+        if (parseFloat(obj.amountFilter) > thisEvent.amount) {
+          filtered++;
+          continue;
+        }
+      }
+      // Filter name on from, to, caller
+      if (obj.searchTerm !== "") {
+        let isFiltered = true;
+        if (thisEvent.address.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (isFiltered) {
+          filtered++;
+          continue;
+        }
+      }
+    } else if (latestType == "stake") {
+      stakeEventsIdx--;
+      // Filter by minimum value
+      if (obj.amountFilter !== "") {
+        if (parseFloat(obj.amountFilter) > thisEvent.stake) {
+          filtered++;
+          continue;
+        }
+      }
+      // Filter name on from, to, caller
+      if (obj.searchTerm !== "") {
+        let isFiltered = true;
+        if (thisEvent.address.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (thisEvent.from && thisEvent.from.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (thisEvent.to.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (isFiltered) {
+          filtered++;
+          continue;
+        }
+      }
+    } else if (latestType == "unbond") {
+      unbondEventsIdx--;
+      // Filter by minimum value
+      if (obj.amountFilter !== "") {
+        if (parseFloat(obj.amountFilter) > thisEvent.stake) {
+          filtered++;
+          continue;
+        }
+      }
+      // Filter name on from, to, caller
+      if (obj.searchTerm !== "") {
+        let isFiltered = true;
+        if (thisEvent.address.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (thisEvent.from.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (isFiltered) {
+          filtered++;
+          continue;
+        }
+      }
+    } else if (latestType == "transferTicket") {
+      transferTicketEventsIdx--;
+      // Filter by minimum value
+      if (obj.amountFilter !== "") {
+        if (parseFloat(obj.amountFilter) > thisEvent.amount) {
+          filtered++;
+          continue;
+        }
+      }
+      // Filter name on from, to, caller
+      if (obj.searchTerm !== "") {
+        let isFiltered = true;
+        if (thisEvent.address.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (thisEvent.to.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (isFiltered) {
+          filtered++;
+          continue;
+        }
+      }
+    } else if (latestType == "redeemTicket") {
+      redeemTicketEventsIdx--;
+      // Filter by minimum value
+      if (obj.amountFilter !== "") {
+        if (parseFloat(obj.amountFilter) > thisEvent.amount) {
+          filtered++;
+          continue;
+        }
+      }
+      // Filter name on from, to, caller
+      if (obj.searchTerm !== "") {
+        let isFiltered = true;
+        if (thisEvent.address.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
+        if (isFiltered) {
+          filtered++;
+          continue;
+        }
+      }
     } else {
-      console.log("error, breaky breaky");
-      break;
+      console.log("bork");
     }
-    // Filter by minimum value
-    if (obj.amountFilter !== "") {
-      if (parseFloat(obj.amountFilter) > thisEvent.eventValue) {
-        filtered++;
-        continue;
-      }
-    }
-    // Filter name on from, to, caller
-    if (obj.searchTerm !== "") {
-      let isFiltered = true;
-      if (thisEvent.eventCaller.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
-      if (thisEvent.eventFrom.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
-      if (thisEvent.eventTo.toLowerCase().includes(obj.searchTerm.toLowerCase())) isFiltered = false;
-      if (isFiltered) {
-        filtered++;
-        continue;
-      }
-    }
-    // Filter Events on filter buttons
-    let isFiltered = true;
-    // Check boolean filters on thisEvent.eventType
-    let count = 0;
-    if (filterActivated) {
-      if (thisEvent.eventType === "Activate") {
-        isFiltered = false;
-      }
-      count++;
-    }
-    if (rewardActivated) {
-      if (thisEvent.eventType === "Reward") {
-        isFiltered = false;
-      }
-      count++;
-    }
-    if (updateActivated) {
-      if (thisEvent.eventType === "Update") {
-        isFiltered = false;
-      }
-      count++;
-    }
-    if (withdrawActivated) {
-      if (thisEvent.eventType === "Withdraw") {
-        isFiltered = false;
-      }
-      count++;
-    }
-    if (stakeActivated) {
-      if (thisEvent.eventType === "Stake") {
-        isFiltered = false;
-      }
-      count++;
-    }
-    if (stakeActivated) {
-      if (thisEvent.eventType === "Migrate") {
-        isFiltered = false;
-      }
-      count++;
-    }
-    if (unbondActivated) {
-      if (thisEvent.eventType === "Unbond") {
-        isFiltered = false;
-      }
-      count++;
-    }
-    if (delegatorRewardActivated) {
-      if (thisEvent.eventType === "Claim") {
-        isFiltered = false;
-      }
-      count++;
-    }
-    if (ticketRedemptionActivated) {
-      if (thisEvent.eventType === "RedeemTicket") {
-        isFiltered = false;
-      }
-      count++;
-    }
-    if (isFiltered && count) {
-      filtered++;
-      continue;
-    }
+
 
     if (unfiltered < obj.maxAmount) {
       unfiltered++;
       if (prevBlock === thisEvent.transactionBlock) {
         eventList.push(<EventButton
           key={thisEvent.transactionHash + unfiltered}
+          seed={thisEvent.transactionHash + unfiltered}
           eventObj={thisEvent}
+          type={latestType}
           setSearchTerm={obj.setSearchTerm}
         />);
       } else {
         prevBlock = thisEvent.transactionBlock;
         eventList.push(<EventButton
           key={thisEvent.transactionHash + unfiltered}
+          seed={thisEvent.transactionHash + unfiltered}
           eventObj={thisEvent}
+          type={latestType}
           isFirstOfBlock={prevBlock}
           time={thisEvent.transactionTime}
           setSearchTerm={obj.setSearchTerm}

@@ -34,16 +34,6 @@ const Livepeer = (obj) => {
     return <Navigate push to="/" />;
   }
 
-  let eventsList = [];
-  if (livepeer.events) {
-    eventsList = livepeer.events;
-  }
-
-  let ticketList = [];
-  if (livepeer.tickets) {
-    ticketList = livepeer.tickets;
-  }
-
   let thisOrchObj;
   let headerString;
   if (livepeer.selectedOrchestrator) {
@@ -109,9 +99,20 @@ const Livepeer = (obj) => {
       <div id='bodyContent'>
         {sidebar}
         <div className="mainContent">
-          <EventViewer events={eventsList} searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+          <EventViewer searchTerm={searchTerm} setSearchTerm={setSearchTerm}
             forceVertical={true} showFilter={showFilter} setAmountFilter={setAmountFilter} amountFilter={amountFilter}
-            maxAmount={maxAmount} setMaxAmount={setMaxAmount} tickets={ticketList} />
+            maxAmount={maxAmount} setMaxAmount={setMaxAmount}
+            updateEvents={livepeer.updateEvents}
+            rewardEvents={livepeer.rewardEvents}
+            claimEvents={livepeer.claimEvents}
+            withdrawStakeEvents={livepeer.withdrawStakeEvents}
+            withdrawFeesEvents={livepeer.withdrawFeesEvents}
+            transferTicketEvents={livepeer.transferTicketEvents}
+            redeemTicketEvents={livepeer.redeemTicketEvents}
+            activateEvents={livepeer.activateEvents}
+            unbondEvents={livepeer.unbondEvents}
+            stakeEvents={livepeer.stakeEvents}
+            />
         </div>
       </div>
     </div >

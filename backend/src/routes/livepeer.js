@@ -172,6 +172,94 @@ let stakeEventCache = [];
 
 let monthlyStatCache = [];
 
+apiRouter.get("/getAllMonthlyStats", async (req, res) => {
+  try {
+    res.send(monthlyStatCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getAllUpdateEvents", async (req, res) => {
+  try {
+    res.send(updateEventCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getAllRewardEvents", async (req, res) => {
+  try {
+    res.send(rewardEventCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getAllClaimEvents", async (req, res) => {
+  try {
+    res.send(claimEventCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getAllWithdrawStakeEvents", async (req, res) => {
+  try {
+    res.send(withdrawStakeEventCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getAllWithdrawFeesEvents", async (req, res) => {
+  try {
+    res.send(withdrawFeesEventCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getAllTransferTicketEvents", async (req, res) => {
+  try {
+    res.send(transferTicketEventCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getAllRedeemTicketEvents", async (req, res) => {
+  try {
+    res.send(redeemTicketEventCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getAllActivateEvents", async (req, res) => {
+  try {
+    res.send(activateEventCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getAllUnbondEvents", async (req, res) => {
+  try {
+    res.send(unbondEventCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/getAllStakeEvents", async (req, res) => {
+  try {
+    res.send(stakeEventCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 /*
 
 SMART CONTRACT EVENTS - MONTHLY STATS UPDATING
@@ -712,6 +800,8 @@ const parseAnyEvent = async function (thisEvent) {
       address: thisEvent.data.delegator.toLowerCase(),
       fees: parseFloat(thisEvent.data.rewards) / 1000000000000000000,
       rewards: parseFloat(thisEvent.data.fees) / 1000000000000000000,
+      startRound: parseInt(thisEvent.data.startRound),
+      endRound: parseInt(thisEvent.data.endRound),
       transactionHash: thisEvent.transactionHash,
       blockNumber: thisEvent.blockNumber,
       blockTime: thisEvent.blockTime
@@ -988,8 +1078,11 @@ const syncEvents = function (toBlock) {
   console.log("Starting sync process for Bonding Manager events to block " + toBlock);
   isEventSyncing = true;
   let lastTxSynced = 0;
+  if (lastBlockTickets != 'latest'){
+    lastBlockTickets += 1;
+  }
   // Then do a sync from last found until latest known
-  bondingManagerContract.getPastEvents("allEvents", { fromBlock: lastBlockEvents + 1, toBlock: toBlock }, async (error, events) => {
+  bondingManagerContract.getPastEvents("allEvents", { fromBlock: lastBlockEvents, toBlock: toBlock }, async (error, events) => {
     try {
       if (error) {
         throw error
@@ -1042,8 +1135,11 @@ const syncEvents = function (toBlock) {
 const syncTickets = function (toBlock) {
   console.log("Starting sync process for Ticket Broker events to block " + toBlock);
   isTicketSyncing = true;
+  if (lastBlockTickets != 'latest'){
+    lastBlockTickets += 1;
+  }
   // Then do a sync from last found until latest known
-  ticketBrokerContract.getPastEvents("allEvents", { fromBlock: lastBlockTickets + 1, toBlock: toBlock }, async (error, events) => {
+  ticketBrokerContract.getPastEvents("allEvents", { fromBlock: lastBlockTickets, toBlock: toBlock }, async (error, events) => {
     try {
       if (error) {
         throw error
