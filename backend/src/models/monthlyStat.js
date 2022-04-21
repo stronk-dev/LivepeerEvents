@@ -1,5 +1,54 @@
 import mongoose from 'mongoose';
 
+const WinningTicketSchema = new mongoose.Schema({ 
+  address: {
+    type: String,
+    required: true
+  },
+  sum: {
+    type: Number,
+    required: true
+  },
+  count: {
+    type: Number,
+    required: true
+  },
+ });
+
+ const OrchCommissionSchema = new mongoose.Schema({ 
+  address: {
+    type: String,
+    required: true
+  },
+  feeCommission: {
+    type: Number,
+    required: true
+  },
+  rewardCommission: {
+    type: Number,
+    required: true
+  },
+  timestamp: {
+    type: Number,
+    required: true
+  }
+ });
+
+ const OrchStakeSchema = new mongoose.Schema({ 
+  address: {
+    type: String,
+    required: true
+  },
+  totalStake: {
+    type: Number,
+    required: true
+  },
+  timestamp: {
+    type: Number,
+    required: true
+  }
+ });
+
 const MonthlyStatSchema = new mongoose.Schema({
   // Static props
   year: {
@@ -123,12 +172,12 @@ const MonthlyStatSchema = new mongoose.Schema({
     default: 0
   },
   winningTicketsReceived: {
-    type: [Object],
+    type: [WinningTicketSchema],
     required: false,
     default: []
   },
   winningTicketsSent: {
-    type: [Object],
+    type: [WinningTicketSchema],
     required: false,
     default: []
   },
@@ -144,18 +193,18 @@ const MonthlyStatSchema = new mongoose.Schema({
     default: 0
   },
   winningTicketsRedeemed: {
-    type: [Object],
+    type: [WinningTicketSchema],
     required: false,
     default: []
   },
   // History for theGraph current data for that month
   latestCommission: {
-    type: [Object],
+    type: [OrchCommissionSchema],
     required: false,
     default: null
   },
   latestTotalStake: {
-    type: [Object],
+    type: [OrchStakeSchema],
     required: false,
     default: null
   },

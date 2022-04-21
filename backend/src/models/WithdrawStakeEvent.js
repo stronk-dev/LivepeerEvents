@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const WithdrawEventSchema = new mongoose.Schema({
+const WithdrawStakeEventSchema = new mongoose.Schema({
   address: {
     type: String,
     required: true
@@ -27,5 +27,5 @@ const WithdrawEventSchema = new mongoose.Schema({
   }
 }, { timestamps: false });
 
-const WithdrawEvent = mongoose.model('WithdrawEvent', WithdrawEventSchema);
-export default WithdrawEvent;
+const WithdrawStakeEvent = mongoose.model('WithdrawStakeEvent', WithdrawStakeEventSchema);
+export default WithdrawStakeEvent;

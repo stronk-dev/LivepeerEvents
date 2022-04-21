@@ -11,8 +11,7 @@ const ActivateEventSchema = new mongoose.Schema({
   },
   round: {
     type: Number,
-    required: false,
-    default: true
+    required: true
   },
   transactionHash: {
     type: String,

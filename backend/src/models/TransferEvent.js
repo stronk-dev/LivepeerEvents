@@ -10,7 +10,7 @@ const TransferEventSchema = new mongoose.Schema({
     required: true
   },
   amount: {
-    type: number,
+    type: Number,
     required: true
   },
   transactionHash: {

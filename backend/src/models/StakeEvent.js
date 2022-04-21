@@ -7,7 +7,7 @@ const StakeEventSchema = new mongoose.Schema({
   },
   from: {
     type: String,
-    required: true
+    required: false
   },
   to: {
     type: String,
