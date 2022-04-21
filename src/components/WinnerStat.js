@@ -101,8 +101,8 @@ const Winner = (obj) => {
           <div className="rowAlignLeft" >
             <h3>Fees</h3>
           </div>
-          <div className="rowAlignLeft" >
-            <h4>{obj.thisEarnings.sum.toFixed(4)} Eth</h4>
+          <div className="rowAlignRight" >
+            <span>{obj.thisEarnings.sum.toFixed(4)} Eth</span>
           </div>
           <div className="rowAlignRight" >
             <span>({((obj.thisEarnings.sum / obj.totalEarnings) * 100).toFixed(2)} %)</span>
@@ -114,8 +114,8 @@ const Winner = (obj) => {
             <div className="rowAlignLeft" >
               <h3>Stake</h3>
             </div>
-            <div className="rowAlignLeft" >
-              <h4>{obj.thisStake.totalStake.toFixed(4)} LPT</h4>
+            <div className="rowAlignRight" >
+              <span>{obj.thisStake.totalStake.toFixed(2)} LPT</span>
             </div>
             <div className="rowAlignRight" >
               <span>({((obj.thisStake.totalStake / obj.totalStake) * 100).toFixed(2)} %)</span>

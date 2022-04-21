@@ -10,15 +10,18 @@ const WinnerMonth = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [thisScores, setThisScores] = useState(null);
 
-  useEffect(async () => {
-    if (!obj.data.testScores) {
-      const freshScore = await getOrchestratorScores(obj.data.year, obj.data.month);
-      if (freshScore) {
-        setThisScores(freshScore);
+  useEffect(() => {
+    const setScore = async() => {
+      if (!obj.data.testScores) {
+        const freshScore = await getOrchestratorScores(obj.data.year, obj.data.month);
+        if (freshScore) {
+          setThisScores(freshScore);
+        }
+      } else {
+        setThisScores(obj.data.testScores);
       }
-    } else {
-      setThisScores(obj.data.testScores);
     }
+    setScore();
   }, [obj.data.testScores]);
 
   const getName = (address) => {
@@ -137,15 +140,37 @@ const WinnerMonth = (obj) => {
       let ticketIdx2 = orchList.length - 1;
       let largestIdx = 0;
       let largestValue = 0;
+      let thisVal = null;
       // Find current O with most ticket wins in Eth
       while (ticketIdx2 >= 0) {
         const currentOrch = orchList[ticketIdx2];
-        const thisVal = (currentOrch.sum || currentOrch.totalStake);
+        thisVal = currentOrch.sum;
+        if (!thisVal) {
+          ticketIdx2 -= 1;
+          continue;
+        }
         if (thisVal > largestValue) {
           largestIdx = ticketIdx2;
           largestValue = thisVal;
         }
         ticketIdx2 -= 1;
+      }
+      // Else try to sort by stake
+      if (!thisVal) {
+        ticketIdx2 = orchList.length - 1;
+        while (ticketIdx2 >= 0) {
+          const currentOrch = orchList[ticketIdx2];
+          thisVal = currentOrch.totalStake;
+          if (!thisVal) {
+            ticketIdx2 -= 1;
+            continue;
+          }
+          if (thisVal > largestValue) {
+            largestIdx = ticketIdx2;
+            largestValue = thisVal;
+          }
+          ticketIdx2 -= 1;
+        }
       }
       // Push current biggest list
       sortedList.push(orchList[largestIdx]);
@@ -165,7 +190,7 @@ const WinnerMonth = (obj) => {
     while (ticketIdx >= 0) {
       const thisTicket = obj.data.winningTicketsReceived[ticketIdx];
       ticketIdx -= 1;
-      if ((thisTicket.sum / obj.data.winningTicketsReceivedSum) < 0.04) {
+      if ((thisTicket.sum / obj.data.winningTicketsReceivedSum) < 0.03) {
         otherSum += thisTicket.sum;
       } else {
         pieList.push({

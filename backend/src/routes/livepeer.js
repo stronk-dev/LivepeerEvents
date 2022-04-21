@@ -1889,6 +1889,8 @@ const parseOrchestrator = async function (reqAddr) {
       orchestratorObj = orchestratorObj.transcoder;
       // Not found
       if (!orchestratorObj) {
+        console.log("Pushing null orchestrator " + reqAddr + " @ " + now);
+        orchestratorCache.push({id: reqAddr, lastGet: now });
         return {};
       }
       orchestratorObj.lastGet = now;
@@ -2537,7 +2539,7 @@ const getScoreAtMonthYear = async function (month, year) {
   // Else get it and cache it
   const url = "https://leaderboard-serverless.vercel.app/api/aggregated_stats?since=" + startTime + "&until=" + endTime;
   console.log("Getting new Orchestrator scores for " + year + "-" + month + " @ " + url);
-  await https.get(url, (res) => {
+  return https.get(url, (res) => {
     let body = "";
     res.on("data", (chunk) => {
       body += chunk;
@@ -2565,6 +2567,7 @@ const getScoreAtMonthYear = async function (month, year) {
         }
         // Also update monthly stats
         mutateTestScoresToDB(scoreObj, month, year);
+        return scoreObj;
       } catch (error) {
         console.error(error.message);
       };

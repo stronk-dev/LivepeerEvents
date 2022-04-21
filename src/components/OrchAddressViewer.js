@@ -40,7 +40,7 @@ const Address = (obj) => {
         thisInfo = thisAddr;
         hasENS = true;
         // Check timeout
-        if (now - thisAddr.timestamp < 86400000) {
+        if (now - thisAddr.timestamp < 3600000) {
           break;
         }
         // Is outdated

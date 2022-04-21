@@ -32,8 +32,6 @@ export default (state = {
   blockchains: [],
   thisOrchestrator: null,
   selectedOrchestrator: null,
-  ensInfoMapping: [],
-  ensDomainMapping: [],
   winningTickets: [],
   orchScores: [],
   monthlyStats: [],

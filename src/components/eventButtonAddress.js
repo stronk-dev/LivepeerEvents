@@ -43,13 +43,13 @@ const EventButtonAddress = (obj) => {
       }
     }
     // Lookup current info in cache only if this addr has a mapped ENS domain
-    if (thisDomain && thisDomain.domain && !hasRefreshed) {
+    if (livepeer.ensInfoMapping && thisDomain && thisDomain.domain && !hasRefreshed) {
       for (const thisAddr of livepeer.ensInfoMapping) {
         if (thisAddr.domain === thisDomain.domain) {
           thisInfo = thisAddr;
           hasENS = true;
           // Check timeout
-          if (now - thisAddr.timestamp < 86400000) {
+          if (now - thisAddr.timestamp < 3600000) {
             break;
           }
           // Is outdated
