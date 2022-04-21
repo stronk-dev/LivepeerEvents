@@ -1890,7 +1890,7 @@ const parseOrchestrator = async function (reqAddr) {
       // Not found
       if (!orchestratorObj) {
         console.log("Pushing null orchestrator " + reqAddr + " @ " + now);
-        orchestratorCache.push({id: reqAddr, lastGet: now });
+        orchestratorCache.push({ id: reqAddr, lastGet: now });
         return {};
       }
       orchestratorObj.lastGet = now;
@@ -2512,83 +2512,79 @@ const mutateTestScoresToDB = async function (scoreObj, month, year) {
   });
 }
 
-const zeroPad = (num, places) => String(num).padStart(places, '0')
-const getScoreAtMonthYear = async function (month, year) {
-  const now = new Date().getTime();
-  let wasInCache = false;
-  // See if it is cached
-  for (const thisAddr of orchScoreCache) {
-    if (thisAddr.year === year && thisAddr.month === month) {
-      // Check timeout
-      if (now - thisAddr.timestamp < 360000) {
-        return thisAddr;
-      }
-      wasInCache = true;
-    }
-  }
-  // Calculate UTC timestamps for this month
-  const fromString = year + '-' + zeroPad(month + 1, 2) + '-01T00:00:00.000Z';
-  let endString;
-  if (month > 11) {
-    endString = (year + 1) + '-' + '01-01T00:00:00.000Z';
-  } else {
-    endString = year + '-' + zeroPad((month + 2), 2) + '-01T00:00:00.000Z';
-  }
-  const startTime = parseInt(Date.parse(fromString) / 1000);
-  const endTime = parseInt(Date.parse(endString) / 1000)
-  // Else get it and cache it
-  const url = "https://leaderboard-serverless.vercel.app/api/aggregated_stats?since=" + startTime + "&until=" + endTime;
-  console.log("Getting new Orchestrator scores for " + year + "-" + month + " @ " + url);
-  return https.get(url, (res) => {
-    let body = "";
-    res.on("data", (chunk) => {
-      body += chunk;
-    });
-    res.on("end", () => {
-      try {
-        const data = JSON.parse(body);
-        const scoreObj = {
-          timestamp: now,
-          year: year,
-          month: month,
-          scores: data
-        }
-        if (wasInCache) {
-          for (var idx = 0; idx < orchScoreCache.length; idx++) {
-            if (orchScoreCache[idx].year == year && orchScoreCache[idx].month == month) {
-              console.log("Updating outdated orch score info " + year + "-" + month + " @ " + scoreObj.timestamp);
-              orchScoreCache[idx] = scoreObj;
-              break;
-            }
-          }
-        } else {
-          console.log("Caching new orch score info " + year + "-" + month + " @ " + scoreObj.timestamp);
-          orchScoreCache.push(scoreObj);
-        }
-        // Also update monthly stats
-        mutateTestScoresToDB(scoreObj, month, year);
-        return scoreObj;
-      } catch (error) {
-        console.error(error.message);
-      };
-    });
-  }).on("error", (error) => {
-    console.error(error.message);
-  });
-}
-
+const zeroPad = (num, places) => String(num).padStart(places, '0');
 // Exports info on a given Orchestrator
 apiRouter.post("/getOrchestratorScores", async (req, res) => {
   try {
     const { month, year } = req.body;
     if (month && year) {
       // Since months get counted starting at 0
-      const reqObj = await getScoreAtMonthYear(month, year);
-      res.send(reqObj);
+      const now = new Date().getTime();
+      let wasInCache = false;
+      // See if it is cached
+      for (const thisAddr of orchScoreCache) {
+        if (thisAddr.year === year && thisAddr.month === month) {
+          // Check timeout
+          if (now - thisAddr.timestamp < 360000) {
+            return thisAddr;
+          }
+          wasInCache = true;
+        }
+      }
+      // Calculate UTC timestamps for this month
+      const fromString = year + '-' + zeroPad(month + 1, 2) + '-01T00:00:00.000Z';
+      let endString;
+      if (month > 11) {
+        endString = (year + 1) + '-' + '01-01T00:00:00.000Z';
+      } else {
+        endString = year + '-' + zeroPad((month + 2), 2) + '-01T00:00:00.000Z';
+      }
+      const startTime = parseInt(Date.parse(fromString) / 1000);
+      const endTime = parseInt(Date.parse(endString) / 1000)
+      // Else get it and cache it
+      const url = "https://leaderboard-serverless.vercel.app/api/aggregated_stats?since=" + startTime + "&until=" + endTime;
+      console.log("Getting new Orchestrator scores for " + year + "-" + month + " @ " + url);
+
+      https.get(url, (res) => {
+        let body = "";
+        res.on("data", (chunk) => {
+          body += chunk;
+        });
+        res.on("end", () => {
+          try {
+            const data = JSON.parse(body);
+            const scoreObj = {
+              timestamp: now,
+              year: year,
+              month: month,
+              scores: data
+            }
+            if (wasInCache) {
+              for (var idx = 0; idx < orchScoreCache.length; idx++) {
+                if (orchScoreCache[idx].year == year && orchScoreCache[idx].month == month) {
+                  console.log("Updating outdated orch score info " + year + "-" + month + " @ " + scoreObj.timestamp);
+                  orchScoreCache[idx] = scoreObj;
+                  break;
+                }
+              }
+            } else {
+              console.log("Caching new orch score info " + year + "-" + month + " @ " + scoreObj.timestamp);
+              orchScoreCache.push(scoreObj);
+            }
+            // Also update monthly stats
+            mutateTestScoresToDB(scoreObj, month, year);
+            res.send(scoreObj);
+          } catch (error) {
+            console.error(error.message);
+          };
+        });
+      }).on("error", (error) => {
+        console.error(error.message);
+      });
+    } else {
+      res.send({});
       return;
     }
-    res.send({});
-    return;
   } catch (err) {
     console.log(err);
     res.status(400).send(err);

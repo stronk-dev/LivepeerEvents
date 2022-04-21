@@ -325,7 +325,7 @@ const WinnerMonth = (obj) => {
               }
             }
             let thisScore = null;
-            if (thisScores) {
+            if (thisScores && thisScores.scores) {
               thisScore = thisScores.scores[orch.address];
             }
             return (
