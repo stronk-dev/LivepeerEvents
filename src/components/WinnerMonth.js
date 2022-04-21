@@ -11,7 +11,7 @@ const WinnerMonth = (obj) => {
   const [thisScores, setThisScores] = useState(null);
 
   useEffect(() => {
-    const setScore = async() => {
+    const setScore = async () => {
       if (!obj.data.testScores) {
         const freshScore = await getOrchestratorScores(obj.data.year, obj.data.month);
         if (freshScore) {
@@ -50,14 +50,14 @@ const WinnerMonth = (obj) => {
           if (thisAddr.name) {
             return thisAddr.name;
           } else {
-            return (address.substring(0, 10) + "..");
+            return (address.substring(0, 14) + "..");
           }
           break;
         }
       }
     }
 
-    return (address.substring(0, 10) + "..");
+    return (address.substring(0, 14) + "..");
   }
 
   // Show all orchs (if latestTotalStake exists) or show only those in winningTicketsReceived
@@ -127,7 +127,10 @@ const WinnerMonth = (obj) => {
           labels: {
             fontSize: 10, zIndex: 999
           }
-        }} />
+        }}
+        labelPosition="centroid"
+        labelPlacement="parallel"
+      />
     </div>;
   } else {
     orchList = [...obj.data.winningTicketsReceived];
@@ -232,7 +235,10 @@ const WinnerMonth = (obj) => {
           labels: {
             fontSize: 10, zIndex: 999
           }
-        }} />
+        }}
+        labelPosition="centroid"
+        labelPlacement="parallel"
+      />
     </div>;
   }
 
