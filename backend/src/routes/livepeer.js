@@ -2526,7 +2526,8 @@ apiRouter.post("/getOrchestratorScores", async (req, res) => {
         if (thisAddr.year === year && thisAddr.month === month) {
           // Check timeout
           if (now - thisAddr.timestamp < 360000) {
-            return thisAddr;
+            res.send(thisAddr);
+            return;
           }
           wasInCache = true;
         }
