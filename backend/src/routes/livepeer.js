@@ -800,8 +800,8 @@ const parseAnyEvent = async function (thisEvent) {
   } else if (thisName === "EarningsClaimed") {
     const eventObj = {
       address: thisEvent.data.delegator.toLowerCase(),
-      fees: parseFloat(thisEvent.data.rewards) / 1000000000000000000,
-      rewards: parseFloat(thisEvent.data.fees) / 1000000000000000000,
+      fees: parseFloat(thisEvent.data.fees) / 1000000000000000000,
+      rewards: parseFloat(thisEvent.data.rewards) / 1000000000000000000,
       startRound: parseInt(thisEvent.data.startRound),
       endRound: parseInt(thisEvent.data.endRound),
       transactionHash: thisEvent.transactionHash,
