@@ -39,7 +39,7 @@ const EventButton = (obj) => {
   } else if (obj.type == "claim") {
     eventCaller = obj.eventObj.address;
     eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"💰"} subtext={"delegator claimed"} descriptions={[
-      (eventObj.data.endRound - eventObj.data.startRound + 1) + " rounds",
+      (obj.eventObj.endRound - obj.eventObj.startRound + 1) + " rounds",
       "+" + obj.eventObj.rewards.toFixed(2) + " LPT rewards",
       "+" + obj.eventObj.fees.toFixed(4) + " Eth fees"
     ]} />
@@ -47,9 +47,8 @@ const EventButton = (obj) => {
   } else if (obj.type == "withdrawStake") {
     eventCaller = obj.eventObj.address;
     eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"🏦"} subtext={"withdrew stake"} descriptions={[
-      (eventObj.endRound - eventObj.startRound + 1) + " rounds",
-      "+" + obj.eventObj.rewards.toFixed(2) + " LPT rewards",
-      "+" + obj.eventObj.fees.toFixed(4) + " Eth fees"
+      obj.eventObj.amount.toFixed(2) + " LPT",
+      "round " + obj.eventObj.round
     ]} />
     eventColour = withdrawStakeColour;
   } else if (obj.type == "withdrawFees") {
@@ -98,40 +97,40 @@ const EventButton = (obj) => {
     eventTo = obj.eventObj.to;
     if (eventFrom === "0x0000000000000000000000000000000000000000") {
       eventFrom = "";
-      eventDescription = <Ticket seed={currentTx + "-" + txCounter} icon={"⌛"} subtext={"is now staking"} descriptions={[
+      eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"⌛"} subtext={"is now staking"} descriptions={[
         obj.eventObj.stake.toFixed(2) + " LPT"
       ]} />
     } else if (eventFrom === eventTo) {
       eventFrom = "";
-      eventDescription = <Ticket seed={currentTx + "-" + txCounter} icon={"⌛"} subtext={"changed stake"} descriptions={[
+      eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"⌛"} subtext={"changed stake"} descriptions={[
         obj.eventObj.stake.toFixed(2) + " LPT"
       ]} />
     } else {
-      eventDescription = <Ticket seed={currentTx + "-" + txCounter} icon={"⌛"} subtext={"moved stake"} descriptions={[
+      eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"⌛"} subtext={"moved stake"} descriptions={[
         obj.eventObj.stake.toFixed(2) + " LPT"
       ]} />
     }
     eventColour = stakeColour;
   }
 
-  if (obj.eventObj.eventFrom === "0x0000000000000000000000000000000000000000") {
-    obj.eventObj.eventFrom = "";
+  if (eventFrom === "0x0000000000000000000000000000000000000000") {
+    eventFrom = "";
   }
-  if (obj.eventObj.eventTo === "0x0000000000000000000000000000000000000000") {
-    obj.eventObj.eventTo = "";
+  if (eventTo === "0x0000000000000000000000000000000000000000") {
+    eventTo = "";
   }
-  if (obj.eventObj.eventTo || obj.eventObj.eventFrom || obj.eventObj.eventCaller) {
-    if (obj.eventObj.eventTo) {
+  if (eventTo || eventFrom || eventCaller) {
+    if (eventTo) {
       eventTo =
-        <EventButtonAddress name="To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;" address={obj.eventObj.eventTo} setSearchTerm={obj.setSearchTerm} />
+        <EventButtonAddress name="To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;" address={eventTo} setSearchTerm={obj.setSearchTerm} />
     }
-    if (obj.eventObj.eventFrom) {
+    if (eventFrom) {
       eventFrom =
-        <EventButtonAddress name="From&nbsp;&nbsp;:&nbsp;" address={obj.eventObj.eventFrom} setSearchTerm={obj.setSearchTerm} />
+        <EventButtonAddress name="From&nbsp;&nbsp;:&nbsp;" address={eventFrom} setSearchTerm={obj.setSearchTerm} />
     }
-    if (obj.eventObj.eventCaller) {
+    if (eventCaller) {
       eventCaller =
-        <EventButtonAddress name="Caller&nbsp;:&nbsp;" address={obj.eventObj.eventCaller} setSearchTerm={obj.setSearchTerm} />
+        <EventButtonAddress name="Caller&nbsp;:&nbsp;" address={eventCaller} setSearchTerm={obj.setSearchTerm} />
     }
   }
 

@@ -39,6 +39,8 @@ const fs = require('fs');
 // Used for the livepeer thegraph API
 import { request, gql } from 'graphql-request';
 import MonthlyStat from "../models/monthlyStat";
+import CommissionDataPoint from "../models/CommissionDataPoint";
+import TotalStakeDataPoint from "../models/TotalStakeDataPoint";
 
 // Gets ETH, LPT and other coin info
 let CoinMarketCap = require('coinmarketcap-api');
@@ -270,7 +272,7 @@ const updateMonthlyReward = async function (blockTime, amount) {
   var dateObj = new Date(0);
   dateObj.setUTCSeconds(blockTime);
   // Determine year, month and name
-  const thisMonth = dateObj.getMonth() ;
+  const thisMonth = dateObj.getMonth();
   const thisYear = dateObj.getFullYear();
   console.log("Updating monthly Reward stats for " + thisYear + "-" + thisMonth);
   if (!CONF_DISABLE_DB) {
@@ -303,7 +305,7 @@ const updateMonthlyClaim = async function (blockTime, fees, rewards) {
   var dateObj = new Date(0);
   dateObj.setUTCSeconds(blockTime);
   // Determine year, month and name
-  const thisMonth = dateObj.getMonth() ;
+  const thisMonth = dateObj.getMonth();
   const thisYear = dateObj.getFullYear();
   console.log("Updating monthly Claim stats for " + thisYear + "-" + thisMonth);
   if (!CONF_DISABLE_DB) {
@@ -338,7 +340,7 @@ const updateMonthlyWithdrawStake = async function (blockTime, amount) {
   var dateObj = new Date(0);
   dateObj.setUTCSeconds(blockTime);
   // Determine year, month and name
-  const thisMonth = dateObj.getMonth() ;
+  const thisMonth = dateObj.getMonth();
   const thisYear = dateObj.getFullYear();
   console.log("Updating monthly WithdrawStake stats for " + thisYear + "-" + thisMonth);
   if (!CONF_DISABLE_DB) {
@@ -371,7 +373,7 @@ const updateMonthlyWithdrawFees = async function (blockTime, amount) {
   var dateObj = new Date(0);
   dateObj.setUTCSeconds(blockTime);
   // Determine year, month and name
-  const thisMonth = dateObj.getMonth() ;
+  const thisMonth = dateObj.getMonth();
   const thisYear = dateObj.getFullYear();
   console.log("Updating monthly WithdrawFees stats for " + thisYear + "-" + thisMonth);
   if (!CONF_DISABLE_DB) {
@@ -404,7 +406,7 @@ const updateMonthlyNewDelegator = async function (blockTime, amount) {
   var dateObj = new Date(0);
   dateObj.setUTCSeconds(blockTime);
   // Determine year, month and name
-  const thisMonth = dateObj.getMonth() ;
+  const thisMonth = dateObj.getMonth();
   const thisYear = dateObj.getFullYear();
   console.log("Updating monthly new Delegator stats for " + thisYear + "-" + thisMonth);
   if (!CONF_DISABLE_DB) {
@@ -437,7 +439,7 @@ const updateMonthlyUnbond = async function (blockTime, amount) {
   var dateObj = new Date(0);
   dateObj.setUTCSeconds(blockTime);
   // Determine year, month and name
-  const thisMonth = dateObj.getMonth() ;
+  const thisMonth = dateObj.getMonth();
   const thisYear = dateObj.getFullYear();
   console.log("Updating monthly new Unbond stats for " + thisYear + "-" + thisMonth);
   if (!CONF_DISABLE_DB) {
@@ -501,7 +503,7 @@ const updateMonthlyActivation = async function (blockTime, amount) {
   var dateObj = new Date(0);
   dateObj.setUTCSeconds(blockTime);
   // Determine year, month and name
-  const thisMonth = dateObj.getMonth() ;
+  const thisMonth = dateObj.getMonth();
   const thisYear = dateObj.getFullYear();
   console.log("Updating monthly new activation stats for " + thisYear + "-" + thisMonth);
   if (!CONF_DISABLE_DB) {
@@ -534,7 +536,7 @@ const updateMonthlyMoveStake = async function (blockTime, amount) {
   var dateObj = new Date(0);
   dateObj.setUTCSeconds(blockTime);
   // Determine year, month and name
-  const thisMonth = dateObj.getMonth() ;
+  const thisMonth = dateObj.getMonth();
   const thisYear = dateObj.getFullYear();
   console.log("Updating monthly stake movement stats for " + thisYear + "-" + thisMonth);
   if (!CONF_DISABLE_DB) {
@@ -567,7 +569,7 @@ const updateMonthlyTicketReceived = async function (blockTime, amount, from, to)
   var dateObj = new Date(0);
   dateObj.setUTCSeconds(blockTime);
   // Determine year, month and name
-  const thisMonth = dateObj.getMonth() ;
+  const thisMonth = dateObj.getMonth();
   const thisYear = dateObj.getFullYear();
   console.log("Updating monthly ticket received stats for " + thisYear + "-" + thisMonth);
   if (!CONF_DISABLE_DB) {
@@ -685,7 +687,7 @@ const updateMonthlyTicketRedeemed = async function (blockTime, amount, address) 
   var dateObj = new Date(0);
   dateObj.setUTCSeconds(blockTime);
   // Determine year, month and name
-  const thisMonth = dateObj.getMonth() ;
+  const thisMonth = dateObj.getMonth();
   const thisYear = dateObj.getFullYear();
   console.log("Updating monthly ticket redeemed stats for " + thisYear + "-" + thisMonth);
   if (!CONF_DISABLE_DB) {
@@ -1087,7 +1089,11 @@ const syncEvents = function (toBlock) {
       let size = events.length;
       console.log("Parsing " + size + " events");
       if (!size) {
-        lastBlockEvents = toBlock;
+        if (toBlock == 'latest') {
+          lastBlockEvents = latestBlockInChain;
+        } else {
+          lastBlockEvents = toBlock;
+        }
       }
       for (const event of events) {
         if (event.blockNumber > lastBlockEvents) {
@@ -1141,7 +1147,11 @@ const syncTickets = function (toBlock) {
       let size = events.length;
       console.log("Parsing " + size + " tickets");
       if (!size) {
-        lastBlockTickets = toBlock;
+        if (toBlock == 'latest') {
+          lastBlockTickets = latestBlockInChain;
+        } else {
+          lastBlockTickets = toBlock;
+        }
       }
       for (const event of events) {
         if (event.blockNumber > lastBlockTickets) {
@@ -1247,6 +1257,8 @@ const initSync = async function () {
     address: 1,
     fees: 1,
     rewards: 1,
+    startRound: 1,
+    endRound: 1,
     transactionHash: 1,
     blockNumber: 1,
     blockTime: 1,
@@ -1373,6 +1385,7 @@ const handleSync = async function () {
       console.log("Latest L2 Eth block changed to " + latestBlockInChain);
     } else {
       // If there are no new blocks, wait for 10 seconds before retrying
+      console.log("No new blocks. Sleeping for 10 seconds...");
       await sleep(10000);
       continue;
     }
@@ -1381,15 +1394,15 @@ const handleSync = async function () {
     // Batch requests when sync is large, mark if we are going to reach latestBlockInChain in this round 
     let getFinalTickets = false;
     let toTickets = 'latest';
-    if (latestBlock - lastBlockTickets > 100000) {
-      toTickets = lastBlockTickets + 100000;
+    if (latestBlock - lastBlockTickets > 1000000) {
+      toTickets = lastBlockTickets + 1000000;
     } else {
       getFinalTickets = true;
     }
     let getFinalEvents = false;
     let toEvents = 'latest';
-    if (latestBlock - lastBlockEvents > 100000) {
-      toEvents = lastBlockEvents + 100000;
+    if (latestBlock - lastBlockEvents > 1000000) {
+      toEvents = lastBlockEvents + 1000000;
     } else {
       getFinalEvents = true;
     }
@@ -1404,8 +1417,8 @@ const handleSync = async function () {
       } else if (!getFinalEvents) {
         // Start next batch for events
         toEvents = 'latest';
-        if (latestBlock - lastBlockEvents > 100000) {
-          toEvents = lastBlockEvents + 100000;
+        if (latestBlock - lastBlockEvents > 1000000) {
+          toEvents = lastBlockEvents + 1000000;
         } else {
           getFinalEvents = true;
         }
@@ -1416,8 +1429,8 @@ const handleSync = async function () {
       } else if (!getFinalTickets) {
         // Start next batch for tickets
         toTickets = 'latest';
-        if (latestBlock - lastBlockTickets > 100000) {
-          toTickets = lastBlockTickets + 100000;
+        if (latestBlock - lastBlockTickets > 1000000) {
+          toTickets = lastBlockTickets + 1000000;
         } else {
           getFinalTickets = true;
         }
@@ -1635,7 +1648,7 @@ const mutateNewCommissionRates = async function (address, feeCommission, rewardC
   feeCommission = (100 - (feeCommission / 10000)).toFixed(2);
   // Create new data point
   if (!CONF_DISABLE_DB) {
-    const dbObj = new Event({
+    const dbObj = new CommissionDataPoint({
       address: address,
       feeCommission: feeCommission,
       rewardCommission: rewardCommission,
@@ -1698,7 +1711,7 @@ const mutateNewGlobalStake = async function (address, globalStake) {
   const thisYear = dateObj.getFullYear();
   // Create new data point
   if (!CONF_DISABLE_DB) {
-    const dbObj = new Event({
+    const dbObj = new TotalStakeDataPoint({
       address: address,
       totalStake: globalStake,
       timestamp: now
@@ -2486,12 +2499,10 @@ const mutateTestScoresToDB = async function (scoreObj, month, year) {
   }
   // Immediately mutate Monthly statistics object
   const doc = await MonthlyStat.findOneAndUpdate({
-    year: thisYear,
-    month: thisMonth
+    year: year,
+    month: month
   }, {
-    $set: {
-      testScores: scoreObj
-    }
+    testScores: scoreObj
   }, {
     upsert: true,
     new: true,
@@ -2525,6 +2536,7 @@ const getScoreAtMonthYear = async function (month, year) {
   const endTime = parseInt(Date.parse(endString) / 1000)
   // Else get it and cache it
   const url = "https://leaderboard-serverless.vercel.app/api/aggregated_stats?since=" + startTime + "&until=" + endTime;
+  console.log("Getting new Orchestrator scores for " + year + "-" + month + " @ " + url);
   await https.get(url, (res) => {
     let body = "";
     res.on("data", (chunk) => {

@@ -58,7 +58,7 @@ const Stats = (obj) => {
                             contentInner: { padding: 0 },
                           }}>
                           {
-                            livepeer.monthlyStats.map(function (data) {
+                            livepeer.monthlyStats.slice(0).reverse().map(function (data, i) {
                               let thisMonth = "";
                               let monthAsNum = data.month;
                               if (monthAsNum == 0) {
@@ -91,10 +91,11 @@ const Stats = (obj) => {
                                 <Accordion.Item
                                   label={data.year + "-" + thisMonth + ": " + data.winningTicketsReceived.length + " orchestrators earned " + data.winningTicketsReceivedSum.toFixed(2) + " Eth"}
                                   className="stroke"
-                                  key={data.year + "-" + data.month + "-" + data.total}>
+                                  key={"accord" + i + data.year + "-" + data.month + "-" + data.total}>
                                   <WinnerMonth
                                     data={data}
                                     removeOnlyStakers={removeOnlyStakers}
+                                    seed={"win" + i + data.year + "-" + data.month + "-" + data.total}
                                   />
                                 </Accordion.Item>
                               )

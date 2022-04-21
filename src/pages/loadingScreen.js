@@ -4,9 +4,12 @@ import {
   getVisitorStats
 } from "../actions/user";
 import {
-  getQuotes, getBlockchainData, getEvents, getCurrentOrchestratorInfo, getTickets,
+  getQuotes, getBlockchainData, getCurrentOrchestratorInfo,
   getAllEnsDomains, getAllEnsInfo, getAllThreeBoxInfo, getAllOrchScores,  getAllOrchInfo,
-  getAllDelInfo, getAllMonthlyStats
+  getAllDelInfo, getAllMonthlyStats, getAllUpdateEvents, getAllRewardEvents,
+  getAllClaimEvents, getAllWithdrawStakeEvents, getAllWithdrawFeesEvents,
+  getAllTransferTicketEvents, getAllRedeemTicketEvents, getAllActivateEvents,
+  getAllUnbondEvents, getAllStakeEvents,
 } from "../actions/livepeer";
 import { login } from "../actions/session";
 

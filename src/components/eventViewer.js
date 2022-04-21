@@ -34,7 +34,9 @@ const EventViewer = (obj) => {
   let filtered = 0;
   let hidden = 0;
   let prevBlock = 0;
-  let limitShown = obj.events.length + obj.tickets.length;
+  let limitShown = obj.updateEvents.length + obj.rewardEvents.length + obj.claimEvents.length +
+    obj.withdrawStakeEvents.length + obj.withdrawFeesEvents.length + obj.activateEvents.length +
+    obj.stakeEvents.length + obj.unbondEvents.length + obj.transferTicketEvents.length + obj.redeemTicketEvents.length;
 
   let filterActivatedColour;
   filterActivatedColour = filterActivated ? activationColour : greyColour;
@@ -429,7 +431,7 @@ const EventViewer = (obj) => {
 
     if (unfiltered < obj.maxAmount) {
       unfiltered++;
-      if (prevBlock === thisEvent.transactionBlock) {
+      if (prevBlock === thisEvent.blockNumber) {
         eventList.push(<EventButton
           key={thisEvent.transactionHash + unfiltered}
           seed={thisEvent.transactionHash + unfiltered}
@@ -438,14 +440,14 @@ const EventViewer = (obj) => {
           setSearchTerm={obj.setSearchTerm}
         />);
       } else {
-        prevBlock = thisEvent.transactionBlock;
+        prevBlock = thisEvent.blockNumber;
         eventList.push(<EventButton
           key={thisEvent.transactionHash + unfiltered}
           seed={thisEvent.transactionHash + unfiltered}
           eventObj={thisEvent}
           type={latestType}
           isFirstOfBlock={prevBlock}
-          time={thisEvent.transactionTime}
+          time={thisEvent.blockTime}
           setSearchTerm={obj.setSearchTerm}
         />);
       }
@@ -501,6 +503,7 @@ const EventViewer = (obj) => {
               hideScrollbars={false} onEndScroll={updateOnScroll} ref={listInnerRef}>
               <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0 }}>
                 <div className={obj.forceVertical ? "flexContainer forceWrap" : "flexContainer"} >
+                  <div className="verticalDivider" />
                   {eventList}
                   <div className="verticalDivider" />
                   {showMoreButton}

@@ -176,7 +176,7 @@ export const getOrchestratorInfo = (orchAddr) => async dispatch => {
 };
 
 export const setCachedOrch = (orchObj) => async dispatch => {
-    return dispatch(setOrchestratorInfo(orchObj));
+  return dispatch(setOrchestratorInfo(orchObj));
 };
 
 export const clearOrchestrator = () => async dispatch => {
@@ -219,8 +219,12 @@ export const getThreeBoxInfo = async (addr) => {
   const response = apiUtil.getThreeBox(addr);
 };
 
-export const getOrchestratorScores = (year, month) => async dispatch => {
-  const response = apiUtil.getOrchestratorScores(year, month);
+export const getOrchestratorScores = async (year, month) => {
+  const response = await apiUtil.getOrchestratorScores(year, month);
+  const data = await response.json();
+  if (response.ok) {
+    return data;
+  }
 };
 
 export const getAllOrchScores = () => async dispatch => {

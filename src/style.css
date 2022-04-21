@@ -200,6 +200,15 @@ svg {
   text-shadow: 0.5px 0.5px 0.8px #5a5663;
 }
 
+.darkTextSmoll {
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.875);
+  text-shadow: 0.5px 0.5px 0.8px #5a5663;
+  font-weight: normal;
+  font-size: small;
+}
+
 .hostInfo {
   cursor: default;
   text-align: start;
