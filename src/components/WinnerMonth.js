@@ -195,6 +195,65 @@ const WinnerMonth = (obj) => {
     </div>;
   }
 
+  // Pies for broadcaster payout
+  let broadcasterObj;
+  if (obj.data.winningTicketsSent && obj.data.winningTicketsSent.length) {
+    let otherSum = 0;
+    let pieList = [];
+    let ticketIdx = obj.data.winningTicketsSent.length - 1;
+    // Create pie chart
+    while (ticketIdx >= 0) {
+      const thisTicket = obj.data.winningTicketsSent[ticketIdx];
+      ticketIdx -= 1;
+      if ((thisTicket.sum / obj.data.winningTicketsReceivedSum) < 0.03) {
+        otherSum += thisTicket.sum;
+      } else {
+        pieList.push({
+          address: getName(thisTicket.address),
+          sum: thisTicket.sum
+        });
+      }
+    }
+    pieList.push({
+      address: "Other",
+      sum: otherSum
+    });
+
+    broadcasterObj = <div className="stroke">
+      <h4>Broadcaster Payments</h4>
+      <VictoryPie padding={{ top: 20, bottom: 20, left: 120, right: 120 }} data={pieList} x="address" y="sum"
+        sortOrder="descending"
+        sortKey="sum"
+        colorScale={[
+          "#003f5c",
+          "#2f4b7c",
+          "#665191",
+          "#ff7c43",
+          "#ffa600",
+          "#5c3446",
+          "#83424e",
+          "#a6544e",
+          "#c16d46",
+          "#d18d3c",
+          "#d3b136",
+          "#c5d843",
+          "#a3ff69",
+        ]}
+        style={{
+          backgroundColor: 'rgba(122, 128, 127, 0.4)',
+          data: {
+            fillOpacity: 0.9, stroke: "#636363", strokeWidth: 2
+          },
+          labels: {
+            fontSize: 10, zIndex: 999
+          }
+        }}
+        labelPosition="centroid"
+        labelPlacement="parallel"
+      />
+    </div>;
+  }
+
   let sortedList = [];
   if (orchList.length) {
     // Sort this months data
@@ -315,6 +374,7 @@ const WinnerMonth = (obj) => {
       <div className="verticalDivider" />
       {stakeObj}
       {earningsObj}
+      {broadcasterObj}
       <div className="flexContainer forceWrap">
         {
           sortedList.map(function (orch, i) {
