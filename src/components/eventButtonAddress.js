@@ -95,15 +95,27 @@ const EventButtonAddress = (obj) => {
 
   useEffect(() => {
     // Check if cached as an orchestrator
+    let shouldUpdate = false;
     if (livepeer.orchInfo) {
       for (const thisOrch of livepeer.orchInfo) {
         if (thisOrch.id === obj.address) {
           return;
         }
       }
-      // Preload Orch info
+      shouldUpdate = true;
+    }
+    if (livepeer.delInfo) {
+      for (const thisOrch of livepeer.delInfo) {
+        if (thisOrch.id === obj.address) {
+          return;
+        }
+      }
+      shouldUpdate = true;
+    }
+    // Preload Orch info
+    if (shouldUpdate){
       console.log("Refresh due to non-existing orch in global state");
-      dispatch(getOrchestratorInfoSilent(obj.address));
+      getOrchestratorInfoSilent(obj.address);
     }
   }, [livepeer.orchInfo]);
 

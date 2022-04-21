@@ -146,14 +146,8 @@ export const getCurrentOrchestratorInfo = () => async dispatch => {
   return dispatch(receiveErrors(data));
 };
 
-export const getOrchestratorInfoSilent = (orchAddr) => async dispatch => {
-  const response = await apiUtil.getOrchestratorInfo(orchAddr);
-  const data = await response.json();
-  if (response.ok) {
-    if (data && data.id) {
-      return dispatch(cacheNewOrch(data));
-    }
-  }
+export const getOrchestratorInfoSilent = async (orchAddr) => {
+  apiUtil.getOrchestratorInfo(orchAddr);
 };
 
 export const getOrchestratorInfo = (orchAddr) => async dispatch => {
