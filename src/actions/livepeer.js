@@ -267,7 +267,9 @@ export const getAllUpdateEvents = () => async dispatch => {
   const response = await apiUtil.getAllUpdateEvents();
   const data = await response.json();
   if (response.ok) {
-    return dispatch(setAllUpdateEvents(data));
+    if (data && data.length){
+      return dispatch(setAllUpdateEvents(data));
+    }
   }
   return dispatch(receiveErrors(data));
 };
@@ -276,7 +278,9 @@ export const getAllRewardEvents = () => async dispatch => {
   const response = await apiUtil.getAllRewardEvents();
   const data = await response.json();
   if (response.ok) {
-    return dispatch(setAllRewardEvents(data));
+    if (data && data.length){
+      return dispatch(setAllRewardEvents(data));
+    }
   }
   return dispatch(receiveErrors(data));
 };
@@ -285,7 +289,9 @@ export const getAllClaimEvents = () => async dispatch => {
   const response = await apiUtil.getAllClaimEvents();
   const data = await response.json();
   if (response.ok) {
-    return dispatch(setAllClaimEvents(data));
+    if (data && data.length){
+      return dispatch(setAllClaimEvents(data));
+    }
   }
   return dispatch(receiveErrors(data));
 };
@@ -294,7 +300,9 @@ export const getAllWithdrawStakeEvents = () => async dispatch => {
   const response = await apiUtil.getAllWithdrawStakeEvents();
   const data = await response.json();
   if (response.ok) {
-    return dispatch(setAllWithdrawStakeEvents(data));
+    if (data && data.length){
+      return dispatch(setAllWithdrawStakeEvents(data));
+    }
   }
   return dispatch(receiveErrors(data));
 };
@@ -303,7 +311,9 @@ export const getAllWithdrawFeesEvents = () => async dispatch => {
   const response = await apiUtil.getAllWithdrawFeesEvents();
   const data = await response.json();
   if (response.ok) {
-    return dispatch(setAllWithdrawFeesEvents(data));
+    if (data && data.length){
+      return dispatch(setAllWithdrawFeesEvents(data));
+    }
   }
   return dispatch(receiveErrors(data));
 };
@@ -312,7 +322,9 @@ export const getAllTransferTicketEvents = () => async dispatch => {
   const response = await apiUtil.getAllTransferTicketEvents();
   const data = await response.json();
   if (response.ok) {
-    return dispatch(setAllTransferTicketEvents(data));
+    if (data && data.length){
+      return dispatch(setAllTransferTicketEvents(data));
+    }
   }
   return dispatch(receiveErrors(data));
 };
@@ -321,7 +333,9 @@ export const getAllRedeemTicketEvents = () => async dispatch => {
   const response = await apiUtil.getAllRedeemTicketEvents();
   const data = await response.json();
   if (response.ok) {
-    return dispatch(setAllRedeemTicketEvents(data));
+    if (data && data.length){
+      return dispatch(setAllRedeemTicketEvents(data));
+    }
   }
   return dispatch(receiveErrors(data));
 };
@@ -330,7 +344,9 @@ export const getAllActivateEvents = () => async dispatch => {
   const response = await apiUtil.getAllActivateEvents();
   const data = await response.json();
   if (response.ok) {
-    return dispatch(setAllActivateEvents(data));
+    if (data && data.length){
+      return dispatch(setAllActivateEvents(data));
+    }
   }
   return dispatch(receiveErrors(data));
 };
@@ -339,7 +355,9 @@ export const getAllUnbondEvents = () => async dispatch => {
   const response = await apiUtil.getAllUnbondEvents();
   const data = await response.json();
   if (response.ok) {
-    return dispatch(setAllUnbondEvents(data));
+    if (data && data.length){
+      return dispatch(setAllUnbondEvents(data));
+    }
   }
   return dispatch(receiveErrors(data));
 };
@@ -348,7 +366,9 @@ export const getAllStakeEvents = () => async dispatch => {
   const response = await apiUtil.getAllStakeEvents();
   const data = await response.json();
   if (response.ok) {
-    return dispatch(setAllStakeEvents(data));
+    if (data && data.length){
+      return dispatch(setAllStakeEvents(data));
+    }
   }
   return dispatch(receiveErrors(data));
 };

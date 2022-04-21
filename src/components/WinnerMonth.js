@@ -338,6 +338,7 @@ const WinnerMonth = (obj) => {
                   thisStake={thisStake}
                   thisCommission={thisCommission}
                   address={orch.address}
+                  thisIndex={i + 1}
                   seed={obj.seed + "win" + orch.address + i}
                 />
                 <div className="verticalDivider" />

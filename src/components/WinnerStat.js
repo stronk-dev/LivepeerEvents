@@ -91,6 +91,9 @@ const Winner = (obj) => {
   return (
     <div className="stroke hostInfo" style={{ padding: '1em', cursor: 'grab' }} >
       <div className="row">
+        <div className="strokeSmollLeft" style={{ marginLeft: '0.2em', whiteSpace:'nowrap' }} >
+          <h3>{obj.thisIndex}</h3>
+        </div>
         <div className="rowAlignLeft">
           <Address address={obj.address} seed={obj.seed} />
         </div>

@@ -28,16 +28,6 @@ const Startup = (obj) => {
       dispatch(getQuotes());
       dispatch(getBlockchainData());
       dispatch(getCurrentOrchestratorInfo());
-      dispatch(getAllUpdateEvents());
-      dispatch(getAllRewardEvents());
-      dispatch(getAllClaimEvents());
-      dispatch(getAllWithdrawStakeEvents());
-      dispatch(getAllWithdrawFeesEvents());
-      dispatch(getAllTransferTicketEvents());
-      dispatch(getAllRedeemTicketEvents());
-      dispatch(getAllActivateEvents());
-      dispatch(getAllUnbondEvents());
-      dispatch(getAllStakeEvents());
     });
   }
   
@@ -65,6 +55,16 @@ const Startup = (obj) => {
       dispatch(getAllDelInfo());
       dispatch(getAllOrchScores());
       dispatch(getAllMonthlyStats());
+      dispatch(getAllUpdateEvents());
+      dispatch(getAllRewardEvents());
+      dispatch(getAllClaimEvents());
+      dispatch(getAllWithdrawStakeEvents());
+      dispatch(getAllWithdrawFeesEvents());
+      dispatch(getAllTransferTicketEvents());
+      dispatch(getAllRedeemTicketEvents());
+      dispatch(getAllActivateEvents());
+      dispatch(getAllUnbondEvents());
+      dispatch(getAllStakeEvents());
     });
   }
   
