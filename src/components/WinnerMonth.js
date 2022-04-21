@@ -136,53 +136,6 @@ const WinnerMonth = (obj) => {
     orchList = [...obj.data.winningTicketsReceived];
   }
 
-  let sortedList = [];
-  if (orchList.length) {
-    // Sort this months data
-    while (orchList.length) {
-      let ticketIdx2 = orchList.length - 1;
-      let largestIdx = 0;
-      let largestValue = 0;
-      let thisVal = null;
-      // Find current O with most ticket wins in Eth
-      while (ticketIdx2 >= 0) {
-        const currentOrch = orchList[ticketIdx2];
-        thisVal = currentOrch.sum;
-        if (!thisVal) {
-          ticketIdx2 -= 1;
-          continue;
-        }
-        if (thisVal > largestValue) {
-          largestIdx = ticketIdx2;
-          largestValue = thisVal;
-        }
-        ticketIdx2 -= 1;
-      }
-      // Else try to sort by stake
-      if (!thisVal) {
-        ticketIdx2 = orchList.length - 1;
-        while (ticketIdx2 >= 0) {
-          const currentOrch = orchList[ticketIdx2];
-          thisVal = currentOrch.totalStake;
-          if (!thisVal) {
-            ticketIdx2 -= 1;
-            continue;
-          }
-          if (thisVal > largestValue) {
-            largestIdx = ticketIdx2;
-            largestValue = thisVal;
-          }
-          ticketIdx2 -= 1;
-        }
-      }
-      // Push current biggest list
-      sortedList.push(orchList[largestIdx]);
-      // Remove from list
-      orchList.splice(largestIdx, 1);
-    }
-  }
-
-
   // Pies for earnings overview
   let earningsObj;
   if (obj.data.winningTicketsReceived && obj.data.winningTicketsReceived.length) {
@@ -240,6 +193,66 @@ const WinnerMonth = (obj) => {
         labelPlacement="parallel"
       />
     </div>;
+  }
+
+  let sortedList = [];
+  if (orchList.length) {
+    // Sort this months data
+    while (orchList.length) {
+      let ticketIdx2 = orchList.length - 1;
+      let largestIdx = 0;
+      let largestValue = 0;
+
+      // Find current O with most ticket wins in Eth
+      while (ticketIdx2 >= 0) {
+        const currentOrch = orchList[ticketIdx2];
+        let thisVal;
+
+        for (const obj of ticketList) {
+          if (obj.address == currentOrch.address) {
+            thisVal = obj.sum;
+          }
+        }
+
+        if (!thisVal) {
+          ticketIdx2 -= 1;
+          continue;
+        }
+        if (thisVal > largestValue) {
+          largestIdx = ticketIdx2;
+          largestValue = thisVal;
+        }
+        ticketIdx2 -= 1;
+      }
+      // Else try to sort by stake
+      if (!largestValue) {
+        ticketIdx2 = orchList.length - 1;
+        while (ticketIdx2 >= 0) {
+          const currentOrch = orchList[ticketIdx2];
+          let thisVal;
+
+          for (const obj of stakeList) {
+            if (obj.address == currentOrch.address) {
+              thisVal = obj.totalStake;
+            }
+          }
+
+          if (!thisVal) {
+            ticketIdx2 -= 1;
+            continue;
+          }
+          if (thisVal > largestValue) {
+            largestIdx = ticketIdx2;
+            largestValue = thisVal;
+          }
+          ticketIdx2 -= 1;
+        }
+      }
+      // Push current biggest list
+      sortedList.push(orchList[largestIdx]);
+      // Remove from list
+      orchList.splice(largestIdx, 1);
+    }
   }
 
   return (
