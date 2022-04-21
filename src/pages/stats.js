@@ -5,53 +5,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Accordion } from '@mantine/core';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import WinnerMonth from '../components/WinnerMonth';
-import StakeOverview from '../components/StakeOverview';
 
 const Stats = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
-  const [ticketsPerMonth, setTicketsPerMonth] = useState([]);
   const [redirectToHome, setRedirectToHome] = useState(false);
+  const [removeOnlyStakers, setRemoveOnlyStakers] = useState(false);
 
   console.log("Rendering Stats Viewer");
 
   if (redirectToHome) {
     return <Navigate push to="/" />;
-  }
-
-  const getName = (address) => {
-    let thisDomain = null;
-    // Lookup domain in cache
-    if (livepeer.ensDomainMapping) {
-      for (const thisAddr of livepeer.ensDomainMapping) {
-        if (thisAddr.address === address) {
-          thisDomain = thisAddr;
-          break;
-        }
-      }
-    }
-    // Lookup current info in cache only if this addr has a mapped ENS domain
-    if (thisDomain && thisDomain.domain) {
-      for (const thisAddr of livepeer.ensInfoMapping) {
-        if (thisAddr.domain === thisDomain.domain) {
-          return thisAddr.domain;
-        }
-      }
-    }
-
-    if (livepeer.threeBoxInfo) {
-      for (const thisAddr of livepeer.threeBoxInfo) {
-        if (thisAddr.address === address) {
-          if (thisAddr.name) {
-            return thisAddr.name;
-          } else {
-            return (address.substring(0, 10) + "..");
-          }
-          break;
-        }
-      }
-    }
-
-    return (address.substring(0, 10) + "..");
   }
 
   return (
@@ -65,6 +28,14 @@ const Stats = (obj) => {
           </button>
           <h4 className="rowAlignLeft withWrap showNeverOnMobile">Statistics</h4>
         </div>
+        {/* <div className='rowAlignRight'>
+          <p>Filter</p>
+          <div className="toggle-container" onClick={() => setRemoveOnlyStakers(!removeOnlyStakers)}>
+            <div className={`dialog-button ${removeOnlyStakers ? "" : "disabled"}`}>
+              {removeOnlyStakers ? "Show" : "Hide"}
+            </div>
+          </div>
+        </div> */}
       </div>
       <div id='bodyContent'>
         <div className="mainContent">
@@ -86,13 +57,8 @@ const Stats = (obj) => {
                             content: { padding: 0, paddingTop: '1em', paddingBottom: '1em' },
                             contentInner: { padding: 0 },
                           }}>
-                          <Accordion.Item
-                            label={"Current Stake Overview"}
-                            className="stroke">
-                            <StakeOverview />
-                          </Accordion.Item>
                           {
-                            ticketsPerMonth.map(function (data) {
+                            livepeer.monthlyStats.map(function (data) {
                               let thisMonth = "";
                               let monthAsNum = data.month;
                               if (monthAsNum == 0) {
@@ -123,14 +89,12 @@ const Stats = (obj) => {
 
                               return (
                                 <Accordion.Item
-                                  label={data.year + "-" + thisMonth + ": " + data.orchestrators.length + " orchestrators earned " + data.total.toFixed(2) + " Eth"}
+                                  label={data.year + "-" + thisMonth + ": " + data.winningTicketsReceived.length + " orchestrators earned " + data.winningTicketsReceivedSum.toFixed(2) + " Eth"}
                                   className="stroke"
                                   key={data.year + "-" + data.month + "-" + data.total}>
                                   <WinnerMonth
-                                    year={data.year}
-                                    month={data.month}
-                                    orchestrators={data.orchestrators}
-                                    total={data.total}
+                                    data={data}
+                                    removeOnlyStakers={removeOnlyStakers}
                                   />
                                 </Accordion.Item>
                               )

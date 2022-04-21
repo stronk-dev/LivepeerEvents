@@ -1078,11 +1078,8 @@ const syncEvents = function (toBlock) {
   console.log("Starting sync process for Bonding Manager events to block " + toBlock);
   isEventSyncing = true;
   let lastTxSynced = 0;
-  if (lastBlockTickets != 'latest'){
-    lastBlockTickets += 1;
-  }
   // Then do a sync from last found until latest known
-  bondingManagerContract.getPastEvents("allEvents", { fromBlock: lastBlockEvents, toBlock: toBlock }, async (error, events) => {
+  bondingManagerContract.getPastEvents("allEvents", { fromBlock: lastBlockEvents + 1, toBlock: toBlock }, async (error, events) => {
     try {
       if (error) {
         throw error
@@ -1135,11 +1132,8 @@ const syncEvents = function (toBlock) {
 const syncTickets = function (toBlock) {
   console.log("Starting sync process for Ticket Broker events to block " + toBlock);
   isTicketSyncing = true;
-  if (lastBlockTickets != 'latest'){
-    lastBlockTickets += 1;
-  }
   // Then do a sync from last found until latest known
-  ticketBrokerContract.getPastEvents("allEvents", { fromBlock: lastBlockTickets, toBlock: toBlock }, async (error, events) => {
+  ticketBrokerContract.getPastEvents("allEvents", { fromBlock: lastBlockTickets + 1, toBlock: toBlock }, async (error, events) => {
     try {
       if (error) {
         throw error
