@@ -85,7 +85,7 @@ const WinnerMonth = (obj) => {
     while (ticketIdx >= 0) {
       const thisTicket = obj.data.latestTotalStake[ticketIdx];
       ticketIdx -= 1;
-      if ((thisTicket.totalStake / totalStakeSum) < 0.04) {
+      if ((thisTicket.totalStake / totalStakeSum) < 0.015) {
         otherSum += thisTicket.totalStake;
       } else {
         pieList.push({
@@ -118,6 +118,11 @@ const WinnerMonth = (obj) => {
           "#d3b136",
           "#c5d843",
           "#a3ff69",
+          "#275c18",
+          "#007b56",
+          "#009897",
+          "#00b1d2",
+          "#78c7ff"
         ]}
         style={{
           backgroundColor: 'rgba(122, 128, 127, 0.4)',
@@ -146,7 +151,7 @@ const WinnerMonth = (obj) => {
     while (ticketIdx >= 0) {
       const thisTicket = obj.data.winningTicketsReceived[ticketIdx];
       ticketIdx -= 1;
-      if ((thisTicket.sum / obj.data.winningTicketsReceivedSum) < 0.03) {
+      if ((thisTicket.sum / obj.data.winningTicketsReceivedSum) < 0.015) {
         otherSum += thisTicket.sum;
       } else {
         pieList.push({
@@ -205,7 +210,7 @@ const WinnerMonth = (obj) => {
     while (ticketIdx >= 0) {
       const thisTicket = obj.data.winningTicketsSent[ticketIdx];
       ticketIdx -= 1;
-      if ((thisTicket.sum / obj.data.winningTicketsReceivedSum) < 0.03) {
+      if ((thisTicket.sum / obj.data.winningTicketsReceivedSum) < 0.015) {
         otherSum += thisTicket.sum;
       } else {
         pieList.push({
