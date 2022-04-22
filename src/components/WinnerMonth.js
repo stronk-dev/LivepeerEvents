@@ -116,7 +116,7 @@ const WinnerMonth = (obj) => {
         width={620}
         height={620}
         innerRadius={50}
-        labelRadius={140}
+        labelRadius={130}
         cornerRadius={3}
         colorScale={[
           "#282678",
@@ -196,7 +196,7 @@ const WinnerMonth = (obj) => {
         width={620}
         height={620}
         innerRadius={50}
-        labelRadius={140}
+        labelRadius={130}
         cornerRadius={3}
         colorScale={[
           "#282678",
@@ -274,7 +274,7 @@ const WinnerMonth = (obj) => {
         width={620}
         height={620}
         innerRadius={50}
-        labelRadius={140}
+        labelRadius={130}
         cornerRadius={3}
         colorScale={[
           "#282678",
@@ -426,7 +426,7 @@ const WinnerMonth = (obj) => {
       }
       {obj.data.winningTicketsReceivedCount ?
         <div className="rowAlignLeft">
-          <p className="darkTextSmoll">🎫 {obj.data.winningTicketsReceivedCount} winning tickets were sent out worth {obj.data.winningTicketsReceivedSum.toFixed(2)} ETH</p>
+          <p className="darkTextSmoll">🎫 {obj.data.winningTicketsReceivedCount} winning tickets were sent out by {obj.data.winningTicketsSent.length} broadcasters</p>
         </div> : null
       }
       {obj.data.winningTicketsRedeemedCount ?
