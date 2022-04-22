@@ -93,7 +93,7 @@ const MonthlyGraphs = (obj) => {
 
     totalGraphs++;
 
-    stakeObj = <div className="stroke" style={{width: 'unset'}}>
+    stakeObj = <div className="stroke" style={{ width: 'unset' }}>
       <h4>Stake Distribution</h4>
       <VictoryPie padding={0} data={pieList} x="address" y="sum"
         sortOrder="descending"
@@ -175,7 +175,7 @@ const MonthlyGraphs = (obj) => {
 
     totalGraphs++;
 
-    earningsObj = <div className="stroke" style={{width: 'unset'}}>
+    earningsObj = <div className="stroke" style={{ width: 'unset' }}>
       <h4>Earnings Distribution</h4>
       <VictoryPie padding={{ top: 20, bottom: 20, left: 120, right: 120 }} data={pieList} x="address" y="sum"
         sortOrder="descending"
@@ -260,7 +260,7 @@ const MonthlyGraphs = (obj) => {
 
     totalGraphs++;
 
-    broadcasterObj = <div className="stroke" style={{width: 'unset'}}>
+    broadcasterObj = <div className="stroke" style={{ width: 'unset' }}>
       <h4>Broadcaster Payments</h4>
       <VictoryPie padding={{ top: 20, bottom: 20, left: 120, right: 120 }} data={pieList} x="address" y="sum"
         sortOrder="descending"
@@ -403,14 +403,16 @@ const MonthlyGraphs = (obj) => {
   }
 
   return (
-    <div className="stroke insetEffect" key={obj.seed + "graphs"} style={{ minHeight: '70vh' }}>
-      {renderStake ? stakeObj : null}
-      {renderEarnings ? earningsObj : null}
-      {renderBread ? broadcasterObj : null}
+    <div className="stroke fullMargin insetEffect" style={{ padding: 0, margin: 0, height: '70vh' }}>
       <div className="row" style={{ marginTop: '1em', marginBottom: '1em' }}>
         {totalGraphs > 1 ?
           <Pagination page={activeGraph} onChange={setGraph} total={totalGraphs} siblings={1} initialPage={1} />
           : null}
+      </div>
+      <div className="row" style={{ marginTop: '1em', marginBottom: '1em', height: '100%' }}>
+        {renderStake ? stakeObj : null}
+        {renderEarnings ? earningsObj : null}
+        {renderBread ? broadcasterObj : null}
       </div>
     </div>
   )

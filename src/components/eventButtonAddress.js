@@ -175,7 +175,7 @@ const EventButtonAddress = (obj) => {
         }
         dispatch(getOrchestratorInfo(obj.address));
       }} >
-        {thisName}
+        <span className="elipsText elipsOnMobileExtra">{thisName}</span>
       </button>
     </div>
   )

@@ -31,7 +31,7 @@ const Stats = (obj) => {
         <div className="mainContent">
           <div className="strokeSmollLeft" style={{ height: 'calc( 100vh - 50px)' }}>
             <div className="row" style={{ width: '100%', height: '100%' }}>
-              <div className="stroke roundedOpaque onlyVerticalScroll" style={{ width: '40vw', minWidth: '400px', height: 'calc( 100vh - 50px - 2em)', marginTop: '2em' }}>
+              <div className="stroke roundedOpaque onlyVerticalScroll" style={{ width: '40vw', minWidth: '300px', height: 'calc( 100vh - 50px - 2em)', marginTop: '2em' }}>
                 <div className="content-wrapper" style={{ width: '100%' }}>
                   <div className="overflow-container">
                     <div className="overflow-content" style={{ padding: 0 }}>

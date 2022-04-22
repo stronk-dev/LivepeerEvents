@@ -111,7 +111,7 @@ const Address = (obj) => {
         <img alt="" src="livepeer.png" width="20em" height="20em" />
       </a>
       {thisIcon}
-      <span className="elipsText elipsOnMobileExtra" style={{ width: '100%' }}>{thisName}</span>
+      <span className="elipsText elipsOnMobileExtra">{thisName}</span>
     </div>
   )
 }

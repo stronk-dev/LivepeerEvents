@@ -113,66 +113,66 @@ const MonthlyOrchestrators = (obj) => {
   const totalPages = (sortedList.length + (itemsPerPage - (sortedList.length % itemsPerPage))) / itemsPerPage;
 
   return (
-      <div className="stroke fullMargin insetEffect" style={{ padding: 0, margin: 0, height: '70vh' }}>
-        <div className="content-wrapper">
-          <ScrollContainer className="overflow-container" hideScrollbars={false} style={{}}>
-            <div className="overflow-content" style={{ cursor: 'grab', maxHeight: '300px' }}>
-              {
-                sortedList.map(function (orch, i) {
-                  const tmp = i - ((activePage - 1) * itemsPerPage);
-                  if (tmp >= 0 && tmp < itemsPerPage) {
-                    let thisCommission = null;
-                    let thisStake = null;
-                    let thisEarnings = null;
-
-                    for (const obj of ticketList) {
-                      if (obj.address == orch.address) {
-                        thisEarnings = obj;
-                      }
-                    }
-                    for (const obj of commissionList) {
-                      if (obj.address == orch.address) {
-                        thisCommission = obj;
-                      }
-                    }
-                    for (const obj of stakeList) {
-                      if (obj.address == orch.address) {
-                        thisStake = obj;
-                      }
-                    }
-                    let thisScore = null;
-                    if (thisScores && thisScores.scores) {
-                      thisScore = thisScores.scores[orch.address];
-                    }
-                    return (
-                      <div className='stroke' key={obj.seed + orch.address + i}>
-                        <Winner
-                          thisScore={thisScore}
-                          totalEarnings={obj.data.winningTicketsReceivedSum}
-                          thisEarnings={thisEarnings}
-                          totalStake={totalStakeSum}
-                          thisStake={thisStake}
-                          thisCommission={thisCommission}
-                          address={orch.address}
-                          thisIndex={i + 1}
-                          seed={obj.seed + "win" + orch.address + i}
-                        />
-                        <div className="verticalDivider" />
-                      </div>
-                    )
-                  }
-                  return null;
-                })
-              }
-            </div>
-          </ScrollContainer>
-        </div>
-        <div className="row" style={{ marginTop: '1em', marginBottom: '1em' }}>
-          {totalPages > 1 ?
-            <Pagination page={activePage} onChange={setPage} total={totalPages} siblings={1} initialPage={1} />
-            : null}
-        </div>
+    <div className="stroke fullMargin insetEffect" style={{ padding: 0, margin: 0, height: '70vh' }}>
+      <div className="row" style={{ marginTop: '1em', marginBottom: '1em' }}>
+        {totalPages > 1 ?
+          <Pagination page={activePage} onChange={setPage} total={totalPages} siblings={1} initialPage={1} />
+          : null}
       </div>
+      <div className="content-wrapper">
+        <ScrollContainer className="overflow-container" hideScrollbars={false} style={{}}>
+          <div className="overflow-content" style={{ cursor: 'grab', maxHeight: '300px' }}>
+            {
+              sortedList.map(function (orch, i) {
+                const tmp = i - ((activePage - 1) * itemsPerPage);
+                if (tmp >= 0 && tmp < itemsPerPage) {
+                  let thisCommission = null;
+                  let thisStake = null;
+                  let thisEarnings = null;
+
+                  for (const obj of ticketList) {
+                    if (obj.address == orch.address) {
+                      thisEarnings = obj;
+                    }
+                  }
+                  for (const obj of commissionList) {
+                    if (obj.address == orch.address) {
+                      thisCommission = obj;
+                    }
+                  }
+                  for (const obj of stakeList) {
+                    if (obj.address == orch.address) {
+                      thisStake = obj;
+                    }
+                  }
+                  let thisScore = null;
+                  if (thisScores && thisScores.scores) {
+                    thisScore = thisScores.scores[orch.address];
+                  }
+                  return (
+                    <div className='stroke' key={obj.seed + orch.address + i}>
+                      <Winner
+                        thisScore={thisScore}
+                        totalEarnings={obj.data.winningTicketsReceivedSum}
+                        thisEarnings={thisEarnings}
+                        totalStake={totalStakeSum}
+                        thisStake={thisStake}
+                        thisCommission={thisCommission}
+                        address={orch.address}
+                        thisIndex={i + 1}
+                        seed={obj.seed + "win" + orch.address + i}
+                      />
+                      <div className="verticalDivider" />
+                    </div>
+                  )
+                }
+                return null;
+              })
+            }
+          </div>
+        </ScrollContainer>
+      </div>
+    </div>
   )
 }
 

@@ -5,19 +5,34 @@ import MonthlyOrchestrators from '../components/MonthlyOrchestrators';
 import { RadioGroup, Radio } from "@mantine/core";
 
 const MonthlyStats = (obj) => {
-  const [activePage, setPage] = useState(1);
+  const [activePage, setPage] = useState(0);
 
   let thisColour;
-  if (activePage == 1){
+  if (activePage == 1) {
     thisColour = "teal";
-  } else if (activePage == 2){
+  } else if (activePage == 2) {
     thisColour = "indigo";
-  } else if (activePage == 3){
+  } else if (activePage == 3) {
     thisColour = "red";
   }
 
   return (
     <div className="stroke" key={obj.seed + "menu"}>
+      <div className="verticalDivider" />
+      <div className="row" style={{ marginTop: '0.3em', marginBottom: '0.3em' }}>
+        <RadioGroup
+          value={activePage}
+          onChange={setPage}
+          spacing="lg"
+          size="lg"
+          color={thisColour}
+          required
+        >
+          <Radio value="1" label="Summary" />
+          <Radio value="2" label="Graphs" />
+          <Radio value="3" label="Orchestrators" />
+        </RadioGroup>
+      </div>
       <div className="verticalDivider" />
       <div className="row">
         {
@@ -49,21 +64,6 @@ const MonthlyStats = (obj) => {
           seed={"orchestrators" + obj.data.year + "-" + obj.data.month + "-" + obj.data.total}
         /> : null
       }
-      <div className="verticalDivider" />
-      <div className="row" style={{ marginTop: '0.3em', marginBottom: '0.3em' }}>
-        <RadioGroup
-          value={activePage}
-          onChange={setPage}
-          spacing="lg"
-          size="lg"
-          color={thisColour}
-          required
-        >
-          <Radio value="1" label="Summary" />
-          <Radio value="2" label="Graphs" />
-          <Radio value="3" label="Orchestrators" />
-        </RadioGroup>
-      </div>
       <div className="verticalDivider" />
     </div>
   )
