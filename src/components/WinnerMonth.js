@@ -5,6 +5,18 @@ import Winner from '../components/WinnerStat';
 import {
   getOrchestratorScores
 } from "../actions/livepeer";
+import Ticket from "../components/TicketViewer";
+
+const claimColour = "rgba(25, 158, 29, 0.4)";
+const stakeColour = "rgba(25, 158, 147, 0.4)";
+const ticketRedeemColour = "rgba(25, 98, 158, 0.4)";
+const rewardColour = "rgba(25, 27, 158, 0.4)";
+const unbondColour = "rgba(105, 25, 158, 0.4)";
+const updateColour = "rgba(158, 25, 52, 0.4)";
+const withdrawStakeColour = "rgba(158, 98, 25, 0.4)";
+const activationColour = "rgba(154, 158, 25, 0.4)";
+const ticketTransferColour = "rgba(88, 91, 42, 0.3)";
+const greyColour = "rgba(122, 128, 127, 0.4)";
 
 const WinnerMonth = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
@@ -380,60 +392,114 @@ const WinnerMonth = (obj) => {
   return (
     <div className="stroke" key={obj.seed + "strok"}>
       {obj.data.reactivationCount ?
-        <div className="rowAlignLeft">
-          <p className="darkTextSmoll">🔌 {obj.data.reactivationCount} Orchestrators reactivated</p>
+        <div className="row">
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: activationColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
+            <Ticket seed={obj.seed + "-reactivationCount-"} icon={"🔌"} subtext={obj.data.reactivationCount + " activated"} descriptions={[
+              obj.data.reactivationCount + " Orchestrators reactivated"
+            ]} />
+          </div>
         </div> : null
       }
+      <div className="halfVerticalDivider" />
       {obj.data.activationCount ?
-        <div className="rowAlignLeft">
-          <p className="darkTextSmoll">🔧 {obj.data.activationCount} Orchestrator joined with an initial stake of {obj.data.activationInitialSum.toFixed(2)} LPT</p>
+        <div className="row">
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: activationColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"🔧"} subtext={obj.data.activationCount + " new orchestrators"} descriptions={[
+              obj.data.activationCount + " orchestrators joined with an initial stake of " + obj.data.activationInitialSum.toFixed(2) + " LPT"
+            ]} />
+          </div>
         </div> : null
       }
-      {obj.data.unbondCount ?
-        <div className="rowAlignLeft">
-          <p className="darkTextSmoll">📉 {obj.data.unbondCount} delegators unbonded {obj.data.unbondStakeSum.toFixed(2)} LPT</p>
-        </div> : null
-      }
-      {obj.data.rewardCount ?
-        <div className="rowAlignLeft">
-          <p className="darkTextSmoll">⌛ {obj.data.rewardCount} reward calls were made worth {obj.data.rewardAmountSum.toFixed(2)} LPT</p>
-        </div> : null
-      }
-      {obj.data.claimCount ?
-        <div className="rowAlignLeft">
-          <p className="darkTextSmoll">💸 {obj.data.claimRewardSum.toFixed(2)} LPT and {obj.data.claimFeeSum.toFixed(2)} ETH rewards were claimed by {obj.data.claimCount} delegators</p>
-        </div> : null
-      }
-      {obj.data.withdrawStakeCount ?
-        <div className="rowAlignLeft">
-          <p className="darkTextSmoll">🏦 {obj.data.withdrawStakeAmountSum.toFixed(2)} LPT worth of staking rewards were withdrawn by {obj.data.withdrawStakeCount} delegators</p>
-        </div> : null
-      }
-      {obj.data.withdrawFeesCount ?
-        <div className="rowAlignLeft">
-          <p className="darkTextSmoll">🏦 {obj.data.withdrawFeesAmountSum.toFixed(2)} ETH worth of transcoding fees were withdrawn by {obj.data.withdrawFeesCount} delegators </p>
-        </div> : null
-      }
+      <div className="halfVerticalDivider" />
       {obj.data.bondCount ?
-        <div className="rowAlignLeft">
-          <p className="darkTextSmoll">📈 {obj.data.bondCount} accounts delegated for the first time for a total of {obj.data.bondStakeSum.toFixed(2)} LPT</p>
+        <div className="row">
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: stakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"📈"} subtext={obj.data.bondCount + " new orchestrators"} descriptions={[
+              obj.data.bondCount + " accounts delegated for the first time for a total of " + obj.data.bondStakeSum.toFixed(2) + " LPT"
+            ]} />
+          </div>
         </div> : null
       }
+      <div className="halfVerticalDivider" />
+      {obj.data.unbondCount ?
+        <div className="row">
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: unbondColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"📉"} subtext={obj.data.unbondCount + " unbonded"} descriptions={[
+              obj.data.unbondCount + " delegators unbonded " + obj.data.unbondStakeSum.toFixed(2) + " LPT"
+            ]} />
+          </div>
+        </div> : null
+      }
+      <div className="halfVerticalDivider" />
+      {obj.data.rewardCount ?
+        <div className="row">
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: rewardColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"⌛"} subtext={obj.data.rewardCount + " reward calls"} descriptions={[
+              obj.data.rewardCount + " reward calls were made worth " + obj.data.rewardAmountSum.toFixed(2) + " LPT"
+            ]} />
+          </div>
+        </div> : null
+      }
+      <div className="halfVerticalDivider" />
+      {obj.data.claimCount ?
+        <div className="row">
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: claimColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"💸"} subtext={obj.data.claimCount + " reward claims"} descriptions={[
+              obj.data.claimRewardSum.toFixed(2) + "  LPT and " + obj.data.claimFeeSum.toFixed(2) + " ETH rewards were claimed"
+            ]} />
+          </div>
+        </div> : null
+      }
+      <div className="halfVerticalDivider" />
+      {obj.data.withdrawStakeCount ?
+        <div className="row">
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: withdrawStakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"🏦"} subtext={obj.data.withdrawStakeCount + " withdraw reward calls"} descriptions={[
+              obj.data.withdrawStakeAmountSum.toFixed(2) + " LPT worth of staking rewards were withdrawn"
+            ]} />
+          </div>
+        </div> : null
+      }
+      <div className="halfVerticalDivider" />
+      {obj.data.withdrawFeesCount ?
+        <div className="row">
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: withdrawStakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"🏦"} subtext={obj.data.withdrawFeesCount + " withdraw fee calls"} descriptions={[
+              obj.data.withdrawFeesAmountSum.toFixed(2) + " ETH worth of staking rewards were withdrawn"
+            ]} />
+          </div>
+        </div> : null
+      }
+      <div className="halfVerticalDivider" />
       {obj.data.moveStakeCount ?
-        <div className="rowAlignLeft">
-          <p className="darkTextSmoll">🔄 {obj.data.moveStakeSum.toFixed(2)} LPT stake got moved around in {obj.data.moveStakeCount} transactions </p>
+        <div className="row">
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: stakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"🔄"} subtext={obj.data.moveStakeCount + " stake movements"} descriptions={[
+              obj.data.moveStakeSum.toFixed(2) + " LPT worth of stake was moved between orchestrators"
+            ]} />
+          </div>
         </div> : null
       }
+      <div className="halfVerticalDivider" />
       {obj.data.winningTicketsReceivedCount ?
-        <div className="rowAlignLeft">
-          <p className="darkTextSmoll">🎫 {obj.data.winningTicketsReceivedCount} winning tickets were sent out by {obj.data.winningTicketsSent.length} broadcasters</p>
+        <div className="row">
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: ticketTransferColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"🎫"} subtext={obj.data.winningTicketsReceivedCount + " winning tickets"} descriptions={[
+              obj.data.winningTicketsReceivedCount + " winning tickets were sent out by " + obj.data.winningTicketsSent.length + " broadcasters"
+            ]} />
+          </div>
         </div> : null
       }
+      <div className="halfVerticalDivider" />
       {obj.data.winningTicketsRedeemedCount ?
-        <div className="rowAlignLeft">
-          <p className="darkTextSmoll">🎟️ {obj.data.winningTicketsRedeemedCount} winning tickets were redeemed worth {obj.data.winningTicketsRedeemedSum.toFixed(2)} ETH</p>
+        <div className="row">
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: ticketRedeemColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"🎟️"} subtext={obj.data.winningTicketsRedeemedCount + " winning tickets"} descriptions={[
+              obj.data.winningTicketsRedeemedCount + " winning tickets were redeemed worth " + obj.data.winningTicketsRedeemedSum.toFixed(2) + " ETH"
+            ]} />
+          </div>
         </div> : null
-      }
+      }<div className="halfVerticalDivider" />
       <div className="verticalDivider" />
       {stakeObj}
       {earningsObj}
