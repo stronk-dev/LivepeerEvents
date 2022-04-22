@@ -91,7 +91,7 @@ const Winner = (obj) => {
   return (
     <div className="stroke hostInfo" style={{ padding: '1em', cursor: 'grab' }} >
       <div className="row">
-        <div className="strokeSmollLeft" style={{ marginLeft: '0.2em', whiteSpace:'nowrap' }} >
+        <div className="strokeSmollLeft" style={{ marginLeft: '0.2em', whiteSpace: 'nowrap' }} >
           <h3>{obj.thisIndex}</h3>
         </div>
         <div className="rowAlignLeft">
@@ -110,7 +110,7 @@ const Winner = (obj) => {
           <div className="rowAlignRight" >
             <span>({((obj.thisEarnings.sum / obj.totalEarnings) * 100).toFixed(2)} %)</span>
           </div>
-        </div> : null
+        </div> : <div className="strokeSmollLeft" style={{ minWidth: '100px' }} />
         }
         {obj.thisStake ?
           <div className="strokeSmollLeft" style={{ minWidth: '100px' }} >
@@ -123,7 +123,7 @@ const Winner = (obj) => {
             <div className="rowAlignRight" >
               <span>({((obj.thisStake.totalStake / obj.totalStake) * 100).toFixed(2)} %)</span>
             </div>
-          </div> : null
+          </div> : <div className="strokeSmollLeft" style={{ minWidth: '100px' }} />
         }
         {obj.thisCommission ?
           <div className="strokeSmollLeft" style={{ minWidth: '100px' }} >
@@ -136,7 +136,7 @@ const Winner = (obj) => {
             <div className="rowAlignRight" >
               <span>{obj.thisCommission.feeCommission.toFixed(2)}% Fee</span>
             </div>
-          </div> : null
+          </div> : <div className="strokeSmollLeft" style={{ minWidth: '100px' }} />
         }
       </div>
     </div>

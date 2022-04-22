@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import '../style.css';
 import { Navigate } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Accordion } from '@mantine/core';
-import ScrollContainer from 'react-indiana-drag-scroll';
-import WinnerMonth from '../components/WinnerMonth';
-// import Graphs from '../components/Graphs';
+import MonthlyStats from './MonthlyStats';
 
 const Stats = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [redirectToHome, setRedirectToHome] = useState(false);
-  const [removeOnlyStakers, setRemoveOnlyStakers] = useState(false);
 
   console.log("Rendering Stats Viewer");
 
@@ -29,14 +26,6 @@ const Stats = (obj) => {
           </button>
           <h4 className="rowAlignLeft withWrap showNeverOnMobile">Statistics</h4>
         </div>
-        {/* <div className='rowAlignRight'>
-          <p>Filter</p>
-          <div className="toggle-container" onClick={() => setRemoveOnlyStakers(!removeOnlyStakers)}>
-            <div className={`dialog-button ${removeOnlyStakers ? "" : "disabled"}`}>
-              {removeOnlyStakers ? "Show" : "Hide"}
-            </div>
-          </div>
-        </div> */}
       </div>
       <div id='bodyContent'>
         <div className="mainContent">
@@ -44,21 +33,40 @@ const Stats = (obj) => {
             <div className="row" style={{ width: '100%', height: '100%' }}>
               <div className="stroke roundedOpaque onlyVerticalScroll" style={{ width: '40vw', minWidth: '400px', height: 'calc( 100vh - 50px - 2em)', marginTop: '2em' }}>
                 <div className="content-wrapper" style={{ width: '100%' }}>
-                  <ScrollContainer activationDistance={1} className="overflow-container" hideScrollbars={false}>
-                    <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0 }}>
+                  <div className="overflow-container">
+                    <div className="overflow-content" style={{ padding: 0 }}>
                       <div className="flexContainer forceWrap" >
                         <Accordion initialItem={0} className="stroke"
+                          style={{ width: '100%', alignItems: 'stretch' }}
                           styles={{
-                            item: { padding: 0 },
-                            itemOpened: { padding: 0 },
-                            itemTitle: { padding: 0, paddingTop: '1em', paddingBottom: '1em' },
-                            control: { padding: 0 },
-                            label: { padding: 0 },
-                            icon: { padding: 0 },
-                            content: { padding: 0, paddingTop: '1em', paddingBottom: '1em' },
-                            contentInner: { padding: 0 },
+                            item: { padding: 0, width: '100%', alignItems: 'stretch' },
+                            itemOpened: { padding: 0, width: '100%', alignItems: 'stretch' },
+                            itemTitle: {
+                              color: 'rgba(218, 218, 218, 0.9)',
+                              padding: 0, width: '100%',
+                            },
+                            control: {
+                              color: 'rgba(218, 218, 218, 0.9)',
+                              padding: 0, margin: 0, height: '100%',
+                              backgroundColor: 'rgba(56, 56, 56, 0.8)',
+                              boxShadow: 'inset 3px 3px 12px 2px rgba(62, 62, 104, 0.05)'
+                            },
+                            label: {
+                              color: 'rgba(218, 218, 218, 0.9)',
+                              padding: '1em', width: '100%',
+                              backgroundColor: 'rgba(56, 56, 56, 0.8)',
+                              boxShadow: 'inset 3px 3px 12px 2px rgba(62, 62, 104, 0.05)'
+                            },
+                            icon: {
+                              padding: 0, margin: 0,
+                            },
+                            content: {
+                              padding: 0, alignItems: 'stretch', width: '100%', height: '100%',
+                              backgroundColor: 'rgba(56, 56, 56, 0.3)',
+                              boxShadow: 'inset 3px 3px 12px 2px rgba(62, 62, 104, 0.05)'
+                            },
+                            contentInner: { padding: 0, width: '100%', height: '100%' },
                           }}>
-                          {/* <Graphs commissions={livepeer.allCommissions} stakes={livepeer.allTotalStakes} /> */}
                           {
                             livepeer.monthlyStats.slice(0).reverse().map(function (data, i) {
                               let thisMonth = "";
@@ -89,14 +97,17 @@ const Stats = (obj) => {
                                 thisMonth = "December";;
                               }
 
+                              const title = data.year + "-" + thisMonth + ": " + data.winningTicketsReceived.length + " orchestrators earned " + data.winningTicketsReceivedSum.toFixed(2) + " Eth";
+
                               return (
                                 <Accordion.Item
-                                  label={data.year + "-" + thisMonth + ": " + data.winningTicketsReceived.length + " orchestrators earned " + data.winningTicketsReceivedSum.toFixed(2) + " Eth"}
+                                  label={title}
+                                  icon={"🔄"}
                                   className="stroke"
+                                  style={{ width: '100%', alignItems: 'stretch' }}
                                   key={"accord" + i + data.year + "-" + data.month + "-" + data.total}>
-                                  <WinnerMonth
+                                  <MonthlyStats
                                     data={data}
-                                    removeOnlyStakers={removeOnlyStakers}
                                     seed={"win" + i + data.year + "-" + data.month + "-" + data.total}
                                   />
                                 </Accordion.Item>
@@ -106,13 +117,13 @@ const Stats = (obj) => {
                         </Accordion>
                       </div>
                     </div>
-                  </ScrollContainer>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </div >
     </div >
   );
 }

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, } from 'react';
 import ScrollContainer from "react-indiana-drag-scroll";
-import Address from "./OrchAddressViewer";
 import { Pagination } from "@mantine/core";
 
 const itemsPerPage = 10;

@@ -78,12 +78,12 @@ const Address = (obj) => {
     if (thisInfo.avatar) {
       thisIcon =
         <a className="selectOrchLight" style={{ marginRight: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
-          <img alt="" src={thisInfo.avatar.url} width="20em" height="20em" style={{ margin: '0.2em', padding: '0.2em' }}  />
+          <img alt="" src={thisInfo.avatar.url} width="20em" height="20em" style={{ margin: '0.2em', padding: '0.2em' }} />
         </a >
     } else {
       thisIcon =
         <a className="selectOrchLight" style={{ marginRight: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
-          <img alt="" src="ens.png" width="20em" height="20em" style={{ margin: '0.2em', padding: '0.2em' }}  />
+          <img alt="" src="ens.png" width="20em" height="20em" style={{ margin: '0.2em', padding: '0.2em' }} />
         </a >
     }
   } else if (hasThreeBox) {
@@ -94,7 +94,7 @@ const Address = (obj) => {
     }
     if (thisInfo.image) {
       thisIcon =
-        <a className="selectOrch" style={{ marginRight: '0.5em', cursor: 'grab'}} disabled>
+        <a className="selectOrch" style={{ marginRight: '0.5em', cursor: 'grab' }} disabled>
           <img alt="" src={"https://cloudflare-ipfs.com/ipfs/" + thisInfo.image} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
         </a >
     } else {
@@ -111,7 +111,7 @@ const Address = (obj) => {
         <img alt="" src="livepeer.png" width="20em" height="20em" />
       </a>
       {thisIcon}
-      <span className="elipsText elipsOnMobileExtra">{thisName}</span>
+      <span className="elipsText elipsOnMobileExtra" style={{ width: '100%' }}>{thisName}</span>
     </div>
   )
 }
