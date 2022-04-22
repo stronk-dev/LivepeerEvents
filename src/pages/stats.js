@@ -39,7 +39,19 @@ const Stats = (obj) => {
                         <Accordion initialItem={0} className="stroke"
                           style={{ width: '100%', alignItems: 'stretch' }}
                           styles={{
-                            item: { padding: 0, width: '100%', alignItems: 'stretch' },
+                            item: {
+                              padding: 0, width: '100%', alignItems: 'stretch',
+                              color: 'black',
+                              border: 'none',
+                              '&:hover': {
+                                color: 'black',
+                                border: 'none'
+                              },
+                              '&': {
+                                color: 'black',
+                                border: 'none'
+                              }
+                            },
                             itemOpened: { padding: 0, width: '100%', alignItems: 'stretch' },
                             itemTitle: {
                               color: 'rgba(218, 218, 218, 0.9)',
