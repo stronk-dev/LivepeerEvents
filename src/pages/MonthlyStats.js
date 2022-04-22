@@ -39,9 +39,9 @@ const MonthlyStats = (obj) => {
           transitionTimingFunction="linear"
           color={thisColour}
           data={[
-            { label: 'Summary', value: '1' },
-            { label: 'Graphs', value: '2' },
-            { label: 'Orchestrators', value: '3' }
+            { label: 'Info', value: '1' },
+            { label: 'Graph', value: '2' },
+            { label: 'Score', value: '3' }
           ]}
         />
       </div>

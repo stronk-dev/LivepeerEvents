@@ -386,10 +386,10 @@ const MonthlyGraphs = (obj) => {
     dataRow.push({ label: 'Stake', value: '1' });
   }
   if (totalGraphs && earningsObj) {
-    dataRow.push({ label: 'Earnings', value: '2' });
+    dataRow.push({ label: 'Fee', value: '2' });
   }
   if (totalGraphs && broadcasterObj) {
-    dataRow.push({ label: 'Broadcasters', value: '3' });
+    dataRow.push({ label: 'DMS', value: '3' });
   }
 
   return (
