@@ -11,7 +11,7 @@ const EventButtonAddress = (obj) => {
   const [hasThreeBoxRefreshed, setThreeBoxRefresh] = useState(false);
   const [orchInfo, setOrchInfo] = useState(null);
   const now = new Date().getTime();
-  
+
   useEffect(() => {
     let thisInfo = null;
     let thisDomain = null;
@@ -87,7 +87,7 @@ const EventButtonAddress = (obj) => {
         }
       }
     }
-    if (thisInfo && thisInfo != orchInfo){
+    if (thisInfo && thisInfo != orchInfo) {
       console.log("Setting INFO obj");
       setOrchInfo(thisInfo);
     }
@@ -113,7 +113,7 @@ const EventButtonAddress = (obj) => {
       shouldUpdate = true;
     }
     // Preload Orch info
-    if (shouldUpdate){
+    if (shouldUpdate) {
       console.log("Refresh due to non-existing orch in global state");
       getOrchestratorInfoSilent(obj.address);
     }
@@ -125,8 +125,8 @@ const EventButtonAddress = (obj) => {
     thisName = <h4 className="elipsText elipsOnMobileExtra">{orchInfo.domain}</h4>;
     if (orchInfo.avatar) {
       thisIcon =
-        <a className="selectOrch" style={{ padding: '0', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + orchInfo.domain + "/details"} >
-          <img alt="" src={orchInfo.avatar.url} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
+        <a className="selectOrch" style={{ marginRight: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + orchInfo.domain + "/details"} >
+          <img alt="" src={orchInfo.avatar.url} width="20em" height="20em" style={{ margin: '0.2em', padding: '0.2em' }} />
         </a >
     }
   } else if (orchInfo && (orchInfo.name || orchInfo.image)) {
@@ -136,7 +136,10 @@ const EventButtonAddress = (obj) => {
       thisName = <span className="elipsText elipsOnMobileExtra">{obj.address}</span>;
     }
     if (orchInfo.image) {
-      thisIcon = <img alt="" src={"https://cloudflare-ipfs.com/ipfs/" + orchInfo.image} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
+      thisIcon =
+        <a className="selectOrch" style={{ marginRight: '0.5em', cursor: 'grab'}} disabled>
+          <img alt="" src={"https://cloudflare-ipfs.com/ipfs/" + orchInfo.image} width="20em" height="20em" style={{ margin: 0, padding: 0 }} style={{ margin: 0, padding: 0 }} />
+        </a >
     } else {
       thisIcon = null;
     }
