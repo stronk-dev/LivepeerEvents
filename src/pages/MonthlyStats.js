@@ -27,6 +27,7 @@ const MonthlyStats = (obj) => {
               border: 'none',
               '&:hover': {
                 color: 'black',
+                backgroundColor: 'rgba(56, 56, 56, 0.2)',
                 border: 'none'
               },
               '&': {
@@ -39,6 +40,7 @@ const MonthlyStats = (obj) => {
               border: 'none',
               '&:hover': {
                 color: 'black',
+                backgroundColor: 'rgba(56, 56, 56, 0.2)',
                 border: 'none'
               },
               '&': {

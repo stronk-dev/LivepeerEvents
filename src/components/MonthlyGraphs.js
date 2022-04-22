@@ -404,6 +404,7 @@ const MonthlyGraphs = (obj) => {
                 border: 'none',
                 '&:hover': {
                   color: 'black',
+                  backgroundColor: 'rgba(56, 56, 56, 0.2)',
                   border: 'none'
                 },
                 '&': {
@@ -416,6 +417,7 @@ const MonthlyGraphs = (obj) => {
                 border: 'none',
                 '&:hover': {
                   color: 'black',
+                  backgroundColor: 'rgba(56, 56, 56, 0.2)',
                   border: 'none'
                 },
                 '&': {

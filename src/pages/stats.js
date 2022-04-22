@@ -37,19 +37,21 @@ const Stats = (obj) => {
                     <div className="overflow-content" style={{ padding: 0 }}>
                       <div className="flexContainer forceWrap" >
                         <Accordion initialItem={0} className="stroke"
-                          style={{ width: '100%', alignItems: 'stretch' }}
+                          style={{
+                            width: '100%', alignItems: 'stretch'
+                          }}
                           styles={{
                             item: {
                               padding: 0, width: '100%', alignItems: 'stretch',
                               color: 'black',
-                              border: 'none',
+                              border: '1px solid rgba(56, 56, 56, 0.9)',
                               '&:hover': {
                                 color: 'black',
-                                border: 'none'
+                                border: '1px solid rgba(56, 56, 56, 0.9)',
                               },
                               '&': {
                                 color: 'black',
-                                border: 'none'
+                                border: '1px solid rgba(56, 56, 56, 0.9)',
                               }
                             },
                             itemOpened: { padding: 0, width: '100%', alignItems: 'stretch' },
@@ -61,7 +63,18 @@ const Stats = (obj) => {
                               color: 'rgba(218, 218, 218, 0.9)',
                               padding: 0, margin: 0, height: '100%',
                               backgroundColor: 'rgba(56, 56, 56, 0.8)',
-                              boxShadow: 'inset 3px 3px 12px 2px rgba(62, 62, 104, 0.05)'
+                              boxShadow: 'inset 3px 3px 12px 2px rgba(62, 62, 104, 0.05)',
+                              color: 'black',
+                              border: 'none',
+                              '&:hover': {
+                                color: 'black',
+                                backgroundColor: 'rgba(56, 56, 56, 0.9)',
+                              },
+                              '&': {
+                                color: 'black',
+                                backgroundColor: 'rgba(56, 56, 56, 0.8)',
+                                border: 'none',
+                              }
                             },
                             label: {
                               color: 'rgba(218, 218, 218, 0.9)',
@@ -70,7 +83,7 @@ const Stats = (obj) => {
                               boxShadow: 'inset 3px 3px 12px 2px rgba(62, 62, 104, 0.05)'
                             },
                             icon: {
-                              padding: 0, margin: 0,
+                              padding: '0.2em', margin: '0.2em',
                             },
                             content: {
                               padding: 0, alignItems: 'stretch', width: '100%', height: '100%',
