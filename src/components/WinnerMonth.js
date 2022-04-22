@@ -39,6 +39,9 @@ const WinnerMonth = (obj) => {
     if (thisDomain && thisDomain.domain) {
       for (const thisAddr of livepeer.ensInfoMapping) {
         if (thisAddr.domain === thisDomain.domain) {
+          if (thisAddr.domain.length > 18){
+            return (thisAddr.domain.substring(0, 16) + "..");
+          }
           return thisAddr.domain;
         }
       }
@@ -48,16 +51,19 @@ const WinnerMonth = (obj) => {
       for (const thisAddr of livepeer.threeBoxInfo) {
         if (thisAddr.address === address) {
           if (thisAddr.name) {
+            if (thisAddr.name.length > 18){
+              return (thisAddr.name.substring(0, 16) + "..");
+            }
             return thisAddr.name;
           } else {
-            return (address.substring(0, 14) + "..");
+            return (address.substring(0, 16) + "..");
           }
           break;
         }
       }
     }
 
-    return (address.substring(0, 14) + "..");
+    return (address.substring(0, 16) + "..");
   }
 
   // Show all orchs (if latestTotalStake exists) or show only those in winningTicketsReceived
