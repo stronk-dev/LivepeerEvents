@@ -42,7 +42,7 @@ const MonthlyStats = (obj) => {
           activePage == 2 ? <h4>Graphs</h4> : null
         }
         {
-          activePage == 3 ? <h3>orchestrators</h3> : null
+          activePage == 3 ? <h4>Orchestrators</h4> : null
         }
       </div>
       <div className="verticalDivider" />

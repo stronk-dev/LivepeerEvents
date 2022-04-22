@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { VictoryPie } from 'victory';
-import { Pagination } from "@mantine/core";
+import { RadioGroup, Radio } from "@mantine/core";
 
 const MonthlyGraphs = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
@@ -372,47 +372,39 @@ const MonthlyGraphs = (obj) => {
     }
   }
 
-  let renderStake = false;
-  let renderEarnings = false;
-  let renderBread = false;
-  let graphIndex = activeGraph;
-  if (totalGraphs && stakeObj) {
-    if (graphIndex == 1) {
-      renderStake = true;
-      graphIndex = 0;
-    } else {
-      graphIndex--;
-    }
-  }
-  if (graphIndex == 1 && graphIndex && totalGraphs && earningsObj) {
-    if (graphIndex == 1) {
-      renderEarnings = true;
-      graphIndex = 0;
-    } else {
-      graphIndex--;
-    }
-  }
-  graphIndex--;
-  if (graphIndex == 1 && graphIndex && totalGraphs && broadcasterObj) {
-    if (graphIndex == 1) {
-      renderBread = true;
-      graphIndex = 0;
-    } else {
-      graphIndex--;
-    }
+  let thisColour;
+  if (activeGraph == 1) {
+    thisColour = "violet";
+  } else if (activeGraph == 2) {
+    thisColour = "green";
+  } else if (activeGraph == 3) {
+    thisColour = "orange";
   }
 
   return (
-    <div className="stroke fullMargin insetEffect" style={{ padding: 0, margin: 0, minHeight: '70vh' }}>
+    <div className="stroke fullMargin insetEffect" style={{ padding: 0, margin: 0 }}>
       <div className="row" style={{ marginTop: '1em', marginBottom: '1em' }}>
         {totalGraphs > 1 ?
-          <Pagination page={activeGraph} onChange={setGraph} total={totalGraphs} siblings={1} initialPage={1} />
+          <div className="row" style={{ marginTop: '0.3em', marginBottom: '0.3em' }}>
+            <RadioGroup
+              value={activeGraph}
+              onChange={setGraph}
+              spacing="lg"
+              size="lg"
+              color={thisColour}
+              required
+            >
+              {(totalGraphs && stakeObj) ? <Radio value="1" label="Stake" /> : null}
+              {(totalGraphs && earningsObj) ? <Radio value="2" label="Earnings" /> : null}
+              {(totalGraphs && broadcasterObj) ? <Radio value="3" label="Broadcasters" /> : null}
+            </RadioGroup>
+          </div>
           : null}
       </div>
-      <div className="row" style={{ marginTop: '1em', marginBottom: '1em', height: '100%' }}>
-        {renderStake ? stakeObj : null}
-        {renderEarnings ? earningsObj : null}
-        {renderBread ? broadcasterObj : null}
+      <div className="row" style={{ marginTop: '1em', marginBottom: '1em', minHeight: '70vh', height: '100%' }}>
+        {(activeGraph == 1) ? stakeObj : null}
+        {(activeGraph == 2) ? earningsObj : null}
+        {(activeGraph == 3) ? broadcasterObj : null}
       </div>
     </div>
   )
