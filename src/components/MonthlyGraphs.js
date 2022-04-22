@@ -93,7 +93,7 @@ const MonthlyGraphs = (obj) => {
 
     totalGraphs++;
 
-    stakeObj = <div className="stroke">
+    stakeObj = <div className="stroke" style={{width: 'unset'}}>
       <h4>Stake Distribution</h4>
       <VictoryPie padding={0} data={pieList} x="address" y="sum"
         sortOrder="descending"
@@ -175,7 +175,7 @@ const MonthlyGraphs = (obj) => {
 
     totalGraphs++;
 
-    earningsObj = <div className="stroke">
+    earningsObj = <div className="stroke" style={{width: 'unset'}}>
       <h4>Earnings Distribution</h4>
       <VictoryPie padding={{ top: 20, bottom: 20, left: 120, right: 120 }} data={pieList} x="address" y="sum"
         sortOrder="descending"
@@ -260,7 +260,7 @@ const MonthlyGraphs = (obj) => {
 
     totalGraphs++;
 
-    broadcasterObj = <div className="stroke">
+    broadcasterObj = <div className="stroke" style={{width: 'unset'}}>
       <h4>Broadcaster Payments</h4>
       <VictoryPie padding={{ top: 20, bottom: 20, left: 120, right: 120 }} data={pieList} x="address" y="sum"
         sortOrder="descending"
