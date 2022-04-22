@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import EventButton from "./eventButton";
 import ScrollContainer from 'react-indiana-drag-scroll';
+import { Pagination } from "@mantine/core";
 import Filter from './filterComponent';
 
 const thresholdStaking = 0.001;
@@ -18,8 +19,10 @@ const ticketTransferColour = "rgba(88, 91, 42, 0.3)";
 const greyColour = "rgba(122, 128, 127, 0.4)";
 
 const defaultIncrementMaxShown = 50;
+const itemsPerPage = 10;
 
 const EventViewer = (obj) => {
+  const [activePage, setPage] = useState(1);
   const listInnerRef = useRef();
   const [filterActivated, setFilterActivated] = useState(true);
   const [rewardActivated, setRewardActivated] = useState(true);
@@ -54,18 +57,6 @@ const EventViewer = (obj) => {
   ticketActivatedColour = ticketRedemptionActivated ? ticketRedeemColour : greyColour;
   let unbondActivatedColour;
   unbondActivatedColour = unbondActivated ? unbondColour : greyColour;
-
-  const updateOnScroll = () => {
-    if (unfiltered == 0) {
-      return;
-    }
-    if (listInnerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current.container.current;
-      if (scrollTop + clientHeight === scrollHeight) {
-        obj.setMaxAmount(obj.maxAmount + defaultIncrementMaxShown);
-      }
-    }
-  }
 
   let eventList = [];
   let thisEvent = {};
@@ -428,57 +419,27 @@ const EventViewer = (obj) => {
       console.log("bork");
     }
 
-
-    if (unfiltered < obj.maxAmount) {
-      unfiltered++;
-      if (prevBlock === thisEvent.blockNumber) {
-        eventList.push(<EventButton
-          key={thisEvent.transactionHash + unfiltered}
-          seed={thisEvent.transactionHash + unfiltered}
-          eventObj={thisEvent}
-          type={latestType}
-          setSearchTerm={obj.setSearchTerm}
-        />);
-      } else {
-        prevBlock = thisEvent.blockNumber;
-        eventList.push(<EventButton
-          key={thisEvent.transactionHash + unfiltered}
-          seed={thisEvent.transactionHash + unfiltered}
-          eventObj={thisEvent}
-          type={latestType}
-          isFirstOfBlock={prevBlock}
-          time={thisEvent.blockTime}
-          setSearchTerm={obj.setSearchTerm}
-        />);
-      }
+    unfiltered++;
+    if (prevBlock === thisEvent.blockNumber) {
+      eventList.push(<EventButton
+        key={thisEvent.transactionHash + unfiltered}
+        seed={thisEvent.transactionHash + unfiltered}
+        eventObj={thisEvent}
+        type={latestType}
+        setSearchTerm={obj.setSearchTerm}
+      />);
+    } else {
+      prevBlock = thisEvent.blockNumber;
+      eventList.push(<EventButton
+        key={thisEvent.transactionHash + unfiltered}
+        seed={thisEvent.transactionHash + unfiltered}
+        eventObj={thisEvent}
+        type={latestType}
+        isFirstOfBlock={prevBlock}
+        time={thisEvent.blockTime}
+        setSearchTerm={obj.setSearchTerm}
+      />);
     }
-    else {
-      hidden++;
-    }
-  }
-
-  let showMoreButton;
-  if (hidden == 0) {
-    showMoreButton =
-      <div className="row">
-        <div className="strokeSmollLeft" style={{ width: '100%' }}>
-          <p className="row buttonPadding" style={{ borderRadius: "1.2em", backgroundColor: greyColour, maxWidth: '600px' }}>
-            ☑️ Reached end of results
-          </p>
-        </div>
-      </div>
-  } else {
-    showMoreButton =
-      <div className="row">
-        <div className="strokeSmollLeft" style={{ width: '100%' }}>
-          <button className="row nonHomeButton buttonPadding" style={{ borderRadius: "1.2em", backgroundColor: greyColour, maxWidth: '600px' }}
-            onClick={() => {
-              obj.setMaxAmount(obj.maxAmount + defaultIncrementMaxShown);
-            }}>
-            <h3>🔄 Show More</h3>
-          </button>
-        </div>
-      </div>
   }
 
   let filterBit;
@@ -499,14 +460,30 @@ const EventViewer = (obj) => {
       <div className="row" style={{ width: '100%', height: '100%' }}>
         <div className="stroke roundedOpaque onlyVerticalScroll" style={{ width: '40vw', minWidth: '400px', height: 'calc( 100vh - 50px - 2em)', marginTop: '2em' }}>
           <div className="content-wrapper" style={{ width: '100%' }}>
-            <ScrollContainer activationDistance={1} className="overflow-container"
-              hideScrollbars={false} onEndScroll={updateOnScroll} ref={listInnerRef}>
-              <div className="overflow-content" style={{ cursor: 'grab', paddingTop: 0 }}>
+            <ScrollContainer activationDistance={1} className="overflow-container" hideScrollbars={false} style={{ width: '100%' }}>
+              <div className="overflow-content" style={{ cursor: 'grab', padding: 0 }}>
                 <div className={obj.forceVertical ? "flexContainer forceWrap" : "flexContainer"} >
                   <div className="verticalDivider" />
-                  {eventList}
-                  <div className="verticalDivider" />
-                  {showMoreButton}
+                  {
+                    eventList.map((delObj, idx) => {
+                      const tmp = idx - ((activePage - 1) * itemsPerPage);
+                      if (tmp >= 0 && tmp < itemsPerPage) {
+                        return (
+                          <div className="flexContainer forceWrap" style={{ marginLeft: '0.2em', marginRight: '0.2em', width: '100%' }} key={"ticket-" + idx}>
+                            <div className="rowAlignLeft">
+                              <div className="strokeSmollLeft showNeverOnMobile" style={{ marginLeft: '0.2em', marginRight: '0.2em', whiteSpace: 'nowrap' }} >
+                                <h3>{idx}</h3>
+                              </div>
+                              <div className="row">
+                                {delObj}
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      }
+                      return null;
+                    })
+                  }
                   <div className="verticalDivider" />
                 </div>
               </div>
@@ -554,6 +531,9 @@ const EventViewer = (obj) => {
                 <h3>Activated</h3>
               </button>
             </div>
+          </div>
+          <div className="row" style={{ marginTop: '1em', marginBottom: '1em', justifyContent: 'space-evenly', display: "flex" }}>
+            <Pagination page={activePage} onChange={setPage} total={(limitShown + (itemsPerPage - (limitShown % itemsPerPage))) / itemsPerPage} siblings={3} initialPage={1} />
           </div>
         </div>
       </div>

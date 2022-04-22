@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { VictoryPie } from 'victory';
 import Winner from '../components/WinnerStat';
