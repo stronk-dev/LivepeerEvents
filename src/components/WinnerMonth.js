@@ -6,6 +6,7 @@ import {
   getOrchestratorScores
 } from "../actions/livepeer";
 import Ticket from "../components/TicketViewer";
+import { Pagination } from "@mantine/core";
 
 const claimColour = "rgba(25, 158, 29, 0.4)";
 const stakeColour = "rgba(25, 158, 147, 0.4)";
@@ -18,9 +19,16 @@ const activationColour = "rgba(154, 158, 25, 0.4)";
 const ticketTransferColour = "rgba(88, 91, 42, 0.3)";
 const greyColour = "rgba(122, 128, 127, 0.4)";
 
+const itemsPerPage = 6;
+
 const WinnerMonth = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [thisScores, setThisScores] = useState(null);
+  const [activePage, setPage] = useState(1);
+  const [activeGraph, setGraph] = useState(1);
+
+  let totalGraphs = 0;
+
 
   useEffect(() => {
     const setScore = async () => {
@@ -119,6 +127,8 @@ const WinnerMonth = (obj) => {
       });
     }
 
+    totalGraphs++;
+
     stakeObj = <div className="stroke">
       <h4>Stake Distribution</h4>
       <VictoryPie padding={0} data={pieList} x="address" y="sum"
@@ -199,6 +209,8 @@ const WinnerMonth = (obj) => {
       });
     }
 
+    totalGraphs++;
+
     earningsObj = <div className="stroke">
       <h4>Earnings Distribution</h4>
       <VictoryPie padding={{ top: 20, bottom: 20, left: 120, right: 120 }} data={pieList} x="address" y="sum"
@@ -276,6 +288,8 @@ const WinnerMonth = (obj) => {
         sum: otherSum
       });
     }
+
+    totalGraphs++;
 
     broadcasterObj = <div className="stroke">
       <h4>Broadcaster Payments</h4>
@@ -389,6 +403,23 @@ const WinnerMonth = (obj) => {
     }
   }
 
+  const totalPages = (sortedList.length + (itemsPerPage - (sortedList.length % itemsPerPage))) / itemsPerPage;
+  let renderStake = false;
+  let renderEarnings = false;
+  let renderBread = false;
+  let graphIndex = 1;
+  if (activeGraph == graphIndex && totalGraphs && stakeObj) {
+    renderStake = true;
+  }
+  graphIndex++;
+  if (activeGraph == graphIndex && totalGraphs && earningsObj) {
+    renderEarnings = true;
+  }
+  graphIndex++;
+  if (activeGraph == graphIndex && totalGraphs && broadcasterObj) {
+    renderBread = true;
+  }
+
   return (
     <div className="stroke" key={obj.seed + "strok"}>
       {obj.data.reactivationCount ?
@@ -405,7 +436,7 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: activationColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"🔧"} subtext={obj.data.activationCount + " new orchestrators"} descriptions={[
-              obj.data.activationCount + " orchestrators joined with an initial stake of " + obj.data.activationInitialSum.toLocaleString({maximumFractionDigits:2}) + " LPT"
+              obj.data.activationCount + " orchestrators joined with an initial stake of " + obj.data.activationInitialSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT"
             ]} />
           </div>
         </div> : null
@@ -415,7 +446,7 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: updateColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"🔗"} subtext={obj.data.latestCommission.length + " orchestrators found"} descriptions={[
-              obj.data.latestCommission.length + "  orchestrators had a total of " + totalStakeSum.toLocaleString({maximumFractionDigits:2}) + " LPT staked to them"
+              obj.data.latestCommission.length + "  orchestrators had a total of " + totalStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT staked to them"
             ]} />
           </div>
         </div> : null}
@@ -424,7 +455,7 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: stakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"📈"} subtext={obj.data.bondCount + " new delegators"} descriptions={[
-              obj.data.bondCount + " accounts delegated for the first time for a total of " + obj.data.bondStakeSum.toLocaleString({maximumFractionDigits:2}) + " LPT"
+              obj.data.bondCount + " accounts delegated for the first time for a total of " + obj.data.bondStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT"
             ]} />
           </div>
         </div> : null
@@ -434,7 +465,7 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: unbondColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"📉"} subtext={obj.data.unbondCount + " leaving delegators"} descriptions={[
-              obj.data.unbondCount + " delegators unbonded " + obj.data.unbondStakeSum.toLocaleString({maximumFractionDigits:2}) + " LPT"
+              obj.data.unbondCount + " delegators unbonded " + obj.data.unbondStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT"
             ]} />
           </div>
         </div> : null
@@ -444,7 +475,7 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: rewardColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"⌛"} subtext={obj.data.rewardCount + " reward calls"} descriptions={[
-              obj.data.rewardCount + " reward calls made by orchestrators were worth " + obj.data.rewardAmountSum.toLocaleString({maximumFractionDigits:2}) + " LPT"
+              obj.data.rewardCount + " reward calls made by orchestrators were worth " + obj.data.rewardAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT"
             ]} />
           </div>
         </div> : null
@@ -454,7 +485,7 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: claimColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"🏦"} subtext={obj.data.claimCount + " reward claims"} descriptions={[
-              obj.data.claimRewardSum.toLocaleString({maximumFractionDigits:2}) + "  LPT and " + obj.data.claimFeeSum.toLocaleString({maximumFractionDigits:2}) + " ETH worth of rewards were claimed by delegators"
+              obj.data.claimRewardSum.toLocaleString({ maximumFractionDigits: 2 }) + "  LPT and " + obj.data.claimFeeSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH worth of rewards were claimed by delegators"
             ]} />
           </div>
         </div> : null
@@ -464,7 +495,7 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: withdrawStakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"💸"} subtext={obj.data.withdrawStakeCount + " withdraw reward calls"} descriptions={[
-              obj.data.withdrawStakeAmountSum.toLocaleString({maximumFractionDigits:2}) + " LPT worth of staking rewards were withdrawn to the account of the delegator"
+              obj.data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT worth of staking rewards were withdrawn to the account of the delegator"
             ]} />
           </div>
         </div> : null
@@ -474,7 +505,7 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: withdrawStakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"💸"} subtext={obj.data.withdrawFeesCount + " withdraw fee calls"} descriptions={[
-              obj.data.withdrawFeesAmountSum.toLocaleString({maximumFractionDigits:2}) + " ETH worth of transcoding fees were withdrawn to the account of the delegator"
+              obj.data.withdrawFeesAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH worth of transcoding fees were withdrawn to the account of the delegator"
             ]} />
           </div>
         </div> : null
@@ -484,7 +515,7 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: stakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"🔄"} subtext={obj.data.moveStakeCount + " stake movements"} descriptions={[
-              obj.data.moveStakeSum.toLocaleString({maximumFractionDigits:2}) + " LPT worth of stake was moved between orchestrators"
+              obj.data.moveStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT worth of stake was moved between orchestrators"
             ]} />
           </div>
         </div> : null
@@ -504,59 +535,73 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: ticketRedeemColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"🎟️"} subtext={obj.data.winningTicketsRedeemedCount + " redeemed tickets"} descriptions={[
-              obj.data.winningTicketsRedeemedCount + " winning tickets were redeemed worth " + obj.data.winningTicketsRedeemedSum.toLocaleString({maximumFractionDigits:2}) + " ETH"
+              obj.data.winningTicketsRedeemedCount + " winning tickets were redeemed worth " + obj.data.winningTicketsRedeemedSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH"
             ]} />
           </div>
         </div> : null
       }<div className="halfVerticalDivider" />
       <div className="verticalDivider" />
-      {stakeObj}
-      {earningsObj}
-      {broadcasterObj}
+      {renderStake ? stakeObj : null}
+      {renderEarnings ? earningsObj : null}
+      {renderBread ? broadcasterObj : null}
+      <div className="row" style={{ marginTop: '1em', marginBottom: '1em' }}>
+        {totalGraphs > 1 ?
+          <Pagination page={activeGraph} onChange={setGraph} total={totalGraphs} siblings={1} initialPage={1} />
+          : null}
+      </div>
       <div className="flexContainer forceWrap">
         {
           sortedList.map(function (orch, i) {
-            let thisCommission = null;
-            let thisStake = null;
-            let thisEarnings = null;
+            const tmp = i - ((activePage - 1) * itemsPerPage);
+            if (tmp >= 0 && tmp < itemsPerPage) {
+              let thisCommission = null;
+              let thisStake = null;
+              let thisEarnings = null;
 
-            for (const obj of ticketList) {
-              if (obj.address == orch.address) {
-                thisEarnings = obj;
+              for (const obj of ticketList) {
+                if (obj.address == orch.address) {
+                  thisEarnings = obj;
+                }
               }
-            }
-            for (const obj of commissionList) {
-              if (obj.address == orch.address) {
-                thisCommission = obj;
+              for (const obj of commissionList) {
+                if (obj.address == orch.address) {
+                  thisCommission = obj;
+                }
               }
-            }
-            for (const obj of stakeList) {
-              if (obj.address == orch.address) {
-                thisStake = obj;
+              for (const obj of stakeList) {
+                if (obj.address == orch.address) {
+                  thisStake = obj;
+                }
               }
+              let thisScore = null;
+              if (thisScores && thisScores.scores) {
+                thisScore = thisScores.scores[orch.address];
+              }
+              return (
+                <div className='stroke' key={obj.seed + orch.address + i}>
+                  <Winner
+                    thisScore={thisScore}
+                    totalEarnings={obj.data.winningTicketsReceivedSum}
+                    thisEarnings={thisEarnings}
+                    totalStake={totalStakeSum}
+                    thisStake={thisStake}
+                    thisCommission={thisCommission}
+                    address={orch.address}
+                    thisIndex={i + 1}
+                    seed={obj.seed + "win" + orch.address + i}
+                  />
+                  <div className="verticalDivider" />
+                </div>
+              )
             }
-            let thisScore = null;
-            if (thisScores && thisScores.scores) {
-              thisScore = thisScores.scores[orch.address];
-            }
-            return (
-              <div className='stroke' key={obj.seed + orch.address + i}>
-                <Winner
-                  thisScore={thisScore}
-                  totalEarnings={obj.data.winningTicketsReceivedSum}
-                  thisEarnings={thisEarnings}
-                  totalStake={totalStakeSum}
-                  thisStake={thisStake}
-                  thisCommission={thisCommission}
-                  address={orch.address}
-                  thisIndex={i + 1}
-                  seed={obj.seed + "win" + orch.address + i}
-                />
-                <div className="verticalDivider" />
-              </div>
-            )
+            return null;
           })
         }
+        <div className="row" style={{ marginTop: '1em', marginBottom: '1em' }}>
+          {totalPages > 1 ?
+            <Pagination page={activePage} onChange={setPage} total={totalPages} boundaries={2} siblings={2} initialPage={1} />
+            : null}
+        </div>
       </div>
       <div className="verticalDivider" />
     </div>
