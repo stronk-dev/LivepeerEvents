@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { VictoryPie } from 'victory';
+import ScrollContainer from "react-indiana-drag-scroll";
 import Winner from '../components/WinnerStat';
 import {
   getOrchestratorScores
@@ -19,7 +20,7 @@ const activationColour = "rgba(154, 158, 25, 0.4)";
 const ticketTransferColour = "rgba(88, 91, 42, 0.3)";
 const greyColour = "rgba(122, 128, 127, 0.4)";
 
-const itemsPerPage = 6;
+const itemsPerPage = 10;
 
 const WinnerMonth = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
@@ -549,58 +550,69 @@ const WinnerMonth = (obj) => {
           <Pagination page={activeGraph} onChange={setGraph} total={totalGraphs} siblings={1} initialPage={1} />
           : null}
       </div>
-      <div className="flexContainer forceWrap">
-        {
-          sortedList.map(function (orch, i) {
-            const tmp = i - ((activePage - 1) * itemsPerPage);
-            if (tmp >= 0 && tmp < itemsPerPage) {
-              let thisCommission = null;
-              let thisStake = null;
-              let thisEarnings = null;
+      <div className="row">
+        <div className="strokeSmollLeft fullMargin" style={{ paddingBottom: 0, marginBottom: 0, height: '80vh' }}>
+          <div className="row">
+            <h3>{sortedList.length} Delegators</h3>
+          </div>
+          <div className="content-wrapper">
+            <ScrollContainer className="overflow-container" hideScrollbars={false} style={{}}>
+              <div className="overflow-content" style={{ cursor: 'grab', maxHeight: '300px' }}>
+                {
+                  sortedList.map(function (orch, i) {
+                    const tmp = i - ((activePage - 1) * itemsPerPage);
+                    if (tmp >= 0 && tmp < itemsPerPage) {
+                      let thisCommission = null;
+                      let thisStake = null;
+                      let thisEarnings = null;
 
-              for (const obj of ticketList) {
-                if (obj.address == orch.address) {
-                  thisEarnings = obj;
+                      for (const obj of ticketList) {
+                        if (obj.address == orch.address) {
+                          thisEarnings = obj;
+                        }
+                      }
+                      for (const obj of commissionList) {
+                        if (obj.address == orch.address) {
+                          thisCommission = obj;
+                        }
+                      }
+                      for (const obj of stakeList) {
+                        if (obj.address == orch.address) {
+                          thisStake = obj;
+                        }
+                      }
+                      let thisScore = null;
+                      if (thisScores && thisScores.scores) {
+                        thisScore = thisScores.scores[orch.address];
+                      }
+                      return (
+                        <div className='stroke' key={obj.seed + orch.address + i}>
+                          <Winner
+                            thisScore={thisScore}
+                            totalEarnings={obj.data.winningTicketsReceivedSum}
+                            thisEarnings={thisEarnings}
+                            totalStake={totalStakeSum}
+                            thisStake={thisStake}
+                            thisCommission={thisCommission}
+                            address={orch.address}
+                            thisIndex={i + 1}
+                            seed={obj.seed + "win" + orch.address + i}
+                          />
+                          <div className="verticalDivider" />
+                        </div>
+                      )
+                    }
+                    return null;
+                  })
                 }
-              }
-              for (const obj of commissionList) {
-                if (obj.address == orch.address) {
-                  thisCommission = obj;
-                }
-              }
-              for (const obj of stakeList) {
-                if (obj.address == orch.address) {
-                  thisStake = obj;
-                }
-              }
-              let thisScore = null;
-              if (thisScores && thisScores.scores) {
-                thisScore = thisScores.scores[orch.address];
-              }
-              return (
-                <div className='stroke' key={obj.seed + orch.address + i}>
-                  <Winner
-                    thisScore={thisScore}
-                    totalEarnings={obj.data.winningTicketsReceivedSum}
-                    thisEarnings={thisEarnings}
-                    totalStake={totalStakeSum}
-                    thisStake={thisStake}
-                    thisCommission={thisCommission}
-                    address={orch.address}
-                    thisIndex={i + 1}
-                    seed={obj.seed + "win" + orch.address + i}
-                  />
-                  <div className="verticalDivider" />
-                </div>
-              )
-            }
-            return null;
-          })
-        }
-        <div className="row" style={{ marginTop: '1em', marginBottom: '1em' }}>
-          {totalPages > 1 ?
-            <Pagination page={activePage} onChange={setPage} total={totalPages} boundaries={2} siblings={2} initialPage={1} />
-            : null}
+              </div>
+            </ScrollContainer>
+          </div>
+          <div className="row" style={{ marginTop: '1em', marginBottom: '1em' }}>
+            {totalPages > 1 ?
+              <Pagination page={activePage} onChange={setPage} total={totalPages} siblings={1} initialPage={1} />
+              : null}
+          </div>
         </div>
       </div>
       <div className="verticalDivider" />
