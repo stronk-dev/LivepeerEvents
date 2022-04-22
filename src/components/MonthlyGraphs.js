@@ -403,7 +403,7 @@ const MonthlyGraphs = (obj) => {
   }
 
   return (
-    <div className="stroke fullMargin insetEffect" style={{ padding: 0, margin: 0, height: '70vh' }}>
+    <div className="stroke fullMargin insetEffect" style={{ padding: 0, margin: 0, minHeight: '70vh' }}>
       <div className="row" style={{ marginTop: '1em', marginBottom: '1em' }}>
         {totalGraphs > 1 ?
           <Pagination page={activeGraph} onChange={setGraph} total={totalGraphs} siblings={1} initialPage={1} />
