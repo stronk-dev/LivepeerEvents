@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { VictoryPie } from 'victory';
-import { RadioGroup, Radio } from "@mantine/core";
+import { SegmentedControl } from "@mantine/core";
 
 const MonthlyGraphs = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
-  const [activeGraph, setGraph] = useState(1);
+  const [activeGraph, setGraph] = useState(2);
 
   let totalGraphs = 0;
 
@@ -381,24 +381,42 @@ const MonthlyGraphs = (obj) => {
     thisColour = "orange";
   }
 
+  let dataRow = [];
+  if (totalGraphs && stakeObj) {
+    dataRow.push({ label: 'Stake', value: '1' });
+  }
+  if (totalGraphs && earningsObj) {
+    dataRow.push({ label: 'Earnings', value: '2' });
+  }
+  if (totalGraphs && broadcasterObj) {
+    dataRow.push({ label: 'Broadcasters', value: '3' });
+  }
+
   return (
     <div className="stroke fullMargin insetEffect" style={{ padding: 0, margin: 0 }}>
-      <div className="row" style={{ marginTop: '1em', marginBottom: '1em' }}>
+      <div className="row" style={{ margin: 0 }}>
         {totalGraphs > 1 ?
-          <div className="row" style={{ marginTop: '0.3em', marginBottom: '0.3em' }}>
-            <RadioGroup
-              value={activeGraph}
-              onChange={setGraph}
-              spacing="lg"
-              size="lg"
-              color={thisColour}
-              required
-            >
-              {(totalGraphs && stakeObj) ? <Radio value="1" label="Stake" /> : null}
-              {(totalGraphs && earningsObj) ? <Radio value="2" label="Earnings" /> : null}
-              {(totalGraphs && broadcasterObj) ? <Radio value="3" label="Broadcasters" /> : null}
-            </RadioGroup>
-          </div>
+          <SegmentedControl
+            styles={{
+              root: { backgroundColor: 'rgba(103, 103, 103, 0.6)' },
+              label: { color: 'black' },
+              labelActive: { color: 'black' },
+              input: { color: 'black' },
+              control: { color: 'black' },
+              controlActive: {},
+              active: { color: 'black' },
+              disabled: {},
+            }}
+            value={activeGraph}
+            onChange={setGraph}
+            radius="md"
+            spacing="lg"
+            size="lg"
+            transitionDuration={200}
+            transitionTimingFunction="linear"
+            color={thisColour}
+            data={dataRow}
+          />
           : null}
       </div>
       <div className="row" style={{ marginTop: '1em', marginBottom: '1em', minHeight: '70vh', height: '100%' }}>
