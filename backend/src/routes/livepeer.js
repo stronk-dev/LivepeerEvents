@@ -2578,12 +2578,12 @@ apiRouter.post("/getOrchestratorScores", async (req, res) => {
       const url = "https://leaderboard-serverless.vercel.app/api/aggregated_stats?since=" + startTime + "&until=" + endTime;
       console.log("Getting new Orchestrator scores for " + year + "-" + month + " @ " + url);
 
-      https.get(url, (res) => {
+      https.get(url, (res2) => {
         let body = "";
-        res.on("data", (chunk) => {
+        res2.on("data", (chunk) => {
           body += chunk;
         });
-        res.on("end", () => {
+        res2.on("end", () => {
           try {
             const data = JSON.parse(body);
             const scoreObj = {
