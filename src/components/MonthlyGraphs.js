@@ -99,8 +99,6 @@ const MonthlyGraphs = (obj) => {
         sortOrder="descending"
         sortKey="sum"
         radius={300}
-        width={620}
-        height={620}
         innerRadius={50}
         labelRadius={130}
         cornerRadius={3}
@@ -403,7 +401,7 @@ const MonthlyGraphs = (obj) => {
   }
 
   return (
-    <div className="stroke insetEffect" key={obj.seed + "graphs"} style={{ height: '70vh' }}>
+    <div className="stroke insetEffect" key={obj.seed + "graphs"} style={{ minHeight: '70vh' }}>
       {renderStake ? stakeObj : null}
       {renderEarnings ? earningsObj : null}
       {renderBread ? broadcasterObj : null}
