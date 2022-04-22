@@ -99,6 +99,8 @@ const MonthlyGraphs = (obj) => {
         sortOrder="descending"
         sortKey="sum"
         radius={300}
+        width={620}
+        height={620}
         innerRadius={50}
         labelRadius={130}
         cornerRadius={3}
