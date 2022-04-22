@@ -112,9 +112,11 @@ const WinnerMonth = (obj) => {
       <VictoryPie padding={0} data={pieList} x="address" y="sum"
         sortOrder="descending"
         sortKey="sum"
-        radius={200}
-        innerRadius={10}
-        labelRadius={({ radius }) => radius * 0.5}
+        radius={300}
+        width={620}
+        height={620}
+        innerRadius={50}
+        labelRadius={140}
         cornerRadius={3}
         colorScale={[
           "#282678",
@@ -148,7 +150,7 @@ const WinnerMonth = (obj) => {
             fillOpacity: 0.9, stroke: "#636363", strokeWidth: 1.5
           },
           labels: {
-            fontSize: 10, zIndex: 999
+            fontSize: 16, zIndex: 999
           }
         }}
         labelPosition="centroid"
@@ -190,9 +192,11 @@ const WinnerMonth = (obj) => {
       <VictoryPie padding={{ top: 20, bottom: 20, left: 120, right: 120 }} data={pieList} x="address" y="sum"
         sortOrder="descending"
         sortKey="sum"
-        radius={200}
-        innerRadius={10}
-        labelRadius={({ radius }) => radius * 0.5}
+        radius={300}
+        width={620}
+        height={620}
+        innerRadius={50}
+        labelRadius={140}
         cornerRadius={3}
         colorScale={[
           "#282678",
@@ -226,7 +230,7 @@ const WinnerMonth = (obj) => {
             fillOpacity: 0.9, stroke: "#636363", strokeWidth: 1.5
           },
           labels: {
-            fontSize: 10, zIndex: 999
+            fontSize: 16, zIndex: 999
           }
         }}
         labelPosition="centroid"
@@ -266,9 +270,11 @@ const WinnerMonth = (obj) => {
       <VictoryPie padding={{ top: 20, bottom: 20, left: 120, right: 120 }} data={pieList} x="address" y="sum"
         sortOrder="descending"
         sortKey="sum"
-        radius={200}
-        innerRadius={10}
-        labelRadius={({ radius }) => radius * 0.5}
+        radius={300}
+        width={620}
+        height={620}
+        innerRadius={50}
+        labelRadius={140}
         cornerRadius={3}
         colorScale={[
           "#282678",
@@ -302,7 +308,7 @@ const WinnerMonth = (obj) => {
             fillOpacity: 0.9, stroke: "#636363", strokeWidth: 1.5
           },
           labels: {
-            fontSize: 10, zIndex: 999
+            fontSize: 16, zIndex: 999
           }
         }}
         labelPosition="centroid"
