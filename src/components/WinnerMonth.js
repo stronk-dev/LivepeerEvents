@@ -39,7 +39,7 @@ const WinnerMonth = (obj) => {
     if (thisDomain && thisDomain.domain) {
       for (const thisAddr of livepeer.ensInfoMapping) {
         if (thisAddr.domain === thisDomain.domain) {
-          if (thisAddr.domain.length > 18){
+          if (thisAddr.domain.length > 18) {
             return (thisAddr.domain.substring(0, 16) + "..");
           }
           return thisAddr.domain;
@@ -51,7 +51,7 @@ const WinnerMonth = (obj) => {
       for (const thisAddr of livepeer.threeBoxInfo) {
         if (thisAddr.address === address) {
           if (thisAddr.name) {
-            if (thisAddr.name.length > 18){
+            if (thisAddr.name.length > 18) {
               return (thisAddr.name.substring(0, 16) + "..");
             }
             return thisAddr.name;
@@ -100,18 +100,24 @@ const WinnerMonth = (obj) => {
         });
       }
     }
-    pieList.push({
-      address: "Other",
-      sum: otherSum
-    });
+    if ((otherSum / totalStakeSum) > 0.01) {
+      pieList.push({
+        address: "Other",
+        sum: otherSum
+      });
+    }
 
     stakeObj = <div className="stroke">
       <h4>Stake Distribution</h4>
-      <VictoryPie padding={{ top: 20, bottom: 20, left: 120, right: 120 }} data={pieList} x="address" y="sum"
+      <VictoryPie padding={0} data={pieList} x="address" y="sum"
         sortOrder="descending"
         sortKey="sum"
+        radius={200}
+        innerRadius={10}
+        labelRadius={({ radius }) => radius * 0.5}
+        cornerRadius={3}
         colorScale={[
-          "#201f5c",
+          "#282678",
           "#56256c",
           "#872974",
           "#b63074",
@@ -139,7 +145,7 @@ const WinnerMonth = (obj) => {
         style={{
           backgroundColor: 'rgba(122, 128, 127, 0.4)',
           data: {
-            fillOpacity: 0.9, stroke: "#636363", strokeWidth: 2
+            fillOpacity: 0.9, stroke: "#636363", strokeWidth: 1.5
           },
           labels: {
             fontSize: 10, zIndex: 999
@@ -172,18 +178,24 @@ const WinnerMonth = (obj) => {
         });
       }
     }
-    pieList.push({
-      address: "Other",
-      sum: otherSum
-    });
+    if ((otherSum / obj.data.winningTicketsReceivedSum) > 0.01) {
+      pieList.push({
+        address: "Other",
+        sum: otherSum
+      });
+    }
 
     earningsObj = <div className="stroke">
       <h4>Earnings Distribution</h4>
       <VictoryPie padding={{ top: 20, bottom: 20, left: 120, right: 120 }} data={pieList} x="address" y="sum"
         sortOrder="descending"
         sortKey="sum"
+        radius={200}
+        innerRadius={10}
+        labelRadius={({ radius }) => radius * 0.5}
+        cornerRadius={3}
         colorScale={[
-          "#201f5c",
+          "#282678",
           "#56256c",
           "#872974",
           "#b63074",
@@ -211,7 +223,7 @@ const WinnerMonth = (obj) => {
         style={{
           backgroundColor: 'rgba(122, 128, 127, 0.4)',
           data: {
-            fillOpacity: 0.9, stroke: "#636363", strokeWidth: 2
+            fillOpacity: 0.9, stroke: "#636363", strokeWidth: 1.5
           },
           labels: {
             fontSize: 10, zIndex: 999
@@ -242,18 +254,24 @@ const WinnerMonth = (obj) => {
         });
       }
     }
-    pieList.push({
-      address: "Other",
-      sum: otherSum
-    });
+    if ((otherSum / obj.data.winningTicketsReceivedSum) > 0.01) {
+      pieList.push({
+        address: "Other",
+        sum: otherSum
+      });
+    }
 
     broadcasterObj = <div className="stroke">
       <h4>Broadcaster Payments</h4>
       <VictoryPie padding={{ top: 20, bottom: 20, left: 120, right: 120 }} data={pieList} x="address" y="sum"
         sortOrder="descending"
         sortKey="sum"
+        radius={200}
+        innerRadius={10}
+        labelRadius={({ radius }) => radius * 0.5}
+        cornerRadius={3}
         colorScale={[
-          "#201f5c",
+          "#282678",
           "#56256c",
           "#872974",
           "#b63074",
@@ -281,7 +299,7 @@ const WinnerMonth = (obj) => {
         style={{
           backgroundColor: 'rgba(122, 128, 127, 0.4)',
           data: {
-            fillOpacity: 0.9, stroke: "#636363", strokeWidth: 2
+            fillOpacity: 0.9, stroke: "#636363", strokeWidth: 1.5
           },
           labels: {
             fontSize: 10, zIndex: 999
