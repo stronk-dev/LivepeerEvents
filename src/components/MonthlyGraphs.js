@@ -409,7 +409,6 @@ const MonthlyGraphs = (obj) => {
             }}
             value={activeGraph}
             onChange={setGraph}
-            radius="md"
             spacing="lg"
             size="lg"
             transitionDuration={200}

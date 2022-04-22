@@ -32,7 +32,6 @@ const MonthlyStats = (obj) => {
           }}
           value={activePage}
           onChange={setPage}
-          radius="md"
           spacing="lg"
           size="lg"
           transitionDuration={200}
