@@ -398,17 +398,73 @@ const MonthlyGraphs = (obj) => {
         {totalGraphs > 1 ?
           <SegmentedControl
             styles={{
-              root: { backgroundColor: 'rgba(103, 103, 103, 0.6)' },
-              label: { color: 'black' },
-              labelActive: { color: 'black' },
-              input: { color: 'black' },
-              control: { color: 'black' },
-              controlActive: {},
-              active: { color: 'black' },
-              disabled: {},
+              root: { backgroundColor: 'rgba(103, 103, 103, 0.6)', border: 'none', borderColor: 'transparent' },
+              label: {
+                color: 'black',
+                border: 'none',
+                '&:hover': {
+                  color: 'black',
+                  border: 'none'
+                },
+                '&': {
+                  color: 'black',
+                  border: 'none'
+                }
+              },
+              labelActive: {
+                color: 'black',
+                border: 'none',
+                '&:hover': {
+                  color: 'black',
+                  border: 'none'
+                },
+                '&': {
+                  color: 'black',
+                  border: 'none'
+                }
+              },
+              input: {
+
+              },
+              control: {
+                color: 'black',
+                border: 'none',
+                '&:hover': {
+                  color: 'black',
+                  border: 'none'
+                },
+                '&': {
+                  color: 'black',
+                  border: 'none'
+                },
+                '&:not(:first-of-type)': {
+                  color: 'black',
+                  border: 'none'
+                }
+                
+              },
+              controlActive: {
+                color: 'black',
+                border: 'none',
+                '&:hover': {
+                  color: 'black',
+                  border: 'none'
+                },
+                '&': {
+                  color: 'black',
+                  border: 'none'
+                }
+              },
+              active: {
+
+              },
+              disabled: {
+
+              },
             }}
             value={activeGraph}
             onChange={setGraph}
+            radius={0}
             spacing="lg"
             size="lg"
             transitionDuration={200}

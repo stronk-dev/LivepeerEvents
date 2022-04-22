@@ -17,23 +17,79 @@ const MonthlyStats = (obj) => {
   }
 
   return (
-    <div className="stroke" key={obj.seed + "menu"}>
+    <div className="stroke" key={obj.seed + "menu"} style={{ marginTop: '0', paddingTop: '0' }}>
       <div className="row" style={{ margin: '0' }}>
         <SegmentedControl
           styles={{
-            root: { backgroundColor: 'rgba(103, 103, 103, 0.6)' },
-            label: { color: 'black' },
-            labelActive: { color: 'black' },
-            input: { color: 'black' },
-            control: { color: 'black' },
-            controlActive: {},
-            active: { color: 'black' },
-            disabled: {},
+            root: { backgroundColor: 'rgba(103, 103, 103, 0.6)', border: 'none', borderColor: 'transparent' },
+            label: {
+              color: 'black',
+              border: 'none',
+              '&:hover': {
+                color: 'black',
+                border: 'none'
+              },
+              '&': {
+                color: 'black',
+                border: 'none'
+              }
+            },
+            labelActive: {
+              color: 'black',
+              border: 'none',
+              '&:hover': {
+                color: 'black',
+                border: 'none'
+              },
+              '&': {
+                color: 'black',
+                border: 'none'
+              }
+            },
+            input: {
+
+            },
+            control: {
+              color: 'black',
+              border: 'none',
+              '&:hover': {
+                color: 'black',
+                border: 'none'
+              },
+              '&': {
+                color: 'black',
+                border: 'none'
+              },
+              '&:not(:first-of-type)': {
+                color: 'black',
+                border: 'none'
+              }
+
+            },
+            controlActive: {
+              color: 'black',
+              border: 'none',
+              '&:hover': {
+                color: 'black',
+                border: 'none'
+              },
+              '&': {
+                color: 'black',
+                border: 'none'
+              }
+            },
+            active: {
+
+            },
+            disabled: {
+
+            },
           }}
           value={activePage}
           onChange={setPage}
           spacing="lg"
           size="lg"
+          radius={0}
           transitionDuration={200}
           transitionTimingFunction="linear"
           color={thisColour}
@@ -44,19 +100,6 @@ const MonthlyStats = (obj) => {
           ]}
         />
       </div>
-      <div className="verticalDivider" />
-      <div className="row">
-        {
-          activePage == 1 ? <h4>Summary</h4> : null
-        }
-        {
-          activePage == 2 ? <h4>Graphs</h4> : null
-        }
-        {
-          activePage == 3 ? <h4>Orchestrators</h4> : null
-        }
-      </div>
-      <div className="verticalDivider" />
       {
         activePage == 1 ? <MonthlyFactoids
           data={obj.data}
