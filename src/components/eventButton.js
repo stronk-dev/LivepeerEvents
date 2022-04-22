@@ -32,7 +32,7 @@ const EventButton = (obj) => {
     eventColour = updateColour;
   } else if (obj.type == "reward") {
     eventCaller = obj.eventObj.address;
-    eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"💸"} subtext={"called reward"} descriptions={[
+    eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"🏦"} subtext={"called reward"} descriptions={[
       "+" + obj.eventObj.amount.toFixed(2) + " LPT" + (Math.floor(obj.eventObj.amount) == 69 ? "... Nice!" : "")
     ]} />
     eventColour = rewardColour;
@@ -46,14 +46,14 @@ const EventButton = (obj) => {
     eventColour = claimColour;
   } else if (obj.type == "withdrawStake") {
     eventCaller = obj.eventObj.address;
-    eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"🏦"} subtext={"withdrew stake"} descriptions={[
+    eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"💸"} subtext={"withdrew stake"} descriptions={[
       obj.eventObj.amount.toFixed(2) + " LPT",
       "round " + obj.eventObj.round
     ]} />
     eventColour = withdrawStakeColour;
   } else if (obj.type == "withdrawFees") {
     eventCaller = obj.eventObj.address;
-    eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"🏦"} subtext={"withdrew fees"} descriptions={[
+    eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"💸"} subtext={"withdrew fees"} descriptions={[
       "+" + obj.eventObj.amount.toFixed(4) + " Eth fees"
     ]} />
     eventColour = withdrawStakeColour;

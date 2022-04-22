@@ -394,7 +394,7 @@ const WinnerMonth = (obj) => {
       {obj.data.reactivationCount ?
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: activationColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
-            <Ticket seed={obj.seed + "-reactivationCount-"} icon={"🔌"} subtext={obj.data.reactivationCount + " reactivated"} descriptions={[
+            <Ticket seed={obj.seed + "-reactivationCount-"} icon={"🔌"} subtext={obj.data.reactivationCount + " reactivations"} descriptions={[
               obj.data.reactivationCount + " Orchestrators reactivated"
             ]} />
           </div>
@@ -405,17 +405,26 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: activationColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"🔧"} subtext={obj.data.activationCount + " new orchestrators"} descriptions={[
-              obj.data.activationCount + " orchestrators joined with an initial stake of " + obj.data.activationInitialSum.toFixed(2) + " LPT"
+              obj.data.activationCount + " orchestrators joined with an initial stake of " + obj.data.activationInitialSum.toLocaleString({maximumFractionDigits:2}) + " LPT"
             ]} />
           </div>
         </div> : null
       }
       <div className="halfVerticalDivider" />
+      {(obj.data.latestCommission && obj.data.latestCommission.length) ?
+        <div className="row">
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: updateColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"🔗"} subtext={obj.data.latestCommission.length + " orchestrators found"} descriptions={[
+              obj.data.latestCommission.length + "  orchestrators had a total of " + totalStakeSum.toLocaleString({maximumFractionDigits:2}) + " LPT staked to them"
+            ]} />
+          </div>
+        </div> : null}
+      <div className="halfVerticalDivider" />
       {obj.data.bondCount ?
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: stakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"📈"} subtext={obj.data.bondCount + " new delegators"} descriptions={[
-              obj.data.bondCount + " accounts delegated for the first time for a total of " + obj.data.bondStakeSum.toFixed(2) + " LPT"
+              obj.data.bondCount + " accounts delegated for the first time for a total of " + obj.data.bondStakeSum.toLocaleString({maximumFractionDigits:2}) + " LPT"
             ]} />
           </div>
         </div> : null
@@ -425,7 +434,7 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: unbondColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"📉"} subtext={obj.data.unbondCount + " leaving delegators"} descriptions={[
-              obj.data.unbondCount + " delegators unbonded " + obj.data.unbondStakeSum.toFixed(2) + " LPT"
+              obj.data.unbondCount + " delegators unbonded " + obj.data.unbondStakeSum.toLocaleString({maximumFractionDigits:2}) + " LPT"
             ]} />
           </div>
         </div> : null
@@ -435,7 +444,7 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: rewardColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"⌛"} subtext={obj.data.rewardCount + " reward calls"} descriptions={[
-              obj.data.rewardCount + " reward calls were made worth " + obj.data.rewardAmountSum.toFixed(2) + " LPT"
+              obj.data.rewardCount + " reward calls made by orchestrators were worth " + obj.data.rewardAmountSum.toLocaleString({maximumFractionDigits:2}) + " LPT"
             ]} />
           </div>
         </div> : null
@@ -444,8 +453,8 @@ const WinnerMonth = (obj) => {
       {obj.data.claimCount ?
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: claimColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
-            <Ticket seed={obj.seed + "-neworchs-"} icon={"💸"} subtext={obj.data.claimCount + " reward claims"} descriptions={[
-              obj.data.claimRewardSum.toFixed(2) + "  LPT and " + obj.data.claimFeeSum.toFixed(2) + " ETH worth of rewards were claimed"
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"🏦"} subtext={obj.data.claimCount + " reward claims"} descriptions={[
+              obj.data.claimRewardSum.toLocaleString({maximumFractionDigits:2}) + "  LPT and " + obj.data.claimFeeSum.toLocaleString({maximumFractionDigits:2}) + " ETH worth of rewards were claimed by delegators"
             ]} />
           </div>
         </div> : null
@@ -454,8 +463,8 @@ const WinnerMonth = (obj) => {
       {obj.data.withdrawStakeCount ?
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: withdrawStakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
-            <Ticket seed={obj.seed + "-neworchs-"} icon={"🏦"} subtext={obj.data.withdrawStakeCount + " withdraw reward calls"} descriptions={[
-              obj.data.withdrawStakeAmountSum.toFixed(2) + " LPT worth of staking rewards were withdrawn"
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"💸"} subtext={obj.data.withdrawStakeCount + " withdraw reward calls"} descriptions={[
+              obj.data.withdrawStakeAmountSum.toLocaleString({maximumFractionDigits:2}) + " LPT worth of staking rewards were withdrawn to the account of the delegator"
             ]} />
           </div>
         </div> : null
@@ -464,8 +473,8 @@ const WinnerMonth = (obj) => {
       {obj.data.withdrawFeesCount ?
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: withdrawStakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
-            <Ticket seed={obj.seed + "-neworchs-"} icon={"🏦"} subtext={obj.data.withdrawFeesCount + " withdraw fee calls"} descriptions={[
-              obj.data.withdrawFeesAmountSum.toFixed(2) + " ETH worth of transcoding fees were withdrawn"
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"💸"} subtext={obj.data.withdrawFeesCount + " withdraw fee calls"} descriptions={[
+              obj.data.withdrawFeesAmountSum.toLocaleString({maximumFractionDigits:2}) + " ETH worth of transcoding fees were withdrawn to the account of the delegator"
             ]} />
           </div>
         </div> : null
@@ -475,7 +484,7 @@ const WinnerMonth = (obj) => {
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: stakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
             <Ticket seed={obj.seed + "-neworchs-"} icon={"🔄"} subtext={obj.data.moveStakeCount + " stake movements"} descriptions={[
-              obj.data.moveStakeSum.toFixed(2) + " LPT worth of stake was moved between orchestrators"
+              obj.data.moveStakeSum.toLocaleString({maximumFractionDigits:2}) + " LPT worth of stake was moved between orchestrators"
             ]} />
           </div>
         </div> : null
@@ -494,8 +503,8 @@ const WinnerMonth = (obj) => {
       {obj.data.winningTicketsRedeemedCount ?
         <div className="row">
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: ticketRedeemColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
-            <Ticket seed={obj.seed + "-neworchs-"} icon={"🎟️"} subtext={obj.data.winningTicketsRedeemedCount + " winning tickets"} descriptions={[
-              obj.data.winningTicketsRedeemedCount + " winning tickets were redeemed worth " + obj.data.winningTicketsRedeemedSum.toFixed(2) + " ETH"
+            <Ticket seed={obj.seed + "-neworchs-"} icon={"🎟️"} subtext={obj.data.winningTicketsRedeemedCount + " redeemed tickets"} descriptions={[
+              obj.data.winningTicketsRedeemedCount + " winning tickets were redeemed worth " + obj.data.winningTicketsRedeemedSum.toLocaleString({maximumFractionDigits:2}) + " ETH"
             ]} />
           </div>
         </div> : null
