@@ -112,6 +112,7 @@ const Livepeer = (obj) => {
             activateEvents={livepeer.activateEvents}
             unbondEvents={livepeer.unbondEvents}
             stakeEvents={livepeer.stakeEvents}
+            monthlyStats={livepeer.monthlyStats}
             />
         </div>
       </div>

@@ -31,9 +31,28 @@ const EventButton = (obj) => {
     ]} />
     eventColour = updateColour;
   } else if (obj.type == "reward") {
+    // Determine reward cut
+    let appendix = "";
+    if (obj.monthlyStats) {
+      var dateObj = new Date(0);
+      dateObj.setUTCSeconds(obj.time);
+      const thisYear = dateObj.getFullYear();
+      const thisMonth = dateObj.getMonth();
+      for (const timeObj of obj.monthlyStats) {
+        if (thisYear == timeObj.year && thisMonth == timeObj.month) {
+          if (timeObj.latestCommission) {
+            for (const commissionObj of timeObj.latestCommission) {
+              if (commissionObj.address == obj.eventObj.address) {
+                appendix += ", keeping " + (obj.eventObj.amount * (commissionObj.rewardCommission / 100)).toFixed(4) + " LPT as commission";
+              }
+            }
+          }
+        }
+      }
+    }
     eventCaller = obj.eventObj.address;
     eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"🏦"} subtext={"called reward"} descriptions={[
-      "+" + obj.eventObj.amount.toFixed(2) + " LPT" + (Math.floor(obj.eventObj.amount) == 69 ? "... Nice!" : "")
+      "+" + obj.eventObj.amount.toFixed(2) + " LPT" + appendix
     ]} />
     eventColour = rewardColour;
   } else if (obj.type == "claim") {
@@ -86,9 +105,28 @@ const EventButton = (obj) => {
     ]} />
     eventColour = ticketTransferColour;
   } else if (obj.type == "redeemTicket") {
+    // Determine fee cut
+    let appendix = "";
+    if (obj.monthlyStats) {
+      var dateObj = new Date(0);
+      dateObj.setUTCSeconds(obj.time);
+      const thisYear = dateObj.getFullYear();
+      const thisMonth = dateObj.getMonth();
+      for (const timeObj of obj.monthlyStats) {
+        if (thisYear == timeObj.year && thisMonth == timeObj.month) {
+          if (timeObj.latestCommission) {
+            for (const commissionObj of timeObj.latestCommission) {
+              if (commissionObj.address == obj.eventObj.address) {
+                appendix += ", keeping " + (obj.eventObj.amount * (commissionObj.feeCommission / 100)).toFixed(4) + " Eth as commission";
+              }
+            }
+          }
+        }
+      }
+    }
     eventCaller = obj.eventObj.address;
     eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"🎟️"} subtext={"redeemed winning ticket"} descriptions={[
-      "+" + obj.eventObj.amount.toFixed(4) + " Eth"
+      "+" + obj.eventObj.amount.toFixed(4) + " Eth" + appendix
     ]} />
     eventColour = ticketRedeemColour;
   } else if (obj.type == "stake") {

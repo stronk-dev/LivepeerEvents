@@ -98,10 +98,6 @@ const EventViewer = (obj) => {
     unbondEventsIdx = -1;
   }
   if (!delegatorRewardActivated) {
-    filtered += rewardEventsIdx + 1;
-    rewardEventsIdx = -1;
-  }
-  if (!rewardActivated) {
     filtered += claimEventsIdx + 1;
     claimEventsIdx = -1;
   }
@@ -426,7 +422,9 @@ const EventViewer = (obj) => {
         seed={thisEvent.transactionHash + unfiltered}
         eventObj={thisEvent}
         type={latestType}
+        time={thisEvent.blockTime}
         setSearchTerm={obj.setSearchTerm}
+        monthlyStats={obj.monthlyStats}
       />);
     } else {
       prevBlock = thisEvent.blockNumber;
@@ -438,6 +436,7 @@ const EventViewer = (obj) => {
         isFirstOfBlock={prevBlock}
         time={thisEvent.blockTime}
         setSearchTerm={obj.setSearchTerm}
+        monthlyStats={obj.monthlyStats}
       />);
     }
   }
