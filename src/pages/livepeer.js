@@ -6,7 +6,8 @@ import { getOrchestratorInfo, clearOrchestrator } from "../actions/livepeer";
 import EventViewer from "../components/eventViewer";
 import Orchestrator from "../components/orchestratorViewer";
 import ContractPrices from '../components/ContractPrices';
-import { Dialog } from '@mantine/core';
+import { Dialog, ScrollArea, Stack } from '@mantine/core';
+import ScrollContainer from 'react-indiana-drag-scroll';
 
 // Shows the EventViewer and other Livepeer related info
 const defaultMaxShown = 50;
@@ -107,24 +108,25 @@ const Livepeer = (obj) => {
           shadow="xl"
           radius="md"
           styles={{
-            root: { backgroundColor: 'rgba(214, 214, 214, 0.90)' },
-            closeButton: { },
+            root: { backgroundColor: 'rgba(214, 214, 214, 0.80)', maxHeight: '90vh' },
+            closeButton: {},
           }}
         >
-          <div className='stroke'>
-            <div className="verticalDivider" />
-            <div className="strokeSmollLeft sideMargin">
-              <div className="row">
-                <div className="row">
-                  <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} forceVertical={true} />
+          <div className="content-wrapper" style={{ width: '100%' }}>
+            <ScrollContainer activationDistance={1} className="overflow-container" hideScrollbars={false} style={{ width: '100%', overflowX: 'hidden' }}>
+              <div className="overflow-content" style={{ cursor: 'grab', padding: 0, width: '100%' }}>
+                <div className="verticalDivider" />
+                <div className="strokeSmollLeft sideMargin">
+                  <div className="row">
+                    <div className="row">
+                      <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} forceVertical={true} />
+                    </div>
+                  </div>
+                  <div className="verticalDivider" />
                 </div>
               </div>
-              <div className="verticalDivider" />
-              <div className="row">
-                <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
-              </div>
-            </div>
-          </div >
+            </ScrollContainer>
+          </div>
         </Dialog>
         {sidebar}
         <div className="mainContent">

@@ -454,7 +454,7 @@ const EventViewer = (obj) => {
         position={{ bottom: 20, left: 20 }}
         radius="md"
         styles={{
-          root: { backgroundColor: 'rgba(214, 214, 214, 0.90)' },
+          root: { backgroundColor: 'rgba(214, 214, 214, 0.80)' },
           closeButton: {},
         }}
       >

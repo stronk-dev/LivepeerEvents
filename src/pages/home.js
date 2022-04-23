@@ -5,10 +5,13 @@ import {
 } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import RetroHitCounter from 'react-retro-hit-counter';
+import ContractPrices from '../components/ContractPrices';
+
 // Index of all sub-pages on this website
 
 const Home = (obj) => {
   const userstate = useSelector((state) => state.userstate);
+  const livepeer = useSelector((state) => state.livepeerstate);
   const [redirectToGrafana, setRedirectToGrafana] = useState(false);
   const [redirectToLPT, setRedirectToLPT] = useState(false);
   const [redirectToStats, setRedirectToStats] = useState(false);
@@ -29,7 +32,7 @@ const Home = (obj) => {
 
   return (
     <div className="stroke">
-      <div className="verticalDivider"/>
+      <div className="verticalDivider" />
       <div className="row">
         <img alt="" src="livepeer.png" width="100em" height="100em" style={{ zIndex: 10 }} />
       </div>
@@ -67,6 +70,10 @@ const Home = (obj) => {
             }}>
               <p>📈 Statistics 💰</p>
             </button>
+          </div>
+          <div className="verticalDivider" />
+          <div className="row">
+            <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
           </div>
           <div className="verticalDivider" />
         </div>
