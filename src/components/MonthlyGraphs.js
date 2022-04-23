@@ -253,11 +253,6 @@ const MonthlyGraphs = (obj) => {
       });
     }
 
-    console.log("+1 for tickets");
-    console.log(obj.data.winningTicketsSent);
-    console.log(obj.data.winningTicketsReceivedSum);
-    console.log(pieList);
-
     totalGraphs++;
 
     broadcasterObj = <div className="stroke" style={{ width: 'unset' }}>

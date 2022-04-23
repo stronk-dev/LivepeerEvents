@@ -19,7 +19,7 @@ const OrchDelegatorViewer = (obj) => {
       // Find current O with most ticket wins in Eth
       while (ticketIdx2 >= 0) {
         const currentOrch = tmpCopy[ticketIdx2];
-        let thisVal = currentOrch.bondedAmount;
+        let thisVal = parseFloat(currentOrch.bondedAmount);
 
         if (thisVal > largestValue) {
           largestIdx = ticketIdx2;

@@ -1,8 +1,9 @@
 import React, { useState, useRef } from "react";
 import EventButton from "./eventButton";
 import ScrollContainer from 'react-indiana-drag-scroll';
-import { Pagination } from "@mantine/core";
+import { Pagination, Title } from "@mantine/core";
 import Filter from './filterComponent';
+import { Dialog, Stack, Button, Group } from '@mantine/core';
 
 const thresholdStaking = 0.001;
 const thresholdFees = 0.00009;
@@ -444,19 +445,31 @@ const EventViewer = (obj) => {
   let filterBit;
   if (obj.showFilter) {
     filterBit =
-      <div className="strokeSmollLeft roundedOpaque" style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, width: '100%' }}>
-        <div className="row">
-          <span>Showing {hidden + unfiltered} out of {limitShown} results</span>
-        </div>
-        <Filter amountFilter={obj.amountFilter} setAmountFilter={obj.setAmountFilter}
-          searchTerm={obj.searchTerm} setSearchTerm={obj.setSearchTerm} />
-      </div>
+      <Dialog
+        opened={obj.showFilter}
+        withCloseButton
+        onClose={() => obj.setShowFilter(false)}
+        size="xl"
+        shadow="xl"
+        position={{ bottom: 20, left: 20 }}
+        radius="md"
+        styles={{
+          root: { backgroundColor: 'rgba(214, 214, 214, 0.90)' },
+          closeButton: {},
+        }}
+      >
+        <Stack>
+          <Title order={3}>Showing {hidden + unfiltered} out of {limitShown} results</Title>
+          <Filter amountFilter={obj.amountFilter} setAmountFilter={obj.setAmountFilter}
+            searchTerm={obj.searchTerm} setSearchTerm={obj.setSearchTerm} />
+        </Stack>
+      </Dialog>
   }
   return (
     <div className="strokeSmollLeft" style={{ height: 'calc( 100vh - 50px)' }}>
       {filterBit}
       <div className="row" style={{ width: '100%', height: '100%' }}>
-        <div className="stroke roundedOpaque onlyVerticalScroll" style={{ width: '40vw', minWidth: '400px', height: 'calc( 100vh - 50px - 2em)', marginTop: '2em' }}>
+        <div className="stroke roundedOpaque onlyVerticalScroll" style={{ width: '40vw', maxWidth: '600px', minWidth: '300px', height: 'calc( 100vh - 50px - 2em)', marginTop: '2em' }}>
           <div className="content-wrapper" style={{ width: '100%' }}>
             <ScrollContainer activationDistance={1} className="overflow-container" hideScrollbars={false} style={{ width: '100%', overflowX: 'hidden' }}>
               <div className="overflow-content" style={{ cursor: 'grab', padding: 0, width: '100%' }}>

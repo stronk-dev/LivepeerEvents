@@ -6,6 +6,7 @@ import { getOrchestratorInfo, clearOrchestrator } from "../actions/livepeer";
 import EventViewer from "../components/eventViewer";
 import Orchestrator from "../components/orchestratorViewer";
 import ContractPrices from '../components/ContractPrices';
+import { Dialog } from '@mantine/core';
 
 // Shows the EventViewer and other Livepeer related info
 const defaultMaxShown = 50;
@@ -19,6 +20,7 @@ const Livepeer = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
+  const [opened, setOpened] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
   console.log("Rendering Livepeer");
 
@@ -44,7 +46,7 @@ const Livepeer = (obj) => {
   }
 
   let sidebar;
-  if (showSidebar) {
+  if (showSidebar && false) {
     sidebar = <div id='sideContent'>
       <div className="verticalDivider" />
       <div className="strokeSmollLeft sideMargin">
@@ -82,7 +84,7 @@ const Livepeer = (obj) => {
           }}>
             <h4>✖️ Clear</h4>
           </button>
-          <p>Sidebar</p>
+          <p>Detail</p>
           <div className="toggle-container" onClick={() => setShowSidebar(!showSidebar)}>
             <div className={`dialog-button ${showSidebar ? "" : "disabled"}`}>
               {showSidebar ? "Show" : "Hide"}
@@ -97,10 +99,37 @@ const Livepeer = (obj) => {
         </div>
       </div>
       <div id='bodyContent'>
+        <Dialog
+          opened={showSidebar}
+          withCloseButton
+          onClose={() => setShowSidebar(false)}
+          size="xl"
+          shadow="xl"
+          radius="md"
+          styles={{
+            root: { backgroundColor: 'rgba(214, 214, 214, 0.90)' },
+            closeButton: { },
+          }}
+        >
+          <div className='stroke'>
+            <div className="verticalDivider" />
+            <div className="strokeSmollLeft sideMargin">
+              <div className="row">
+                <div className="row">
+                  <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} forceVertical={true} />
+                </div>
+              </div>
+              <div className="verticalDivider" />
+              <div className="row">
+                <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
+              </div>
+            </div>
+          </div >
+        </Dialog>
         {sidebar}
         <div className="mainContent">
           <EventViewer searchTerm={searchTerm} setSearchTerm={setSearchTerm}
-            forceVertical={true} showFilter={showFilter} setAmountFilter={setAmountFilter} amountFilter={amountFilter}
+            forceVertical={true} setShowFilter={setShowFilter} showFilter={showFilter} setAmountFilter={setAmountFilter} amountFilter={amountFilter}
             maxAmount={maxAmount} setMaxAmount={setMaxAmount}
             updateEvents={livepeer.updateEvents}
             rewardEvents={livepeer.rewardEvents}
@@ -113,7 +142,7 @@ const Livepeer = (obj) => {
             unbondEvents={livepeer.unbondEvents}
             stakeEvents={livepeer.stakeEvents}
             monthlyStats={livepeer.monthlyStats}
-            />
+          />
         </div>
       </div>
     </div >

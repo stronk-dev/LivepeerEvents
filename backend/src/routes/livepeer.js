@@ -1259,6 +1259,7 @@ const initSync = async function () {
     transactionHash: 1,
     blockNumber: 1,
     blockTime: 1,
+    blockRound: 1,
     _id: 0
   });
   // Get all parsed reward events and cache them
@@ -1268,6 +1269,7 @@ const initSync = async function () {
     transactionHash: 1,
     blockNumber: 1,
     blockTime: 1,
+    blockRound: 1,
     _id: 0
   });
   // Get all parsed claim events and cache them
@@ -1280,6 +1282,7 @@ const initSync = async function () {
     transactionHash: 1,
     blockNumber: 1,
     blockTime: 1,
+    blockRound: 1,
     _id: 0
   });
   // Get all parsed withdraw fees events and cache them
@@ -1289,6 +1292,7 @@ const initSync = async function () {
     transactionHash: 1,
     blockNumber: 1,
     blockTime: 1,
+    blockRound: 1,
     _id: 0
   });
   // Get all parsed withdraw stake events and cache them
@@ -1299,6 +1303,7 @@ const initSync = async function () {
     transactionHash: 1,
     blockNumber: 1,
     blockTime: 1,
+    blockRound: 1,
     _id: 0
   });
   // Get all parsed transfer winning ticket events and cache them
@@ -1309,6 +1314,7 @@ const initSync = async function () {
     transactionHash: 1,
     blockNumber: 1,
     blockTime: 1,
+    blockRound: 1,
     _id: 0
   });
   // Get all parsed redeem winning ticket events and cache them
@@ -1318,6 +1324,7 @@ const initSync = async function () {
     transactionHash: 1,
     blockNumber: 1,
     blockTime: 1,
+    blockRound: 1,
     _id: 0
   });
   // Get all parsed orchestrator activation events and cache them
@@ -1328,6 +1335,7 @@ const initSync = async function () {
     transactionHash: 1,
     blockNumber: 1,
     blockTime: 1,
+    blockRound: 1,
     _id: 0
   });
   // Get all parsed unbond events and cache them
@@ -1339,6 +1347,7 @@ const initSync = async function () {
     transactionHash: 1,
     blockNumber: 1,
     blockTime: 1,
+    blockRound: 1,
     _id: 0
   });
   // Get all parsed stake events and cache them
@@ -1350,6 +1359,7 @@ const initSync = async function () {
     transactionHash: 1,
     blockNumber: 1,
     blockTime: 1,
+    blockRound: 1,
     _id: 0
   });
   // Get all parsed monthly stats and cache them
@@ -2627,6 +2637,72 @@ apiRouter.post("/getOrchestratorScores", async (req, res) => {
 apiRouter.get("/getAllOrchScores", async (req, res) => {
   try {
     res.send(orchScoreCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+/*
+
+BLOCKS - LIVEPEER ROUNDS
+Gets livepeer round number for a given block number
+Gets entire round details if the round does not exist yet
+Saves entire round details as separate data point as well
+Mutates roundCache to contain the new round
+Mutates the Event in the database to contain the round number
+
+*/
+
+let roundCache = [];
+
+const mutateRoundToDB = async function (scoreObj) {
+  // Immediately mutate new object
+  const doc = await MonthlyStat.findOneAndUpdate({
+    year: year,
+    month: month
+  }, {
+    testScores: scoreObj
+  }, {
+    upsert: true,
+    new: true,
+    setDefaultsOnInsert: true
+  });
+  // Then find and mutate all Event objects which fall in this round
+}
+
+apiRouter.post("/getRoundAtBlock", async (req, res) => {
+  try {
+    const { blockNumber } = req.body;
+    if (blockNumber) {
+      // Since months get counted starting at 0
+      const now = new Date().getTime();
+      let wasInCache = false;
+      // See if it is cached
+      for (const thisAddr of orchScoreCache) {
+        if (thisAddr.year === year && thisAddr.month === month) {
+          // Check timeout
+          if (now - thisAddr.timestamp < 360000) {
+            res.send(thisAddr);
+            return;
+          }
+          wasInCache = true;
+        }
+      }
+      // Check DB
+      // Get from thegraph
+      console.log("Getting new Orchestrator scores for " + year + "-" + month + " @ " + url);
+      // Save to DB
+      mutateRoundToDB();
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+});
+// Returns entire orch score mapping cache
+apiRouter.get("/getAllRounds", async (req, res) => {
+  try {
+    res.send(roundCache);
   } catch (err) {
     res.status(400).send(err);
   }

@@ -8,10 +8,6 @@ const BlockSchema = new mongoose.Schema({
   blockTime: {
     type: Number,
     required: true
-  },
-  blockRound: {
-    type: Number,
-    required: false    
   }
 }, { timestamps: false });
 
