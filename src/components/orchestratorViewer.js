@@ -6,7 +6,7 @@ const Orchestrator = (obj) => {
   if (obj.thisOrchestrator) {
     if (obj.forceVertical) {
       return (
-        <div className="hostInfo sideMargin mobileNoSideMargin">
+        <div className="hostInfo">
           <div className="flexContainer" style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column' }}>
             <OrchInfoViewer
               rewardCut={obj.thisOrchestrator.rewardCut}
@@ -22,7 +22,7 @@ const Orchestrator = (obj) => {
       )
     } else {
       return (
-        <div className="hostInfo sideMargin mobileNoSideMargin">
+        <div className="hostInfo">
           <div className="flexContainer" style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column' }}>
             <OrchInfoViewer
               rewardCut={obj.thisOrchestrator.rewardCut}

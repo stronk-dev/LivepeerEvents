@@ -2,6 +2,8 @@ import React from "react";
 import Stat from "./statViewer";
 import Address from "./OrchAddressViewer";
 import { useSelector } from 'react-redux';
+import { Text } from "@mantine/core";
+import ScrollContainer from "react-indiana-drag-scroll";
 
 function updateClipboard(newClip) {
   navigator.clipboard.writeText(newClip).then(
@@ -111,11 +113,7 @@ const OrchInfoViewer = (obj) => {
     let ensUrl;
     if (hasENS) {
       if (thisInfo.description) {
-        ensDescription =
-          <div className="stroke">
-            <div className="verticalDivider" />
-            <span>{thisInfo.description}</span>
-          </div>
+        ensDescription = thisInfo.description
       }
       if (thisInfo.url) {
         if (!thisInfo.url.startsWith('http')) {
@@ -132,11 +130,7 @@ const OrchInfoViewer = (obj) => {
       }
     } else if (hasThreeBox) {
       if (thisInfo.description) {
-        ensDescription =
-          <div className="stroke">
-            <div className="verticalDivider" />
-            <span>{thisInfo.description}</span>
-          </div>
+        ensDescription = thisInfo.description
       }
       if (thisInfo.website) {
         if (!thisInfo.website.startsWith('http')) {
@@ -162,7 +156,16 @@ const OrchInfoViewer = (obj) => {
           </div>
           <Address address={thisID} />
           {ensUrl}
-          {ensDescription}
+          <div className="verticalDivider" />
+          <div className="content-wrapper" style={{maxWidth: '350px', maxHeight: '300px', height: ' 100%' }}>
+            <ScrollContainer activationDistance={1} className="overflow-container" hideScrollbars={false} style={{ overflowX: 'hidden', justifyContent: 'center' }}>
+              <div className="overflow-content" style={{ cursor: 'grab', padding: 0, maxHeight: '200px', maxWidth: '300px' }}>
+                <p className="darkText" style={{ overflowWrap: 'break-word' }}>
+                  {ensDescription}
+                </p>
+              </div>
+            </ScrollContainer>
+          </div>
           <div className="stretchAndBetween" style={{ borderTop: '2px solid rgba(15,15,15,0.05)', marginTop: '0.2em' }} >
             <Stat header={"Earned Fees"} content1={totalVolumeETH + " Eth"} content2={"$" + totalVolumeUSD} />
           </div>

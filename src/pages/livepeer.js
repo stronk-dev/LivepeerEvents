@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getOrchestratorInfo, clearOrchestrator } from "../actions/livepeer";
 import EventViewer from "../components/eventViewer";
 import Orchestrator from "../components/orchestratorViewer";
-import ContractPrices from '../components/ContractPrices';
 import { Dialog, ScrollArea, Stack } from '@mantine/core';
 import ScrollContainer from 'react-indiana-drag-scroll';
 
@@ -44,24 +43,6 @@ const Livepeer = (obj) => {
     headerString = "Inspecting " + thisOrchObj.id;
   } else {
     headerString = "Livepeer Orchestrator Explorer";
-  }
-
-  let sidebar;
-  if (showSidebar && false) {
-    sidebar = <div id='sideContent'>
-      <div className="verticalDivider" />
-      <div className="strokeSmollLeft sideMargin">
-        <div className="row">
-          <div className="row">
-            <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} forceVertical={true} />
-          </div>
-        </div>
-        <div className="verticalDivider" />
-        <div className="row">
-          <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
-        </div>
-      </div>
-    </div >
   }
 
 
@@ -116,19 +97,12 @@ const Livepeer = (obj) => {
             <ScrollContainer activationDistance={1} className="overflow-container" hideScrollbars={false} style={{ width: '100%', overflowX: 'hidden' }}>
               <div className="overflow-content" style={{ cursor: 'grab', padding: 0, width: '100%' }}>
                 <div className="verticalDivider" />
-                <div className="strokeSmollLeft sideMargin">
-                  <div className="row">
-                    <div className="row">
-                      <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} forceVertical={true} />
-                    </div>
-                  </div>
-                  <div className="verticalDivider" />
-                </div>
+                <Orchestrator thisOrchestrator={thisOrchObj} rootOnly={false} forceVertical={true} />
+                <div className="verticalDivider" />
               </div>
             </ScrollContainer>
           </div>
         </Dialog>
-        {sidebar}
         <div className="mainContent">
           <EventViewer searchTerm={searchTerm} setSearchTerm={setSearchTerm}
             forceVertical={true} setShowFilter={setShowFilter} showFilter={showFilter} setAmountFilter={setAmountFilter} amountFilter={amountFilter}

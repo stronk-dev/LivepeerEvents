@@ -36,45 +36,43 @@ const OrchDelegatorViewer = (obj) => {
     const totalPages = (delegators.length + (itemsPerPage - (delegators.length % itemsPerPage))) / itemsPerPage;
 
     return (
-      <div className="row">
-        <div className="strokeSmollLeft fullMargin" style={{ paddingBottom: 0, marginBottom: 0 }}>
-          <div className="row">
-            <h3>{delegators.length} Current Delegators</h3>
-          </div>
-          <div className="content-wrapper">
-            <ScrollContainer className="overflow-container" hideScrollbars={false} style={{}}>
-              <div className="overflow-content" style={{ cursor: 'grab', maxHeight: '300px' }}>
-                {
-                  sortedList.map((delObj, idx) => {
-                    const tmp = idx - ((activePage - 1) * itemsPerPage);
-                    if (tmp >= 0 && tmp < itemsPerPage) {
-                      return (
-                        <div className="flexContainer forceWrap" key={"delegator" + idx}>
-                          <div className="rowAlignLeft">
-                            <div className="strokeSmollLeft" style={{ marginLeft: '0.2em', whiteSpace: 'nowrap' }} >
-                              <h3>{idx + 1}</h3>
-                            </div>
-                            <div className="rowAlignLeft">
-                              <Address address={delObj.id} seed={"delegator" + idx + delObj.id} />
-                            </div>
+      <div className="strokeSmollLeft" style={{ paddingBottom: 0, marginBottom: 0 }}>
+        <div className="row">
+          <h3>{delegators.length} Current Delegators</h3>
+        </div>
+        <div className="content-wrapper">
+          <ScrollContainer className="overflow-container" hideScrollbars={false} style={{}}>
+            <div className="overflow-content" style={{ cursor: 'grab', maxHeight: '300px' }}>
+              {
+                sortedList.map((delObj, idx) => {
+                  const tmp = idx - ((activePage - 1) * itemsPerPage);
+                  if (tmp >= 0 && tmp < itemsPerPage) {
+                    return (
+                      <div className="flexContainer forceWrap" key={"delegator" + idx}>
+                        <div className="rowAlignLeft">
+                          <div className="strokeSmollLeft" style={{ marginLeft: '0.2em', whiteSpace: 'nowrap' }} >
+                            <h3>{idx + 1}</h3>
                           </div>
-                          <div className="rowAlignRight">
-                            <p className="darkText">{parseFloat(delObj.bondedAmount).toFixed(2)} LPT since round {delObj.startRound}</p>
+                          <div className="rowAlignLeft">
+                            <Address address={delObj.id} seed={"delegator" + idx + delObj.id} />
                           </div>
                         </div>
-                      )
-                    }
-                    return null;
-                  })
-                }
-              </div>
-            </ScrollContainer>
-          </div>
-          <div className="row" style={{ marginTop: '1em', marginBottom: '1em' }}>
-            {totalPages > 1 ?
-              <Pagination page={activePage} onChange={setPage} total={totalPages} siblings={1} initialPage={1} />
-              : null}
-          </div>
+                        <div className="rowAlignRight">
+                          <p className="darkText">{parseFloat(delObj.bondedAmount).toFixed(2)} LPT since round {delObj.startRound}</p>
+                        </div>
+                      </div>
+                    )
+                  }
+                  return null;
+                })
+              }
+            </div>
+          </ScrollContainer>
+        </div>
+        <div className="row" style={{ marginTop: '1em', marginBottom: '1em' }}>
+          {totalPages > 1 ?
+            <Pagination page={activePage} onChange={setPage} total={totalPages} siblings={1} initialPage={1} />
+            : null}
         </div>
       </div>
     )
