@@ -52,7 +52,7 @@ const OrchDelegatorViewer = (obj) => {
                         <div className="flexContainer forceWrap" key={"delegator" + idx}>
                           <div className="rowAlignLeft">
                             <div className="strokeSmollLeft" style={{ marginLeft: '0.2em', whiteSpace: 'nowrap' }} >
-                              <h3>{idx}</h3>
+                              <h3>{idx + 1}</h3>
                             </div>
                             <div className="rowAlignLeft">
                               <Address address={delObj.id} seed={"delegator" + idx + delObj.id} />

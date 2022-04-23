@@ -13,7 +13,7 @@ const MonthlyStats = (obj) => {
   } else if (activePage == 2) {
     thisColour = "indigo";
   } else if (activePage == 3) {
-    thisColour = "red";
+    thisColour = "gray";
   }
 
   return (
@@ -98,7 +98,7 @@ const MonthlyStats = (obj) => {
           data={[
             { label: 'Info', value: '1' },
             { label: 'Graph', value: '2' },
-            { label: 'Score', value: '3' }
+            { label: 'Fees', value: '3' }
           ]}
         />
       </div>

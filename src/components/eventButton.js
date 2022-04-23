@@ -122,15 +122,15 @@ const EventButton = (obj) => {
   if (eventTo || eventFrom || eventCaller) {
     if (eventTo) {
       eventTo =
-        <EventButtonAddress name="To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;" address={eventTo} setSearchTerm={obj.setSearchTerm} />
+        <EventButtonAddress name="To" address={eventTo} setSearchTerm={obj.setSearchTerm} />
     }
     if (eventFrom) {
       eventFrom =
-        <EventButtonAddress name="From&nbsp;&nbsp;:&nbsp;" address={eventFrom} setSearchTerm={obj.setSearchTerm} />
+        <EventButtonAddress name="From" address={eventFrom} setSearchTerm={obj.setSearchTerm} />
     }
     if (eventCaller) {
       eventCaller =
-        <EventButtonAddress name="Caller&nbsp;:&nbsp;" address={eventCaller} setSearchTerm={obj.setSearchTerm} />
+        <EventButtonAddress name="" address={eventCaller} setSearchTerm={obj.setSearchTerm} />
     }
   }
 
@@ -140,27 +140,31 @@ const EventButton = (obj) => {
   }
 
   return (
-    <div className="strokeSmollLeft" style={{ width: '100%', minWidth: '200px', maxWidth: '500px' }}>
-      {blockNumber}
-      <div className="strokeSmollLeft" style={{ width: "100%", borderRadius: "1.2em", backgroundColor: eventColour, opacity: 0.9, border: '0.1em solid rgba(54, 46, 46, 0.1)', boxShadow: "4px 2px 3px 2px rgba(54, 46, 46, 0.1)" }}>
-        <div className="halfVerticalDivider" />
-        <div className="rowAlignLeft">
-          {eventCaller}
-        </div>
-        <div className="halfVerticalDivider" />
-        <div className="row">
-          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: eventColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
-            {eventDescription}
+    <div className="strokeSmollLeft" style={{ width: '100%', margin: 0, padding: 0 }}>
+      <div className="row" style={{ paddingLeft: '1em', paddingRight: '1em' }}>
+        {blockNumber}
+      </div>
+      <div className="row" style={{ margin: 0, padding: 0 }}>
+        <div className="stroke infoContainer" style={{ width: "100%", padding: 0, margin: 0, minWidth: '200px', maxWidth: '400px' }}>
+          <div className="rowAlignLeft infoBar" style={{ margin: 0 }}>
+            {eventCaller}
+          </div>
+          <div className="halfVerticalDivider" />
+          <div className="row">
+            <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: eventColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
+              {eventDescription}
+            </div>
+          </div>
+          <div className="halfVerticalDivider" />
+          <div className="stroke infoBar">
+            <div className="rowAlignLeft" style={{ margin: 0 }}>
+              {eventFrom}
+            </div>
+            <div className="rowAlignLeft" style={{ margin: 0 }}>
+              {eventTo}
+            </div>
           </div>
         </div>
-        <div className="halfVerticalDivider" />
-        <div className="rowAlignLeft">
-          {eventFrom}
-        </div>
-        <div className="rowAlignLeft">
-          {eventTo}
-        </div>
-        <div className="halfVerticalDivider" />
       </div>
       <div className="halfVerticalDivider" />
     </div>

@@ -98,11 +98,11 @@ const MonthlyGraphs = (obj) => {
       <VictoryPie padding={0} data={pieList} x="address" y="sum"
         sortOrder="descending"
         sortKey="sum"
-        radius={300}
-        width={620}
-        height={620}
-        innerRadius={50}
-        labelRadius={130}
+        radius={400}
+        width={800}
+        height={800}
+        innerRadius={140}
+        labelRadius={170}
         cornerRadius={3}
         colorScale={[
           "#282678",
@@ -136,7 +136,7 @@ const MonthlyGraphs = (obj) => {
             fillOpacity: 0.9, stroke: "#636363", strokeWidth: 1.5
           },
           labels: {
-            fontSize: 16, zIndex: 999
+            fontSize: 24, zIndex: 999
           }
         }}
         labelPosition="centroid"
@@ -180,11 +180,11 @@ const MonthlyGraphs = (obj) => {
       <VictoryPie padding={{ top: 20, bottom: 20, left: 120, right: 120 }} data={pieList} x="address" y="sum"
         sortOrder="descending"
         sortKey="sum"
-        radius={300}
-        width={620}
-        height={620}
-        innerRadius={50}
-        labelRadius={130}
+        radius={400}
+        width={800}
+        height={800}
+        innerRadius={140}
+        labelRadius={170}
         cornerRadius={3}
         colorScale={[
           "#282678",
@@ -218,7 +218,7 @@ const MonthlyGraphs = (obj) => {
             fillOpacity: 0.9, stroke: "#636363", strokeWidth: 1.5
           },
           labels: {
-            fontSize: 16, zIndex: 999
+            fontSize: 24, zIndex: 999
           }
         }}
         labelPosition="centroid"
@@ -265,11 +265,11 @@ const MonthlyGraphs = (obj) => {
       <VictoryPie padding={{ top: 20, bottom: 20, left: 120, right: 120 }} data={pieList} x="address" y="sum"
         sortOrder="descending"
         sortKey="sum"
-        radius={300}
-        width={620}
-        height={620}
-        innerRadius={50}
-        labelRadius={130}
+        radius={400}
+        width={800}
+        height={800}
+        innerRadius={140}
+        labelRadius={170}
         cornerRadius={3}
         colorScale={[
           "#282678",
@@ -303,7 +303,7 @@ const MonthlyGraphs = (obj) => {
             fillOpacity: 0.9, stroke: "#636363", strokeWidth: 1.5
           },
           labels: {
-            fontSize: 16, zIndex: 999
+            fontSize: 24, zIndex: 999
           }
         }}
         labelPosition="centroid"

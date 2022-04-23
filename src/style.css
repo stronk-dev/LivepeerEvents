@@ -70,7 +70,7 @@ p {
 
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 15px;
   border-radius: 10px;
 }
 
@@ -226,6 +226,42 @@ svg {
   height: 100%;
   width: 100%;
   border-radius: 1em;
+}
+
+.infoBar {
+  cursor: default;
+  text-align: start;
+  padding: 0;
+  margin: 0;
+  user-select: text;
+  font-size: small;
+  color: rgba(15, 15, 15, 0.8750);
+  background-color: rgba(192, 188, 202, 0.335);
+  -webkit-box-shadow: inset 3px 3px 12px 2px rgba(62, 62, 104, 0.2);
+  -moz-box-shadow: inset 3px 3px 12px 2px rgba(62, 62, 104, 0.2);
+  box-shadow: inset 3px 3px 12px 2px rgba(62, 62, 104, 0.2);
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  border-radius: 0.5em;
+}
+
+.infoContainer {
+  cursor: default;
+  text-align: start;
+  padding: 0;
+  margin: 0;
+  user-select: text;
+  font-size: small;
+  color: rgba(15, 15, 15, 0.8750);
+  background: rgba(2, 0, 36, 0.5);
+  background: linear-gradient(120deg, rgba(4, 3, 24, 0.10) 0%, rgba(78, 78, 85, 0.05) 35%, rgba(49, 79, 85, 0.10) 100%);
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  border-radius: 0.5em;
 }
 
 .insetEffect {
@@ -576,6 +612,9 @@ svg {
   text-shadow: 0.5px 0.5px 0.8px #9493aa;
   background-color: transparent;
   border: none;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 .selectOrch:hover, .selectOrch a:hover{

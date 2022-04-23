@@ -453,15 +453,14 @@ const EventViewer = (obj) => {
           searchTerm={obj.searchTerm} setSearchTerm={obj.setSearchTerm} />
       </div>
   }
-
   return (
     <div className="strokeSmollLeft" style={{ height: 'calc( 100vh - 50px)' }}>
       {filterBit}
       <div className="row" style={{ width: '100%', height: '100%' }}>
         <div className="stroke roundedOpaque onlyVerticalScroll" style={{ width: '40vw', minWidth: '400px', height: 'calc( 100vh - 50px - 2em)', marginTop: '2em' }}>
           <div className="content-wrapper" style={{ width: '100%' }}>
-            <ScrollContainer activationDistance={1} className="overflow-container" hideScrollbars={false} style={{ width: '100%' }}>
-              <div className="overflow-content" style={{ cursor: 'grab', padding: 0 }}>
+            <ScrollContainer activationDistance={1} className="overflow-container" hideScrollbars={false} style={{ width: '100%', overflowX: 'hidden' }}>
+              <div className="overflow-content" style={{ cursor: 'grab', padding: 0, width: '100%' }}>
                 <div className={obj.forceVertical ? "flexContainer forceWrap" : "flexContainer"} >
                   <div className="verticalDivider" />
                   {
@@ -471,9 +470,9 @@ const EventViewer = (obj) => {
                         return (
                           <div className="flexContainer forceWrap" style={{ marginLeft: '0.2em', marginRight: '0.2em', width: '100%' }} key={"ticket-" + idx}>
                             <div className="rowAlignLeft">
-                              <div className="strokeSmollLeft showNeverOnMobile" style={{ marginLeft: '0.2em', marginRight: '0.2em', whiteSpace: 'nowrap' }} >
-                                <h3>{idx}</h3>
-                              </div>
+                              {/* <div className="showNeverOnMobile" >
+                                <h3 style={{ width: '2em', marginLeft: '0.2em', marginRight: '0.2em', whiteSpace: 'nowrap' }}>{idx + 1}</h3>
+                              </div> */}
                               <div className="row">
                                 {delObj}
                               </div>
@@ -533,7 +532,7 @@ const EventViewer = (obj) => {
             </div>
           </div>
           <div className="row" style={{ marginTop: '1em', marginBottom: '1em', justifyContent: 'space-evenly', display: "flex" }}>
-            <Pagination page={activePage} onChange={setPage} total={(limitShown + (itemsPerPage - (limitShown % itemsPerPage))) / itemsPerPage} siblings={3} initialPage={1} />
+            <Pagination page={activePage} onChange={setPage} total={(limitShown + (itemsPerPage - (limitShown % itemsPerPage))) / itemsPerPage} siblings={2} initialPage={1} />
           </div>
         </div>
       </div>

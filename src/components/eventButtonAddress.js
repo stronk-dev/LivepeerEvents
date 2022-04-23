@@ -3,6 +3,7 @@ import {
   getOrchestratorInfo, getEnsInfo, getThreeBoxInfo, setCachedOrch, getOrchestratorInfoSilent
 } from "../actions/livepeer";
 import { useDispatch, useSelector } from 'react-redux';
+import { Text } from '@mantine/core';
 
 const EventButtonAddress = (obj) => {
   const dispatch = useDispatch();
@@ -122,44 +123,48 @@ const EventButtonAddress = (obj) => {
   let thisName;
   let thisIcon;
   if (orchInfo && orchInfo.domain) {
-    thisName = <h4 className="elipsText elipsOnMobileExtra">{orchInfo.domain}</h4>;
+    thisName = <Text style={{ textOverflow: "ellipsis", overflow: "hidden", width: '100%' }} >{orchInfo.domain}</Text>;
     if (orchInfo.avatar) {
       thisIcon =
-        <a className="selectOrch" style={{ marginRight: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + orchInfo.domain + "/details"} >
-          <img alt="" src={orchInfo.avatar.url} width="20em" height="20em" style={{ margin: '0.2em', padding: '0.2em' }} />
+        <a className="selectOrch" style={{ padding: '0.3em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + orchInfo.domain + "/details"} >
+          <img alt="" src={orchInfo.avatar.url} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
         </a >
     }
   } else if (orchInfo && (orchInfo.name || orchInfo.image)) {
     if (orchInfo.name) {
-      thisName = <h4 className="elipsText elipsOnMobileExtra">{orchInfo.name}</h4>;
+      thisName = <Text style={{ textOverflow: "ellipsis", overflow: "hidden", width: '100%' }} >{orchInfo.name}</Text>;
     } else {
-      thisName = <span className="elipsText elipsOnMobileExtra">{obj.address}</span>;
+      thisName = <Text style={{ textOverflow: "ellipsis", overflow: "hidden", width: '100%', maxWidth: '10vw' }} >{obj.address}</Text>;
     }
     if (orchInfo.image) {
       thisIcon =
-        <a className="selectOrch" style={{ marginRight: '0.5em', cursor: 'grab'}} disabled>
-          <img alt="" src={"https://cloudflare-ipfs.com/ipfs/" + orchInfo.image} width="20em" height="20em" style={{ margin: 0, padding: 0 }} style={{ margin: 0, padding: 0 }} />
+        <a className="selectOrch" style={{ padding: '0.3em', cursor: 'grab' }} disabled>
+          <img alt="" src={"https://cloudflare-ipfs.com/ipfs/" + orchInfo.image} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
         </a >
     } else {
       thisIcon = null;
     }
   } else {
-    thisName = <span className="elipsText elipsOnMobileExtra">{obj.address}</span>;
+    thisName = <Text style={{ textOverflow: "ellipsis", overflow: "hidden", width: '100%', maxWidth: '10vw' }} >{obj.address}</Text>;
     thisIcon = null;
   }
 
 
   return (
-    <div className="rowAlignLeft" style={{ width: '100%' }}>
-      <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.address}>
+    <div className="rowAlignLeft" style={{
+      width: '100%', display: 'flex', padding: 0, margin: 0,
+      justifyContent: 'spaceAround',
+      flexFlow: 'row wrap',
+      alignItems: 'stretch'
+    }}>
+      <a className="selectOrch" style={{ padding: '0.3em', cursor: 'alias' }} rel="noopener noreferrer" target="_blank" href={"https://explorer.livepeer.org/accounts/" + obj.address}>
         <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
       </a>
-      <button className="selectOrch" style={{ padding: '0.5em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.address) }} >
-        <span className="elipsText">🔎</span>
+      <button className="selectOrch" style={{ padding: '0.3em', cursor: 'pointer' }} onClick={() => { obj.setSearchTerm(obj.address) }} >
+        <span style={{ margin: 0 }}>🔎</span>
       </button>
-      <span>{obj.name}</span>
       {thisIcon}
-      <button className="selectOrch" style={{ padding: '0.5em', cursor: 'help' }} onClick={() => {
+      <button className="selectOrch" style={{ padding: '0.3em', cursor: 'help', flex: 1, flexGrow: 3 }} onClick={() => {
         // Check if cached as an orchestrator
         if (livepeer.orchInfo) {
           for (const thisOrch of livepeer.orchInfo) {
@@ -175,8 +180,11 @@ const EventButtonAddress = (obj) => {
         }
         dispatch(getOrchestratorInfo(obj.address));
       }} >
-        <span className="elipsText elipsOnMobileExtra">{thisName}</span>
+        <div className="row">
+          <span>{obj.name}</span> {thisName}
+        </div>
       </button>
+
     </div>
   )
 }
