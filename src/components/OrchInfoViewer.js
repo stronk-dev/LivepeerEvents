@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import Stat from "./statViewer";
 import Address from "./OrchAddressViewer";
 import { useSelector } from 'react-redux';
 import { Text } from "@mantine/core";
 import ScrollContainer from "react-indiana-drag-scroll";
+import { Popover } from '@mantine/core';
 
 function updateClipboard(newClip) {
   navigator.clipboard.writeText(newClip).then(
@@ -27,6 +28,7 @@ function copyLink(addr) {
 }
 
 const OrchInfoViewer = (obj) => {
+  const [opened, setOpened] = useState(false);
   const livepeer = useSelector((state) => state.livepeerstate);
   let hasENS = false;
   let hasThreeBox = false;
@@ -130,7 +132,7 @@ const OrchInfoViewer = (obj) => {
       }
     } else if (hasThreeBox) {
       if (thisInfo.description) {
-        ensDescription = thisInfo.description
+        ensDescription = thisInfo.description;
       }
       if (thisInfo.website) {
         if (!thisInfo.website.startsWith('http')) {
@@ -147,6 +149,34 @@ const OrchInfoViewer = (obj) => {
       }
     }
 
+    let descriptionObj;
+    if (ensDescription) {
+      if (ensDescription.length < 200) {
+        descriptionObj =
+          <p className="darkText" style={{ overflowWrap: 'break-word' }}>
+            {ensDescription}
+          </p>
+      } else {
+        descriptionObj =
+          <Popover className="strokeSmollLeft" style={{ cursor: 'pointer', marginTop: '0.2em', marginBottom: '0.2em' }}
+            opened={opened}
+            onClose={() => setOpened(false)}
+            target={
+              <p className="darkText" style={{ overflowWrap: 'break-word' }} onClick={() => setOpened((o) => !o)}>
+                {ensDescription.substring(0, 200)}...
+              </p>
+            }
+            width={260}
+            position="right"
+            withArrow
+          >
+            <p className="darkText" style={{ overflowWrap: 'break-word' }}>
+              {ensDescription}
+            </p>
+          </Popover>
+      }
+    }
+
     return (
       <div className="row">
         <div className="stroke sideMargin">
@@ -157,15 +187,7 @@ const OrchInfoViewer = (obj) => {
           <Address address={thisID} />
           {ensUrl}
           <div className="verticalDivider" />
-          <div className="content-wrapper" style={{maxWidth: '350px', maxHeight: '300px', height: ' 100%' }}>
-            <ScrollContainer activationDistance={1} className="overflow-container" hideScrollbars={false} style={{ overflowX: 'hidden', justifyContent: 'center' }}>
-              <div className="overflow-content" style={{ cursor: 'grab', padding: 0, maxHeight: '200px', maxWidth: '300px' }}>
-                <p className="darkText" style={{ overflowWrap: 'break-word' }}>
-                  {ensDescription}
-                </p>
-              </div>
-            </ScrollContainer>
-          </div>
+          {descriptionObj}
           <div className="stretchAndBetween" style={{ borderTop: '2px solid rgba(15,15,15,0.05)', marginTop: '0.2em' }} >
             <Stat header={"Earned Fees"} content1={totalVolumeETH + " Eth"} content2={"$" + totalVolumeUSD} />
           </div>
