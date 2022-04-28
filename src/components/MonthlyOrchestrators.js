@@ -29,26 +29,46 @@ const MonthlyOrchestrators = (obj) => {
   }, [obj.data.testScores]);
 
   // Show all orchs (if latestTotalStake exists) or show only those in winningTicketsReceived
-  let orchList;
   let ticketList = obj.data.winningTicketsReceived || [];
   let commissionList = obj.data.latestCommission || [];
   let stakeList = obj.data.latestTotalStake || [];
 
-  // Pies for stake overview, if have stake data for that month saved
+
+  // Show all orchs (if latestTotalStake exists) or show only those in winningTicketsReceived
+  let orchList;
   let totalStakeSum = 0;
   if (obj.data.latestTotalStake && obj.data.latestTotalStake.length) {
     orchList = [...obj.data.latestTotalStake];
-    let ticketIdx = obj.data.latestTotalStake.length - 1;
-    // Calc total stake at that time
-    while (ticketIdx >= 0) {
-      const thisTicket = obj.data.latestTotalStake[ticketIdx];
-      ticketIdx -= 1;
-      totalStakeSum += thisTicket.totalStake;
+    // Filter out orchestrators who have not earned any fees, to get a more accurate earnings vs stake overview
+    if (obj.showOnlyTranscoders) {
+      if (obj.data.winningTicketsReceived && obj.data.winningTicketsReceived.length) {
+        // For each orchestrator in latestTotalStake, splice it if they are not present in winningTicketsReceived
+        let ticketIdx = obj.data.latestTotalStake.length - 1;
+        while (ticketIdx >= 0) {
+          const thisOrch = obj.data.latestTotalStake[ticketIdx];
+          let found = false;
+          for (const orchWinnings of obj.data.winningTicketsReceived) {
+            if (orchWinnings.address == thisOrch.address) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            orchList.splice(ticketIdx, 1);
+          } else {
+            totalStakeSum += thisOrch.totalStake;
+          }
+          ticketIdx--;
+        }
+      }
+    } else {
+      for (const thisOrch of obj.data.latestTotalStake) {
+        totalStakeSum += thisOrch.totalStake;
+      }
     }
   } else {
     orchList = [...obj.data.winningTicketsReceived];
   }
-
 
   let sortedList = [];
   if (orchList.length) {

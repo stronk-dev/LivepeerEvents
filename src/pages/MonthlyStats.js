@@ -111,12 +111,14 @@ const MonthlyStats = (obj) => {
       {
         activePage == 2 ? <MonthlyGraphs
           data={obj.data}
+          showOnlyTranscoders={obj.showOnlyTranscoders}
           seed={"graphs" + obj.data.year + "-" + obj.data.month + "-" + obj.data.total}
         /> : null
       }
       {
         activePage == 3 ? <MonthlyOrchestrators
           data={obj.data}
+          showOnlyTranscoders={obj.showOnlyTranscoders}
           seed={"orchestrators" + obj.data.year + "-" + obj.data.month + "-" + obj.data.total}
         /> : null
       }

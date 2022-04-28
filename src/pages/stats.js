@@ -8,6 +8,7 @@ import MonthlyStats from './MonthlyStats';
 const Stats = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [redirectToHome, setRedirectToHome] = useState(false);
+  const [showOnlyTranscoders, setShowOnlyTranscoders] = useState(true);
 
   console.log("Rendering Stats Viewer");
 
@@ -25,6 +26,14 @@ const Stats = (obj) => {
             <h1>🏠</h1>
           </button>
           <h4 className="rowAlignLeft withWrap showNeverOnMobile">Statistics</h4>
+        </div>
+        <div className='rowAlignRight'>
+          <p>Hide non-earners</p>
+          <div className="toggle-container" onClick={() => setShowOnlyTranscoders(!showOnlyTranscoders)}>
+            <div className={`dialog-button ${showOnlyTranscoders ? "" : "disabled"}`}>
+              {showOnlyTranscoders ? "Show" : "Hide"}
+            </div>
+          </div>
         </div>
       </div>
       <div id='bodyContent'>
@@ -131,6 +140,7 @@ const Stats = (obj) => {
                               key={"accord" + i + data.year + "-" + data.month + "-" + data.total}>
                               <MonthlyStats
                                 data={data}
+                                showOnlyTranscoders={showOnlyTranscoders}
                                 seed={"win" + i + data.year + "-" + data.month + "-" + data.total}
                               />
                             </Accordion.Item>

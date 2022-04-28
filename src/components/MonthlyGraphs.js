@@ -53,27 +53,48 @@ const MonthlyGraphs = (obj) => {
 
   // Show all orchs (if latestTotalStake exists) or show only those in winningTicketsReceived
   let orchList;
-  let ticketList = obj.data.winningTicketsReceived || [];
-  let stakeList = obj.data.latestTotalStake || [];
+  if (obj.data.latestTotalStake && obj.data.latestTotalStake.length) {
+    orchList = [...obj.data.latestTotalStake];
+    // Filter out orchestrators who have not earned any fees, to get a more accurate earnings vs stake overview
+    if (obj.showOnlyTranscoders) {
+      if (obj.data.winningTicketsReceived && obj.data.winningTicketsReceived.length) {
+        // For each orchestrator in latestTotalStake, splice it if they are not present in winningTicketsReceived
+        let ticketIdx = obj.data.latestTotalStake.length - 1;
+        while (ticketIdx >= 0) {
+          const thisOrch = obj.data.latestTotalStake[ticketIdx];
+          let found = false;
+          for (const orchWinnings of obj.data.winningTicketsReceived) {
+            if (orchWinnings.address == thisOrch.address) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            orchList.splice(ticketIdx, 1);
+          }
+          ticketIdx--;
+        }
+      }
+    }
+  }
 
   // Pies for stake overview, if have stake data for that month saved
   let stakeObj;
   let totalStakeSum = 0;
-  if (obj.data.latestTotalStake && obj.data.latestTotalStake.length) {
-    orchList = [...obj.data.latestTotalStake];
+  if (orchList && orchList.length) {
     let pieList = [];
     let otherSum = 0;
-    let ticketIdx = obj.data.latestTotalStake.length - 1;
+    let ticketIdx = orchList.length - 1;
     // Calc total stake at that time
     while (ticketIdx >= 0) {
-      const thisTicket = obj.data.latestTotalStake[ticketIdx];
+      const thisTicket = orchList[ticketIdx];
       ticketIdx -= 1;
       totalStakeSum += thisTicket.totalStake;
     }
-    ticketIdx = obj.data.latestTotalStake.length - 1;
+    ticketIdx = orchList.length - 1;
     // Create pie chart
     while (ticketIdx >= 0) {
-      const thisTicket = obj.data.latestTotalStake[ticketIdx];
+      const thisTicket = orchList[ticketIdx];
       ticketIdx -= 1;
       if ((thisTicket.totalStake / totalStakeSum) < 0.015) {
         otherSum += thisTicket.totalStake;
@@ -143,8 +164,6 @@ const MonthlyGraphs = (obj) => {
         labelPlacement="parallel"
       />
     </div>;
-  } else {
-    orchList = [...obj.data.winningTicketsReceived];
   }
 
   // Pies for earnings overview
@@ -307,66 +326,6 @@ const MonthlyGraphs = (obj) => {
     </div>;
   }
 
-  let sortedList = [];
-  if (orchList.length) {
-    // Sort this months data
-    while (orchList.length) {
-      let ticketIdx2 = orchList.length - 1;
-      let largestIdx = 0;
-      let largestValue = 0;
-
-      // Find current O with most ticket wins in Eth
-      while (ticketIdx2 >= 0) {
-        const currentOrch = orchList[ticketIdx2];
-        let thisVal;
-
-        for (const obj of ticketList) {
-          if (obj.address == currentOrch.address) {
-            thisVal = obj.sum;
-          }
-        }
-
-        if (!thisVal) {
-          ticketIdx2 -= 1;
-          continue;
-        }
-        if (thisVal > largestValue) {
-          largestIdx = ticketIdx2;
-          largestValue = thisVal;
-        }
-        ticketIdx2 -= 1;
-      }
-      // Else try to sort by stake
-      if (!largestValue) {
-        ticketIdx2 = orchList.length - 1;
-        while (ticketIdx2 >= 0) {
-          const currentOrch = orchList[ticketIdx2];
-          let thisVal;
-
-          for (const obj of stakeList) {
-            if (obj.address == currentOrch.address) {
-              thisVal = obj.totalStake;
-            }
-          }
-
-          if (!thisVal) {
-            ticketIdx2 -= 1;
-            continue;
-          }
-          if (thisVal > largestValue) {
-            largestIdx = ticketIdx2;
-            largestValue = thisVal;
-          }
-          ticketIdx2 -= 1;
-        }
-      }
-      // Push current biggest list
-      sortedList.push(orchList[largestIdx]);
-      // Remove from list
-      orchList.splice(largestIdx, 1);
-    }
-  }
-
   let thisColour;
   if (activeGraph == 1) {
     thisColour = "violet";
@@ -438,7 +397,7 @@ const MonthlyGraphs = (obj) => {
                   color: 'black',
                   border: 'none'
                 }
-                
+
               },
               controlActive: {
                 color: 'black',
