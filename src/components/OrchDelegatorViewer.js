@@ -36,7 +36,7 @@ const OrchDelegatorViewer = (obj) => {
     const totalPages = (delegators.length + (itemsPerPage - (delegators.length % itemsPerPage))) / itemsPerPage;
 
     return (
-      <div className="strokeSmollLeft" style={{ paddingBottom: 0, marginBottom: 0 }}>
+      <div className="stroke" style={{ paddingBottom: 0, marginBottom: 0 }}>
         <div className="row">
           <h3>{delegators.length} Current Delegators</h3>
         </div>
