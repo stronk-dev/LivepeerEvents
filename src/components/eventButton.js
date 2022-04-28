@@ -178,12 +178,12 @@ const EventButton = (obj) => {
   }
 
   return (
-    <div className="strokeSmollLeft" style={{ width: '100%', margin: 0, padding: 0 }}>
+    <div className="strokeSmollLeft" style={{ width: '100%', margin: 0, padding: 0, cursor: 'inherit' }}>
       <div className="row" style={{ paddingLeft: '1em', paddingRight: '1em' }}>
         {blockNumber}
       </div>
-      <div className="row" style={{ margin: 0, padding: 0 }}>
-        <div className="stroke infoContainer" style={{ width: "100%", padding: 0, margin: 0, minWidth: '200px', maxWidth: '400px' }}>
+      <div className="row" style={{ margin: 0, padding: 0, cursor: 'inherit' }}>
+        <div className="stroke infoContainer" style={{ width: "100%", padding: 0, margin: 0, minWidth: '200px', maxWidth: '400px', cursor: 'inherit' }}>
           <div className="rowAlignLeft infoBar" style={{ margin: 0 }}>
             {eventCaller}
           </div>

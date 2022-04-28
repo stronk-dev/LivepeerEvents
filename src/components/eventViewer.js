@@ -485,7 +485,7 @@ const EventViewer = (obj) => {
                               {/* <div className="showNeverOnMobile" >
                                 <h3 style={{ width: '2em', marginLeft: '0.2em', marginRight: '0.2em', whiteSpace: 'nowrap' }}>{idx + 1}</h3>
                               </div> */}
-                              <div className="row">
+                              <div className="row" style={{ cursor: 'grab' }}>
                                 {delObj}
                               </div>
                             </div>
