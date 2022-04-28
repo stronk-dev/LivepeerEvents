@@ -34,7 +34,7 @@ const Address = (obj) => {
     }
   }
   // Lookup current info in cache only if this addr has a mapped ENS domain
-  if (thisDomain && thisDomain.domain) {
+  if (thisDomain && thisDomain.domain && livepeer.ensInfoMapping && livepeer.ensInfoMapping.length) {
     for (const thisAddr of livepeer.ensInfoMapping) {
       if (thisAddr.domain === thisDomain.domain) {
         thisInfo = thisAddr;

@@ -88,7 +88,7 @@ const OrchInfoViewer = (obj) => {
       }
     }
     // Lookup current info in cache only if this addr has a mapped ENS domain
-    if (thisDomain && thisDomain.domain) {
+    if (thisDomain && thisDomain.domain && livepeer.ensInfoMapping && livepeer.ensInfoMapping.length) {
       for (const thisAddr of livepeer.ensInfoMapping) {
         if (thisAddr.domain === thisDomain.domain) {
           thisInfo = thisAddr;
@@ -178,7 +178,7 @@ const OrchInfoViewer = (obj) => {
     }
 
     return (
-      <div className="row">
+      <div className="row" style={{maxWidth: '500px'}}>
         <div className="stroke sideMargin">
           <div className="verticalDivider" />
           <div className="row">
