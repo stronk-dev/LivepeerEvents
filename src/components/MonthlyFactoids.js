@@ -1,6 +1,5 @@
 import React from 'react';
 import Ticket from "../components/TicketViewer";
-import ScrollContainer from 'react-indiana-drag-scroll';
 
 const claimColour = "rgba(25, 158, 29, 0.4)";
 const stakeColour = "rgba(25, 158, 147, 0.4)";
@@ -12,6 +11,27 @@ const withdrawStakeColour = "rgba(158, 98, 25, 0.4)";
 const activationColour = "rgba(154, 158, 25, 0.4)";
 const ticketTransferColour = "rgba(88, 91, 42, 0.3)";
 const greyColour = "rgba(122, 128, 127, 0.4)";
+
+function updateClipboard(newClip) {
+  navigator.clipboard.writeText(newClip).then(
+    () => {
+      console.log("Copied!");
+    },
+    () => {
+      console.log("Copy failed!");
+    }
+  );
+}
+
+function copyLink(addr) {
+  navigator.permissions
+    .query({ name: "clipboard-write" })
+    .then((result) => {
+      if (result.state === "granted" || result.state === "prompt") {
+        updateClipboard(addr);
+      }
+    });
+}
 
 const MonthlyFactoids = (obj) => {
   // Pies for stake overview, if have stake data for that month saved
@@ -26,9 +46,47 @@ const MonthlyFactoids = (obj) => {
     }
   }
 
+  let summary = "";
+  if (obj.data.reactivationCount) {
+    summary += "🔌 " + obj.data.reactivationCount + " orchestrators reactivated \r\n";
+  }
+  if (obj.data.activationCount) {
+    summary += "🔧 " + obj.data.activationCount + " orchestrators joined with an initial stake of " + obj.data.activationInitialSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT \r\n";
+  }
+  if (obj.data.latestCommission && obj.data.latestCommission.length) {
+    summary += "🔗 " + obj.data.latestCommission.length + " orchestrators had a total of " + totalStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT staked to them \r\n";
+  }
+  if (obj.data.bondCount) {
+    summary += "📈 " + obj.data.bondCount + " accounts delegated for the first time for a total of " + obj.data.bondStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT \r\n";
+  }
+  if (obj.data.unbondCount) {
+    summary +="📉 " + obj.data.unbondCount + " delegators unbonded " + obj.data.unbondStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT \r\n";
+  }
+  if (obj.data.rewardCount) {
+    summary += "⌛ " + obj.data.rewardCount + " reward calls made were made by orchestrators worth " + obj.data.rewardAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT \r\n";
+  }
+  if (obj.data.claimCount) {
+    summary += "🏦 " + obj.data.claimRewardSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT and " + obj.data.claimFeeSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH worth of rewards were claimed by delegators \r\n";
+  }
+  if (obj.data.withdrawStakeCount) {
+    summary += "💸 " + obj.data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT worth of staking rewards were withdrawn to the accounts of delegators \r\n";
+  }
+  if (obj.data.withdrawFeesCount) {
+    summary += "💸 " + obj.data.withdrawFeesAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH worth of transcoding fees were withdrawn to the accounts of delegators \r\n";
+  }
+  if (obj.data.moveStakeCount) {
+    summary += "🔄 " + obj.data.moveStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT worth of stake was moved directly between orchestrators in " + obj.data.moveStakeCount + " transactions \r\n";
+  }
+  if (obj.data.winningTicketsReceivedCount) {
+    summary += "🎫 " + obj.data.winningTicketsReceivedCount + " winning tickets were sent out by " + obj.data.winningTicketsSent.length + " broadcasters \r\n";
+  }
+  if (obj.data.winningTicketsRedeemedCount) {
+    summary += "🎟️ " + obj.data.winningTicketsRedeemedCount + " winning tickets were redeemed worth " + obj.data.winningTicketsRedeemedSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH \r\n";
+  }
+
   return (
     <div className="stroke insetEffect" key={obj.seed + "factoids"}>
-      <div className="overflow-content" style={{ cursor: 'grab', width: "unset" }}>
+      <div className="overflow-content" style={{ width: "unset" }}>
         {obj.data.reactivationCount ?
           <div className="stroke" style={{ width: 'unset' }}>
             <div className="halfVerticalDivider" />
@@ -104,7 +162,7 @@ const MonthlyFactoids = (obj) => {
             <div className="halfVerticalDivider" />
             <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: withdrawStakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
               <Ticket seed={obj.seed + "-neworchs-"} icon={"💸"} subtext={obj.data.withdrawStakeCount + " withdraw reward calls"} descriptions={[
-                obj.data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT worth of staking rewards were withdrawn to the account of the delegator"
+                obj.data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT worth of staking rewards were withdrawn to the accounts of delegators"
               ]} />
             </div>
           </div> : null
@@ -114,7 +172,7 @@ const MonthlyFactoids = (obj) => {
             <div className="halfVerticalDivider" />
             <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: withdrawStakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
               <Ticket seed={obj.seed + "-neworchs-"} icon={"💸"} subtext={obj.data.withdrawFeesCount + " withdraw fee calls"} descriptions={[
-                obj.data.withdrawFeesAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH worth of transcoding fees were withdrawn to the account of the delegator"
+                obj.data.withdrawFeesAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH worth of transcoding fees were withdrawn to the accounts of delegators"
               ]} />
             </div>
           </div> : null
@@ -149,6 +207,12 @@ const MonthlyFactoids = (obj) => {
             </div>
           </div> : null
         }
+        <div className="halfVerticalDivider" />
+        <button className="selectOrchLight" onClick={() => {
+          copyLink(summary);
+        }}>
+          <img alt="" src="clipboard.svg" width="20em" height="20em" />
+        </button>
         <div className="halfVerticalDivider" />
       </div>
     </div>

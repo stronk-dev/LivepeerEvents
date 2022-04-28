@@ -178,7 +178,7 @@ const OrchInfoViewer = (obj) => {
     }
 
     return (
-      <div className="row" style={{maxWidth: '500px'}}>
+      <div className="row" style={{ maxWidth: '500px' }}>
         <div className="stroke sideMargin">
           <div className="verticalDivider" />
           <div className="row">
