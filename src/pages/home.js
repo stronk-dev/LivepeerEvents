@@ -15,6 +15,7 @@ const Home = (obj) => {
   const [redirectToGrafana, setRedirectToGrafana] = useState(false);
   const [redirectToLPT, setRedirectToLPT] = useState(false);
   const [redirectToStats, setRedirectToStats] = useState(false);
+  const [redirectToGraphs, setRedirectToGraphs] = useState(false);
   if (redirectToGrafana) {
     return <Navigate push to="/orchestrator" />;
   }
@@ -23,6 +24,10 @@ const Home = (obj) => {
   }
   if (redirectToStats) {
     return <Navigate push to="/stats" />;
+  }
+
+  if (redirectToGraphs) {
+    return <Navigate push to="/graphs" />;
   }
   // Get amount of unique IP's which have visited this website
   var totalVisitorCount = 0;
@@ -38,7 +43,7 @@ const Home = (obj) => {
       </div>
       <div className="verticalDivider" />
       <div className="flexContainer">
-        <div className="stroke roundedOpaque">
+        <div className="stroke roundedOpaque" style={{maxWidth: '400px'}}>
           <div className="verticalDivider" />
           <div className="row">
             <h3>Home</h3>
@@ -71,9 +76,23 @@ const Home = (obj) => {
               <p>📈 Statistics 💰</p>
             </button>
           </div>
+          <div className="row">
+            <button className="waveButton" onClick={() => {
+              setRedirectToGraphs(true);
+            }}>
+              <p>📉 Graphs 📊</p>
+            </button>
+          </div>
           <div className="verticalDivider" />
           <div className="row">
             <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
+          </div>
+          <div className="verticalDivider" />
+          <div className="row">
+            <h3>Status</h3>
+          </div>
+          <div className="row">
+            <p>Currently there is an issue with Events getting duplicated. The website will have inflated statistics and become unavailable from time to time while we are working on a fix</p>
           </div>
           <div className="verticalDivider" />
         </div>

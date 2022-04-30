@@ -10,7 +10,6 @@ import { Pagination } from "@mantine/core";
 const itemsPerPage = 10;
 
 const MonthlyOrchestrators = (obj) => {
-  const livepeer = useSelector((state) => state.livepeerstate);
   const [thisScores, setThisScores] = useState(null);
   const [activePage, setPage] = useState(1);
 

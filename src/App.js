@@ -4,7 +4,8 @@ import Startup from './pages/loadingScreen.js';
 import Grafana from './pages/grafana.js';
 import Livepeer from './pages/livepeer.js';
 import Stats  from './pages/stats.js';
-import Summary from './pages/summary.js'
+import Summary from './pages/summary.js';
+import Graphs from './pages/graph.js';
 
 import {
   BrowserRouter as Router,
@@ -22,6 +23,7 @@ export default function App() {
           <Route exact path='/tickets' element={<Stats />} />
           <Route exact path='/stats' element={<Stats />} />
           <Route exact path='/summary' element={<Summary />} />
+          <Route exact path='/graphs' element={<Graphs />} />
           <Route exact path='/orchestrator' element={<Grafana />} />
           <Route path='/' element={<Home />} />
         </Routes>
