@@ -1093,6 +1093,8 @@ SMART CONTRACT EVENTS - SYNC BLOCKS
 
 */
 
+hasError = false;
+
 // Syncs events database
 const syncEvents = function (toBlock) {
   console.log("Starting sync process for Bonding Manager events to block " + toBlock);
@@ -1148,6 +1150,9 @@ const syncEvents = function (toBlock) {
     }
     catch (err) {
       console.log("FATAL ERROR: ", err);
+      hasError = true;
+      isEventSyncing = false;
+      return;
     }
     isEventSyncing = false;
   });
@@ -1196,6 +1201,9 @@ const syncTickets = function (toBlock) {
     }
     catch (err) {
       console.log("FATAL ERROR: ", err);
+      hasError = true;
+      isTicketSyncing = false;
+      return;
     }
     isTicketSyncing = false;
   });
@@ -1415,77 +1423,94 @@ const initSync = async function () {
 let cycle = 0;
 // Does the actual looping over last parsed block -> latest block in chain
 const handleSync = async function () {
-  if (!CONF_DISABLE_DB && !startedInitSync) {
-    console.log("Preloading all the things from the database");
-    await initSync();
-  }
-  cycle++;
-  console.log('Starting new sync cycle #' + cycle);
-  isSyncing = true;
-  // Get latest block in chain
-  const latestBlock = await web3layer2.eth.getBlockNumber();
-  if (latestBlock > latestBlockInChain) {
-    latestBlockInChain = latestBlock;
-    console.log("Latest L2 Eth block changed to " + latestBlockInChain);
-  } else {
-    // If there are no new blocks, wait for 10 seconds before retrying
-    console.log("No new blocks. Sleeping for 10 seconds...");
+  try {
+    if (!CONF_DISABLE_DB && !startedInitSync) {
+      console.log("Preloading all the things from the database");
+      await initSync();
+    }
+    cycle++;
+    console.log('Starting new sync cycle #' + cycle);
+    isSyncing = true;
+    // Get latest block in chain
+    const latestBlock = await web3layer2.eth.getBlockNumber();
+    if (latestBlock > latestBlockInChain) {
+      latestBlockInChain = latestBlock;
+      console.log("Latest L2 Eth block changed to " + latestBlockInChain);
+    } else {
+      // If there are no new blocks, wait for 10 seconds before retrying
+      console.log("No new blocks. Sleeping for 10 seconds...");
+      setTimeout(() => {
+        handleSync();
+      }, 10000);
+      return;
+    }
+    console.log("Needs to sync " + (latestBlockInChain - lastBlockEvents) + " blocks for Events sync");
+    console.log("Needs to sync " + (latestBlockInChain - lastBlockTickets) + " blocks for Tickets sync");
+    // Batch requests when sync is large, mark if we are going to reach latestBlockInChain in this round 
+    let getFinalTickets = false;
+    let toTickets = 'latest';
+    if (latestBlock - lastBlockTickets > 1000000) {
+      toTickets = lastBlockTickets + 1000000;
+    } else {
+      getFinalTickets = true;
+    }
+    let getFinalEvents = false;
+    let toEvents = 'latest';
+    if (latestBlock - lastBlockEvents > 1000000) {
+      toEvents = lastBlockEvents + 1000000;
+    } else {
+      getFinalEvents = true;
+    }
+    // Start initial sync for this sync round
+    syncTickets(toTickets);
+    syncEvents(toEvents);
+    // Then loop until we have reached the last known block
+    while (isEventSyncing || isTicketSyncing || !getFinalTickets || !getFinalEvents) {
+      await sleep(500);
+      if (hasError){
+        throw("Error while syncing");
+      }
+      if (isEventSyncing) {
+        console.log("Parsed " + lastBlockEvents + " out of " + latestBlockInChain + " blocks for Event sync");
+      } else if (!getFinalEvents) {
+        // Start next batch for events
+        toEvents = 'latest';
+        if (latestBlock - lastBlockEvents > 1000000) {
+          toEvents = lastBlockEvents + 1000000;
+        } else {
+          getFinalEvents = true;
+        }
+        syncEvents(toEvents);
+      }
+      if (isTicketSyncing) {
+        console.log("Parsed " + lastBlockTickets + " out of " + latestBlockInChain + " blocks for Ticket sync");
+      } else if (!getFinalTickets) {
+        // Start next batch for tickets
+        toTickets = 'latest';
+        if (latestBlock - lastBlockTickets > 1000000) {
+          toTickets = lastBlockTickets + 1000000;
+        } else {
+          getFinalTickets = true;
+        }
+        syncTickets(toTickets);
+      }
+    }
+    isSyncing = false;
     setTimeout(() => {
       handleSync();
-    }, 10000)
+    }, 10000);
+    return;
   }
-  console.log("Needs to sync " + (latestBlockInChain - lastBlockEvents) + " blocks for Events sync");
-  console.log("Needs to sync " + (latestBlockInChain - lastBlockTickets) + " blocks for Tickets sync");
-  // Batch requests when sync is large, mark if we are going to reach latestBlockInChain in this round 
-  let getFinalTickets = false;
-  let toTickets = 'latest';
-  if (latestBlock - lastBlockTickets > 1000000) {
-    toTickets = lastBlockTickets + 1000000;
-  } else {
-    getFinalTickets = true;
+  catch (err) {
+    console.log("Error while syncing. Retrying in 30 seconds");
+    console.log("latestBlockInChain " + latestBlockInChain);
+    console.log("lastBlockEvents " + lastBlockEvents);
+    console.log("lastBlockTickets " + lastBlockTickets);
+    isSyncing = false;
+    setTimeout(() => {
+      handleSync();
+    }, 30000)
   }
-  let getFinalEvents = false;
-  let toEvents = 'latest';
-  if (latestBlock - lastBlockEvents > 1000000) {
-    toEvents = lastBlockEvents + 1000000;
-  } else {
-    getFinalEvents = true;
-  }
-  // Start initial sync for this sync round
-  syncTickets(toTickets);
-  syncEvents(toEvents);
-  // Then loop until we have reached the last known block
-  while (isEventSyncing || isTicketSyncing || !getFinalTickets || !getFinalEvents) {
-    await sleep(500);
-    if (isEventSyncing) {
-      console.log("Parsed " + lastBlockEvents + " out of " + latestBlockInChain + " blocks for Event sync");
-    } else if (!getFinalEvents) {
-      // Start next batch for events
-      toEvents = 'latest';
-      if (latestBlock - lastBlockEvents > 1000000) {
-        toEvents = lastBlockEvents + 1000000;
-      } else {
-        getFinalEvents = true;
-      }
-      syncEvents(toEvents);
-    }
-    if (isTicketSyncing) {
-      console.log("Parsed " + lastBlockTickets + " out of " + latestBlockInChain + " blocks for Ticket sync");
-    } else if (!getFinalTickets) {
-      // Start next batch for tickets
-      toTickets = 'latest';
-      if (latestBlock - lastBlockTickets > 1000000) {
-        toTickets = lastBlockTickets + 1000000;
-      } else {
-        getFinalTickets = true;
-      }
-      syncTickets(toTickets);
-    }
-  }
-  isSyncing = false;
-  setTimeout(() => {
-    handleSync();
-  }, 10000)
 };
 if (!isSyncing && !CONF_SIMPLE_MODE) {
   console.log("Starting sync process");
