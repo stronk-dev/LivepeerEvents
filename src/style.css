@@ -193,6 +193,11 @@ svg {
   color: rgba(176, 175, 218, 0.7);
 }
 
+.lightTextAlt {
+  color: rgba(220, 220, 235, 0.7);
+  text-shadow: 0.5px 0.5px 0.8px #5a5663;
+}
+
 .darkText {
   margin: 0;
   padding: 0;

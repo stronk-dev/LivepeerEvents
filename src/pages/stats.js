@@ -5,10 +5,201 @@ import { useSelector } from 'react-redux';
 import { Accordion } from '@mantine/core';
 import MonthlyStats from './MonthlyStats';
 
+function updateClipboard(newClip) {
+  navigator.clipboard.writeText(newClip).then(
+    () => {
+      console.log("Copied!");
+    },
+    () => {
+      console.log("Copy failed!");
+    }
+  );
+}
+
+function copyLink(addr) {
+  navigator.permissions
+    .query({ name: "clipboard-write" })
+    .then((result) => {
+      if (result.state === "granted" || result.state === "prompt") {
+        updateClipboard(addr);
+      }
+    });
+}
+
 const Stats = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [showOnlyTranscoders, setShowOnlyTranscoders] = useState(true);
+
+  const getName = (address) => {
+    let thisDomain = null;
+    // Lookup domain in cache
+    if (livepeer.ensDomainMapping) {
+      for (const thisAddr of livepeer.ensDomainMapping) {
+        if (thisAddr.address === address) {
+          thisDomain = thisAddr;
+          break;
+        }
+      }
+    }
+    // Lookup current info in cache only if this addr has a mapped ENS domain
+    if (thisDomain && thisDomain.domain) {
+      for (const thisAddr of livepeer.ensInfoMapping) {
+        if (thisAddr.domain === thisDomain.domain) {
+          if (thisAddr.domain.length > 18) {
+            return thisAddr.domain;
+          }
+          return thisAddr.domain;
+        }
+      }
+    }
+
+    if (livepeer.threeBoxInfo) {
+      for (const thisAddr of livepeer.threeBoxInfo) {
+        if (thisAddr.address === address) {
+          if (thisAddr.name) {
+            if (thisAddr.name.length > 18) {
+              return thisAddr.name;
+            }
+            return thisAddr.name;
+          } else {
+            return address;
+          }
+          break;
+        }
+      }
+    }
+
+    return address;
+  }
+
+
+  function getDataFor(year, month, data) {
+    let summary = month + " " + year + ": \r\n";
+
+    let totalStakeSum = 0;
+    if (data.latestTotalStake && data.latestTotalStake.length) {
+      let ticketIdx = data.latestTotalStake.length - 1;
+      // Calc total stake at that time
+      while (ticketIdx >= 0) {
+        const thisTicket = data.latestTotalStake[ticketIdx];
+        ticketIdx -= 1;
+        totalStakeSum += thisTicket.totalStake;
+      }
+    }
+
+    if (data.reactivationCount) {
+      summary += "🔌 " + data.reactivationCount + " orchestrators reactivated \r\n";
+    }
+    if (data.activationCount) {
+      summary += "🔧 " + data.activationCount + " orchestrators joined with an initial stake of " + data.activationInitialSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT \r\n";
+    }
+    // if (data.latestCommission && data.latestCommission.length) {
+    //   summary += "🔗 " + data.latestCommission.length + " orchestrators had a total of " + totalStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT staked to them \r\n";
+    // }
+    if (data.bondCount) {
+      summary += "📈 " + data.bondCount + " accounts delegated for the first time for a total of " + data.bondStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT \r\n";
+    }
+    if (data.unbondCount) {
+      summary += "📉 " + data.unbondCount + " delegators unbonded " + data.unbondStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT \r\n";
+    }
+    if (data.rewardCount) {
+      summary += "⌛ " + data.rewardCount + " reward calls made were made by orchestrators worth " + data.rewardAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT \r\n";
+    }
+    if (data.claimCount) {
+      summary += "🏦 " + data.claimRewardSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT and " + data.claimFeeSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH worth of rewards were claimed by delegators \r\n";
+    }
+    if (data.withdrawStakeCount) {
+      summary += "💸 " + data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT worth of staking rewards were withdrawn to the accounts of delegators \r\n";
+    }
+    if (data.withdrawFeesCount) {
+      summary += "💸 " + data.withdrawFeesAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH worth of transcoding fees were withdrawn to the accounts of delegators \r\n";
+    }
+    if (data.moveStakeCount) {
+      summary += "🔄 " + data.moveStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT worth of stake was moved directly between orchestrators in " + data.moveStakeCount + " transactions \r\n";
+    }
+    if (data.winningTicketsReceivedCount) {
+      summary += "🎫 " + data.winningTicketsReceivedCount + " winning tickets were sent out by " + data.winningTicketsSent.length + " broadcasters \r\n";
+    }
+    if (data.winningTicketsRedeemedCount) {
+      summary += "🎟️ " + data.winningTicketsRedeemedCount + " winning tickets were redeemed worth " + data.winningTicketsRedeemedSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH \r\n";
+    }
+    summary += "\r\n";
+
+    let winnerList = [...data.winningTicketsReceived] || [];
+    let stakeList = data.latestTotalStake || [];
+
+    // Count earners of more than 0.2 Eth
+    let luckyCount = 0;
+    let totalStakeSumEarners = 0;
+    for (const thisObj of winnerList) {
+      if (thisObj.sum > 0.2) {
+        luckyCount++;
+      }
+      for (const thisObjB of stakeList) {
+        if (thisObjB.address == thisObj.address) {
+          totalStakeSumEarners += thisObjB.totalStake;
+        }
+      }
+    }
+
+    if (data.winningTicketsReceived.length && data.winningTicketsReceivedSum) {
+      summary += data.winningTicketsReceived.length + " orchestrators earned " + data.winningTicketsReceivedSum.toFixed(2) + " Eth \r\n";
+    }
+    summary += luckyCount + " orchestrators earned more than 0.2 Eth \r\n";
+    summary += "Top 10 earners for this month are: \r\n";
+
+    // Find highest earner
+    const maxPrint = 10;
+    let currentPrinted = 0;
+    while (currentPrinted < maxPrint && winnerList.length) {
+      let ticketIdx2 = winnerList.length - 1;
+      let largestIdx = 0;
+      let largestValue = 0;
+      while (ticketIdx2 >= 0) {
+        const currentOrch = winnerList[ticketIdx2];
+        let thisVal;
+        for (const obj of winnerList) {
+          if (obj.address == currentOrch.address) {
+            thisVal = obj.sum;
+          }
+        }
+        if (!thisVal) {
+          ticketIdx2 -= 1;
+          continue;
+        }
+        if (thisVal > largestValue) {
+          largestIdx = ticketIdx2;
+          largestValue = thisVal;
+        }
+        ticketIdx2 -= 1;
+      }
+
+      currentPrinted++;
+      const largestObj = winnerList[largestIdx];
+      // Print highest earner info
+      const earningsPercentage = parseFloat((largestObj.sum / data.winningTicketsReceivedSum) * 100);
+      summary += "#" + currentPrinted + ": " + getName(largestObj.address) + " won " + largestObj.count + " tickets worth " + largestObj.sum.toFixed(2) + " Eth" + " (" + earningsPercentage.toFixed(2) + "%)";
+
+      // Add stake info if available
+      for (const thisObj of stakeList) {
+        if (thisObj.address == largestObj.address) {
+          const stakePercentage = parseFloat((thisObj.totalStake / totalStakeSumEarners) * 100);
+          summary += " with a stake of " + thisObj.totalStake.toFixed(0) + " LPT (" + stakePercentage.toFixed(2) + "%)";
+        }
+      }
+
+      summary += "\r\n";
+      // Remove from list
+      winnerList.splice(largestIdx, 1);
+    }
+
+    if (stakeList.length) {
+      summary += "\r\nThe percentages are their share of the total fees for that month and their latest known stake compared to the stake of all orchestrators who won a ticket in that month\r\n";
+    }
+
+    copyLink(summary);
+  }
 
   console.log("Rendering Stats Viewer");
 
@@ -129,7 +320,20 @@ const Stats = (obj) => {
                             thisMonth = "December";;
                           }
 
-                          const title = data.year + "-" + thisMonth + ": " + data.winningTicketsReceived.length + " orchestrators earned " + data.winningTicketsReceivedSum.toFixed(2) + " Eth";
+                          const title = (
+                            <div className='row'>
+                              <div className='rowAlignLeft'>
+                                <h3 className="lightTextAlt">{data.year}-{thisMonth}: {data.winningTicketsReceived.length} orchestrators earned {data.winningTicketsReceivedSum.toFixed(2)} Eth</h3>
+                              </div>
+                              <div className='rowAlignRight'>
+                                <div className="selectOrchLight" onClick={() => {
+                                  getDataFor(data.year, thisMonth, data);
+                                }}>
+                                  <img alt="" src="clipboard.svg" width="20em" height="20em" />
+                                </div>
+                              </div>
+                            </div>
+                          )
 
                           return (
                             <Accordion.Item
