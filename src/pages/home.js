@@ -76,13 +76,13 @@ const Home = (obj) => {
               <p>📈 Statistics 💰</p>
             </button>
           </div>
-          <div className="row">
+          {/* <div className="row">
             <button className="waveButton" onClick={() => {
               setRedirectToGraphs(true);
             }}>
               <p>📉 Graphs 📊</p>
             </button>
-          </div>
+          </div> */}
           <div className="verticalDivider" />
           <div className="row">
             <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
