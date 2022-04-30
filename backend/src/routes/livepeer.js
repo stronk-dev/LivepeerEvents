@@ -1093,7 +1093,7 @@ SMART CONTRACT EVENTS - SYNC BLOCKS
 
 */
 
-hasError = false;
+let hasError = false;
 
 // Syncs events database
 const syncEvents = function (toBlock) {
