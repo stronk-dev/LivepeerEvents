@@ -92,7 +92,7 @@ const Home = (obj) => {
             <h3>Status</h3>
           </div>
           <div className="row">
-            <p>Currently there is an issue with Events getting duplicated. The website will have inflated statistics and become unavailable from time to time while we are working on a fix</p>
+            <p>There was an issue with Events getting duplicated. The website might become unavailable from time to time while the issue is being fixed.</p>
           </div>
           <div className="verticalDivider" />
         </div>
