@@ -1502,6 +1502,7 @@ const handleSync = async function () {
     return;
   }
   catch (err) {
+    hasError = false;
     console.log("Error while syncing. Retrying in 30 seconds");
     console.log("latestBlockInChain " + latestBlockInChain);
     console.log("lastBlockEvents " + lastBlockEvents);
