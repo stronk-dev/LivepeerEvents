@@ -77,52 +77,29 @@ const Stats = (obj) => {
   function getDataFor(year, month, data) {
     let summary = month + " " + year + ": \r\n";
 
-    let totalStakeSum = 0;
-    if (data.latestTotalStake && data.latestTotalStake.length) {
-      let ticketIdx = data.latestTotalStake.length - 1;
-      // Calc total stake at that time
-      while (ticketIdx >= 0) {
-        const thisTicket = data.latestTotalStake[ticketIdx];
-        ticketIdx -= 1;
-        totalStakeSum += thisTicket.totalStake;
-      }
-    }
-
     if (data.reactivationCount) {
       summary += "🔌 " + data.reactivationCount + " orchestrators reactivated \r\n";
     }
     if (data.activationCount) {
-      summary += "🔧 " + data.activationCount + " orchestrators joined with an initial stake of " + data.activationInitialSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT \r\n";
+      summary += "🔧 " + data.activationCount + " orchestrators joined with an initial stake of " + data.activationInitialSum.toLocaleString({ maximumFractionDigits: 1 }) + " LPT \r\n";
     }
-    // if (data.latestCommission && data.latestCommission.length) {
-    //   summary += "🔗 " + data.latestCommission.length + " orchestrators had a total of " + totalStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT staked to them \r\n";
-    // }
     if (data.bondCount) {
-      summary += "📈 " + data.bondCount + " accounts delegated for the first time for a total of " + data.bondStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT \r\n";
+      summary += "📈 " + data.bondCount + " accounts delegated for the first time for a total of " + data.bondStakeSum.toLocaleString({ maximumFractionDigits: 1 }) + " LPT \r\n";
     }
     if (data.unbondCount) {
-      summary += "📉 " + data.unbondCount + " delegators unbonded " + data.unbondStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT \r\n";
-    }
-    if (data.rewardCount) {
-      summary += "⌛ " + data.rewardCount + " reward calls made were made by orchestrators worth " + data.rewardAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT \r\n";
-    }
-    if (data.claimCount) {
-      summary += "🏦 " + data.claimRewardSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT and " + data.claimFeeSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH worth of rewards were claimed by delegators \r\n";
+      summary += "📉 " + data.unbondCount + " delegators unbonded " + data.unbondStakeSum.toLocaleString({ maximumFractionDigits: 1 }) + " LPT \r\n";
     }
     if (data.withdrawStakeCount) {
-      summary += "💸 " + data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT worth of staking rewards were withdrawn to the accounts of delegators \r\n";
+      summary += "💸 " + data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 1 }) + " LPT worth of staking rewards were withdrawn to the accounts of delegators \r\n";
     }
     if (data.withdrawFeesCount) {
-      summary += "💸 " + data.withdrawFeesAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH worth of transcoding fees were withdrawn to the accounts of delegators \r\n";
+      summary += "💸 " + data.withdrawFeesAmountSum.toLocaleString({ maximumFractionDigits: 3 }) + " ETH worth of transcoding fees were withdrawn to the accounts of delegators \r\n";
     }
     if (data.moveStakeCount) {
-      summary += "🔄 " + data.moveStakeSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT worth of stake was moved directly between orchestrators in " + data.moveStakeCount + " transactions \r\n";
+      summary += "🔄 " + data.moveStakeSum.toLocaleString({ maximumFractionDigits: 1 }) + " LPT worth of stake was moved directly between orchestrators in " + data.moveStakeCount + " transactions \r\n";
     }
     if (data.winningTicketsReceivedCount) {
       summary += "🎫 " + data.winningTicketsReceivedCount + " winning tickets were sent out by " + data.winningTicketsSent.length + " broadcasters \r\n";
-    }
-    if (data.winningTicketsRedeemedCount) {
-      summary += "🎟️ " + data.winningTicketsRedeemedCount + " winning tickets were redeemed worth " + data.winningTicketsRedeemedSum.toLocaleString({ maximumFractionDigits: 2 }) + " ETH \r\n";
     }
     summary += "\r\n";
 
@@ -144,9 +121,9 @@ const Stats = (obj) => {
     }
 
     if (data.winningTicketsReceived.length && data.winningTicketsReceivedSum) {
-      summary += data.winningTicketsReceived.length + " orchestrators earned " + data.winningTicketsReceivedSum.toFixed(2) + " Eth \r\n";
+      summary += data.winningTicketsReceived.length + " orchestrators earned " + data.winningTicketsReceivedSum.toFixed(3) + " Eth in transcoding fees \r\n";
     }
-    summary += luckyCount + " orchestrators earned more than 0.2 Eth \r\n";
+    summary += luckyCount + " of them received more than 0.2 Eth \r\n";
     summary += "Top 10 earners for this month are: \r\n";
 
     // Find highest earner
@@ -179,13 +156,13 @@ const Stats = (obj) => {
       const largestObj = winnerList[largestIdx];
       // Print highest earner info
       const earningsPercentage = parseFloat((largestObj.sum / data.winningTicketsReceivedSum) * 100);
-      summary += "#" + currentPrinted + ": " + getName(largestObj.address) + " won " + largestObj.count + " tickets worth " + largestObj.sum.toFixed(2) + " Eth" + " (" + earningsPercentage.toFixed(2) + "%)";
+      summary += "#" + currentPrinted + ": " + getName(largestObj.address) + " won " + largestObj.count + " tickets worth " + largestObj.sum.toFixed(3) + " Eth" + " (" + earningsPercentage.toFixed(2) + "%)";
 
       // Add stake info if available
       for (const thisObj of stakeList) {
         if (thisObj.address == largestObj.address) {
           const stakePercentage = parseFloat((thisObj.totalStake / totalStakeSumEarners) * 100);
-          summary += " with a stake of " + thisObj.totalStake.toFixed(0) + " LPT (" + stakePercentage.toFixed(2) + "%)";
+          summary += " with a stake of " + thisObj.totalStake.toFixed(1) + " LPT (" + stakePercentage.toFixed(2) + "%)";
         }
       }
 
