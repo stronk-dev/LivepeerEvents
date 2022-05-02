@@ -87,13 +87,13 @@ const Home = (obj) => {
           <div className="row">
             <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
           </div>
-          <div className="verticalDivider" />
+          {/* <div className="verticalDivider" />
           <div className="row">
             <h3>Status</h3>
           </div>
           <div className="row">
             <p>There was an issue with Events getting duplicated. The website might become unavailable from time to time while the issue is being fixed.</p>
-          </div>
+          </div> */}
           <div className="verticalDivider" />
         </div>
       </div>
