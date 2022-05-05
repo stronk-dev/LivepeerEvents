@@ -27,6 +27,17 @@ function copyLink(addr) {
     });
 }
 
+function nl2br(str) {
+  if (typeof str === "undefined" || str === null) {
+    return "";
+  }
+  var breakTag = "<br>"; // "<br />"
+  return (str + "").replace(
+    /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g,
+    "$1" + breakTag + "$2"
+  );
+}
+
 const OrchInfoViewer = (obj) => {
   const [opened, setOpened] = useState(false);
   const livepeer = useSelector((state) => state.livepeerstate);
@@ -122,26 +133,32 @@ const OrchInfoViewer = (obj) => {
     if (ensDescription) {
       if (ensDescription.length < 200) {
         descriptionObj =
-          <p className="darkText" style={{ overflowWrap: 'break-word' }}>
-            {ensDescription}
-          </p>
+          <div className="darkText" style={{ overflowWrap: 'break-word' }}
+            dangerouslySetInnerHTML={{
+              __html: nl2br(ensDescription),
+            }}
+          />
       } else {
         descriptionObj =
           <Popover className="strokeSmollLeft" style={{ cursor: 'pointer', marginTop: '0.2em', marginBottom: '0.2em' }}
             opened={opened}
             onClose={() => setOpened(false)}
             target={
-              <p className="darkText" style={{ overflowWrap: 'break-word' }} onClick={() => setOpened((o) => !o)}>
-                {ensDescription.substring(0, 200)}...
-              </p>
+              <div className="darkText" style={{ overflowWrap: 'break-word' }} onClick={() => setOpened((o) => !o)}
+                dangerouslySetInnerHTML={{
+                  __html: nl2br(ensDescription.substring(0, 200) + "..."),
+                }}
+              />
             }
             width={260}
             position="right"
             withArrow
           >
-            <p className="darkText" style={{ overflowWrap: 'break-word' }}>
-              {ensDescription}
-            </p>
+            <div className="darkText" style={{ overflowWrap: 'break-word' }}
+              dangerouslySetInnerHTML={{
+                __html: nl2br(ensDescription),
+              }}
+            />
           </Popover>
       }
     }
