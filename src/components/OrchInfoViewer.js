@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Stat from "./statViewer";
 import Address from "./OrchAddressViewer";
 import { useSelector } from 'react-redux';
-import { Text } from "@mantine/core";
-import ScrollContainer from "react-indiana-drag-scroll";
 import { Popover } from '@mantine/core';
 
 function updateClipboard(newClip) {
