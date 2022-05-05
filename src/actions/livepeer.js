@@ -12,7 +12,6 @@ export const RECEIVE_TICKETS = "RECEIVE_TICKETS";
 export const RECEIVE_WINNING_TICKETS = "RECEIVE_WINNING_TICKETS";
 export const SET_ALL_ENS_INFO = "SET_ALL_ENS_INFO";
 export const SET_ALL_ENS_DOMAINS = "SET_ALL_ENS_DOMAINS";
-export const SET_ALL_THREEBOX_INFO = "SET_ALL_THREEBOX_INFO";
 export const SET_ALL_ORCH_SCORES = "SET_ALL_ORCH_SCORES";
 export const SET_ALL_ORCH_INFO = "SET_ALL_ORCH_INFO";
 export const SET_ALL_DEL_INFO = "SET_ALL_DEL_INFO";
@@ -62,9 +61,6 @@ const setAllEnsInfo = message => ({
 });
 const setAllEnsDomains = message => ({
   type: SET_ALL_ENS_DOMAINS, message
-});
-const setAllThreeBoxInfo = message => ({
-  type: SET_ALL_THREEBOX_INFO, message
 });
 const setAllOrchScores = message => ({
   type: SET_ALL_ORCH_SCORES, message
@@ -207,20 +203,6 @@ export const getAllEnsInfo = () => async dispatch => {
 
 export const getEnsInfo = async (addr) => {
   const response = apiUtil.getEnsInfo(addr);
-};
-
-
-export const getAllThreeBoxInfo = () => async dispatch => {
-  const response = await apiUtil.getAllThreeBox();
-  const data = await response.json();
-  if (response.ok) {
-    return dispatch(setAllThreeBoxInfo(data));
-  }
-  return dispatch(receiveErrors(data));
-};
-
-export const getThreeBoxInfo = async (addr) => {
-  const response = apiUtil.getThreeBox(addr);
 };
 
 export const getOrchestratorScores = async (year, month) => {

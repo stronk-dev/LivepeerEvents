@@ -54,22 +54,6 @@ const Stats = (obj) => {
       }
     }
 
-    if (livepeer.threeBoxInfo) {
-      for (const thisAddr of livepeer.threeBoxInfo) {
-        if (thisAddr.address === address) {
-          if (thisAddr.name) {
-            if (thisAddr.name.length > 18) {
-              return thisAddr.name;
-            }
-            return thisAddr.name;
-          } else {
-            return address;
-          }
-          break;
-        }
-      }
-    }
-
     return address;
   }
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  getOrchestratorInfo, getEnsInfo, getThreeBoxInfo, setCachedOrch, getOrchestratorInfoSilent
+  getOrchestratorInfo, getEnsInfo, setCachedOrch, getOrchestratorInfoSilent
 } from "../actions/livepeer";
 import { useDispatch, useSelector } from 'react-redux';
 import { Text } from '@mantine/core';
@@ -9,7 +9,6 @@ const EventButtonAddress = (obj) => {
   const dispatch = useDispatch();
   const livepeer = useSelector((state) => state.livepeerstate);
   const [hasRefreshed, setRefresh] = useState(false);
-  const [hasThreeBoxRefreshed, setThreeBoxRefresh] = useState(false);
   const [orchInfo, setOrchInfo] = useState(null);
   const now = new Date().getTime();
 
@@ -17,7 +16,6 @@ const EventButtonAddress = (obj) => {
     let thisInfo = null;
     let thisDomain = null;
     let hasENS = null;
-    let hasThreeBox = null
     // Lookup domain in cache
     if (livepeer.ensDomainMapping && !hasRefreshed) {
       for (const thisAddr of livepeer.ensDomainMapping) {
@@ -69,30 +67,7 @@ const EventButtonAddress = (obj) => {
         setRefresh(true);
       }
     }
-
-    // Ugly shit, but temporary for now to quickly enable threebox. Sorry!
-    if (!hasENS && !hasThreeBoxRefreshed) {
-      if (livepeer.threeBoxInfo) {
-        for (const thisAddr of livepeer.threeBoxInfo) {
-          if (thisAddr.address === obj.address) {
-            thisInfo = thisAddr;
-            hasThreeBox = true;
-            break;
-          }
-        }
-        // If it was not cached at all
-        if (!hasThreeBox && !hasThreeBoxRefreshed) {
-          console.log("Refresh due to non-existing 3BOX info");
-          setThreeBoxRefresh(true);
-          getThreeBoxInfo(obj.address);
-        }
-      }
-    }
-    if (thisInfo && thisInfo != orchInfo) {
-      console.log("Setting INFO obj");
-      setOrchInfo(thisInfo);
-    }
-  }, [livepeer.ensDomainMapping, livepeer.threeBoxInfo]);
+  }, [livepeer.ensDomainMapping]);
 
   useEffect(() => {
     // Check if cached as an orchestrator
@@ -129,20 +104,6 @@ const EventButtonAddress = (obj) => {
         <a className="selectOrch" style={{ padding: '0.3em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + orchInfo.domain + "/details"} >
           <img alt="" src={orchInfo.avatar.url} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
         </a >
-    }
-  } else if (orchInfo && (orchInfo.name || orchInfo.image)) {
-    if (orchInfo.name) {
-      thisName = <Text style={{ textOverflow: "ellipsis", overflow: "hidden", width: '100%' }} >{orchInfo.name}</Text>;
-    } else {
-      thisName = <Text style={{ textOverflow: "ellipsis", overflow: "hidden", width: '100%', maxWidth: '10vw' }} >{obj.address}</Text>;
-    }
-    if (orchInfo.image) {
-      thisIcon =
-        <a className="selectOrch" style={{ padding: '0.3em', cursor: 'grab' }} disabled>
-          <img alt="" src={"https://cloudflare-ipfs.com/ipfs/" + orchInfo.image} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
-        </a >
-    } else {
-      thisIcon = null;
     }
   } else {
     thisName = <Text style={{ textOverflow: "ellipsis", overflow: "hidden", width: '100%', maxWidth: '10vw' }} >{obj.address}</Text>;

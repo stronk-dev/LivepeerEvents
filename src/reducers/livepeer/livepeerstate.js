@@ -9,7 +9,6 @@ import {
   RECEIVE_WINNING_TICKETS,
   SET_ALL_ENS_INFO,
   SET_ALL_ENS_DOMAINS,
-  SET_ALL_THREEBOX_INFO,
   SET_ALL_ORCH_SCORES,
   SET_ALL_ORCH_INFO,
   SET_ALL_DEL_INFO,
@@ -70,8 +69,6 @@ export default (state = {
       return { ...state, ensInfoMapping: message };
     case SET_ALL_ENS_DOMAINS:
       return { ...state, ensDomainMapping: message };
-    case SET_ALL_THREEBOX_INFO:
-      return { ...state, threeBoxInfo: message };
     case SET_ALL_ORCH_SCORES:
       return { ...state, orchScores: message };
     case SET_ALL_ORCH_INFO:

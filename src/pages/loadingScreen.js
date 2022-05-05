@@ -5,7 +5,7 @@ import {
 } from "../actions/user";
 import {
   getQuotes, getBlockchainData, getCurrentOrchestratorInfo,
-  getAllEnsDomains, getAllEnsInfo, getAllThreeBoxInfo, getAllOrchScores,  getAllOrchInfo,
+  getAllEnsDomains, getAllEnsInfo, getAllOrchScores,  getAllOrchInfo,
   getAllDelInfo, getAllMonthlyStats, getAllUpdateEvents, getAllRewardEvents,
   getAllClaimEvents, getAllWithdrawStakeEvents, getAllWithdrawFeesEvents,
   getAllTransferTicketEvents, getAllRedeemTicketEvents, getAllActivateEvents,
@@ -42,7 +42,6 @@ const Startup = (obj) => {
   const refreshENS = () => {
     console.log("Refreshing ENS data...");
     batch(() => {
-      dispatch(getAllThreeBoxInfo());
       dispatch(getAllEnsDomains());
       dispatch(getAllEnsInfo());
     });

@@ -6,7 +6,6 @@ const Address = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [hasRefreshed, setRefresh] = useState(false);
   let hasENS = false;
-  let hasThreeBox = false;
   let thisDomain = null;
   let thisInfo = null;
   const now = new Date().getTime();
@@ -58,19 +57,6 @@ const Address = (obj) => {
     }
   }
 
-  // Ugly shit, but temporary for now to quickly enable threebox. Sorry!
-  if (!hasENS) {
-    if (livepeer.threeBoxInfo) {
-      for (const thisAddr of livepeer.threeBoxInfo) {
-        if (thisAddr.address === obj.address) {
-          thisInfo = thisAddr;
-          hasThreeBox = true;
-          break;
-        }
-      }
-    }
-  }
-
   let thisName;
   let thisIcon;
   if (hasENS) {
@@ -85,20 +71,6 @@ const Address = (obj) => {
         <a className="selectOrchLight" style={{ marginRight: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + thisInfo.domain + "/details"} >
           <img alt="" src="ens.png" width="20em" height="20em" style={{ margin: '0.2em', padding: '0.2em' }} />
         </a >
-    }
-  } else if (hasThreeBox) {
-    if (thisInfo.name) {
-      thisName = <h4 className="elipsText elipsOnMobileExtra">{thisInfo.name}</h4>;
-    } else {
-      thisName = <span className="elipsText elipsOnMobileExtra">{obj.address}</span>;
-    }
-    if (thisInfo.image) {
-      thisIcon =
-        <a className="selectOrch" style={{ marginRight: '0.5em', cursor: 'grab' }} disabled>
-          <img alt="" src={"https://cloudflare-ipfs.com/ipfs/" + thisInfo.image} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
-        </a >
-    } else {
-      thisIcon = null;
     }
   } else {
     thisName = obj.address;

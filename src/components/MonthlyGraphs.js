@@ -32,22 +32,6 @@ const MonthlyGraphs = (obj) => {
       }
     }
 
-    if (livepeer.threeBoxInfo) {
-      for (const thisAddr of livepeer.threeBoxInfo) {
-        if (thisAddr.address === address) {
-          if (thisAddr.name) {
-            if (thisAddr.name.length > 18) {
-              return (thisAddr.name.substring(0, 16) + "..");
-            }
-            return thisAddr.name;
-          } else {
-            return (address.substring(0, 16) + "..");
-          }
-          break;
-        }
-      }
-    }
-
     return (address.substring(0, 16) + "..");
   }
 
