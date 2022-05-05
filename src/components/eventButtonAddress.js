@@ -67,6 +67,10 @@ const EventButtonAddress = (obj) => {
         setRefresh(true);
       }
     }
+    if (thisInfo && thisInfo != orchInfo) {
+      console.log("Setting INFO obj");
+      setOrchInfo(thisInfo);
+    }
   }, [livepeer.ensDomainMapping]);
 
   useEffect(() => {
