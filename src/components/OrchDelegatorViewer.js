@@ -34,6 +34,7 @@ const OrchDelegatorViewer = (obj) => {
     }
 
     const totalPages = (delegators.length + (itemsPerPage - (delegators.length % itemsPerPage))) / itemsPerPage;
+    const thisPage = (activePage > totalPages) ? totalPages : activePage;
 
     return (
       <div className="stroke" style={{ paddingBottom: 0, marginBottom: 0 }}>
@@ -45,7 +46,7 @@ const OrchDelegatorViewer = (obj) => {
             <div className="overflow-content" style={{ cursor: 'grab', maxHeight: '300px' }}>
               {
                 sortedList.map((delObj, idx) => {
-                  const tmp = idx - ((activePage - 1) * itemsPerPage);
+                  const tmp = idx - ((thisPage - 1) * itemsPerPage);
                   if (tmp >= 0 && tmp < itemsPerPage) {
                     return (
                       <div className="flexContainer forceWrap" key={"delegator" + idx}>
@@ -71,7 +72,7 @@ const OrchDelegatorViewer = (obj) => {
         </div>
         <div className="row" style={{ marginTop: '1em', marginBottom: '1em' }}>
           {totalPages > 1 ?
-            <Pagination page={activePage} onChange={setPage} total={totalPages} siblings={1} initialPage={1} />
+            <Pagination page={thisPage} onChange={setPage} total={totalPages} siblings={1} initialPage={1} />
             : null}
         </div>
       </div>
