@@ -18,9 +18,10 @@ const Block = (obj) => {
         <p style={{ overflowWrap: 'break-word' }}>
           📅&nbsp;{thisLocalDate}
         </p>
-        <p className='darkTextSmoll' style={{ overflowWrap: 'break-word' }}>
+        {thisOffset != 0 ? <p className='darkTextSmoll' style={{ overflowWrap: 'break-word' }}>
           ({thisOffset > 0 ? "+" : ""}{thisOffset})
-        </p>
+        </p> : null
+        }
       </span>
     </div>
   )

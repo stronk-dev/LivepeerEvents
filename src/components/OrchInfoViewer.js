@@ -170,7 +170,6 @@ const OrchInfoViewer = (obj) => {
           </div>
           <Address address={thisID} />
           {ensUrl}
-          <div className="verticalDivider" />
           {descriptionObj}
           <div className="stretchAndBetween" style={{ borderTop: '2px solid rgba(15,15,15,0.05)', marginTop: '0.2em' }} >
             <Stat header={"Earned Fees"} content1={totalVolumeETH + " Eth"} content2={"$" + totalVolumeUSD} />
