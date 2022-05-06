@@ -242,7 +242,7 @@ const Stats = (obj) => {
                           boxShadow: 'inset 3px 3px 12px 2px rgba(62, 62, 104, 0.05)'
                         },
                         icon: {
-                          padding: '0.2em', margin: '0.2em',
+                          padding: '0.2em', margin: '0.2em', color: 'rgba(218, 218, 218, 0.9)',
                         },
                         content: {
                           padding: 0, alignItems: 'stretch', width: '100%', height: '100%',
@@ -299,7 +299,6 @@ const Stats = (obj) => {
                           return (
                             <Accordion.Item
                               label={title}
-                              icon={"🔄"}
                               className="stroke"
                               style={{ width: '100%', alignItems: 'stretch' }}
                               key={"accord" + i + data.year + "-" + data.month + "-" + data.total}>
