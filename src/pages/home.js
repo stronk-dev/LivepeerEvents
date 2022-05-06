@@ -42,60 +42,58 @@ const Home = (obj) => {
         <img alt="" src="livepeer.png" width="100em" height="100em" style={{ zIndex: 10 }} />
       </div>
       <div className="verticalDivider" />
-      <div className="flexContainer">
-        <div className="stroke roundedOpaque" style={{maxWidth: '400px'}}>
-          <div className="verticalDivider" />
-          <div className="row">
-            <h3>Home</h3>
-          </div>
-          <div className="row">
-            <a href="https://github.com/stronk-dev/LivepeerEvents">
-              <button className="waveButton">
-                <p>🧱 Source Code 🏠</p>
-              </button>
-            </a>
-          </div>
-          <div className="row">
-            <button className="waveButton" onClick={() => {
-              setRedirectToGrafana(true);
-            }}>
-              <p>🚀 Orchestrator 🌑</p>
+      <div className="stroke roundedOpaque" style={{ maxWidth: '400px' }}>
+        <div className="verticalDivider" />
+        <div className="row">
+          <h3>Home</h3>
+        </div>
+        <div className="row">
+          <a href="https://github.com/stronk-dev/LivepeerEvents">
+            <button className="waveButton">
+              <p>🧱 Source Code 🏠</p>
             </button>
-          </div>
-          <div className="row">
-            <button className="waveButton" onClick={() => {
-              setRedirectToLPT(true);
-            }}>
-              <p>🔎 Contract Events 🕵️</p>
-            </button>
-          </div>
-          <div className="row">
-            <button className="waveButton" onClick={() => {
-              setRedirectToStats(true);
-            }}>
-              <p>📈 Statistics 💰</p>
-            </button>
-          </div>
-          {/* <div className="row">
+          </a>
+        </div>
+        <div className="row">
+          <button className="waveButton" onClick={() => {
+            setRedirectToGrafana(true);
+          }}>
+            <p>🚀 Orchestrator 🌑</p>
+          </button>
+        </div>
+        <div className="row">
+          <button className="waveButton" onClick={() => {
+            setRedirectToLPT(true);
+          }}>
+            <p>🔎 Contract Events 🕵️</p>
+          </button>
+        </div>
+        <div className="row">
+          <button className="waveButton" onClick={() => {
+            setRedirectToStats(true);
+          }}>
+            <p>📈 Statistics 💰</p>
+          </button>
+        </div>
+        {/* <div className="row">
             <button className="waveButton" onClick={() => {
               setRedirectToGraphs(true);
             }}>
               <p>📉 Graphs 📊</p>
             </button>
           </div> */}
-          <div className="verticalDivider" />
-          <div className="row">
-            <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
-          </div>
-          {/* <div className="verticalDivider" />
+        <div className="verticalDivider" />
+        <div className="row">
+          <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
+        </div>
+        {/* <div className="verticalDivider" />
           <div className="row">
             <h3>Status</h3>
           </div>
           <div className="row">
             <p>There was an issue with Events getting duplicated. The website might become unavailable from time to time while the issue is being fixed.</p>
           </div> */}
-          <div className="verticalDivider" />
-        </div>
+        <div className="verticalDivider" />
       </div>
       <div className="alwaysOnBottom showNeverOnMobile">
         <div className="row">
