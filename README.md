@@ -11,29 +11,7 @@ This project shows a live feed of events happening on the Livepeer BondingManage
 Orchestrators can be inspected by clicking on their address, showing all of their delegators, earned fees and stake
 
 ## API endpoints:
-- https://nframe.nl/api/livepeer/grafana
-  - Returns a JSON object of top 200 coin data, as well as gas fees and contract prices
-- https://nframe.nl/api/livepeer/cmc
-  - Returns a JSON object of the raw data of the top 200 coins
-- https://nframe.nl/api/livepeer/blockchains
-  - Returns a JSON object of gas fees and livepeer contract fees on L1 and L2
-- https://nframe.nl/api/livepeer/quotes
-  - Returns a JSON object of top 200 coint data by coin symbol
-- https://nframe.nl/api/livepeer/getEvents
-  - Returns a JSON object of the raw data of all events on the Livepeer BondingManager contract
-- https://nframe.nl/api/livepeer/getTickets
-  - Returns a JSON object of the raw data of all events on the Livepeer TicketBroker contract
-- https://nframe.nl/api/livepeer/getOrchestrator
-    - POST request with orchAddr in the body
-- https://www.nframe.nl/livepeer/getOrchestrator?orchAddr=0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e
-  - GET requests with the orchAddr as URL parameter
-  - Returns a JSON object of the current data on the given Orchestrator
-- https://www.nframe.nl/livepeer/getOrchestrator
-  - Returns a JSON object of the default Orchestrator selected in the backend
-- https://www.nframe.nl/livepeer/prometheus/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e
-  - Returns a Prometheus compatible output of all data except blockchain Events
-
-See the wiki for examples of their raw output
+View the Wiki for a list of all available endpoints, their parameters and an example of their output
 
 # How
 
