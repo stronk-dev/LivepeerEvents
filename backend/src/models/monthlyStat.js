@@ -201,12 +201,12 @@ const MonthlyStatSchema = new mongoose.Schema({
   latestCommission: {
     type: [OrchCommissionSchema],
     required: false,
-    default: null
+    default: []
   },
   latestTotalStake: {
     type: [OrchStakeSchema],
     required: false,
-    default: null
+    default: []
   },
   testScores: {
     type: Object,
