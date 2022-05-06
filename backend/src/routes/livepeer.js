@@ -41,6 +41,7 @@ const fs = require('fs');
 
 // Used for the livepeer thegraph API
 import { request, gql } from 'graphql-request';
+import Round from "../models/Round";
 
 // Gets ETH, LPT and other coin info
 let CoinMarketCap = require('coinmarketcap-api');
@@ -161,24 +162,57 @@ let lastBlockEvents = 0;
 let lastBlockTickets = 0;
 let ticketsCache = [];
 
+let alreadyHasAnyRefresh = {};
+
 let updateEventCache = [];
+let alreadyHasUpdateRefresh = {};
+
 let rewardEventCache = [];
+let alreadyHasRewardRefresh = {};
+
 let claimEventCache = [];
+let alreadyHasClaimRefresh = {};
+
 let withdrawStakeEventCache = [];
+let alreadyHasWithdrawStakeRefresh = {};
+
 let withdrawFeesEventCache = [];
+let alreadyHasWithdrawFeesRefresh = {};
+
 let transferTicketEventCache = [];
+let alreadyHasTransferTicketRefresh = {};
+
 let redeemTicketEventCache = [];
+let alreadyHasRedeemTicketRefresh = {};
+
 let activateEventCache = [];
+let alreadyHasActivateRefresh = {};
+
 let unbondEventCache = [];
+let alreadyHasUnbondRefresh = {};
+
 let stakeEventCache = [];
+let alreadyHasStakeRefresh = {};
 
 let monthlyStatCache = [];
+let alreadyHasMonthlyStatRefresh = {};
+
 let commissionDataPointCache = [];
 let totalStakeDataPoint = [];
 
-apiRouter.get("/getAllMonthlyStats", async (req, res) => {
+apiRouter.post("/getAllMonthlyStats", async (req, res) => {
   try {
+    const { smartUpdate } = req.body;
+    if (smartUpdate && req.session.user.ip) {
+      if (alreadyHasMonthlyStatRefresh[req.session.user.ip]) {
+        res.send({ noop: true });
+        return;
+      }
+    }
     res.send(monthlyStatCache);
+    if (req.session.user.ip) {
+      alreadyHasMonthlyStatRefresh[req.session.user.ip] = true;
+    }
   } catch (err) {
     res.status(400).send(err);
   }
@@ -200,81 +234,209 @@ apiRouter.get("/getAllTotalStakes", async (req, res) => {
   }
 });
 
-apiRouter.get("/getAllUpdateEvents", async (req, res) => {
+apiRouter.post("/getAllUpdateEvents", async (req, res) => {
   try {
+    const { smartUpdate } = req.body;
+    if (smartUpdate && req.session.user.ip) {
+      if (alreadyHasUpdateRefresh[req.session.user.ip]) {
+        res.send({ noop: true });
+        return;
+      }
+    }
     res.send(updateEventCache);
+    if (req.session.user.ip) {
+      alreadyHasAnyRefresh[req.session.user.ip] = true;
+      alreadyHasUpdateRefresh[req.session.user.ip] = true;
+    }
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-apiRouter.get("/getAllRewardEvents", async (req, res) => {
+apiRouter.post("/getAllRewardEvents", async (req, res) => {
   try {
+    const { smartUpdate } = req.body;
+    if (smartUpdate && req.session.user.ip) {
+      if (alreadyHasRewardRefresh[req.session.user.ip]) {
+        res.send({ noop: true });
+        return;
+      }
+    }
     res.send(rewardEventCache);
+    if (req.session.user.ip) {
+      alreadyHasAnyRefresh[req.session.user.ip] = true;
+      alreadyHasRewardRefresh[req.session.user.ip] = true;
+    }
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-apiRouter.get("/getAllClaimEvents", async (req, res) => {
+apiRouter.post("/getAllClaimEvents", async (req, res) => {
   try {
+    const { smartUpdate } = req.body;
+    if (smartUpdate && req.session.user.ip) {
+      if (alreadyHasClaimRefresh[req.session.user.ip]) {
+        res.send({ noop: true });
+        return;
+      }
+    }
     res.send(claimEventCache);
+    if (req.session.user.ip) {
+      alreadyHasAnyRefresh[req.session.user.ip] = true;
+      alreadyHasClaimRefresh[req.session.user.ip] = true;
+    }
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-apiRouter.get("/getAllWithdrawStakeEvents", async (req, res) => {
+apiRouter.post("/getAllWithdrawStakeEvents", async (req, res) => {
   try {
+    const { smartUpdate } = req.body;
+    if (smartUpdate && req.session.user.ip) {
+      if (alreadyHasWithdrawStakeRefresh[req.session.user.ip]) {
+        res.send({ noop: true });
+        return;
+      }
+    }
     res.send(withdrawStakeEventCache);
+    if (req.session.user.ip) {
+      alreadyHasAnyRefresh[req.session.user.ip] = true;
+      alreadyHasWithdrawStakeRefresh[req.session.user.ip] = true;
+    }
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-apiRouter.get("/getAllWithdrawFeesEvents", async (req, res) => {
+apiRouter.post("/getAllWithdrawFeesEvents", async (req, res) => {
   try {
+    const { smartUpdate } = req.body;
+    if (smartUpdate && req.session.user.ip) {
+      if (alreadyHasWithdrawFeesRefresh[req.session.user.ip]) {
+        res.send({ noop: true });
+        return;
+      }
+    }
     res.send(withdrawFeesEventCache);
+    if (req.session.user.ip) {
+      alreadyHasAnyRefresh[req.session.user.ip] = true;
+      alreadyHasWithdrawFeesRefresh[req.session.user.ip] = true;
+    }
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-apiRouter.get("/getAllTransferTicketEvents", async (req, res) => {
+apiRouter.post("/getAllTransferTicketEvents", async (req, res) => {
   try {
+    const { smartUpdate } = req.body;
+    if (smartUpdate && req.session.user.ip) {
+      if (alreadyHasTransferTicketRefresh[req.session.user.ip]) {
+        res.send({ noop: true });
+        return;
+      }
+    }
     res.send(transferTicketEventCache);
+    if (req.session.user.ip) {
+      alreadyHasAnyRefresh[req.session.user.ip] = true;
+      alreadyHasTransferTicketRefresh[req.session.user.ip] = true;
+    }
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-apiRouter.get("/getAllRedeemTicketEvents", async (req, res) => {
+apiRouter.post("/getAllRedeemTicketEvents", async (req, res) => {
   try {
+    const { smartUpdate } = req.body;
+    if (smartUpdate && req.session.user.ip) {
+      if (alreadyHasRedeemTicketRefresh[req.session.user.ip]) {
+        res.send({ noop: true });
+        return;
+      }
+    }
     res.send(redeemTicketEventCache);
+    if (req.session.user.ip) {
+      alreadyHasAnyRefresh[req.session.user.ip] = true;
+      alreadyHasRedeemTicketRefresh[req.session.user.ip] = true;
+    }
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-apiRouter.get("/getAllActivateEvents", async (req, res) => {
+apiRouter.post("/getAllActivateEvents", async (req, res) => {
   try {
+    const { smartUpdate } = req.body;
+    if (smartUpdate && req.session.user.ip) {
+      if (alreadyHasActivateRefresh[req.session.user.ip]) {
+        res.send({ noop: true });
+        return;
+      }
+    }
     res.send(activateEventCache);
+    if (req.session.user.ip) {
+      alreadyHasAnyRefresh[req.session.user.ip] = true;
+      alreadyHasActivateRefresh[req.session.user.ip] = true;
+    }
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-apiRouter.get("/getAllUnbondEvents", async (req, res) => {
+apiRouter.post("/getAllUnbondEvents", async (req, res) => {
   try {
+    const { smartUpdate } = req.body;
+    if (smartUpdate && req.session.user.ip) {
+      if (alreadyHasUnbondRefresh[req.session.user.ip]) {
+        res.send({ noop: true });
+        return;
+      }
+    }
     res.send(unbondEventCache);
+    if (req.session.user.ip) {
+      alreadyHasAnyRefresh[req.session.user.ip] = true;
+      alreadyHasUnbondRefresh[req.session.user.ip] = true;
+    }
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-apiRouter.get("/getAllStakeEvents", async (req, res) => {
+apiRouter.post("/getAllStakeEvents", async (req, res) => {
   try {
+    const { smartUpdate } = req.body;
+    if (smartUpdate && req.session.user.ip) {
+      if (alreadyHasStakeRefresh[req.session.user.ip]) {
+        res.send({ noop: true });
+        return;
+      }
+    }
     res.send(stakeEventCache);
+    if (req.session.user.ip) {
+      alreadyHasAnyRefresh[req.session.user.ip] = true;
+      alreadyHasStakeRefresh[req.session.user.ip] = true;
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+apiRouter.get("/hasAnyRefresh", async (req, res) => {
+  try {
+    if (req.session.user.ip) {
+      console.log(req.session.user.ip + " is checking for new Events");
+      if (alreadyHasAnyRefresh[req.session.user.ip]) {
+        console.log(req.session.user.ip + " is still up to date");
+        res.send({ requiresRefresh: false });
+        return;
+      } else {
+        console.log(req.session.user.ip + " requires an update");
+      }
+    }
+    res.send({ requiresRefresh: true });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -310,12 +472,21 @@ const updateMonthlyReward = async function (blockTime, amount) {
     });
   }
   // Update cached entry if it is cached
+  let found = false;
   for (var idx = 0; idx < monthlyStatCache.length; idx++) {
     if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
       monthlyStatCache[idx].rewardCount += 1;
       monthlyStatCache[idx].rewardAmountSum += amount;
+      found = true;
       break;
     }
+  }
+  if (!found) {
+    const doc = await MonthlyStat.findOne({
+      year: thisYear,
+      month: thisMonth
+    });
+    monthlyStatCache.push(doc);
   }
 }
 
@@ -344,13 +515,22 @@ const updateMonthlyClaim = async function (blockTime, fees, rewards) {
     });
   }
   // Update cached entry if it is cached
+  let found = false;
   for (var idx = 0; idx < monthlyStatCache.length; idx++) {
     if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
       monthlyStatCache[idx].claimCount += 1;
       monthlyStatCache[idx].claimRewardSum += rewards;
       monthlyStatCache[idx].claimFeeSum += fees;
+      found = true;
       break;
     }
+  }
+  if (!found) {
+    const doc = await MonthlyStat.findOne({
+      year: thisYear,
+      month: thisMonth
+    });
+    monthlyStatCache.push(doc);
   }
 }
 
@@ -378,12 +558,21 @@ const updateMonthlyWithdrawStake = async function (blockTime, amount) {
     });
   }
   // Update cached entry if it is cached
+  let found = false;
   for (var idx = 0; idx < monthlyStatCache.length; idx++) {
     if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
       monthlyStatCache[idx].withdrawStakeCount += 1;
       monthlyStatCache[idx].withdrawStakeAmountSum += amount;
+      found = true;
       break;
     }
+  }
+  if (!found) {
+    const doc = await MonthlyStat.findOne({
+      year: thisYear,
+      month: thisMonth
+    });
+    monthlyStatCache.push(doc);
   }
 }
 
@@ -411,12 +600,21 @@ const updateMonthlyWithdrawFees = async function (blockTime, amount) {
     });
   }
   // Update cached entry if it is cached
+  let found = false;
   for (var idx = 0; idx < monthlyStatCache.length; idx++) {
     if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
       monthlyStatCache[idx].withdrawFeesCount += 1;
       monthlyStatCache[idx].withdrawFeesAmountSum += amount;
+      found = true;
       break;
     }
+  }
+  if (!found) {
+    const doc = await MonthlyStat.findOne({
+      year: thisYear,
+      month: thisMonth
+    });
+    monthlyStatCache.push(doc);
   }
 }
 
@@ -444,12 +642,21 @@ const updateMonthlyNewDelegator = async function (blockTime, amount) {
     });
   }
   // Update cached entry if it is cached
+  let found = false;
   for (var idx = 0; idx < monthlyStatCache.length; idx++) {
     if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
       monthlyStatCache[idx].bondCount += 1;
       monthlyStatCache[idx].bondStakeSum += amount;
+      found = true;
       break;
     }
+  }
+  if (!found) {
+    const doc = await MonthlyStat.findOne({
+      year: thisYear,
+      month: thisMonth
+    });
+    monthlyStatCache.push(doc);
   }
 }
 
@@ -477,12 +684,21 @@ const updateMonthlyUnbond = async function (blockTime, amount) {
     });
   }
   // Update cached entry if it is cached
+  let found = false;
   for (var idx = 0; idx < monthlyStatCache.length; idx++) {
     if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
       monthlyStatCache[idx].unbondCount += 1;
       monthlyStatCache[idx].unbondStakeSum += amount;
+      found = true;
       break;
     }
+  }
+  if (!found) {
+    const doc = await MonthlyStat.findOne({
+      year: thisYear,
+      month: thisMonth
+    });
+    monthlyStatCache.push(doc);
   }
 }
 
@@ -509,11 +725,20 @@ const updateMonthlyReactivated = async function (blockTime, amount) {
     });
   }
   // Update cached entry if it is cached
+  let found = false;
   for (var idx = 0; idx < monthlyStatCache.length; idx++) {
     if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
       monthlyStatCache[idx].reactivationCount += 1;
+      found = true;
       break;
     }
+  }
+  if (!found) {
+    const doc = await MonthlyStat.findOne({
+      year: thisYear,
+      month: thisMonth
+    });
+    monthlyStatCache.push(doc);
   }
 }
 
@@ -541,12 +766,21 @@ const updateMonthlyActivation = async function (blockTime, amount) {
     });
   }
   // Update cached entry if it is cached
+  let found = false;
   for (var idx = 0; idx < monthlyStatCache.length; idx++) {
     if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
       monthlyStatCache[idx].activationCount += 1;
       monthlyStatCache[idx].activationInitialSum += amount;
+      found = true;
       break;
     }
+  }
+  if (!found) {
+    const doc = await MonthlyStat.findOne({
+      year: thisYear,
+      month: thisMonth
+    });
+    monthlyStatCache.push(doc);
   }
 }
 
@@ -574,12 +808,21 @@ const updateMonthlyMoveStake = async function (blockTime, amount) {
     });
   }
   // Update cached entry if it is cached
+  let found = false;
   for (var idx = 0; idx < monthlyStatCache.length; idx++) {
     if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
       monthlyStatCache[idx].moveStakeCount += 1;
       monthlyStatCache[idx].moveStakeSum += amount;
+      found = true;
       break;
     }
+  }
+  if (!found) {
+    const doc = await MonthlyStat.findOne({
+      year: thisYear,
+      month: thisMonth
+    });
+    monthlyStatCache.push(doc);
   }
 }
 
@@ -619,6 +862,8 @@ const updateMonthlyTicketReceived = async function (blockTime, amount, from, to)
             'winningTicketsReceived.$.sum': amount + eventObj.sum,
             'winningTicketsReceived.$.count': 1 + eventObj.count,
           }
+        }, {
+          new: true
         });
         hasModified = true;
         break;
@@ -638,6 +883,8 @@ const updateMonthlyTicketReceived = async function (blockTime, amount, from, to)
             count: 1
           }
         }
+      }, {
+        new: true
       });
     }
     // Check to see if the doc's embedded winningTicketsSent already contains this address
@@ -654,6 +901,8 @@ const updateMonthlyTicketReceived = async function (blockTime, amount, from, to)
             'winningTicketsSent.$.sum': amount + eventObj.sum,
             'winningTicketsSent.$.count': 1 + eventObj.count,
           }
+        }, {
+          new: true
         });
         hasModified = true;
         break;
@@ -673,31 +922,61 @@ const updateMonthlyTicketReceived = async function (blockTime, amount, from, to)
             count: 1
           }
         }
+      }, {
+        new: true
       });
     }
   }
   // Update cached entry if it is cached
+  let found = false;
   for (var idx = 0; idx < monthlyStatCache.length; idx++) {
     if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
       monthlyStatCache[idx].winningTicketsReceivedCount += 1;
       monthlyStatCache[idx].winningTicketsReceivedSum += amount;
+      let foundNested = false;
       // Check to see if the doc's embedded winningTicketsReceived already contains this address
       for (var idx2 = 0; idx2 < monthlyStatCache[idx].winningTicketsReceived.length; idx2++) {
         if (monthlyStatCache[idx].winningTicketsReceived[idx2].address == to) {
           monthlyStatCache[idx].winningTicketsReceived[idx2].count += 1;
           monthlyStatCache[idx].winningTicketsReceived[idx2].sum += amount;
+          foundNested = true;
           break;
         }
       }
+      if (!foundNested) {
+        monthlyStatCache[idx].winningTicketsReceived.push({
+          address: to,
+          sum: amount,
+          count: 1
+        });
+      }
+      foundNested = false;
       // Check to see if the doc's embedded winningTicketsSent already contains this address
       for (var idx2 = 0; idx2 < monthlyStatCache[idx].winningTicketsSent.length; idx2++) {
         if (monthlyStatCache[idx].winningTicketsSent[idx2].address == from) {
           monthlyStatCache[idx].winningTicketsSent[idx2].count += 1;
           monthlyStatCache[idx].winningTicketsSent[idx2].sum += amount;
+          foundNested = true;
           break;
         }
       }
+      if (!foundNested) {
+        monthlyStatCache[idx].winningTicketsSent.push({
+          address: from,
+          sum: amount,
+          count: 1
+        });
+      }
+      found = true;
+      break;
     }
+  }
+  if (!found) {
+    const doc = await MonthlyStat.findOne({
+      year: thisYear,
+      month: thisMonth
+    });
+    monthlyStatCache.push(doc);
   }
 }
 
@@ -737,6 +1016,8 @@ const updateMonthlyTicketRedeemed = async function (blockTime, amount, address) 
             'winningTicketsRedeemed.$.sum': amount + eventObj.sum,
             'winningTicketsRedeemed.$.count': 1 + eventObj.count,
           }
+        }, {
+          new: true
         });
         hasModified = true;
         break;
@@ -756,23 +1037,44 @@ const updateMonthlyTicketRedeemed = async function (blockTime, amount, address) 
             count: 1
           }
         }
+      }, {
+        new: true
       });
     }
   }
   // Update cached entry if it is cached
+  let found = false;
   for (var idx = 0; idx < monthlyStatCache.length; idx++) {
     if (monthlyStatCache[idx].year == thisYear && monthlyStatCache[idx].month == thisMonth) {
       monthlyStatCache[idx].winningTicketsRedeemedCount += 1;
       monthlyStatCache[idx].winningTicketsRedeemedSum += amount;
+      let foundNested = false;
       // Check to see if the doc's embedded winningTicketsRedeemed already contains this address
       for (var idx2 = 0; idx2 < monthlyStatCache[idx].winningTicketsRedeemed.length; idx2++) {
         if (monthlyStatCache[idx].winningTicketsRedeemed[idx2].address == address) {
           monthlyStatCache[idx].winningTicketsRedeemed[idx2].count += 1;
           monthlyStatCache[idx].winningTicketsRedeemed[idx2].sum += amount;
+          foundNested = true;
           break;
         }
       }
+      if (!foundNested) {
+        monthlyStatCache[idx].winningTicketsRedeemed.push({
+          address: address,
+          sum: amount,
+          count: 1
+        });
+      }
+      found = true;
+      break;
     }
+  }
+  if (!found) {
+    const doc = await MonthlyStat.findOne({
+      year: thisYear,
+      month: thisMonth
+    });
+    monthlyStatCache.push(doc);
   }
 }
 
@@ -801,6 +1103,8 @@ const parseAnyEvent = async function (thisEvent) {
     }
     // No monthly stats
     updateEventCache.push(eventObj);
+    alreadyHasAnyRefresh = {};
+    alreadyHasUpdateRefresh = {};
   } else if (thisName === "Reward") {
     const eventObj = {
       address: thisEvent.data.transcoder.toLowerCase(),
@@ -814,7 +1118,10 @@ const parseAnyEvent = async function (thisEvent) {
       await dbObj.save();
     }
     updateMonthlyReward(eventObj.blockTime, eventObj.amount);
+    alreadyHasMonthlyStatRefresh = {};
     rewardEventCache.push(eventObj);
+    alreadyHasAnyRefresh = {};
+    alreadyHasRewardRefresh = {};
   } else if (thisName === "EarningsClaimed") {
     const eventObj = {
       address: thisEvent.data.delegator.toLowerCase(),
@@ -831,7 +1138,10 @@ const parseAnyEvent = async function (thisEvent) {
       await dbObj.save();
     }
     updateMonthlyClaim(eventObj.blockTime, eventObj.fees, eventObj.rewards);
+    alreadyHasMonthlyStatRefresh = {};
     claimEventCache.push(eventObj);
+    alreadyHasAnyRefresh = {};
+    alreadyHasClaimRefresh = {};
   } else if (thisName === "WithdrawStake") {
     const eventObj = {
       address: thisEvent.data.delegator.toLowerCase(),
@@ -846,7 +1156,10 @@ const parseAnyEvent = async function (thisEvent) {
       await dbObj.save();
     }
     updateMonthlyWithdrawStake(eventObj.blockTime, eventObj.amount);
+    alreadyHasMonthlyStatRefresh = {};
     withdrawStakeEventCache.push(eventObj);
+    alreadyHasAnyRefresh = {};
+    alreadyHasWithdrawStakeRefresh = {};
   } else if (thisName === "WithdrawFees") {
     const eventObj = {
       address: thisEvent.data.delegator.toLowerCase(),
@@ -860,7 +1173,10 @@ const parseAnyEvent = async function (thisEvent) {
       await dbObj.save();
     }
     updateMonthlyWithdrawFees(eventObj.blockTime, eventObj.amount);
+    alreadyHasMonthlyStatRefresh = {};
     withdrawFeesEventCache.push(eventObj);
+    alreadyHasAnyRefresh = {};
+    alreadyHasWithdrawFeesRefresh = {};
   } else if (thisName === "WinningTicketTransfer") {
     const eventObj = {
       address: thisEvent.data.sender.toLowerCase(),
@@ -875,7 +1191,10 @@ const parseAnyEvent = async function (thisEvent) {
       await dbObj.save();
     }
     updateMonthlyTicketReceived(eventObj.blockTime, eventObj.amount, eventObj.address, eventObj.to);
+    alreadyHasMonthlyStatRefresh = {};
     transferTicketEventCache.push(eventObj);
+    alreadyHasAnyRefresh = {};
+    alreadyHasTransferTicketRefresh = {};
   } else if (thisName === "WinningTicketRedeemed") {
     const eventObj = {
       address: thisEvent.data.recipient.toLowerCase(),
@@ -889,7 +1208,10 @@ const parseAnyEvent = async function (thisEvent) {
       await dbObj.save();
     }
     updateMonthlyTicketRedeemed(eventObj.blockTime, eventObj.amount, eventObj.address);
+    alreadyHasMonthlyStatRefresh = {};
     redeemTicketEventCache.push(eventObj);
+    alreadyHasAnyRefresh = {};
+    alreadyHasRedeemTicketRefresh = {};
   } else {
     console.log("Skipping unknown event of type " + thisName);
   }
@@ -981,7 +1303,10 @@ const parseSequenceEvent = async function () {
       await dbObj.save();
     }
     updateMonthlyMoveStake(eventObj.blockTime, eventObj.stake);
+    alreadyHasMonthlyStatRefresh = {};
     stakeEventCache.push(eventObj);
+    alreadyHasAnyRefresh = {};
+    alreadyHasStakeRefresh = {};
   } else if (eventContainsBond && eventContainsTranscoderActivated) {
     console.log('Parsing TranscoderActivated sequence event');
     // Bond -> TranscoderActivated: activation in Round #
@@ -998,7 +1323,10 @@ const parseSequenceEvent = async function () {
       await dbObj.save();
     }
     updateMonthlyActivation(eventObj.blockTime, eventObj.initialStake);
+    alreadyHasMonthlyStatRefresh = {};
     activateEventCache.push(eventObj);
+    alreadyHasAnyRefresh = {};
+    alreadyHasActivateRefresh = {};
   } else if (eventContainsTranscoderActivated) {
     console.log('Parsing lone TranscoderActivated sequence event');
     // Lone TranscoderActivated: reactivation
@@ -1014,7 +1342,10 @@ const parseSequenceEvent = async function () {
       await dbObj.save();
     }
     updateMonthlyReactivated(eventObj.blockTime);
+    alreadyHasMonthlyStatRefresh = {};
     activateEventCache.push(eventObj);
+    alreadyHasAnyRefresh = {};
+    alreadyHasActivateRefresh = {};
   } else if (eventContainsUnbond) {
     console.log('Parsing lone unbond sequence event');
     // Lone Unbond: delegator unstaked
@@ -1032,7 +1363,10 @@ const parseSequenceEvent = async function () {
       await dbObj.save();
     }
     updateMonthlyUnbond(eventObj.blockTime, eventObj.stake);
+    alreadyHasMonthlyStatRefresh = {};
     unbondEventCache.push(eventObj);
+    alreadyHasAnyRefresh = {};
+    alreadyHasUnbondRefresh = {};
   } else if (eventContainsBond) {
     console.log('Parsing lone bond sequence event');
     // Lone Bond: new delegator (Stake event)
@@ -1050,7 +1384,10 @@ const parseSequenceEvent = async function () {
       await dbObj.save();
     }
     updateMonthlyNewDelegator(eventObj.blockTime, eventObj.stake);
+    alreadyHasMonthlyStatRefresh = {};
     stakeEventCache.push(eventObj);
+    alreadyHasAnyRefresh = {};
+    alreadyHasStakeRefresh = {};
   } else if (eventContainsRebond) {
     console.log('Parsing lone rebond sequence event');
     // Lone Rebond: delegator increased their stake (Stake event)
@@ -1068,6 +1405,8 @@ const parseSequenceEvent = async function () {
       // No monthly stats
     }
     stakeEventCache.push(eventObj);
+    alreadyHasAnyRefresh = {};
+    alreadyHasStakeRefresh = {};
   } else {
     console.log('Skipping unknown sequence event');
   }
@@ -1086,6 +1425,109 @@ const onNewEvent = async function (thisEvent) {
     parseAnyEvent(thisEvent);
   }
 }
+
+/*
+
+BLOCKS - LIVEPEER ROUNDS
+Gets livepeer round number for a given block number
+Gets entire round details if the round does not exist yet
+Saves entire round details as separate data point as well
+Mutates roundCache to contain the new round
+Mutates the Event in the database to contain the round number
+
+*/
+
+let roundCache = [];
+
+const getRoundInfo = async function (blockNumber) {
+  // Get round info from gql
+  const roundQuery = gql`{
+    rounds(where: {startBlock_lte: "${blockNumber}"}) {
+      id
+      length
+      startBlock
+      endBlock
+      mintableTokens
+      volumeETH
+      volumeUSD
+      totalActiveStake
+      totalSupply
+      participationRate
+      movedStake
+      newStake
+    }
+  }
+  `;
+  const roundObj = await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", roundQuery);
+  // Not found
+  if (!roundObj) {
+    console.log("No round found at block " + blockNumber);
+    return {};
+  }
+  console.log("This functions is not implemented yet. Logging element to console...")
+  console.log(roundObj);
+  // TODO filter out down to 1 round
+  return roundObj;
+  // Update cache
+  roundCache.push(roundObj);
+  // Only save if the endBlock is elapsed
+  if (latestBlockInChain > roundObj.endBlock) {
+    const data = {
+      number: roundObj.number,
+      lengthBlocks: roundObj.lengthBlocks,
+      startBlock: roundObj.startBlock,
+      endBlock: roundObj.endBlock,
+      mintableTokens: roundObj.mintableTokens,
+      volumeEth: roundObj.volumeEth,
+      volumeUsd: roundObj.volumeUsd,
+      totalActiveStake: roundObj.totalActiveStake,
+      totalSupply: roundObj.totalSupply,
+      participationRate: roundObj.participationRate,
+      movedStake: roundObj.movedStake,
+      newStake: roundObj.newStake
+    }
+    if (!CONF_DISABLE_DB) {
+      // TODO only create if nonexistent (find and update with upsert or something)
+      const dbObj = new Round(data);
+      await dbObj.save();
+    }
+  }
+
+}
+
+apiRouter.post("/getRoundAtBlock", async (req, res) => {
+  try {
+    const { blockNumber } = req.body;
+    if (blockNumber) {
+      console.log("Getting round info for block " + blockNumber);
+      // See if it is cached
+      for (const thisRound of roundCache) {
+        if (thisRound.startBlock <= blockNumber && thisRound.endBlock >= blockNumber) {
+          res.send(thisRound);
+          return;
+        }
+      }
+      // Get block info from thegraph
+      console.log("Getting round info for block " + blockNumber);
+      const thisRoundInfo = await getRoundInfo(blockNumber);
+      res.send(thisRoundInfo);
+      return;
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+});
+// Returns entire orch score mapping cache
+apiRouter.get("/getAllRounds", async (req, res) => {
+  try {
+    res.send(roundCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+
 
 /*
 
@@ -1418,6 +1860,22 @@ const initSync = async function () {
     timestamp: 1,
     _id: 0
   });
+  // Get all round info
+  roundCache = await Round.find({}, {
+    number: 1,
+    lengthBlocks: 1,
+    startBlock: 1,
+    endBlock: 1,
+    mintableTokens: 1,
+    volumeEth: 1,
+    volumeUsd: 1,
+    totalActiveStake: 1,
+    totalSupply: 1,
+    participationRate: 1,
+    movedStake: 1,
+    newStake: 1,
+    _id: 0
+  })
 }
 
 let cycle = 0;
@@ -1467,8 +1925,8 @@ const handleSync = async function () {
     // Then loop until we have reached the last known block
     while (isEventSyncing || isTicketSyncing || !getFinalTickets || !getFinalEvents) {
       await sleep(500);
-      if (hasError){
-        throw("Error while syncing");
+      if (hasError) {
+        throw ("Error while syncing");
       }
       if (isEventSyncing) {
         console.log("Parsed " + lastBlockEvents + " out of " + latestBlockInChain + " blocks for Event sync");
@@ -1847,6 +2305,9 @@ const mutateDynamicStatsFromDB = async function (orchestratorObj) {
     latestCommission: 1,
     latestTotalStake: 1
   });
+  if (!doc){
+    return;
+  }
   let oldFeeCommission = -1;
   let oldRewardCommission = -1;
   let oldTotalStake = -1;
@@ -2606,70 +3067,6 @@ apiRouter.get("/getAllOrchScores", async (req, res) => {
     res.status(400).send(err);
   }
 });
-
-/*
-
-BLOCKS - LIVEPEER ROUNDS
-Gets livepeer round number for a given block number
-Gets entire round details if the round does not exist yet
-Saves entire round details as separate data point as well
-Mutates roundCache to contain the new round
-Mutates the Event in the database to contain the round number
-
-*/
-
-let roundCache = [];
-let highestEndblockSeen = 0;
-
-const mutateRound = async function (scoreObj) {
-  // Immediately mutate new object
-  const doc = await MonthlyStat.findOneAndUpdate({
-    year: year,
-    month: month
-  }, {
-    testScores: scoreObj
-  }, {
-    upsert: true,
-    new: true,
-    setDefaultsOnInsert: true
-  }); k
-  // Then find and mutate all Event objects which fall in this round
-}
-
-apiRouter.post("/getRoundAtBlock", async (req, res) => {
-  try {
-    const { blockNumber } = req.body;
-    if (blockNumber) {
-      // See if it is cached
-      for (const thisRound of roundCache) {
-        if (thisRound.startBlock <= blockNumber && thisRound.endBlock >= blockNumber) {
-          if (thisRound.endBlock > highestEndblockSeen) {
-
-          }
-          res.send(thisAddr);
-        }
-      }
-      // Check DB
-      // If exists, mutate cache and return value
-      // Get from thegraph
-      console.log("Getting new Orchestrator scores for " + year + "-" + month + " @ " + url);
-      // Save to DB
-      mutateRound();
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(400).send(err);
-  }
-});
-// Returns entire orch score mapping cache
-apiRouter.get("/getAllRounds", async (req, res) => {
-  try {
-    res.send(roundCache);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
 
 
 export default apiRouter;

@@ -90,24 +90,6 @@ export const getEnsInfo = (addr) => (
   })
 );
 
-export const getAllThreeBox = () => (
-  fetch("api/livepeer/getAllThreeBox/", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-);
-
-export const getThreeBox = (addr) => (
-  fetch("api/livepeer/getThreeBox/" + addr, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-);
-
 export const getOrchestratorScores = (year, month) => (
   fetch("api/livepeer/getOrchestratorScores", {
     method: "POST",
@@ -145,9 +127,10 @@ export const getAllDelInfo = () => (
   })
 );
 
-export const getAllMonthlyStats = () => (
+export const getAllMonthlyStats = (smartUpdate) => (
   fetch("api/livepeer/getAllMonthlyStats", {
-    method: "GET",
+    method: "POST",
+    body: JSON.stringify({ smartUpdate }),
     headers: {
       "Content-Type": "application/json"
     }
@@ -172,80 +155,108 @@ export const getAllTotalStakes = () => (
   })
 );
 
-export const getAllUpdateEvents = () => (
+export const getAllUpdateEvents = (smartUpdate) => (
   fetch("api/livepeer/getAllUpdateEvents", {
-    method: "GET",
+    method: "POST",
+    body: JSON.stringify({ smartUpdate }),
     headers: {
       "Content-Type": "application/json"
     }
   })
 );
 
-export const getAllRewardEvents = () => (
+export const getAllRewardEvents = (smartUpdate) => (
   fetch("api/livepeer/getAllRewardEvents", {
-    method: "GET",
+    method: "POST",
+    body: JSON.stringify({ smartUpdate }),
     headers: {
       "Content-Type": "application/json"
     }
   })
 );
 
-export const getAllClaimEvents = () => (
+export const getAllClaimEvents = (smartUpdate) => (
   fetch("api/livepeer/getAllClaimEvents", {
-    method: "GET",
+    method: "POST",
+    body: JSON.stringify({ smartUpdate }),
     headers: {
       "Content-Type": "application/json"
     }
   })
 );
 
-export const getAllWithdrawStakeEvents = () => (
+export const getAllWithdrawStakeEvents = (smartUpdate) => (
   fetch("api/livepeer/getAllWithdrawStakeEvents", {
-    method: "GET",
+    method: "POST",
+    body: JSON.stringify({ smartUpdate }),
     headers: {
       "Content-Type": "application/json"
     }
   })
 );
 
-export const getAllWithdrawFeesEvents = () => (
+export const getAllWithdrawFeesEvents = (smartUpdate) => (
   fetch("api/livepeer/getAllWithdrawFeesEvents", {
-    method: "GET",
+    method: "POST",
+    body: JSON.stringify({ smartUpdate }),
     headers: {
       "Content-Type": "application/json"
     }
   })
 );
 
-export const getAllTransferTicketEvents = () => (
+export const getAllTransferTicketEvents = (smartUpdate) => (
   fetch("api/livepeer/getAllTransferTicketEvents", {
-    method: "GET",
+    method: "POST",
+    body: JSON.stringify({ smartUpdate }),
     headers: {
       "Content-Type": "application/json"
     }
   })
 );
 
-export const getAllRedeemTicketEvents = () => (
+export const getAllRedeemTicketEvents = (smartUpdate) => (
   fetch("api/livepeer/getAllRedeemTicketEvents", {
-    method: "GET",
+    method: "POST",
+    body: JSON.stringify({ smartUpdate }),
     headers: {
       "Content-Type": "application/json"
     }
   })
 );
 
-export const getAllActivateEvents = () => (
+export const getAllActivateEvents = (smartUpdate) => (
   fetch("api/livepeer/getAllActivateEvents", {
-    method: "GET",
+    method: "POST",
+    body: JSON.stringify({ smartUpdate }),
     headers: {
       "Content-Type": "application/json"
     }
   })
 );
 
-export const getAllUnbondEvents = () => (
+export const getAllUnbondEvents = (smartUpdate) => (
   fetch("api/livepeer/getAllUnbondEvents", {
+    method: "POST",
+    body: JSON.stringify({ smartUpdate }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getAllStakeEvents = (smartUpdate) => (
+  fetch("api/livepeer/getAllStakeEvents", {
+    method: "POST",
+    body: JSON.stringify({ smartUpdate }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+);
+
+export const hasAnyRefresh = () => (
+  fetch("api/livepeer/hasAnyRefresh", {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
@@ -253,11 +264,21 @@ export const getAllUnbondEvents = () => (
   })
 );
 
-export const getAllStakeEvents = () => (
-  fetch("api/livepeer/getAllStakeEvents", {
+export const getAllRounds = () => (
+  fetch("api/livepeer/getAllRounds", {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
+    }
+  })
+);
+
+export const getRoundAtBlock = (blockNumber) => (
+  fetch("api/livepeer/getRoundAtBlock", {
+    method: "POST",
+    body: JSON.stringify({ blockNumber }),
+    headers: {
+      'Content-Type': 'application/json'
     }
   })
 );

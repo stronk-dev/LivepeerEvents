@@ -5,11 +5,12 @@ import {
 } from "../actions/user";
 import {
   getQuotes, getBlockchainData, getCurrentOrchestratorInfo,
-  getAllEnsDomains, getAllEnsInfo, getAllOrchScores,  getAllOrchInfo,
+  getAllEnsDomains, getAllEnsInfo, getAllOrchScores, getAllOrchInfo,
   getAllDelInfo, getAllMonthlyStats, getAllUpdateEvents, getAllRewardEvents,
   getAllClaimEvents, getAllWithdrawStakeEvents, getAllWithdrawFeesEvents,
   getAllTransferTicketEvents, getAllRedeemTicketEvents, getAllActivateEvents,
-  getAllUnbondEvents, getAllStakeEvents, getAllCommissions, getAllTotalStakes
+  getAllUnbondEvents, getAllStakeEvents, getAllCommissions, getAllTotalStakes,
+  hasAnyRefresh
 } from "../actions/livepeer";
 import { login } from "../actions/session";
 
@@ -17,6 +18,9 @@ import { login } from "../actions/session";
 
 // Refresh every 60 seconds
 const refreshInterval = 60000;
+
+// Refresh Events every 10 seconds
+const refreshEventsInterval = 10000;
 
 const Startup = (obj) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -30,7 +34,28 @@ const Startup = (obj) => {
       dispatch(getCurrentOrchestratorInfo());
     });
   }
-  
+
+  const refreshEvents = async () => {
+    console.log("Checking for Events update...");
+    const requiresRefresh = await hasAnyRefresh();
+    if (requiresRefresh) {
+      console.log("Events requires update...");
+      batch(() => {
+        dispatch(getAllMonthlyStats(true));
+        dispatch(getAllUpdateEvents(true));
+        dispatch(getAllRewardEvents(true));
+        dispatch(getAllClaimEvents(true));
+        dispatch(getAllWithdrawStakeEvents(true));
+        dispatch(getAllWithdrawFeesEvents(true));
+        dispatch(getAllTransferTicketEvents(true));
+        dispatch(getAllRedeemTicketEvents(true));
+        dispatch(getAllActivateEvents(true));
+        dispatch(getAllUnbondEvents(true));
+        dispatch(getAllStakeEvents(true));
+      });
+    }
+  }
+
   const refreshLogin = () => {
     console.log("Logging in and getting visitor statistics...");
     batch(() => {
@@ -46,40 +71,50 @@ const Startup = (obj) => {
       dispatch(getAllEnsInfo());
     });
   }
-  
+
   const refreshStaticProps = () => {
     console.log("Refreshing global data...");
     batch(() => {
       dispatch(getAllOrchInfo());
       dispatch(getAllDelInfo());
       dispatch(getAllOrchScores());
-      dispatch(getAllMonthlyStats());
+      dispatch(getAllMonthlyStats(false));
       dispatch(getAllCommissions());
       dispatch(getAllTotalStakes());
-      dispatch(getAllUpdateEvents());
-      dispatch(getAllRewardEvents());
-      dispatch(getAllClaimEvents());
-      dispatch(getAllWithdrawStakeEvents());
-      dispatch(getAllWithdrawFeesEvents());
-      dispatch(getAllTransferTicketEvents());
-      dispatch(getAllRedeemTicketEvents());
-      dispatch(getAllActivateEvents());
-      dispatch(getAllUnbondEvents());
-      dispatch(getAllStakeEvents());
+      dispatch(getAllUpdateEvents(false));
+      dispatch(getAllRewardEvents(false));
+      dispatch(getAllClaimEvents(false));
+      dispatch(getAllWithdrawStakeEvents(false));
+      dispatch(getAllWithdrawFeesEvents(false));
+      dispatch(getAllTransferTicketEvents(false));
+      dispatch(getAllRedeemTicketEvents(false));
+      dispatch(getAllActivateEvents(false));
+      dispatch(getAllUnbondEvents(false));
+      dispatch(getAllStakeEvents(false));
     });
   }
-  
+
   useEffect(() => {
     refreshLogin();
     refreshAllZeData();
     refreshENS();
     refreshStaticProps();
     setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
     if (refreshInterval) {
       const interval = setInterval(refreshAllZeData, refreshInterval);
       return () => clearInterval(interval);
     }
   }, [refreshInterval]);
+
+  useEffect(() => {
+    if (refreshEventsInterval) {
+      const intervalEvents = setInterval(refreshEvents, refreshEventsInterval);
+      return () => clearInterval(intervalEvents);
+    }
+  }, [refreshEventsInterval]);
 
   const texts = [
     "Preloading all the things...",
@@ -107,7 +142,7 @@ const Startup = (obj) => {
         </div>
         <div className="verticalDivider" />
         <div className="stroke roundedOpaque" style={{ width: 'unset', padding: '5em' }}>
-            <h1>{texts[Math.floor(Math.random() * texts.length)]}</h1>
+          <h1>{texts[Math.floor(Math.random() * texts.length)]}</h1>
         </div>
       </div>
     )

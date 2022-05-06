@@ -28,6 +28,8 @@ export const SET_ALL_REDEEM_TICKET_EVENTS = "SET_ALL_REDEEM_TICKET_EVENTS";
 export const SET_ALL_ACTIVATE_EVENTS = "SET_ALL_ACTIVATE_EVENTS";
 export const SET_ALL_UNBOND_EVENTS = "SET_ALL_UNBOND_EVENTS";
 export const SET_ALL_STAKE_EVENTS = "SET_ALL_STAKE_EVENTS";
+export const SET_ALL_ROUNDS = "SET_ALL_ROUNDS";
+export const SET_ADD_ROUNDS = "SET_ADD_ROUNDS";
 
 const setQuotes = message => ({
   type: RECEIVE_QUOTES, message
@@ -123,6 +125,14 @@ const setAllUnbondEvents = message => ({
 
 const setAllStakeEvents = message => ({
   type: SET_ALL_STAKE_EVENTS, message
+});
+
+const setAllRounds = message => ({
+  type: SET_ALL_ROUNDS, message
+});
+
+const setAddRound = message => ({
+  type: SET_ADD_ROUNDS, message
 });
 
 export const getQuotes = () => async dispatch => {
@@ -240,11 +250,13 @@ export const getAllDelInfo = () => async dispatch => {
   return dispatch(receiveErrors(data));
 };
 
-export const getAllMonthlyStats = () => async dispatch => {
-  const response = await apiUtil.getAllMonthlyStats();
+export const getAllMonthlyStats = (smartUpdate) => async dispatch => {
+  const response = await apiUtil.getAllMonthlyStats(smartUpdate);
   const data = await response.json();
   if (response.ok) {
-    return dispatch(setAllMonthlyStats(data));
+    if (!data.noop) {
+      return dispatch(setAllMonthlyStats(data));
+    }
   }
   return dispatch(receiveErrors(data));
 };
@@ -267,112 +279,165 @@ export const getAllTotalStakes = () => async dispatch => {
   return dispatch(receiveErrors(data));
 };
 
-export const getAllUpdateEvents = () => async dispatch => {
-  const response = await apiUtil.getAllUpdateEvents();
+export const hasAnyRefresh = async () => {
+  const response = await apiUtil.hasAnyRefresh();
   const data = await response.json();
   if (response.ok) {
-    if (data && data.length){
-      return dispatch(setAllUpdateEvents(data));
+    if (data) {
+      if (data.requiresRefresh) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+  return true;
+};
+
+
+export const getAllUpdateEvents = (smartUpdate) => async dispatch => {
+  const response = await apiUtil.getAllUpdateEvents(smartUpdate);
+  const data = await response.json();
+  if (response.ok) {
+    if (data && data.length) {
+      if (!data.noop) {
+        return dispatch(setAllUpdateEvents(data));
+      }
     }
   }
   return dispatch(receiveErrors(data));
 };
 
-export const getAllRewardEvents = () => async dispatch => {
-  const response = await apiUtil.getAllRewardEvents();
+export const getAllRewardEvents = (smartUpdate) => async dispatch => {
+  const response = await apiUtil.getAllRewardEvents(smartUpdate);
   const data = await response.json();
   if (response.ok) {
-    if (data && data.length){
-      return dispatch(setAllRewardEvents(data));
+    if (data && data.length) {
+      if (!data.noop) {
+        return dispatch(setAllRewardEvents(data));
+      }
     }
   }
   return dispatch(receiveErrors(data));
 };
 
-export const getAllClaimEvents = () => async dispatch => {
-  const response = await apiUtil.getAllClaimEvents();
+export const getAllClaimEvents = (smartUpdate) => async dispatch => {
+  const response = await apiUtil.getAllClaimEvents(smartUpdate);
   const data = await response.json();
   if (response.ok) {
-    if (data && data.length){
-      return dispatch(setAllClaimEvents(data));
+    if (data && data.length) {
+      if (!data.noop) {
+        return dispatch(setAllClaimEvents(data));
+      }
     }
   }
   return dispatch(receiveErrors(data));
 };
 
-export const getAllWithdrawStakeEvents = () => async dispatch => {
-  const response = await apiUtil.getAllWithdrawStakeEvents();
+export const getAllWithdrawStakeEvents = (smartUpdate) => async dispatch => {
+  const response = await apiUtil.getAllWithdrawStakeEvents(smartUpdate);
   const data = await response.json();
   if (response.ok) {
-    if (data && data.length){
-      return dispatch(setAllWithdrawStakeEvents(data));
+    if (data && data.length) {
+      if (!data.noop) {
+        return dispatch(setAllWithdrawStakeEvents(data));
+      }
     }
   }
   return dispatch(receiveErrors(data));
 };
 
-export const getAllWithdrawFeesEvents = () => async dispatch => {
-  const response = await apiUtil.getAllWithdrawFeesEvents();
+export const getAllWithdrawFeesEvents = (smartUpdate) => async dispatch => {
+  const response = await apiUtil.getAllWithdrawFeesEvents(smartUpdate);
   const data = await response.json();
   if (response.ok) {
-    if (data && data.length){
-      return dispatch(setAllWithdrawFeesEvents(data));
+    if (data && data.length) {
+      if (!data.noop) {
+        return dispatch(setAllWithdrawFeesEvents(data));
+      }
     }
   }
   return dispatch(receiveErrors(data));
 };
 
-export const getAllTransferTicketEvents = () => async dispatch => {
-  const response = await apiUtil.getAllTransferTicketEvents();
+export const getAllTransferTicketEvents = (smartUpdate) => async dispatch => {
+  const response = await apiUtil.getAllTransferTicketEvents(smartUpdate);
   const data = await response.json();
   if (response.ok) {
-    if (data && data.length){
-      return dispatch(setAllTransferTicketEvents(data));
+    if (data && data.length) {
+      if (!data.noop) {
+        return dispatch(setAllTransferTicketEvents(data));
+      }
     }
   }
   return dispatch(receiveErrors(data));
 };
 
-export const getAllRedeemTicketEvents = () => async dispatch => {
-  const response = await apiUtil.getAllRedeemTicketEvents();
+export const getAllRedeemTicketEvents = (smartUpdate) => async dispatch => {
+  const response = await apiUtil.getAllRedeemTicketEvents(smartUpdate);
   const data = await response.json();
   if (response.ok) {
-    if (data && data.length){
-      return dispatch(setAllRedeemTicketEvents(data));
+    if (data && data.length) {
+      if (!data.noop) {
+        return dispatch(setAllRedeemTicketEvents(data));
+      }
     }
   }
   return dispatch(receiveErrors(data));
 };
 
-export const getAllActivateEvents = () => async dispatch => {
-  const response = await apiUtil.getAllActivateEvents();
+export const getAllActivateEvents = (smartUpdate) => async dispatch => {
+  const response = await apiUtil.getAllActivateEvents(smartUpdate);
   const data = await response.json();
   if (response.ok) {
-    if (data && data.length){
-      return dispatch(setAllActivateEvents(data));
+    if (data && data.length) {
+      if (!data.noop) {
+        return dispatch(setAllActivateEvents(data));
+      }
     }
   }
   return dispatch(receiveErrors(data));
 };
 
-export const getAllUnbondEvents = () => async dispatch => {
-  const response = await apiUtil.getAllUnbondEvents();
+export const getAllUnbondEvents = (smartUpdate) => async dispatch => {
+  const response = await apiUtil.getAllUnbondEvents(smartUpdate);
   const data = await response.json();
   if (response.ok) {
-    if (data && data.length){
-      return dispatch(setAllUnbondEvents(data));
+    if (data && data.length) {
+      if (!data.noop) {
+        return dispatch(setAllUnbondEvents(data));
+      }
     }
   }
   return dispatch(receiveErrors(data));
 };
 
-export const getAllStakeEvents = () => async dispatch => {
-  const response = await apiUtil.getAllStakeEvents();
+export const getAllStakeEvents = (smartUpdate) => async dispatch => {
+  const response = await apiUtil.getAllStakeEvents(smartUpdate);
   const data = await response.json();
   if (response.ok) {
-    if (data && data.length){
-      return dispatch(setAllStakeEvents(data));
+    if (data && data.length) {
+      if (!data.noop) {
+        return dispatch(setAllStakeEvents(data));
+      }
     }
   }
   return dispatch(receiveErrors(data));
+};
+
+export const getAllRounds = () => async dispatch => {
+  const response = await apiUtil.getAllRounds();
+  const data = await response.json();
+  if (response.ok) {
+    return dispatch(setAllRounds(data));
+  }
+  return dispatch(receiveErrors(data));
+};
+
+export const getRoundAtBlock = (addr) => async dispatch => {
+  const response = await apiUtil.getRoundAtBlock(addr);
+  const data = await response.json();
+  if (response.ok) {
+    return dispatch(setAddRound(data));
+  }
 };

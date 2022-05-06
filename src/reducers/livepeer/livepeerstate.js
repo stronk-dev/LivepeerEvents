@@ -25,7 +25,9 @@ import {
   SET_ALL_REDEEM_TICKET_EVENTS,
   SET_ALL_ACTIVATE_EVENTS,
   SET_ALL_UNBOND_EVENTS,
-  SET_ALL_STAKE_EVENTS
+  SET_ALL_STAKE_EVENTS,
+  SET_ALL_ROUNDS,
+  SET_ADD_ROUNDS
 } from "../../actions/livepeer";
 
 export default (state = {
@@ -46,6 +48,7 @@ export default (state = {
   activateEvents: [],
   unbondEvents: [],
   stakeEvents: [],
+  rounds: []
 }, { type, message }) => {
   Object.freeze(state);
   switch (type) {
@@ -132,6 +135,13 @@ export default (state = {
       return { ...state, unbondEvents: message };
     case SET_ALL_STAKE_EVENTS:
       return { ...state, stakeEvents: message };
+    case SET_ALL_ROUNDS:
+      return { ...state, rounds: message };
+    case SET_ADD_ROUNDS:
+      return {
+        ...state,
+        rounds: [...state.rounds, message]
+      };
     default:
       return { ...state };
   }
