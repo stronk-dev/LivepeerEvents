@@ -49,46 +49,52 @@ const Round = (obj) => {
                 Round {obj.round.number}
               </p>
             </div>
+            <div className="smallVerticalDivider"/>
             {
               obj.round.mintableTokens && obj.round.mintableTokens > 0 ?
-                <div className="row">
-                  <p className="darkText" style={{ overflowWrap: 'break-word' }}>
+                <div className="rowAlignLeft">
+                  <p className="darkText" style={{ overflowWrap: 'break-word', textAlign: 'left' }}>
                     Has {parseFloat(obj.round.mintableTokens).toFixed(2)} mintable tokens
                   </p>
                 </div> : null
             }
+            <div className="smallVerticalDivider"/>
             {
               obj.round.volumeEth && obj.round.volumeUsd && obj.round.volumeEth > 0 && obj.round.volumeUsd > 0 ?
-                <div className="row">
-                  <p className="darkText" style={{ overflowWrap: 'break-word' }}>
+                <div className="rowAlignLeft">
+                  <p className="darkText" style={{ overflowWrap: 'break-word', textAlign: 'left' }}>
                     A volume of {parseFloat(obj.round.volumeEth).toFixed(2)} Eth ({parseFloat(obj.round.volumeUsd).toFixed(2)}$)
                   </p>
                 </div> : null
             }
+            <div className="smallVerticalDivider"/>
             {
               obj.round.totalSupply && obj.round.totalActiveStake && obj.round.totalSupply > 0 && obj.round.totalActiveStake > 0 ?
-                <div className="row">
-                  <p className="darkText" style={{ overflowWrap: 'break-word' }}>
+                <div className="rowAlignLeft">
+                  <p className="darkText" style={{ overflowWrap: 'break-word', textAlign: 'left' }}>
                     A total supply of {parseFloat(obj.round.totalSupply).toFixed(2)} LPT, of which {parseFloat(obj.round.totalActiveStake).toFixed(2)} is staked ({(parseFloat(obj.round.participationRate) * 100).toFixed(2)}%)
                   </p>
                 </div> : null
             }
+            <div className="smallVerticalDivider"/>
             {
               obj.round.newStake && obj.round.newStake > 0 ?
-                <div className="row">
-                  <p className="darkText" style={{ overflowWrap: 'break-word' }}>
+                <div className="rowAlignLeft">
+                  <p className="darkText" style={{ overflowWrap: 'break-word', textAlign: 'left' }}>
                     {parseFloat(obj.round.newStake).toFixed(2)} LPT new stake
                   </p>
                 </div> : null
             }
+            <div className="smallVerticalDivider"/>
             {
               obj.round.movedStake && obj.round.movedStake > 0 ?
-                <div className="row">
-                  <p className="darkText" style={{ overflowWrap: 'break-word' }}>
+                <div className="rowAlignLeft">
+                  <p className="darkText" style={{ overflowWrap: 'break-word', textAlign: 'left' }}>
                     {parseFloat(obj.round.movedStake).toFixed(2)} LPT stake moved around
                   </p>
                 </div> : null
             }
+            <div className="smallVerticalDivider"/>
           </div>
 
         </Popover>

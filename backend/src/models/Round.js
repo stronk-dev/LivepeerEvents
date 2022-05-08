@@ -17,10 +17,6 @@ const RoundSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  lengthBlocks: {
-    type: Number,
-    required: false
-  },
   startBlock: {
     type: Number,
     required: false
