@@ -51,7 +51,7 @@ const Round = (obj) => {
               </p>
             </div>
             {
-              obj.round.mintableTokens ?
+              obj.round.mintableTokens && obj.round.mintableTokens > 0 ?
                 <div className="row">
                   <p className="darkText" style={{ overflowWrap: 'break-word' }}>
                     Has {obj.round.mintableTokens.toFixed(2)} mintable tokens
@@ -59,7 +59,7 @@ const Round = (obj) => {
                 </div> : null
             }
             {
-              obj.round.volumeEth && obj.round.volumeUsd ?
+              obj.round.volumeEth && obj.round.volumeUsd && obj.round.volumeEth > 0 && obj.round.volumeUsd > 0 ?
                 <div className="row">
                   <p className="darkText" style={{ overflowWrap: 'break-word' }}>
                     A volume of {obj.round.volumeEth.toFixed(2)} Eth ({obj.round.volumeUsd.toFixed(2)}$)
@@ -67,7 +67,7 @@ const Round = (obj) => {
                 </div> : null
             }
             {
-              obj.round.totalSupply && obj.round.totalActiveStake ?
+              obj.round.totalSupply && obj.round.totalActiveStake && obj.round.totalSupply > 0 && obj.round.totalActiveStake > 0 ?
                 <div className="row">
                   <p className="darkText" style={{ overflowWrap: 'break-word' }}>
                     A total supply of {obj.round.totalSupply.toFixed(2)} LPT, of which {obj.round.totalActiveStake.toFixed(2)} is staked ({(obj.round.participationRate * 100).toFixed(2)}%)
@@ -75,7 +75,7 @@ const Round = (obj) => {
                 </div> : null
             }
             {
-              obj.round.newStake ?
+              obj.round.newStake && obj.round.newStake > 0 ?
                 <div className="row">
                   <p className="darkText" style={{ overflowWrap: 'break-word' }}>
                     {obj.round.newStake.toFixed(2)} LPT new stake
@@ -83,7 +83,7 @@ const Round = (obj) => {
                 </div> : null
             }
             {
-              obj.round.movedStake ?
+              obj.round.movedStake && obj.round.movedStake > 0 ?
                 <div className="row">
                   <p className="darkText" style={{ overflowWrap: 'break-word' }}>
                     {obj.round.movedStake.toFixed(2)} LPT stake moved around
