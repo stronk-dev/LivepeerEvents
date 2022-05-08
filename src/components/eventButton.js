@@ -172,9 +172,11 @@ const EventButton = (obj) => {
     }
   }
 
+  
   let blockNumber;
   if (obj.isFirstOfBlock) {
-    blockNumber = <Block block={obj.isFirstOfBlock} time={obj.time} url={"https://arbiscan.io/tx/" + obj.eventObj.transactionHash} />
+    console.log(obj);
+    blockNumber = <Block currentRound={obj.currentRound} block={obj.isFirstOfBlock} time={obj.time} url={"https://arbiscan.io/tx/" + obj.eventObj.transactionHash} />
   }
 
   return (

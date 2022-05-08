@@ -7,6 +7,14 @@ const Block = (obj) => {
   const thisLocalDate = dateObj.toLocaleString();
   const thisOffset = (-dateObj.getTimezoneOffset() / 60);
 
+  let currentRoundString;
+  if (obj.currentRound) {
+    currentRoundString =
+      <p style={{ overflowWrap: 'break-word' }}>
+        Round {obj.currentRound}
+      </p>
+  }
+
   return (
     <div className="rowAlignLeft" style={{ margin: 0, marginTop: '1em', width: '100%' }}>
       <a className="selectOrch" style={{ cursor: 'alias', margin: 0 }} target="_blank" rel="noopener noreferrer" href={obj.url}>
@@ -15,6 +23,7 @@ const Block = (obj) => {
       <a className="selectOrch" style={{ cursor: 'alias', margin: 0 }} target="_blank" rel="noopener noreferrer" href={"https://arbiscan.io/block/" + obj.block}>
         <h3 style={{ padding: '0.2em', cursor: 'alias' }}>🔗</h3>
       </a>
+      {currentRoundString}
       <span className="rowAlignRight darkText mobileSmallerFont" style={{ margin: 0 }}>
         <p style={{ overflowWrap: 'break-word' }}>
           📅&nbsp;{thisLocalDate}

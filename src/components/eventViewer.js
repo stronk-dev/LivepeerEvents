@@ -73,6 +73,7 @@ const EventViewer = (obj) => {
   let transferTicketEventsIdx = obj.transferTicketEvents.length - 1;
   let redeemTicketEventsIdx = obj.redeemTicketEvents.length - 1;
   let roundsIdx = obj.rounds.length - 1;
+  let currentRound;
 
   if (!filterActivated) {
     filtered += activateEventsIdx + 1;
@@ -222,7 +223,7 @@ const EventViewer = (obj) => {
       if (thisObj.blockTime > latestTime) {
         latestTime = thisObj.blockTime;
         thisEvent = thisObj;
-        latestType = "round"
+        latestType = "round";
       }
     }
 
@@ -455,6 +456,7 @@ const EventViewer = (obj) => {
         eventObj={thisEvent}
         type={latestType}
         isFirstOfBlock={prevBlock}
+        currentRound={roundsIdx >= 0 ? obj.rounds[roundsIdx].number : null}
         time={thisEvent.blockTime}
         setSearchTerm={obj.setSearchTerm}
         monthlyStats={obj.monthlyStats}
