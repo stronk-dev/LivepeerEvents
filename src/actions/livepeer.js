@@ -29,7 +29,7 @@ export const SET_ALL_ACTIVATE_EVENTS = "SET_ALL_ACTIVATE_EVENTS";
 export const SET_ALL_UNBOND_EVENTS = "SET_ALL_UNBOND_EVENTS";
 export const SET_ALL_STAKE_EVENTS = "SET_ALL_STAKE_EVENTS";
 export const SET_ALL_ROUNDS = "SET_ALL_ROUNDS";
-export const SET_ADD_ROUNDS = "SET_ADD_ROUNDS";
+export const SET_ROUND = "SET_ROUND";
 
 const setQuotes = message => ({
   type: RECEIVE_QUOTES, message
@@ -131,8 +131,8 @@ const setAllRounds = message => ({
   type: SET_ALL_ROUNDS, message
 });
 
-const setAddRound = message => ({
-  type: SET_ADD_ROUNDS, message
+const populateRound = message => ({
+  type: SET_ROUND, message
 });
 
 export const getQuotes = () => async dispatch => {
@@ -434,10 +434,10 @@ export const getAllRounds = () => async dispatch => {
   return dispatch(receiveErrors(data));
 };
 
-export const getRoundAtBlock = (addr) => async dispatch => {
-  const response = await apiUtil.getRoundAtBlock(addr);
+export const getRoundInfo = (round) => async dispatch => {
+  const response = await apiUtil.getRoundInfo(round);
   const data = await response.json();
   if (response.ok) {
-    return dispatch(setAddRound(data));
+    return dispatch(populateRound(data));
   }
 };

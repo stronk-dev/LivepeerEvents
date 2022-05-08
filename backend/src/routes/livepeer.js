@@ -79,6 +79,10 @@ let TicketBrokerTargetJson;
 let TicketBrokerTargetAbi;
 let TicketBrokerTargetAddr;
 let ticketBrokerContract;
+let RoundsManagerTargetJson;
+let RoundsManagerTargetAbi;
+let RoundsManagerTargetAddr;
+let roundsManagerContract;
 if (!CONF_SIMPLE_MODE) {
   console.log("Loading contracts for smart contract events");
   // Listen for events on the bonding manager contract
@@ -91,6 +95,11 @@ if (!CONF_SIMPLE_MODE) {
   TicketBrokerTargetAbi = JSON.parse(TicketBrokerTargetJson);
   TicketBrokerTargetAddr = "0xa8bB618B1520E284046F3dFc448851A1Ff26e41B";
   ticketBrokerContract = new web3layer2.eth.Contract(TicketBrokerTargetAbi.abi, TicketBrokerTargetAddr);
+  // Listen for events on the rounds manager contract
+  RoundsManagerTargetJson = fs.readFileSync('src/abi/RoundsManagerTarget.json');
+  RoundsManagerTargetAbi = JSON.parse(RoundsManagerTargetJson);
+  RoundsManagerTargetAddr = "0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f";
+  roundsManagerContract = new web3layer2.eth.Contract(RoundsManagerTargetAbi.abi, RoundsManagerTargetAddr);
 }
 
 /*
@@ -155,11 +164,14 @@ let startedInitSync = false;
 let isSyncing = false;
 let isEventSyncing = false;
 let isTicketSyncing = false;
+let isRoundSyncing = false;
 
 let eventsCache = [];
 let latestBlockInChain = 0;
+let latestL1Block = 0;
 let lastBlockEvents = 0;
 let lastBlockTickets = 0;
+let lastBlockRounds = 0;
 let ticketsCache = [];
 
 let alreadyHasAnyRefresh = {};
@@ -1439,10 +1451,10 @@ Mutates the Event in the database to contain the round number
 
 let roundCache = [];
 
-const getRoundInfo = async function (blockNumber) {
+const getRoundInfo = async function (roundNumber) {
   // Get round info from gql
   const roundQuery = gql`{
-    rounds(where: {startBlock_lte: "${blockNumber}"}) {
+    rounds(where: {id: "${roundNumber}"}) {
       id
       length
       startBlock
@@ -1460,56 +1472,97 @@ const getRoundInfo = async function (blockNumber) {
   `;
   const roundObj = await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", roundQuery);
   // Not found
-  if (!roundObj) {
-    console.log("No round found at block " + blockNumber);
+  if (!roundObj || !roundObj.rounds || !roundObj.rounds.length) {
+    console.log("No round found with number " + roundNumber);
     return {};
   }
-  console.log("This functions is not implemented yet. Logging element to console...")
-  console.log(roundObj);
-  // TODO filter out down to 1 round
-  return roundObj;
+  const thisRoundObj = roundObj.rounds[0];
   // Update cache
-  roundCache.push(roundObj);
-  // Only save if the endBlock is elapsed
-  if (latestBlockInChain > roundObj.endBlock) {
-    const data = {
-      number: roundObj.number,
+  var wasCached = false;
+  for (var idx = 0; idx < roundCache.length; idx++) {
+    if (roundCache[idx].number == roundNumber){
+      wasCached = true;
+      roundCache[idx].lengthBlocks = thisRoundObj.lengthBlocks;
+      roundCache[idx].startBlock = thisRoundObj.startBlock;
+      roundCache[idx].endBlock = thisRoundObj.endBlock;
+      roundCache[idx].mintableTokens = thisRoundObj.mintableTokens;
+      roundCache[idx].volumeEth = thisRoundObj.volumeETH;
+      roundCache[idx].volumeUsd = thisRoundObj.volumeUSD;
+      roundCache[idx].totalActiveStake = thisRoundObj.totalActiveStake;
+      roundCache[idx].totalSupply = thisRoundObj.totalSupply;
+      roundCache[idx].participationRate = thisRoundObj.participationRate;
+      roundCache[idx].movedStake = thisRoundObj.movedStake;
+      roundCache[idx].newStake = thisRoundObj.newStake;
+    }
+  }
+  // FindAndUpdate
+  if (!CONF_DISABLE_DB) {
+    // Update DB entry
+    const doc = await MonthlyStat.findOneAndUpdate({
+      number: roundNumber
+    }, {
       lengthBlocks: roundObj.lengthBlocks,
       startBlock: roundObj.startBlock,
       endBlock: roundObj.endBlock,
       mintableTokens: roundObj.mintableTokens,
-      volumeEth: roundObj.volumeEth,
-      volumeUsd: roundObj.volumeUsd,
+      volumeEth: roundObj.volumeETH,
+      volumeUsd: roundObj.volumeUSD,
       totalActiveStake: roundObj.totalActiveStake,
       totalSupply: roundObj.totalSupply,
       participationRate: roundObj.participationRate,
       movedStake: roundObj.movedStake,
       newStake: roundObj.newStake
-    }
-    if (!CONF_DISABLE_DB) {
-      // TODO only create if nonexistent (find and update with upsert or something)
-      const dbObj = new Round(data);
-      await dbObj.save();
+    }, {
+      new: true
+    });
+    if (!wasCached){
+      roundCache.push({
+        number: doc.number,
+        transactionHash: doc.transactionHash,
+        blockNumber: doc.blockNumber,
+        lengthBlocks: doc.lengthBlocks,
+        startBlock: doc.startBlock,
+        endBlock: doc.endBlock,
+        mintableTokens: doc.mintableTokens,
+        volumeETH: doc.volumeETH,
+        volumeUSD: doc.volumeUSD,
+        totalActiveStake: doc.totalActiveStake,
+        totalSupply: doc.totalSupply,
+        participationRate: doc.participationRate,
+        movedStake: doc.movedStake,
+        newStake: doc.newStake
+      });
     }
   }
-
 }
 
-apiRouter.post("/getRoundAtBlock", async (req, res) => {
+apiRouter.post("/getRoundInfo", async (req, res) => {
   try {
-    const { blockNumber } = req.body;
-    if (blockNumber) {
-      console.log("Getting round info for block " + blockNumber);
+    const now = new Date().getTime();
+    const { roundNumber } = req.body;
+    if (roundNumber) {
+      console.log("Getting round info for round " + roundNumber);
       // See if it is cached
       for (const thisRound of roundCache) {
-        if (thisRound.startBlock <= blockNumber && thisRound.endBlock >= blockNumber) {
-          res.send(thisRound);
-          return;
+        if (thisRound.round == roundNumber) {
+          // Check if it contains one of the detailed fields
+          if (thisRound.endBlock) {
+            // Check timeout if the round has not elapsed
+            if (thisRound.endBlock >= latestL1Block
+              && (now - thisRound.blockTime) > 1800000) {
+              console.log('Round should update round details');
+              break;
+            }
+            res.send(thisRound);
+            return;
+          } else {
+            console.log('Round should init round details');
+            break;
+          }
         }
       }
       // Get block info from thegraph
-      console.log("Getting round info for block " + blockNumber);
-      const thisRoundInfo = await getRoundInfo(blockNumber);
+      const thisRoundInfo = await getRoundInfo(roundNumber);
       res.send(thisRoundInfo);
       return;
     }
@@ -1539,7 +1592,7 @@ let hasError = false;
 
 // Syncs events database
 const syncEvents = function (toBlock) {
-  console.log("Starting sync process for Bonding Manager events to block " + toBlock);
+  console.log("Starting sync process for Bonding Manager events for blocks " + lastBlockEvents + "->" + toBlock);
   isEventSyncing = true;
   let lastTxSynced = 0;
   // Then do a sync from last found until latest known
@@ -1601,7 +1654,7 @@ const syncEvents = function (toBlock) {
 }
 // Syncs tickets database
 const syncTickets = function (toBlock) {
-  console.log("Starting sync process for Ticket Broker events to block " + toBlock);
+  console.log("Starting sync process for Ticket Broker events for blocks " + lastBlockTickets + "->" + toBlock);
   isTicketSyncing = true;
   // Then do a sync from last found until latest known
   ticketBrokerContract.getPastEvents("allEvents", { fromBlock: lastBlockTickets + 1, toBlock: toBlock }, async (error, events) => {
@@ -1648,6 +1701,58 @@ const syncTickets = function (toBlock) {
       return;
     }
     isTicketSyncing = false;
+  });
+}
+// Syncs rounds database
+const syncRounds = function (toBlock) {
+  console.log("Starting sync process for Rounds Manager events for blocks " + lastBlockRounds + "->" + toBlock);
+  isRoundSyncing = true;
+  // Then do a sync from last found until latest known
+  roundsManagerContract.getPastEvents("allEvents", { fromBlock: lastBlockRounds + 1, toBlock: toBlock }, async (error, events) => {
+    try {
+      if (error) {
+        throw error
+      }
+      let size = events.length;
+      console.log("Parsing " + size + " rounds");
+      if (!size) {
+        if (toBlock == 'latest') {
+          lastBlockRounds = latestBlockInChain;
+        } else {
+          lastBlockRounds = toBlock;
+        }
+      }
+      for (const event of events) {
+        if (event.blockNumber > lastBlockRounds) {
+          lastBlockRounds = event.blockNumber;
+        }
+        // Only parse initRound events
+        if (event.event != 'NewRound') {
+          console.log('Skipping Round Event of type ' + event.event);
+          continue;
+        }
+        const thisBlock = await getBlock(event.blockNumber);
+        const eventObj = {
+          number: event.returnValues.round,
+          transactionHash: event.transactionHash,
+          blockNumber: thisBlock.number,
+          blockTime: thisBlock.timestamp
+        }
+        // Cache & store
+        if (!CONF_DISABLE_DB) {
+          const dbObj = new Round(eventObj);
+          await dbObj.save();
+        }
+        roundCache.push(eventObj);
+      }
+    }
+    catch (err) {
+      console.log("FATAL ERROR: ", err);
+      hasError = true;
+      isRoundSyncing = false;
+      return;
+    }
+    isRoundSyncing = false;
   });
 }
 
@@ -1863,6 +1968,9 @@ const initSync = async function () {
   // Get all round info
   roundCache = await Round.find({}, {
     number: 1,
+    transactionHash: 1,
+    blockNumber: 1,
+    blockTime: 1,
     lengthBlocks: 1,
     startBlock: 1,
     endBlock: 1,
@@ -1876,6 +1984,15 @@ const initSync = async function () {
     newStake: 1,
     _id: 0
   })
+  console.log("Retrieved existing rounds of size " + roundCache.length);
+  // Then determine latest block number parsed based on collection
+  for (var idx = 0; idx < roundCache.length; idx++) {
+    const thisRound = roundCache[idx];
+    if (thisRound.blockNumber > lastBlockRounds) {
+      lastBlockRounds = thisRound.blockNumber;
+    }
+  }
+  console.log("Latest Round block parsed is " + lastBlockRounds);
 }
 
 let cycle = 0;
@@ -1889,8 +2006,13 @@ const handleSync = async function () {
     cycle++;
     console.log('Starting new sync cycle #' + cycle);
     isSyncing = true;
-    // Get latest block in chain
-    const latestBlock = await web3layer2.eth.getBlockNumber();
+    // Get latest blocks in chain
+    var latestBlock = await web3layer1.eth.getBlockNumber();
+    if (latestBlock > latestL1Block) {
+      latestL1Block = latestBlock;
+      console.log("Latest L1 Eth block changed to " + latestL1Block);
+    }
+    latestBlock = await web3layer2.eth.getBlockNumber();
     if (latestBlock > latestBlockInChain) {
       latestBlockInChain = latestBlock;
       console.log("Latest L2 Eth block changed to " + latestBlockInChain);
@@ -1904,6 +2026,7 @@ const handleSync = async function () {
     }
     console.log("Needs to sync " + (latestBlockInChain - lastBlockEvents) + " blocks for Events sync");
     console.log("Needs to sync " + (latestBlockInChain - lastBlockTickets) + " blocks for Tickets sync");
+    console.log("Needs to sync " + (latestBlockInChain - lastBlockRounds) + " blocks for Rounds sync");
     // Batch requests when sync is large, mark if we are going to reach latestBlockInChain in this round 
     let getFinalTickets = false;
     let toTickets = 'latest';
@@ -1919,11 +2042,20 @@ const handleSync = async function () {
     } else {
       getFinalEvents = true;
     }
+    let getFinalRounds = false;
+    let toRounds = 'latest';
+    if (latestBlock - lastBlockRounds > 1000000) {
+      toRounds = lastBlockRounds + 1000000;
+    } else {
+      getFinalRounds = true;
+    }
     // Start initial sync for this sync round
     syncTickets(toTickets);
     syncEvents(toEvents);
+    syncRounds(toRounds);
     // Then loop until we have reached the last known block
-    while (isEventSyncing || isTicketSyncing || !getFinalTickets || !getFinalEvents) {
+    while (isEventSyncing || isTicketSyncing || isRoundSyncing
+      || !getFinalTickets || !getFinalEvents || !getFinalRounds) {
       await sleep(500);
       if (hasError) {
         throw ("Error while syncing");
@@ -1952,6 +2084,18 @@ const handleSync = async function () {
         }
         syncTickets(toTickets);
       }
+      if (isRoundSyncing) {
+        console.log("Parsed " + lastBlockRounds + " out of " + latestBlockInChain + " blocks for Round sync");
+      } else if (!getFinalRounds) {
+        // Start next batch for tickets
+        toRounds = 'latest';
+        if (latestBlock - lastBlockRounds > 1000000) {
+          toRounds = lastBlockRounds + 1000000;
+        } else {
+          getFinalRounds = true;
+        }
+        syncRounds(toRounds);
+      }
     }
     isSyncing = false;
     setTimeout(() => {
@@ -1965,6 +2109,7 @@ const handleSync = async function () {
     console.log("latestBlockInChain " + latestBlockInChain);
     console.log("lastBlockEvents " + lastBlockEvents);
     console.log("lastBlockTickets " + lastBlockTickets);
+    console.log("lastBlockRounds " + lastBlockRounds);
     isSyncing = false;
     setTimeout(() => {
       handleSync();
@@ -2305,7 +2450,7 @@ const mutateDynamicStatsFromDB = async function (orchestratorObj) {
     latestCommission: 1,
     latestTotalStake: 1
   });
-  if (!doc){
+  if (!doc) {
     return;
   }
   let oldFeeCommission = -1;

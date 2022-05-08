@@ -273,10 +273,10 @@ export const getAllRounds = () => (
   })
 );
 
-export const getRoundAtBlock = (blockNumber) => (
-  fetch("api/livepeer/getRoundAtBlock", {
+export const getRoundInfo = (roundNumber) => (
+  fetch("api/livepeer/getRoundInfo", {
     method: "POST",
-    body: JSON.stringify({ blockNumber }),
+    body: JSON.stringify({ roundNumber }),
     headers: {
       'Content-Type': 'application/json'
     }

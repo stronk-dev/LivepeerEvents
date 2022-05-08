@@ -1,0 +1,25 @@
+{
+  address: '0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f',
+  blockHash: '0x733753ab3a1ecf3edbbebc075f85827b259295b3a7443d45c633b1b6c3672eef',
+  blockNumber: 8761883,
+  logIndex: 1,
+  removed: false,
+  transactionHash: '0xd8609ae0a52e0bb8a1eda28634e5a804607eb76a156e9e30682dd1ff748a107a',
+  transactionIndex: 0,
+  id: 'log_cbc32efd',
+  returnValues: Result {
+    '0': '2513',
+    '1': '0x2f180b9a2c759abc9c77372f2a339b16191fe782304318e818b0b3ed0706a216',
+    round: '2513',
+    blockHash: '0x2f180b9a2c759abc9c77372f2a339b16191fe782304318e818b0b3ed0706a216'
+  },
+  event: 'NewRound',
+  signature: '0x22f2fc17c5daf07db2379b3a03a8ef20a183f761097a58fce219c8a14619e786',
+  raw: {
+    data: '0x2f180b9a2c759abc9c77372f2a339b16191fe782304318e818b0b3ed0706a216',
+    topics: [
+      '0x22f2fc17c5daf07db2379b3a03a8ef20a183f761097a58fce219c8a14619e786',
+      '0x00000000000000000000000000000000000000000000000000000000000009d1'
+    ]
+  }
+}

@@ -27,7 +27,7 @@ import {
   SET_ALL_UNBOND_EVENTS,
   SET_ALL_STAKE_EVENTS,
   SET_ALL_ROUNDS,
-  SET_ADD_ROUNDS
+  SET_ROUND
 } from "../../actions/livepeer";
 
 export default (state = {
@@ -137,11 +137,23 @@ export default (state = {
       return { ...state, stakeEvents: message };
     case SET_ALL_ROUNDS:
       return { ...state, rounds: message };
-    case SET_ADD_ROUNDS:
-      return {
-        ...state,
-        rounds: [...state.rounds, message]
-      };
+    case SET_ROUND:
+      // Check to see if it is already cached
+      if (state.rounds) {
+        return {
+          ...state,
+          contents: state.rounds.map(
+            (content) => {
+              if (content.number == message.number) {
+                return message;
+              } else {
+                return content;
+              }
+            }
+          )
+        }
+      }
+      return { ...state };
     default:
       return { ...state };
   }

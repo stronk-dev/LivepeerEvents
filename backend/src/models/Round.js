@@ -5,51 +5,63 @@ const RoundSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  lengthBlocks: {
+  transactionHash: {
+    type: String,
+    required: true
+  },
+  blockNumber: {
     type: Number,
     required: true
+  },
+  blockTime: {
+    type: Number,
+    required: true
+  },
+  lengthBlocks: {
+    type: Number,
+    required: false
   },
   startBlock: {
     type: Number,
-    required: true
+    required: false
   },
   endBlock: {
     type: Number,
-    required: true
+    required: false
   },
   mintableTokens: {
     type: Number,
-    required: true
+    required: false
   },
   volumeEth: {
     type: Number,
-    required: true
+    required: false
   },
   volumeUsd: {
     type: Number,
-    required: true
+    required: false
   },
   totalActiveStake: {
     type: Number,
-    required: true
+    required: false
   },
   totalSupply: {
     type: Number,
-    required: true
+    required: false
   },
   participationRate: {
     type: Number,
-    required: true
+    required: false
   },
   movedStake: {
     type: Number,
-    required: true
+    required: false
   },
   newStake: {
     type: Number,
-    required: true
+    required: false
   }
 }, { timestamps: false });
 
-const Round = mongoose.model('RoundSchema', RoundSchema);
+const Round = mongoose.model('Round', RoundSchema);
 export default Round;

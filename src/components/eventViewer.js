@@ -4,6 +4,7 @@ import ScrollContainer from 'react-indiana-drag-scroll';
 import { Pagination, Title } from "@mantine/core";
 import Filter from './filterComponent';
 import { Dialog, Stack, Button, Group } from '@mantine/core';
+import Round from "./RoundViewer";
 
 const thresholdStaking = 0.001;
 const thresholdFees = 0.00009;
@@ -71,6 +72,7 @@ const EventViewer = (obj) => {
   let unbondEventsIdx = obj.unbondEvents.length - 1;
   let transferTicketEventsIdx = obj.transferTicketEvents.length - 1;
   let redeemTicketEventsIdx = obj.redeemTicketEvents.length - 1;
+  let roundsIdx = obj.rounds.length - 1;
 
   if (!filterActivated) {
     filtered += activateEventsIdx + 1;
@@ -119,7 +121,8 @@ const EventViewer = (obj) => {
     redeemTicketEventsIdx >= 0 ||
     activateEventsIdx >= 0 ||
     unbondEventsIdx >= 0 ||
-    stakeEventsIdx >= 0) {
+    stakeEventsIdx >= 0 ||
+    roundsIdx >= 0) {
 
     let latestTime = 0;
     let thisEvent;
@@ -212,6 +215,14 @@ const EventViewer = (obj) => {
         latestTime = thisObj.blockTime;
         thisEvent = thisObj;
         latestType = "redeemTicket"
+      }
+    }
+    if (roundsIdx >= 0) {
+      const thisObj = obj.rounds[roundsIdx];
+      if (thisObj.blockTime > latestTime) {
+        latestTime = thisObj.blockTime;
+        thisEvent = thisObj;
+        latestType = "round"
       }
     }
 
@@ -412,6 +423,15 @@ const EventViewer = (obj) => {
           continue;
         }
       }
+    } else if (latestType == "round") {
+      roundsIdx--;
+      eventList.push(<Round
+        key={thisEvent.transactionHash + unfiltered + roundsIdx}
+        seed={thisEvent.transactionHash + unfiltered + roundsIdx}
+        round={thisEvent}
+        time={thisEvent.blockTime}
+      />);
+      continue;
     } else {
       console.log("bork");
     }

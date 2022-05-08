@@ -10,7 +10,7 @@ import {
   getAllClaimEvents, getAllWithdrawStakeEvents, getAllWithdrawFeesEvents,
   getAllTransferTicketEvents, getAllRedeemTicketEvents, getAllActivateEvents,
   getAllUnbondEvents, getAllStakeEvents, getAllCommissions, getAllTotalStakes,
-  hasAnyRefresh
+  hasAnyRefresh, getAllRounds
 } from "../actions/livepeer";
 import { login } from "../actions/session";
 
@@ -91,6 +91,8 @@ const Startup = (obj) => {
       dispatch(getAllActivateEvents(false));
       dispatch(getAllUnbondEvents(false));
       dispatch(getAllStakeEvents(false));
+      // TODO make it part of the hasAnyUpdate check
+      dispatch(getAllRounds());
     });
   }
 
