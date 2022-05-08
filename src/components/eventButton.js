@@ -175,7 +175,6 @@ const EventButton = (obj) => {
   
   let blockNumber;
   if (obj.isFirstOfBlock) {
-    console.log(obj);
     blockNumber = <Block currentRound={obj.currentRound} block={obj.isFirstOfBlock} time={obj.time} url={"https://arbiscan.io/tx/" + obj.eventObj.transactionHash} />
   }
 
