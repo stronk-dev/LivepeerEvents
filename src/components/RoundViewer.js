@@ -4,7 +4,6 @@ import {
 } from "../actions/livepeer";
 import { useDispatch, useSelector } from 'react-redux';
 import { Popover } from '@mantine/core';
-import { getOrchestratorByDelegator } from "../util/livepeer";
 
 const Round = (obj) => {
   const [opened, setOpened] = useState(false);
@@ -54,7 +53,7 @@ const Round = (obj) => {
               obj.round.mintableTokens && obj.round.mintableTokens > 0 ?
                 <div className="row">
                   <p className="darkText" style={{ overflowWrap: 'break-word' }}>
-                    Has {obj.round.mintableTokens.toFixed(2)} mintable tokens
+                    Has {parseFloat(obj.round.mintableTokens).toFixed(2)} mintable tokens
                   </p>
                 </div> : null
             }
@@ -62,7 +61,7 @@ const Round = (obj) => {
               obj.round.volumeEth && obj.round.volumeUsd && obj.round.volumeEth > 0 && obj.round.volumeUsd > 0 ?
                 <div className="row">
                   <p className="darkText" style={{ overflowWrap: 'break-word' }}>
-                    A volume of {obj.round.volumeEth.toFixed(2)} Eth ({obj.round.volumeUsd.toFixed(2)}$)
+                    A volume of {parseFloat(obj.round.volumeEth).toFixed(2)} Eth ({parseFloat(obj.round.volumeUsd).toFixed(2)}$)
                   </p>
                 </div> : null
             }
@@ -70,7 +69,7 @@ const Round = (obj) => {
               obj.round.totalSupply && obj.round.totalActiveStake && obj.round.totalSupply > 0 && obj.round.totalActiveStake > 0 ?
                 <div className="row">
                   <p className="darkText" style={{ overflowWrap: 'break-word' }}>
-                    A total supply of {obj.round.totalSupply.toFixed(2)} LPT, of which {obj.round.totalActiveStake.toFixed(2)} is staked ({(obj.round.participationRate * 100).toFixed(2)}%)
+                    A total supply of {parseFloat(obj.round.totalSupply).toFixed(2)} LPT, of which {parseFloat(obj.round.totalActiveStake).toFixed(2)} is staked ({(parseFloat(obj.round.participationRate) * 100).toFixed(2)}%)
                   </p>
                 </div> : null
             }
@@ -78,7 +77,7 @@ const Round = (obj) => {
               obj.round.newStake && obj.round.newStake > 0 ?
                 <div className="row">
                   <p className="darkText" style={{ overflowWrap: 'break-word' }}>
-                    {obj.round.newStake.toFixed(2)} LPT new stake
+                    {parseFloat(obj.round.newStake).toFixed(2)} LPT new stake
                   </p>
                 </div> : null
             }
@@ -86,7 +85,7 @@ const Round = (obj) => {
               obj.round.movedStake && obj.round.movedStake > 0 ?
                 <div className="row">
                   <p className="darkText" style={{ overflowWrap: 'break-word' }}>
-                    {obj.round.movedStake.toFixed(2)} LPT stake moved around
+                    {parseFloat(obj.round.movedStake).toFixed(2)} LPT stake moved around
                   </p>
                 </div> : null
             }

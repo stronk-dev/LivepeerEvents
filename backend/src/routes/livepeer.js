@@ -1482,7 +1482,6 @@ const getRoundInfo = async function (roundNumber) {
   for (var idx = 0; idx < roundCache.length; idx++) {
     if (roundCache[idx].number == roundNumber){
       wasCached = true;
-      roundCache[idx].lengthBlocks = thisRoundObj.lengthBlocks;
       roundCache[idx].startBlock = thisRoundObj.startBlock;
       roundCache[idx].endBlock = thisRoundObj.endBlock;
       roundCache[idx].mintableTokens = thisRoundObj.mintableTokens;
@@ -1498,20 +1497,19 @@ const getRoundInfo = async function (roundNumber) {
   // FindAndUpdate
   if (!CONF_DISABLE_DB) {
     // Update DB entry
-    const doc = await MonthlyStat.findOneAndUpdate({
+    const doc = await Round.findOneAndUpdate({
       number: roundNumber
     }, {
-      lengthBlocks: roundObj.lengthBlocks,
-      startBlock: roundObj.startBlock,
-      endBlock: roundObj.endBlock,
-      mintableTokens: roundObj.mintableTokens,
-      volumeEth: roundObj.volumeETH,
-      volumeUsd: roundObj.volumeUSD,
-      totalActiveStake: roundObj.totalActiveStake,
-      totalSupply: roundObj.totalSupply,
-      participationRate: roundObj.participationRate,
-      movedStake: roundObj.movedStake,
-      newStake: roundObj.newStake
+      startBlock: thisRoundObj.startBlock,
+      endBlock: thisRoundObj.endBlock,
+      mintableTokens: thisRoundObj.mintableTokens,
+      volumeEth: thisRoundObj.volumeETH,
+      volumeUsd: thisRoundObj.volumeUSD,
+      totalActiveStake: thisRoundObj.totalActiveStake,
+      totalSupply: thisRoundObj.totalSupply,
+      participationRate: thisRoundObj.participationRate,
+      movedStake: thisRoundObj.movedStake,
+      newStake: thisRoundObj.newStake
     }, {
       new: true
     });
@@ -1520,7 +1518,6 @@ const getRoundInfo = async function (roundNumber) {
         number: doc.number,
         transactionHash: doc.transactionHash,
         blockNumber: doc.blockNumber,
-        lengthBlocks: doc.lengthBlocks,
         startBlock: doc.startBlock,
         endBlock: doc.endBlock,
         mintableTokens: doc.mintableTokens,
@@ -1533,6 +1530,21 @@ const getRoundInfo = async function (roundNumber) {
         newStake: doc.newStake
       });
     }
+    return ({
+        number: doc.number,
+        transactionHash: doc.transactionHash,
+        blockNumber: doc.blockNumber,
+        startBlock: doc.startBlock,
+        endBlock: doc.endBlock,
+        mintableTokens: doc.mintableTokens,
+        volumeETH: doc.volumeETH,
+        volumeUSD: doc.volumeUSD,
+        totalActiveStake: doc.totalActiveStake,
+        totalSupply: doc.totalSupply,
+        participationRate: doc.participationRate,
+        movedStake: doc.movedStake,
+        newStake: doc.newStake
+    });
   }
 }
 
