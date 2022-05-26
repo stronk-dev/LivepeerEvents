@@ -108,10 +108,10 @@ const Stats = (obj) => {
       summary += data.winningTicketsReceived.length + " orchestrators earned " + data.winningTicketsReceivedSum.toFixed(3) + " Eth in transcoding fees \r\n";
     }
     summary += luckyCount + " of them received more than 0.2 Eth \r\n";
-    summary += "Top 10 earners for this month are: \r\n";
+    summary += "Top 25 earners for this month are: \r\n";
 
     // Find highest earner
-    const maxPrint = 10;
+    const maxPrint = 25;
     let currentPrinted = 0;
     while (currentPrinted < maxPrint && winnerList.length) {
       let ticketIdx2 = winnerList.length - 1;
@@ -156,7 +156,7 @@ const Stats = (obj) => {
     }
 
     if (stakeList.length) {
-      summary += "\r\nThe percentages are their share of the total fees for that month and their latest known stake compared to the stake of all orchestrators who won a ticket in that month\r\n";
+      summary += "\r\n(The percentage of stake only includes orchestrators who won at least 1 ticket this month)\r\n";
     }
 
     copyLink(summary);
