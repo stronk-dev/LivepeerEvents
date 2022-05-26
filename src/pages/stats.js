@@ -107,11 +107,11 @@ const Stats = (obj) => {
     if (data.winningTicketsReceived.length && data.winningTicketsReceivedSum) {
       summary += data.winningTicketsReceived.length + " orchestrators earned " + data.winningTicketsReceivedSum.toFixed(3) + " Eth in transcoding fees \r\n";
     }
-    summary += luckyCount + " of them received more than 0.2 Eth\r\n";
-    summary += "Winning tickets sent out this month:\r\n";
+    summary += luckyCount + " of them received more than 0.2 Eth \r\n";
+    summary += "Top 25 earning orchestrators for this month are: \r\n";
 
     // Find highest earner
-    const maxPrint = 100;
+    const maxPrint = 25;
     let currentPrinted = 0;
     while (currentPrinted < maxPrint && winnerList.length) {
       let ticketIdx2 = winnerList.length - 1;
