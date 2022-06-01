@@ -74,7 +74,7 @@ const Stats = (obj) => {
       summary += "📉 " + data.unbondCount + " delegators unbonded " + data.unbondStakeSum.toLocaleString({ maximumFractionDigits: 1 }) + " LPT \r\n";
     }
     if (data.withdrawStakeCount) {
-      summary += "💸 " + data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 1 }) + " LPT worth of stake were withdrawn to the accounts of delegators \r\n";
+      summary += "💸 " + data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 1 }) + " LPT worth of stake was withdrawn to the accounts of delegators \r\n";
     }
     if (data.withdrawFeesCount) {
       summary += "💸 " + data.withdrawFeesAmountSum.toLocaleString({ maximumFractionDigits: 3 }) + " ETH worth of transcoding fees were withdrawn to the accounts of delegators \r\n";
@@ -156,7 +156,7 @@ const Stats = (obj) => {
     }
 
     if (stakeList.length) {
-      summary += "\r\nThe percentage of stake excludes non-transcoding orchestrators)\r\n";
+      summary += "\r\n(The percentage of stake excludes non-transcoding orchestrators)\r\n";
     }
 
     copyLink(summary);

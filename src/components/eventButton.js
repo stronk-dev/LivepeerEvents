@@ -140,7 +140,7 @@ const EventButton = (obj) => {
       ]} />
     } else if (eventFrom === eventTo) {
       eventFrom = "";
-      eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"⌛"} subtext={"changed stake"} descriptions={[
+      eventDescription = <Ticket seed={obj.seed + "-desc-"} icon={"⌛"} subtext={"rebonded"} descriptions={[
         obj.eventObj.stake.toFixed(2) + " LPT"
       ]} />
     } else {
