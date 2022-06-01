@@ -426,6 +426,8 @@ const EventViewer = (obj) => {
       }
     } else if (latestType == "round") {
       roundsIdx--;
+      // they are ugly, disable for now
+      continue;
       eventList.push(<Round
         key={thisEvent.transactionHash + unfiltered + roundsIdx}
         seed={thisEvent.transactionHash + unfiltered + roundsIdx}
