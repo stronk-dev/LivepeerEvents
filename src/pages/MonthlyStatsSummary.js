@@ -52,7 +52,7 @@ const MonthlyStatsSummary = (obj) => {
         }
         {obj.data.withdrawStakeCount ?
           <div className="stroke" style={{ width: 'unset' }}>
-            <p>💸 {obj.data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 2 })} LPT worth of staking rewards were withdrawn to the account of the delegator</p>
+            <p>💸 {obj.data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 2 })} LPT worth of stake was withdrawn to the account of delegators</p>
           </div> : null
         }
         {obj.data.withdrawFeesCount ?

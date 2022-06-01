@@ -103,7 +103,7 @@ const MonthlyFactoids = (obj) => {
             <div className="halfVerticalDivider" />
             <div className="row" style={{ justifyContent: 'space-between', alignItems: 'stretch', maxWidth: '61.8%', textAlign: 'justify', padding: '0.5em', backgroundColor: withdrawStakeColour, border: '0.1em solid rgba(54, 46, 46, 0.1)' }}>
               <Ticket seed={obj.seed + "-neworchs-"} icon={"💸"} subtext={obj.data.withdrawStakeCount + " withdraw reward calls"} descriptions={[
-                obj.data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT worth of staking rewards were withdrawn to the accounts of delegators"
+                obj.data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 2 }) + " LPT worth of stake was withdrawn to the accounts of delegators"
               ]} />
             </div>
           </div> : null

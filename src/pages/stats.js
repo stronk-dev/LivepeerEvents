@@ -74,7 +74,7 @@ const Stats = (obj) => {
       summary += "📉 " + data.unbondCount + " delegators unbonded " + data.unbondStakeSum.toLocaleString({ maximumFractionDigits: 1 }) + " LPT \r\n";
     }
     if (data.withdrawStakeCount) {
-      summary += "💸 " + data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 1 }) + " LPT worth of staking rewards were withdrawn to the accounts of delegators \r\n";
+      summary += "💸 " + data.withdrawStakeAmountSum.toLocaleString({ maximumFractionDigits: 1 }) + " LPT worth of stake were withdrawn to the accounts of delegators \r\n";
     }
     if (data.withdrawFeesCount) {
       summary += "💸 " + data.withdrawFeesAmountSum.toLocaleString({ maximumFractionDigits: 3 }) + " ETH worth of transcoding fees were withdrawn to the accounts of delegators \r\n";
@@ -156,7 +156,7 @@ const Stats = (obj) => {
     }
 
     if (stakeList.length) {
-      summary += "\r\n(The percentage of stake only includes orchestrators who won at least 1 ticket this month)\r\n";
+      summary += "\r\nThe percentage of stake excludes non-transcoding orchestrators)\r\n";
     }
 
     copyLink(summary);
@@ -180,10 +180,10 @@ const Stats = (obj) => {
           <h4 className="rowAlignLeft withWrap showNeverOnMobile">Statistics</h4>
         </div>
         <div className='rowAlignRight'>
-          <p>Hide non-earners</p>
+          <p>Show non-transcoders?</p>
           <div className="toggle-container" onClick={() => setShowOnlyTranscoders(!showOnlyTranscoders)}>
-            <div className={`dialog-button ${showOnlyTranscoders ? "" : "disabled"}`}>
-              {showOnlyTranscoders ? "Show" : "Hide"}
+            <div className={`dialog-button ${!showOnlyTranscoders ? "" : "disabled"}`}>
+              {!showOnlyTranscoders ? "Show" : "Hide"}
             </div>
           </div>
         </div>
