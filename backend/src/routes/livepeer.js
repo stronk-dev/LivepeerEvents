@@ -2556,8 +2556,6 @@ const parseOrchestrator = async function (reqAddr) {
         }
         rewardCut
         feeShare
-        pendingFeeShare
-        pendingRewardCut
         totalStake
         totalVolumeETH
         totalVolumeUSD
@@ -2601,6 +2599,7 @@ const parseOrchestrator = async function (reqAddr) {
     }
     return orchestratorObj;
   } catch (err) {
+    console.log(err);
     if (wasCached) {
       console.log("Thegraph is probably acting up. Returning cached value...");
       for (var idx = 0; idx < orchestratorCache.length; idx++) {
