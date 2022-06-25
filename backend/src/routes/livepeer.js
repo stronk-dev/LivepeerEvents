@@ -2512,11 +2512,11 @@ const mutateDynamicStatsFromCache = async function (oldOrchestratorObj, newOrche
 // Gets info on a given Orchestrator
 const parseOrchestrator = async function (reqAddr) {
   console.log("Getting orchestrator data from thegraph for " + reqAddr);
+  let wasCached = false;
   try {
     reqAddr = reqAddr.toLowerCase();
     const now = new Date().getTime();
     // Default assume it's the first time we request this Orchestrator
-    let wasCached = false;
     let needsUpdate = true;
     let orchestratorObj = {};
     // First get cached object
