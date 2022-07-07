@@ -81,6 +81,9 @@ const Grafana = (obj) => {
                 <div className="flexContainer stretchAndPad">
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&from=now-12h&to=now&refresh=15s&theme=dark&panelId=33" height="400" frameBorder="0"></iframe>
                 </div>
+                <div className="flexContainer stretchAndPad">
+                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572161" height="400" frameBorder="0"></iframe>
+                </div>
               </div>
               <div className="verticalDivider" />
               <div className="row">
