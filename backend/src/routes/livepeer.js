@@ -195,6 +195,7 @@ let transferTicketEventCache = [];
 let alreadyHasTransferTicketRefresh = {};
 
 let redeemTicketEventCache = [];
+let winningTicketCache = [];
 let alreadyHasRedeemTicketRefresh = {};
 
 let activateEventCache = [];
@@ -379,9 +380,9 @@ apiRouter.post("/getAllRedeemTicketEvents", async (req, res) => {
   }
 });
 
-apiRouter.get("/getAllRedeemTicketEvents", async (req, res) => {
+apiRouter.get("/getAllWinningTickets", async (req, res) => {
   try {
-    res.send(redeemTicketEventCache);
+    res.send(winningTicketCache);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -1230,6 +1231,13 @@ const parseAnyEvent = async function (thisEvent) {
     updateMonthlyTicketRedeemed(eventObj.blockTime, eventObj.amount, eventObj.address);
     alreadyHasMonthlyStatRefresh = {};
     redeemTicketEventCache.push(eventObj);
+    winningTicketCache.push({
+      address: eventObj.address,
+      amount: eventObj.amount,
+      transactionHash: eventObj.transactionHash,
+      blockNumber: eventObj.blockNumber,
+      blockTime: eventObj.blockTime * 1000
+    });
     alreadyHasAnyRefresh = {};
     alreadyHasRedeemTicketRefresh = {};
   } else {
@@ -1902,6 +1910,15 @@ const initSync = async function () {
     blockRound: 1,
     _id: 0
   });
+  for (const winner of redeemTicketEventCache) {
+    winningTicketCache.push({
+      address: winner.address,
+      amount: winner.amount,
+      transactionHash: winner.transactionHash,
+      blockNumber: winner.blockNumber,
+      blockTime: winner.blockTime * 1000
+    });
+  }
   // Get all parsed orchestrator activation events and cache them
   activateEventCache = await ActivateEvent.find({}, {
     address: 1,
