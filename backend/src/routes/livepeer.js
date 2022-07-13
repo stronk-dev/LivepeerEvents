@@ -379,6 +379,14 @@ apiRouter.post("/getAllRedeemTicketEvents", async (req, res) => {
   }
 });
 
+apiRouter.get("/getAllRedeemTicketEvents", async (req, res) => {
+  try {
+    res.send(redeemTicketEventCache);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 apiRouter.post("/getAllActivateEvents", async (req, res) => {
   try {
     const { smartUpdate } = req.body;
