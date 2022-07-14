@@ -52,7 +52,9 @@ const Grafana = (obj) => {
                   <p>${lptPrice}</p>
                   <p>({lptPriceChange24h}%)</p>
                 </div>
-                <div className="row">
+                <div className="row" onClick={() => {
+                  setRedirectToHome(true);
+                }}>
                   <h2>Livepeer Orchestrator</h2>
                 </div>
                 <div className="row">
@@ -84,13 +86,16 @@ const Grafana = (obj) => {
                 <div className="flexContainer stretchAndPad">
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572161" height="400" frameBorder="0"></iframe>
                 </div>
+                <div className="flexContainer stretchAndPad">
+                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572178" height="400" frameBorder="0"></iframe>
+                </div>
               </div>
               <div className="verticalDivider" />
               <div className="row">
                 <a href="https://grafana.stronk.tech/d/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=5s&theme=dark">
                   <button className="waveButton">
                     <img alt="" src="grafana.png" width="30" height="30" />
-                    <p>Full Statistics</p>
+                    <p>All Statistics</p>
                   </button>
                 </a>
               </div>
