@@ -2653,6 +2653,33 @@ apiRouter.get("/getOrchestrator", async (req, res) => {
     res.status(400).send(err);
   }
 });
+apiRouter.get("/getOrchestratorENS", async (req, res) => {
+  try {
+    let reqOrch = req.query.orch;
+    if (!reqOrch || reqOrch == "") {
+      reqOrch = CONF_DEFAULT_ORCH;
+    }
+    const reqObj = await parseOrchestrator(reqOrch);
+    let orchestratorObj = JSON.parse(JSON.stringify(reqObj));
+    // Replace delegators with ENS domain names
+    for (var idx = 0; idx < orchestratorObj.delegators.length; idx++) {
+      console.log(orchestratorObj.delegators[idx]);
+      for (var idx2 = 0; idx2 < ensDomainCache.length; idx2++) {
+        console.log(ensDomainCache[idx2]);
+        if (ensDomainCache[idx2].address == orchestratorObj.delegators[idx].id) {
+          if (ensDomainCache[idx2].domain){
+            orchestratorObj.delegators[idx].id = ensDomainCache[idx2].domain;
+          }
+          break;
+        }
+      }
+    }
+    res.send(orchestratorObj);
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+});
 apiRouter.get("/getOrchestrator/:orch", async (req, res) => {
   try {
     const reqObj = await parseOrchestrator(req.params.orch);
