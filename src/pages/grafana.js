@@ -37,7 +37,7 @@ const Grafana = (obj) => {
         <button className="homeButton" onClick={() => {
           setRedirectToHome(true);
         }}>
-          <img alt="" src="/livepeer.png" width="100em" height="100em" />
+           <div style={{fontSize: '4em'}}>🏠</div>
         </button>
       </div>
       <div className="verticalDivider" />
@@ -65,8 +65,51 @@ const Grafana = (obj) => {
               </div>
               <div className="verticalDivider" />
               <div className="stroke roundedOpaqueDark">
-                <div className="flexContainer fullMargin">
-                  <Orchestrator thisOrchestrator={livepeer.thisOrchestrator} rootOnly={true} />
+                <div className="flexContainer stretchAndPad">
+                  <iframe className="halfGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=79" height="200" frameBorder="0"></iframe>
+                  <iframe className="halfGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=83" height="200" frameBorder="0"></iframe>
+                </div>
+                <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
+                  <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
+                    <img alt="" src="livepeer.png" width="20em" height="20em" />
+                    <span className="lightTextAlt">Stake with Captain Chad</span>
+                  </a>
+                </div>
+                <div className="flexContainer stretchAndPad">
+                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&from=now-12h&to=now&refresh=15s&theme=dark&panelId=23763572146" height="200" frameBorder="0"></iframe>
+                </div>
+                <div className="flexContainer stretchAndPad">
+                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572108" height="400" frameBorder="0"></iframe>
+                </div>
+                <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
+                  <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
+                    <img alt="" src="livepeer.png" width="20em" height="20em" />
+                    <span className="lightTextAlt">Stake with Captain Chad</span>
+                  </a>
+                </div>
+                <div className="flexContainer stretchAndPad">
+                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&from=now-12h&to=now&refresh=15s&theme=dark&panelId=23763572195" height="200" frameBorder="0"></iframe>
+                </div>
+                <div className="flexContainer stretchAndPad">
+                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572161" height="400" frameBorder="0"></iframe>
+                </div>
+                <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
+                  <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
+                    <img alt="" src="livepeer.png" width="20em" height="20em" />
+                    <span className="lightTextAlt">Stake with Captain Chad</span>
+                  </a>
+                </div>
+                <div className="flexContainer stretchAndPad">
+                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572145" height="200" frameBorder="0"></iframe>
+                </div>
+                <div className="flexContainer stretchAndPad">
+                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=109" height="400" frameBorder="0"></iframe>
+                </div>
+                <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
+                  <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
+                    <img alt="" src="livepeer.png" width="20em" height="20em" />
+                    <span className="lightTextAlt">Stake with Captain Chad</span>
+                  </a>
                 </div>
                 <div className="flexContainer stretchAndPad">
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572032" height="200" frameBorder="0"></iframe>
@@ -74,17 +117,11 @@ const Grafana = (obj) => {
                 <div className="flexContainer stretchAndPad">
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&from=now-12h&to=now&refresh=15s&theme=dark&panelId=23763572040" height="400" frameBorder="0"></iframe>
                 </div>
-                <div className="flexContainer stretchAndPad">
-                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572056" height="200" frameBorder="0"></iframe>
-                </div>
-                <div className="flexContainer stretchAndPad">
-                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&from=now-12h&to=now&refresh=15s&theme=dark&panelId=33" height="400" frameBorder="0"></iframe>
-                </div>
-                <div className="flexContainer stretchAndPad">
-                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572161" height="400" frameBorder="0"></iframe>
-                </div>
-                <div className="flexContainer stretchAndPad">
-                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572178" height="400" frameBorder="0"></iframe>
+                <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
+                  <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
+                    <img alt="" src="livepeer.png" width="20em" height="20em" />
+                    <span className="lightTextAlt">Stake with Captain Chad</span>
+                  </a>
                 </div>
               </div>
               <div className="verticalDivider" />
