@@ -69,9 +69,6 @@ const Grafana = (obj) => {
                   <Orchestrator thisOrchestrator={livepeer.thisOrchestrator} rootOnly={true} />
                 </div>
                 <div className="flexContainer stretchAndPad">
-                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572144" height="200" frameBorder="0"></iframe>
-                </div>
-                <div className="flexContainer stretchAndPad">
                   <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572032" height="200" frameBorder="0"></iframe>
                 </div>
                 <div className="flexContainer stretchAndPad">
