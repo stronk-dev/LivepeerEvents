@@ -2870,7 +2870,9 @@ apiRouter.get("/grafana", async (req, res) => {
       commissionFeeCostL2,
       serviceUriFeeCostL1,
       serviceUriFeeCostL2,
-      quotes: cmcQuotes
+      quotes: cmcQuotes,
+      latestBlockMinedL2: latestBlockInChain,
+      latestBlockMinedL1: latestL1Block
     });
   } catch (err) {
     res.status(400).send(err);
