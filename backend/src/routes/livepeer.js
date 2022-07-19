@@ -2663,9 +2663,7 @@ apiRouter.get("/getOrchestratorENS", async (req, res) => {
     let orchestratorObj = JSON.parse(JSON.stringify(reqObj));
     // Replace delegators with ENS domain names
     for (var idx = 0; idx < orchestratorObj.delegators.length; idx++) {
-      console.log(orchestratorObj.delegators[idx]);
       for (var idx2 = 0; idx2 < ensDomainCache.length; idx2++) {
-        console.log(ensDomainCache[idx2]);
         if (ensDomainCache[idx2].address == orchestratorObj.delegators[idx].id) {
           if (ensDomainCache[idx2].domain){
             orchestratorObj.delegators[idx].id = ensDomainCache[idx2].domain;
