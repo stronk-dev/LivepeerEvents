@@ -2958,6 +2958,13 @@ apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
     outputString += "# HELP price_change_service_uri_l2 Cost of changing service uri on L2.\n";
     outputString += "# TYPE price_change_service_uri_l2 gauge\nprice_change_service_uri_l2 ";
     outputString += serviceUriFeeCostL2 + "\n\n";
+    // Add latest Eth and Arbitrum blocks synced
+    outputString += "# HELP latest_block_mined_l2 Latest Arbitrum block synced.\n";
+    outputString += "# TYPE latest_block_mined_l2 gauge\nlatest_block_mined_l2 ";
+    outputString += latestBlockInChain + "\n\n";
+    outputString += "# HELP latest_block_mined_l1 Latest Ethereum block synced.\n";
+    outputString += "# TYPE latest_block_mined_l1 gauge\nlatest_block_mined_l1 ";
+    outputString += latestL1Block + "\n\n";
 
     // Get requested orchestrator info if it is requested
     let reqOrch = req.params.orchAddr;
