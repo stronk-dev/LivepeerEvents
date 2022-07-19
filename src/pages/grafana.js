@@ -41,6 +41,16 @@ const Grafana = (obj) => {
               </div>
               <div className="verticalDivider" />
               <div className="stroke roundedOpaqueDark">
+                <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
+                  <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
+                    <img alt="" src="livepeer.png" width="20em" height="20em" />
+                    <span className="lightTextAlt">Stake with captain-chad.eth</span>
+                  </a>
+                </div>
+                <div className="flexContainer stretchAndPad">
+                  <iframe className="halfGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572081" height="200" frameBorder="0"></iframe>
+                  <iframe className="halfGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572082" height="200" frameBorder="0"></iframe>
+                </div>
                 <div className="flexContainer stretchAndPad">
                   <iframe className="halfGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=75" height="200" frameBorder="0"></iframe>
                   <iframe className="halfGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572196" height="200" frameBorder="0"></iframe>
