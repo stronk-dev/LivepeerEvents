@@ -2869,8 +2869,8 @@ apiRouter.get("/grafana", async (req, res) => {
       serviceUriFeeCostL1,
       serviceUriFeeCostL2,
       quotes: cmcQuotes,
-      latestBlockMinedL2: latestBlockInChain,
-      latestBlockMinedL1: latestL1Block
+      latestBlockMinedL2: l2block,
+      latestBlockMinedL1: l1block
     });
   } catch (err) {
     res.status(400).send(err);
@@ -2961,10 +2961,10 @@ apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
     // Add latest Eth and Arbitrum blocks synced
     outputString += "# HELP latest_block_mined_l2 Latest Arbitrum block synced.\n";
     outputString += "# TYPE latest_block_mined_l2 gauge\nlatest_block_mined_l2 ";
-    outputString += latestBlockInChain + "\n\n";
+    outputString += l2block + "\n\n";
     outputString += "# HELP latest_block_mined_l1 Latest Ethereum block synced.\n";
     outputString += "# TYPE latest_block_mined_l1 gauge\nlatest_block_mined_l1 ";
-    outputString += latestL1Block + "\n\n";
+    outputString += l1block + "\n\n";
 
     // Get requested orchestrator info if it is requested
     let reqOrch = req.params.orchAddr;
