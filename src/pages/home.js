@@ -84,6 +84,24 @@ const Home = (obj) => {
           </div> */}
         <div className="verticalDivider" />
         <div className="row">
+          <p>Contact me on:</p>
+        </div>
+        <div className="row">
+          <a href="https://discordapp.com/users/303504235927044097">
+            <button className="waveButton">
+              <p>Discord</p>
+            </button>
+          </a>
+        </div>
+        <div className="row">
+          <a href="mailto:marco@livepeer.org">
+            <button className="waveButton">
+              <p>Email</p>
+            </button>
+          </a>
+        </div>
+        <div className="verticalDivider" />
+        <div className="row">
           <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
         </div>
         {/* <div className="verticalDivider" />
