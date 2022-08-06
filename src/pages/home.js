@@ -47,34 +47,38 @@ const Home = (obj) => {
         <div className="row">
           <h3>Home</h3>
         </div>
-        <div className="row">
-          <a href="https://github.com/stronk-dev/LivepeerEvents">
-            <button className="waveButton">
-              <p>🧱 Source Code 🏠</p>
-            </button>
-          </a>
-        </div>
-        <div className="row">
-          <button className="waveButton" onClick={() => {
-            setRedirectToGrafana(true);
-          }}>
-            <p>🚀 Orchestrator 🌑</p>
+        <a href="https://github.com/stronk-dev/LivepeerEvents">
+          <button className="waveButton">
+            <div className="row">
+              <img alt="" src="github.png" width="20em" height="20em" style={{ margin: 0 }} />
+              <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Source Code</p>
+            </div>
           </button>
-        </div>
-        <div className="row">
-          <button className="waveButton" onClick={() => {
-            setRedirectToLPT(true);
-          }}>
-            <p>🔎 Contract Events 🕵️</p>
-          </button>
-        </div>
-        <div className="row">
-          <button className="waveButton" onClick={() => {
-            setRedirectToStats(true);
-          }}>
-            <p>📈 Statistics 💰</p>
-          </button>
-        </div>
+        </a>
+        <button className="waveButton" onClick={() => {
+          setRedirectToGrafana(true);
+        }}>
+          <div className="row">
+            <img alt="" src="orch.png" width="20em" height="20em" style={{ margin: 0 }} />
+            <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Orchestrator</p>
+          </div>
+        </button>
+        <button className="waveButton" onClick={() => {
+          setRedirectToLPT(true);
+        }}>
+          <div className="row">
+            <img alt="" src="arb.svg" width="20em" height="20em" style={{ margin: 0 }} />
+            <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Contract Events</p>
+          </div>
+        </button>
+        <button className="waveButton" onClick={() => {
+          setRedirectToStats(true);
+        }}>
+          <div className="row">
+            <img alt="" src="stats.jpg" width="20em" height="20em" style={{ margin: 0 }} />
+            <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Statistics</p>
+          </div>
+        </button>
         {/* <div className="row">
             <button className="waveButton" onClick={() => {
               setRedirectToGraphs(true);
@@ -82,24 +86,34 @@ const Home = (obj) => {
               <p>📉 Graphs 📊</p>
             </button>
           </div> */}
+        <a href="https://dune.com/stronk/livepeer-arbitrum">
+          <button className="waveButton">
+            <div className="row">
+              <img alt="" src="dune.png" width="20em" height="20em" style={{ margin: 0 }} />
+              <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Better Stats</p>
+            </div>
+          </button>
+        </a>
         <div className="verticalDivider" />
         <div className="row">
           <p>Contact me on:</p>
         </div>
-        <div className="row">
-          <a href="https://discordapp.com/users/303504235927044097">
-            <button className="waveButton">
-              <p>Discord</p>
-            </button>
-          </a>
-        </div>
-        <div className="row">
-          <a href="mailto:marco@livepeer.org">
-            <button className="waveButton">
-              <p>Email</p>
-            </button>
-          </a>
-        </div>
+        <a href="https://discordapp.com/users/303504235927044097">
+          <button className="waveButton">
+            <div className="row">
+              <img alt="" src="discord.svg" width="20em" height="20em" style={{ margin: 0 }} />
+              <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Discord</p>
+            </div>
+          </button>
+        </a>
+        <a href="mailto:marco@livepeer.org">
+          <button className="waveButton">
+            <div className="row">
+              <img alt="" src="email.png" width="20em" height="20em" style={{ margin: 0 }} />
+              <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Email</p>
+            </div>
+          </button>
+        </a>
         <div className="verticalDivider" />
         <div className="row">
           <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
