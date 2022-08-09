@@ -59,7 +59,7 @@ const Home = (obj) => {
           setRedirectToGrafana(true);
         }}>
           <div className="row">
-            <img alt="" src="orchestrator.png" width="20em" height="20em" style={{ margin: 0 }} />
+            <img alt="" src="cpnchad.png" width="20em" height="20em" style={{ margin: 0 }} />
             <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Orchestrator</p>
           </div>
         </button>
