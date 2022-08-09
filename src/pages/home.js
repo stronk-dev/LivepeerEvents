@@ -59,7 +59,7 @@ const Home = (obj) => {
           setRedirectToGrafana(true);
         }}>
           <div className="row">
-            <img alt="" src="orch.png" width="20em" height="20em" style={{ margin: 0 }} />
+            <img alt="" src="orchestrator.png" width="20em" height="20em" style={{ margin: 0 }} />
             <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Orchestrator</p>
           </div>
         </button>
@@ -86,6 +86,15 @@ const Home = (obj) => {
               <p>📉 Graphs 📊</p>
             </button>
           </div> */}
+        <a href="https://grafana.stronk.tech/d/b8FvMmmVk/orchestrator-tracker">
+          <button className="waveButton">
+            <div className="row">
+              <img alt="" src="dune.png" width="20em" height="20em" style={{ margin: 0 }} />
+              <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Orchestrator Tracker</p>
+            </div>
+          </button>
+        </a>
+        <div className="verticalDivider" />
         <a href="https://dune.com/stronk/livepeer-arbitrum">
           <button className="waveButton">
             <div className="row">
