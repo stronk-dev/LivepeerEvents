@@ -17,7 +17,7 @@ const Home = (obj) => {
   const [redirectToStats, setRedirectToStats] = useState(false);
   const [redirectToGraphs, setRedirectToGraphs] = useState(false);
   if (redirectToGrafana) {
-    return <Navigate push to="/orchestrator" />;
+    return <Navigate push to="/stake" />;
   }
   if (redirectToLPT) {
     return <Navigate push to="/livepeer" />;

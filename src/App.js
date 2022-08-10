@@ -24,7 +24,7 @@ export default function App() {
           <Route exact path='/stats' element={<Stats />} />
           <Route exact path='/summary' element={<Summary />} />
           <Route exact path='/graphs' element={<Graphs />} />
-          <Route exact path='/orchestrator' element={<Grafana />} />
+          <Route exact path='/stake' element={<Grafana />} />
           <Route path='/' element={<Home />} />
         </Routes>
         <div id="dvdlogo" style={{animationDelay: randomDelay}}>
