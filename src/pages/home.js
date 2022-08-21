@@ -47,14 +47,6 @@ const Home = (obj) => {
         <div className="row">
           <h3>Home</h3>
         </div>
-        <a href="https://github.com/stronk-dev/LivepeerEvents">
-          <button className="waveButton">
-            <div className="row">
-              <img alt="" src="github.png" width="20em" height="20em" style={{ margin: 0 }} />
-              <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Source Code</p>
-            </div>
-          </button>
-        </a>
         <button className="waveButton" onClick={() => {
           setRedirectToGrafana(true);
         }}>
@@ -86,6 +78,18 @@ const Home = (obj) => {
               <p>📉 Graphs 📊</p>
             </button>
           </div> */}
+        <div className="verticalDivider" />
+        <div className="row">
+          <p>External Links:</p>
+        </div>
+        <a href="https://github.com/stronk-dev/LivepeerEvents">
+          <button className="waveButton">
+            <div className="row">
+              <img alt="" src="github.png" width="20em" height="20em" style={{ margin: 0 }} />
+              <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Source Code</p>
+            </div>
+          </button>
+        </a>
         <a href="https://grafana.stronk.tech/d/b8FvMmmVk/orchestrator-tracker">
           <button className="waveButton">
             <div className="row">
@@ -99,6 +103,14 @@ const Home = (obj) => {
             <div className="row">
               <img alt="" src="dune.png" width="20em" height="20em" style={{ margin: 0 }} />
               <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Better Stats</p>
+            </div>
+          </button>
+        </a>
+        <a href="https://hedgedoc.ddvtech.com/wpwHEXMFTueUM7jqhikTvw?view">
+          <button className="waveButton">
+            <div className="row">
+              <img alt="" src="setup.svg" width="20em" height="20em" style={{ margin: 0 }} />
+              <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Orchestrator Setup</p>
             </div>
           </button>
         </a>
