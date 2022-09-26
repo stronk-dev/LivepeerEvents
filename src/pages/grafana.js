@@ -56,7 +56,7 @@ const Grafana = (obj) => {
                   <iframe className="halfGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572196" height="200" frameBorder="0"></iframe>
                 </div>
                 <div className="flexContainer stretchAndPad">
-                  <iframe className="halfGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=79" height="200" frameBorder="0"></iframe>
+                  <iframe className="halfGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572146" height="200" frameBorder="0"></iframe>
                   <iframe className="halfGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=83" height="200" frameBorder="0"></iframe>
                 </div>
                 <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
@@ -66,10 +66,7 @@ const Grafana = (obj) => {
                   </a>
                 </div>
                 <div className="flexContainer stretchAndPad">
-                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&from=now-12h&to=now&refresh=15s&theme=dark&panelId=23763572146" height="200" frameBorder="0"></iframe>
-                </div>
-                <div className="flexContainer stretchAndPad">
-                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572108" height="400" frameBorder="0"></iframe>
+                  <iframe className="fullGrafana" src="https://grafana.stronk.tech/d-solo/71b6OZ0Gz/orchestrator-overview?orgId=1&refresh=15s&theme=dark&panelId=23763572108" height="600" frameBorder="0"></iframe>
                 </div>
                 <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
                   <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
