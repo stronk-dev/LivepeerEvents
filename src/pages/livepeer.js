@@ -53,6 +53,9 @@ const Livepeer = (obj) => {
           <button className="homeButton" onClick={() => {
             setRedirectToHome(true);
           }}>
+            <div className="row">
+              <img alt="" src="https://nframe.nl/avatar.png" width="40em" height="40em" />
+            </div>
             <h1>🏠</h1>
           </button>
           <h4 className="rowAlignLeft withWrap showNeverOnMobile">{headerString}</h4>

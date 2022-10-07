@@ -36,7 +36,13 @@ const Grafana = (obj) => {
                 <div className="row" onClick={() => {
                   setRedirectToHome(true);
                 }}>
+                  <div className="row">
+                    <img alt="" src="https://nframe.nl/avatar.png" width="80em" height="80em" />
+                  </div>
                   <h2>Livepeer Orchestrator</h2>
+                  <div className="row">
+                    <img alt="" src="https://nframe.nl/avatar.png" width="80em" height="80em" />
+                  </div>
                 </div>
               </div>
               <div className="verticalDivider" />
