@@ -22,6 +22,7 @@ const Livepeer = (obj) => {
   const [showFilter, setShowFilter] = useState(false);
   const [opened, setOpened] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
+  const [thisChad, setChad] = useState("");
   console.log("Rendering Livepeer");
 
   useEffect(() => {
@@ -35,6 +36,7 @@ const Livepeer = (obj) => {
   if (redirectToHome) {
     return <Navigate push to="/" />;
   }
+  
 
   let thisOrchObj;
   let headerString;
@@ -45,6 +47,11 @@ const Livepeer = (obj) => {
     headerString = "Livepeer Orchestrator Explorer";
   }
 
+  if (thisChad == ""){
+    const randomChad = performance.now();
+    const chadSource = "https://nframe.nl/avatar.png?" + randomChad;
+    setChad(chadSource);
+  }
 
   return (
     <div style={{ margin: 0, padding: 0, height: '100%', width: '100%', overflow: 'hidden' }}>
@@ -54,7 +61,7 @@ const Livepeer = (obj) => {
             setRedirectToHome(true);
           }}>
             <div className="row">
-              <img alt="" src="https://nframe.nl/avatar.png" width="40em" height="40em" />
+              <img alt="" src={thisChad} width="40em" height="40em" />
             </div>
             <h1>🏠</h1>
           </button>

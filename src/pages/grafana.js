@@ -11,10 +11,17 @@ import Orchestrator from "../components/orchestratorViewer";
 const Grafana = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [redirectToHome, setRedirectToHome] = useState(false);
+  const [thisChad, setChad] = useState("");
+
   if (redirectToHome) {
     return <Navigate push to="/" />;
   }
 
+  if (thisChad == ""){
+    const randomChad = performance.now();
+    const chadSource = "https://nframe.nl/avatar.png?" + randomChad;
+    setChad(chadSource);
+  }
 
   return (
     <div className="stroke" >
@@ -37,11 +44,11 @@ const Grafana = (obj) => {
                   setRedirectToHome(true);
                 }}>
                   <div className="row">
-                    <img alt="" src="https://nframe.nl/avatar.png" width="80em" height="80em" />
+                    <img alt="" src={thisChad} width="80em" height="80em" />
                   </div>
                   <h2>Livepeer Orchestrator</h2>
                   <div className="row">
-                    <img alt="" src="https://nframe.nl/avatar.png" width="80em" height="80em" />
+                    <img alt="" src={thisChad + "1"} width="80em" height="80em" />
                   </div>
                 </div>
               </div>

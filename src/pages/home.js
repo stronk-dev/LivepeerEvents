@@ -16,6 +16,8 @@ const Home = (obj) => {
   const [redirectToLPT, setRedirectToLPT] = useState(false);
   const [redirectToStats, setRedirectToStats] = useState(false);
   const [redirectToGraphs, setRedirectToGraphs] = useState(false);
+  const [thisChad, setChad] = useState("");
+  
   if (redirectToGrafana) {
     return <Navigate push to="/stake" />;
   }
@@ -35,6 +37,12 @@ const Home = (obj) => {
     totalVisitorCount = userstate.visitorStats.totalVisitorCount;
   }
 
+  if (thisChad == ""){
+    const randomChad = performance.now();
+    const chadSource = "https://nframe.nl/avatar.png?" + randomChad;
+    setChad(chadSource);
+  }
+
   return (
     <div className="stroke">
       <div className="verticalDivider" />
@@ -51,7 +59,7 @@ const Home = (obj) => {
           setRedirectToGrafana(true);
         }}>
           <div className="row">
-            <img alt="" src="https://nframe.nl/avatar.png" width="20em" height="20em" style={{ margin: 0 }} />
+            <img alt="" src={thisChad} width="20em" height="20em" style={{ margin: 0 }} />
             <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Orchestrator</p>
           </div>
         </button>
