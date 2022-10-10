@@ -10,6 +10,7 @@ const EventButtonAddress = (obj) => {
   const livepeer = useSelector((state) => state.livepeerstate);
   const [hasRefreshed, setRefresh] = useState(false);
   const [orchInfo, setOrchInfo] = useState(null);
+  const [thisAvatar, setAvatar] = useState("");
   const now = new Date().getTime();
 
   useEffect(() => {
@@ -103,10 +104,18 @@ const EventButtonAddress = (obj) => {
   let thisIcon;
   if (orchInfo && orchInfo.domain) {
     thisName = <Text style={{ textOverflow: "ellipsis", overflow: "hidden", width: '100%' }} >{orchInfo.domain}</Text>;
-    if (orchInfo.avatar) {
+    // Hardcoded Chad substitution
+    if (thisAvatar == "" && orchInfo.avatar){
+      let thisUrl = orchInfo.avatar.url;
+      if (thisUrl == "https://nframe.nl/avatar.png"){
+        thisUrl = "https://nframe.nl/avatar.png?" + performance.now();
+      }
+      setAvatar(thisUrl);
+    }
+    if (thisAvatar != "") {
       thisIcon =
         <a className="selectOrch" style={{ padding: '0.3em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://app.ens.domains/name/" + orchInfo.domain + "/details"} >
-          <img alt="" src={orchInfo.avatar.url} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
+          <img alt="" src={thisAvatar} width="20em" height="20em" style={{ margin: 0, padding: 0 }} />
         </a >
     }
   } else {
