@@ -68,6 +68,7 @@ const web3layer2 = new Alchemy({apiKey: API_L2_KEY, network: Network.ARB_MAINNET
 
 // Smart contract event stuff
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
+const deprWeb3main = createAlchemyWeb3(API_L1_HTTP + API_L1_KEY);
 const deprWeb3 = createAlchemyWeb3(API_L2_HTTP + API_L2_KEY);
 let BondingManagerTargetJson;
 let BondingManagerTargetAbi;
@@ -2042,12 +2043,12 @@ const handleSync = async function () {
     console.log('Starting new sync cycle #' + cycle);
     isSyncing = true;
     // Get latest blocks in chain
-    var latestBlock = await web3layer1.core.getBlockNumber();
+    var latestBlock = await deprWeb3main.eth.getBlockNumber();
     if (latestBlock > latestL1Block) {
       latestL1Block = latestBlock;
       console.log("Latest L1 Eth block changed to " + latestL1Block);
     }
-    latestBlock = await web3layer2.core.getBlockNumber();
+    latestBlock = await deprWeb3.eth.getBlockNumber();
     if (latestBlock > latestBlockInChain) {
       latestBlockInChain = latestBlock;
       console.log("Latest L2 Eth block changed to " + latestBlockInChain);
@@ -2280,8 +2281,8 @@ let serviceUriFeeCostL2 = 0;
 // Queries Alchemy for block info and gas fees
 const parseL1Blockchain = async function () {
   try {
-  const l1Wei = await web3layer1.core.getGasPrice();
-  l1block = await web3layer1.core.getBlockNumber();
+  const l1Wei = await deprWeb3main.core.getGasPrice();
+  l1block = await deprWeb3main.core.getBlockNumber();
   l1Gwei = l1Wei / 1000000000;
   redeemRewardCostL1 = (redeemRewardGwei * l1Gwei) / 1000000000;
   claimTicketCostL1 = (claimTicketGwei * l1Gwei) / 1000000000;
@@ -2295,8 +2296,8 @@ const parseL1Blockchain = async function () {
 }
 const parseL2Blockchain = async function () {
   try {
-  const l2Wei = await web3layer2.core.getGasPrice();
-  l2block = await web3layer2.core.getBlockNumber();
+  const l2Wei = await deprWeb3.core.getGasPrice();
+  l2block = await deprWeb3.core.getBlockNumber();
   l2Gwei = l2Wei / 1000000000;
   redeemRewardCostL2 = (redeemRewardGwei * l2Gwei) / 1000000000;
   claimTicketCostL2 = (claimTicketGwei * l2Gwei) / 1000000000;
