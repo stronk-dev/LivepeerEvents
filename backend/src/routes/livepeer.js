@@ -19,7 +19,7 @@ import TotalStakeDataPoint from "../models/TotalStakeDataPoint";
 
 const apiRouter = express.Router();
 import {
-  API_CMC, API_L1_HTTP, API_L2_HTTP,
+  API_CMC, API_L1_HTTP, API_L1_KEY, API_L2_KEY,
   CONF_DEFAULT_ORCH, CONF_SIMPLE_MODE, CONF_TIMEOUT_CMC,
   CONF_TIMEOUT_ALCHEMY, CONF_TIMEOUT_LIVEPEER,
   CONF_DISABLE_DB, CONF_DISABLE_CMC, CONF_TIMEOUT_ENS_DOMAIN,
@@ -60,14 +60,15 @@ if (!CONF_DISABLE_CMC) {
 }
 
 // Gets blockchain data
-const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
+import { Network, Alchemy } from 'alchemy-sdk';
 console.log("Connecting to HTTP RPC's");
-const web3layer1 = createAlchemyWeb3(API_L1_HTTP);
-const web3layer2 = createAlchemyWeb3(API_L2_HTTP);
+const web3layer1 = new Alchemy({apiKey: API_L1_KEY, network: Network.ETH_MAINNET});
+const web3layer2 = new Alchemy({apiKey: API_L2_KEY, network: Network.ARB_MAINNET});
 
 // ENS stuff TODO: CONF_DISABLE_ENS
 const { ethers } = require("ethers");
-const provider = new ethers.providers.JsonRpcProvider(API_L1_HTTP);
+const l1provider = new ethers.providers.AlchemyProvider("mainnet", API_L1_KEY);
+const l2provider = new ethers.providers.AlchemyProvider("arbitrum", API_L2_KEY);
 
 // Smart contract event stuff
 // https://arbiscan.io/address/0x35Bcf3c30594191d53231E4FF333E8A770453e40#events
@@ -89,17 +90,17 @@ if (!CONF_SIMPLE_MODE) {
   BondingManagerTargetJson = fs.readFileSync('src/abi/BondingManagerTarget.json');
   BondingManagerTargetAbi = JSON.parse(BondingManagerTargetJson);
   BondingManagerProxyAddr = "0x35Bcf3c30594191d53231E4FF333E8A770453e40";
-  bondingManagerContract = new web3layer2.eth.Contract(BondingManagerTargetAbi.abi, BondingManagerProxyAddr);
+  bondingManagerContract = new ethers.Contract(BondingManagerProxyAddr, BondingManagerTargetAbi.abi, l2provider);
   // Listen for events on the ticket broker contract
   TicketBrokerTargetJson = fs.readFileSync('src/abi/TicketBrokerTarget.json');
   TicketBrokerTargetAbi = JSON.parse(TicketBrokerTargetJson);
   TicketBrokerTargetAddr = "0xa8bB618B1520E284046F3dFc448851A1Ff26e41B";
-  ticketBrokerContract = new web3layer2.eth.Contract(TicketBrokerTargetAbi.abi, TicketBrokerTargetAddr);
+  ticketBrokerContract = new ethers.Contract(TicketBrokerTargetAddr, TicketBrokerTargetAbi.abi, l2provider);
   // Listen for events on the rounds manager contract
   RoundsManagerTargetJson = fs.readFileSync('src/abi/RoundsManagerTarget.json');
   RoundsManagerTargetAbi = JSON.parse(RoundsManagerTargetJson);
   RoundsManagerTargetAddr = "0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f";
-  roundsManagerContract = new web3layer2.eth.Contract(RoundsManagerTargetAbi.abi, RoundsManagerTargetAddr);
+  roundsManagerContract = new ethers.Contract(RoundsManagerTargetAddr, RoundsManagerTargetAbi.abi, l2provider);
 }
 
 /*
@@ -136,7 +137,7 @@ const getBlock = async function (blockNumber) {
     }
   }
   // Else get it and cache it
-  const thisBlock = await web3layer2.eth.getBlock(blockNumber);
+  const thisBlock = await web3layer2.core.getBlock(blockNumber);
   console.log("Caching new block " + thisBlock.number + " mined at " + thisBlock.timestamp);
 
   const blockObj = {
@@ -216,14 +217,14 @@ let totalStakeDataPoint = [];
 apiRouter.post("/getAllMonthlyStats", async (req, res) => {
   try {
     const { smartUpdate } = req.body;
-    if (smartUpdate && req.session.user.ip) {
+    if (smartUpdate && req.session.user && req.session.user.ip) {
       if (alreadyHasMonthlyStatRefresh[req.session.user.ip]) {
         res.send({ noop: true });
         return;
       }
     }
     res.send(monthlyStatCache);
-    if (req.session.user.ip) {
+    if (req.session.user && req.session.user.ip) {
       alreadyHasMonthlyStatRefresh[req.session.user.ip] = true;
     }
   } catch (err) {
@@ -250,14 +251,14 @@ apiRouter.get("/getAllTotalStakes", async (req, res) => {
 apiRouter.post("/getAllUpdateEvents", async (req, res) => {
   try {
     const { smartUpdate } = req.body;
-    if (smartUpdate && req.session.user.ip) {
+    if (smartUpdate && req.session.user && req.session.user.ip) {
       if (alreadyHasUpdateRefresh[req.session.user.ip]) {
         res.send({ noop: true });
         return;
       }
     }
     res.send(updateEventCache);
-    if (req.session.user.ip) {
+    if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasUpdateRefresh[req.session.user.ip] = true;
     }
@@ -269,14 +270,14 @@ apiRouter.post("/getAllUpdateEvents", async (req, res) => {
 apiRouter.post("/getAllRewardEvents", async (req, res) => {
   try {
     const { smartUpdate } = req.body;
-    if (smartUpdate && req.session.user.ip) {
+    if (smartUpdate && req.session.user &&req.session.user.ip) {
       if (alreadyHasRewardRefresh[req.session.user.ip]) {
         res.send({ noop: true });
         return;
       }
     }
     res.send(rewardEventCache);
-    if (req.session.user.ip) {
+    if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasRewardRefresh[req.session.user.ip] = true;
     }
@@ -288,14 +289,14 @@ apiRouter.post("/getAllRewardEvents", async (req, res) => {
 apiRouter.post("/getAllClaimEvents", async (req, res) => {
   try {
     const { smartUpdate } = req.body;
-    if (smartUpdate && req.session.user.ip) {
+    if (smartUpdate && req.session.user && req.session.user.ip) {
       if (alreadyHasClaimRefresh[req.session.user.ip]) {
         res.send({ noop: true });
         return;
       }
     }
     res.send(claimEventCache);
-    if (req.session.user.ip) {
+    if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasClaimRefresh[req.session.user.ip] = true;
     }
@@ -307,14 +308,14 @@ apiRouter.post("/getAllClaimEvents", async (req, res) => {
 apiRouter.post("/getAllWithdrawStakeEvents", async (req, res) => {
   try {
     const { smartUpdate } = req.body;
-    if (smartUpdate && req.session.user.ip) {
+    if (smartUpdate && req.session.user && req.session.user.ip) {
       if (alreadyHasWithdrawStakeRefresh[req.session.user.ip]) {
         res.send({ noop: true });
         return;
       }
     }
     res.send(withdrawStakeEventCache);
-    if (req.session.user.ip) {
+    if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasWithdrawStakeRefresh[req.session.user.ip] = true;
     }
@@ -326,14 +327,14 @@ apiRouter.post("/getAllWithdrawStakeEvents", async (req, res) => {
 apiRouter.post("/getAllWithdrawFeesEvents", async (req, res) => {
   try {
     const { smartUpdate } = req.body;
-    if (smartUpdate && req.session.user.ip) {
+    if (smartUpdate && req.session.user && req.session.user.ip) {
       if (alreadyHasWithdrawFeesRefresh[req.session.user.ip]) {
         res.send({ noop: true });
         return;
       }
     }
     res.send(withdrawFeesEventCache);
-    if (req.session.user.ip) {
+    if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasWithdrawFeesRefresh[req.session.user.ip] = true;
     }
@@ -345,14 +346,14 @@ apiRouter.post("/getAllWithdrawFeesEvents", async (req, res) => {
 apiRouter.post("/getAllTransferTicketEvents", async (req, res) => {
   try {
     const { smartUpdate } = req.body;
-    if (smartUpdate && req.session.user.ip) {
+    if (smartUpdate && req.session.user && req.session.user.ip) {
       if (alreadyHasTransferTicketRefresh[req.session.user.ip]) {
         res.send({ noop: true });
         return;
       }
     }
     res.send(transferTicketEventCache);
-    if (req.session.user.ip) {
+    if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasTransferTicketRefresh[req.session.user.ip] = true;
     }
@@ -364,14 +365,14 @@ apiRouter.post("/getAllTransferTicketEvents", async (req, res) => {
 apiRouter.post("/getAllRedeemTicketEvents", async (req, res) => {
   try {
     const { smartUpdate } = req.body;
-    if (smartUpdate && req.session.user.ip) {
+    if (smartUpdate && req.session.user && req.session.user.ip) {
       if (alreadyHasRedeemTicketRefresh[req.session.user.ip]) {
         res.send({ noop: true });
         return;
       }
     }
     res.send(redeemTicketEventCache);
-    if (req.session.user.ip) {
+    if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasRedeemTicketRefresh[req.session.user.ip] = true;
     }
@@ -391,14 +392,14 @@ apiRouter.get("/getAllWinningTickets", async (req, res) => {
 apiRouter.post("/getAllActivateEvents", async (req, res) => {
   try {
     const { smartUpdate } = req.body;
-    if (smartUpdate && req.session.user.ip) {
+    if (smartUpdate && req.session.user && req.session.user.ip) {
       if (alreadyHasActivateRefresh[req.session.user.ip]) {
         res.send({ noop: true });
         return;
       }
     }
     res.send(activateEventCache);
-    if (req.session.user.ip) {
+    if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasActivateRefresh[req.session.user.ip] = true;
     }
@@ -410,14 +411,14 @@ apiRouter.post("/getAllActivateEvents", async (req, res) => {
 apiRouter.post("/getAllUnbondEvents", async (req, res) => {
   try {
     const { smartUpdate } = req.body;
-    if (smartUpdate && req.session.user.ip) {
+    if (smartUpdate && req.session.user && req.session.user.ip) {
       if (alreadyHasUnbondRefresh[req.session.user.ip]) {
         res.send({ noop: true });
         return;
       }
     }
     res.send(unbondEventCache);
-    if (req.session.user.ip) {
+    if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasUnbondRefresh[req.session.user.ip] = true;
     }
@@ -429,14 +430,14 @@ apiRouter.post("/getAllUnbondEvents", async (req, res) => {
 apiRouter.post("/getAllStakeEvents", async (req, res) => {
   try {
     const { smartUpdate } = req.body;
-    if (smartUpdate && req.session.user.ip) {
+    if (smartUpdate && req.session.user && req.session.user.ip) {
       if (alreadyHasStakeRefresh[req.session.user.ip]) {
         res.send({ noop: true });
         return;
       }
     }
     res.send(stakeEventCache);
-    if (req.session.user.ip) {
+    if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasStakeRefresh[req.session.user.ip] = true;
     }
@@ -447,7 +448,7 @@ apiRouter.post("/getAllStakeEvents", async (req, res) => {
 
 apiRouter.get("/hasAnyRefresh", async (req, res) => {
   try {
-    if (req.session.user.ip) {
+    if (req.session.user && req.session.user.ip) {
       console.log(req.session.user.ip + " is checking for new Events");
       if (alreadyHasAnyRefresh[req.session.user.ip]) {
         console.log(req.session.user.ip + " is still up to date");
@@ -1624,7 +1625,7 @@ const syncEvents = function (toBlock) {
   isEventSyncing = true;
   let lastTxSynced = 0;
   // Then do a sync from last found until latest known
-  bondingManagerContract.getPastEvents("allEvents", { fromBlock: lastBlockEvents + 1, toBlock: toBlock }, async (error, events) => {
+  web3layer2.core.getLogs({ address: "0x35Bcf3c30594191d53231E4FF333E8A770453e40", fromBlock: lastBlockEvents + 1, toBlock: toBlock }, async (error, events) => {
     try {
       if (error) {
         throw error
@@ -1685,7 +1686,7 @@ const syncTickets = function (toBlock) {
   console.log("Starting sync process for Ticket Broker events for blocks " + lastBlockTickets + "->" + toBlock);
   isTicketSyncing = true;
   // Then do a sync from last found until latest known
-  ticketBrokerContract.getPastEvents("allEvents", { fromBlock: lastBlockTickets + 1, toBlock: toBlock }, async (error, events) => {
+  web3layer2.core.getLogs({ address: "0xa8bB618B1520E284046F3dFc448851A1Ff26e41B", fromBlock: lastBlockTickets + 1, toBlock: toBlock }, async (error, events) => {
     try {
       if (error) {
         throw error
@@ -1736,7 +1737,7 @@ const syncRounds = function (toBlock) {
   console.log("Starting sync process for Rounds Manager events for blocks " + lastBlockRounds + "->" + toBlock);
   isRoundSyncing = true;
   // Then do a sync from last found until latest known
-  roundsManagerContract.getPastEvents("allEvents", { fromBlock: lastBlockRounds + 1, toBlock: toBlock }, async (error, events) => {
+  web3layer2.core.getLogs({ address: "0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f", fromBlock: lastBlockRounds + 1, toBlock: toBlock }, async (error, events) => {
     try {
       if (error) {
         throw error
@@ -2044,12 +2045,12 @@ const handleSync = async function () {
     console.log('Starting new sync cycle #' + cycle);
     isSyncing = true;
     // Get latest blocks in chain
-    var latestBlock = await web3layer1.eth.getBlockNumber();
+    var latestBlock = await web3layer1.core.getBlockNumber();
     if (latestBlock > latestL1Block) {
       latestL1Block = latestBlock;
       console.log("Latest L1 Eth block changed to " + latestL1Block);
     }
-    latestBlock = await web3layer2.eth.getBlockNumber();
+    latestBlock = await web3layer2.core.getBlockNumber();
     if (latestBlock > latestBlockInChain) {
       latestBlockInChain = latestBlock;
       console.log("Latest L2 Eth block changed to " + latestBlockInChain);
@@ -2141,6 +2142,7 @@ const handleSync = async function () {
     return;
   }
   catch (err) {
+    console.log(err);
     hasError = false;
     console.log("Error while syncing. Retrying in 30 seconds");
     console.log("latestBlockInChain " + latestBlockInChain);
@@ -2280,8 +2282,9 @@ let serviceUriFeeCostL2 = 0;
 
 // Queries Alchemy for block info and gas fees
 const parseL1Blockchain = async function () {
-  const l1Wei = await web3layer1.eth.getGasPrice();
-  l1block = await web3layer1.eth.getBlockNumber();
+  try {
+  const l1Wei = await web3layer1.core.getGasPrice();
+  l1block = await web3layer1.core.getBlockNumber();
   l1Gwei = l1Wei / 1000000000;
   redeemRewardCostL1 = (redeemRewardGwei * l1Gwei) / 1000000000;
   claimTicketCostL1 = (claimTicketGwei * l1Gwei) / 1000000000;
@@ -2289,10 +2292,14 @@ const parseL1Blockchain = async function () {
   stakeFeeCostL1 = (stakeFeeGwei * l1Gwei) / 1000000000;
   commissionFeeCostL1 = (commissionFeeGwei * l1Gwei) / 1000000000;
   serviceUriFeeCostL1 = (serviceUriFee * l1Gwei) / 1000000000;
+ } catch (err) {
+    console.log(err);
+  }
 }
 const parseL2Blockchain = async function () {
-  const l2Wei = await web3layer2.eth.getGasPrice();
-  l2block = await web3layer2.eth.getBlockNumber();
+  try {
+  const l2Wei = await web3layer2.core.getGasPrice();
+  l2block = await web3layer2.core.getBlockNumber();
   l2Gwei = l2Wei / 1000000000;
   redeemRewardCostL2 = (redeemRewardGwei * l2Gwei) / 1000000000;
   claimTicketCostL2 = (claimTicketGwei * l2Gwei) / 1000000000;
@@ -2300,10 +2307,17 @@ const parseL2Blockchain = async function () {
   stakeFeeCostL2 = (stakeFeeGwei * l2Gwei) / 1000000000;
   commissionFeeCostL2 = (commissionFeeGwei * l2Gwei) / 1000000000;
   serviceUriFeeCostL2 = (serviceUriFee * l2Gwei) / 1000000000;
+ } catch (err) {
+    console.log(err);
+  }
+
 }
 const parseEthBlockchain = async function () {
   console.log("Getting new blockchain data");
-  await Promise.all([parseL1Blockchain(), parseL2Blockchain()]);
+   const l1Promise = parseL1Blockchain();
+  const l2Promise = parseL2Blockchain();
+  await Promise.all([l1Promise, l2Promise]);
+  console.log("done getting blockchain data");
 }
 
 // Exports gas fees and contract prices
@@ -2840,8 +2854,8 @@ apiRouter.get("/grafana", async (req, res) => {
     const now = new Date().getTime();
     // Update blockchain data if the cached data has expired
     if (now - arbGet > CONF_TIMEOUT_ALCHEMY) {
-      await parseEthBlockchain();
-      arbGet = now;
+arbGet = now;      
+await parseEthBlockchain();
     }
     // Update coin prices once their data has expired
     if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
@@ -2883,9 +2897,9 @@ apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
     const now = new Date().getTime();
     // Update blockchain data if the cached data has expired
     if (now - arbGet > CONF_TIMEOUT_ALCHEMY) {
-      await parseEthBlockchain();
-      arbGet = now;
-    }
+arbGet = now;      
+await parseEthBlockchain();
+          }
     // Update coin prices once their data has expired
     if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
       await parseCmc();
@@ -3061,7 +3075,7 @@ const getEnsDomain = async function (addr) {
     }
   }
   // Else get it and cache it
-  const ensDomain = await provider.lookupAddress(addr.toLowerCase());
+  const ensDomain = await l1provider.lookupAddress(addr.toLowerCase());
   let ensObj;
   if (!ensDomain) {
     ensObj = {
@@ -3106,7 +3120,7 @@ const getEnsInfo = async function (addr) {
     }
   }
   // Else get it and cache it
-  const resolver = await provider.getResolver(addr);
+  const resolver = await l1provider.getResolver(addr);
   const description = await resolver.getText("description");
   const url = await resolver.getText("url");
   const avatar = await resolver.getAvatar();

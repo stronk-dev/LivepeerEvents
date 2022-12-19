@@ -14,22 +14,24 @@
   "author": "Marco van Dijk",
   "license": "WTFPL",
   "dependencies": {
-    "@alch/alchemy-web3": "^1.2.4",
+    "@alch/alchemy-web3": "^1.4.7",
     "alchemy-api": "^1.3.3",
+    "alchemy-sdk": "^2.2.4",
     "coinmarketcap-api": "^3.1.1",
-    "connect-mongo": "^3.1.2",
-    "crypto-js": "^3.1.9-1",
-    "esm": "^3.2.20",
-    "ethers": "^5.6.1",
+    "connect-mongo": "^4.6.0",
+    "connect-mongodb-session": "^3.1.1",
+    "crypto-js": "^4.1.1",
+    "esm": "^3.2.25",
+    "ethers": "^5.7.2",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "graphql-request": "^4.0.0",
     "install": "^0.13.0",
     "joi": "^14.3.1",
-    "mongoose": "^5.12.3",
+    "mongoose": "^6.8.0",
     "npm": "^8.5.2",
-    "prom-client": "^14.0.1",
-    "web3": "^1.7.0"
+    "prom-client": "^14.1.0",
+    "web3": "^1.8.1"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"

@@ -2,7 +2,7 @@ module.exports = {
   apps : [{
     name   : "backend",
     script : "./src/index.js",
-    cwd : "/var/www/backend",
+    cwd : "/var/www/nframe/backend",
     env_production: {
       NODE_ENV: "production"
    },

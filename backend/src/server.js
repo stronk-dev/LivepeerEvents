@@ -2,7 +2,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import session from "express-session";
-import connectStore from "connect-mongo";
+import MongoStore from "connect-mongo";
 import { userRouter, sessionRouter, livepeerRouter } from './routes/index';
 import {
   NODE_PORT, NODE_ENV, MONGO_URI, SESS_NAME, SESS_SECRET,
@@ -15,20 +15,22 @@ const { NODE_ENV: mode } = process.env;
 (async () => {
   try {
     // Make DB connection if needed
+    let clientP;
     if (!CONF_SIMPLE_MODE && !CONF_DISABLE_DB){
       if (mode == "production"){
-        await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useFindAndModify: false});
+        clientP = mongoose.connect(MONGO_URI, { useNewUrlParser: true}).then(m => m.connection.getClient());
       }else if (mode == "development"){
-        await mongoose.connect(MONGO_URI_DEV, { useNewUrlParser: true, useFindAndModify: false});
+        clientP = mongoose.connect(MONGO_URI_DEV, { useNewUrlParser: true}).then(m => m.connection.getClient());
       }else if (mode == "local"){
-        await mongoose.connect(MONGO_URI_LOCAL, { useNewUrlParser: true, useFindAndModify: false});
+        clientP = mongoose.connect(MONGO_URI_LOCAL, { useNewUrlParser: true}).then(m => m.connection.getClient());
       }else{
-        await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useFindAndModify: false});
+        clientP = mongoose.connect(MONGO_URI, { useNewUrlParser: true}).then(m => m.connection.getClient());
       }
       console.log('MongoDB connected on ' + mode);
     }else{
       console.log('Running without a database connection' );
     }
+    
     // Web application framework
     const app = express();
     app.disable('x-powered-by');
@@ -36,19 +38,16 @@ const { NODE_ENV: mode } = process.env;
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
 
-    let MongoStore;
     if (!CONF_SIMPLE_MODE && !CONF_DISABLE_DB){
-      // Import session module
-      MongoStore = connectStore(session);
       // Declare session data
       app.use(session({
         name: SESS_NAME,
         //TODO: change secret in config file
         secret: SESS_SECRET,
         //define where to store them
-        store: new MongoStore({
-          mongooseConnection: mongoose.connection,
-          collection: 'session',
+        store: MongoStore.create({
+          clientPromise: clientP,
+          collectionName: 'session',
           ttl: parseInt(SESS_LIFETIME) / 1000,
         }),
         saveUninitialized: false,
