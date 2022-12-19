@@ -2281,8 +2281,8 @@ let serviceUriFeeCostL2 = 0;
 // Queries Alchemy for block info and gas fees
 const parseL1Blockchain = async function () {
   try {
-  const l1Wei = await deprWeb3main.core.getGasPrice();
-  l1block = await deprWeb3main.core.getBlockNumber();
+  const l1Wei = await deprWeb3main.eth.getGasPrice();
+  l1block = await deprWeb3main.eth.getBlockNumber();
   l1Gwei = l1Wei / 1000000000;
   redeemRewardCostL1 = (redeemRewardGwei * l1Gwei) / 1000000000;
   claimTicketCostL1 = (claimTicketGwei * l1Gwei) / 1000000000;
@@ -2296,8 +2296,8 @@ const parseL1Blockchain = async function () {
 }
 const parseL2Blockchain = async function () {
   try {
-  const l2Wei = await deprWeb3.core.getGasPrice();
-  l2block = await deprWeb3.core.getBlockNumber();
+  const l2Wei = await deprWeb3.eth.getGasPrice();
+  l2block = await deprWeb3.eth.getBlockNumber();
   l2Gwei = l2Wei / 1000000000;
   redeemRewardCostL2 = (redeemRewardGwei * l2Gwei) / 1000000000;
   claimTicketCostL2 = (claimTicketGwei * l2Gwei) / 1000000000;
