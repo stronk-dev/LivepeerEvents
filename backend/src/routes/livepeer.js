@@ -19,7 +19,7 @@ import TotalStakeDataPoint from "../models/TotalStakeDataPoint";
 
 const apiRouter = express.Router();
 import {
-  API_CMC, API_L1_HTTP, API_L1_KEY, API_L2_KEY,
+  API_CMC, API_L1_KEY, API_L2_KEY, API_L2_HTTP, API_L1_HTTP,
   CONF_DEFAULT_ORCH, CONF_SIMPLE_MODE, CONF_TIMEOUT_CMC,
   CONF_TIMEOUT_ALCHEMY, CONF_TIMEOUT_LIVEPEER,
   CONF_DISABLE_DB, CONF_DISABLE_CMC, CONF_TIMEOUT_ENS_DOMAIN,
@@ -60,18 +60,15 @@ if (!CONF_DISABLE_CMC) {
 }
 
 // Gets blockchain data
+const { ethers } = require("ethers");
 import { Network, Alchemy } from 'alchemy-sdk';
 console.log("Connecting to HTTP RPC's");
 const web3layer1 = new Alchemy({apiKey: API_L1_KEY, network: Network.ETH_MAINNET});
 const web3layer2 = new Alchemy({apiKey: API_L2_KEY, network: Network.ARB_MAINNET});
 
-// ENS stuff TODO: CONF_DISABLE_ENS
-const { ethers } = require("ethers");
-const l1provider = new ethers.providers.AlchemyProvider("mainnet", API_L1_KEY);
-const l2provider = new ethers.providers.AlchemyProvider("arbitrum", API_L2_KEY);
-
 // Smart contract event stuff
-// https://arbiscan.io/address/0x35Bcf3c30594191d53231E4FF333E8A770453e40#events
+const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
+const deprWeb3 = createAlchemyWeb3(API_L2_HTTP + API_L2_KEY);
 let BondingManagerTargetJson;
 let BondingManagerTargetAbi;
 let BondingManagerProxyAddr;
@@ -90,17 +87,17 @@ if (!CONF_SIMPLE_MODE) {
   BondingManagerTargetJson = fs.readFileSync('src/abi/BondingManagerTarget.json');
   BondingManagerTargetAbi = JSON.parse(BondingManagerTargetJson);
   BondingManagerProxyAddr = "0x35Bcf3c30594191d53231E4FF333E8A770453e40";
-  bondingManagerContract = new ethers.Contract(BondingManagerProxyAddr, BondingManagerTargetAbi.abi, l2provider);
+  bondingManagerContract = new deprWeb3.eth.Contract(BondingManagerTargetAbi.abi, BondingManagerProxyAddr);
   // Listen for events on the ticket broker contract
   TicketBrokerTargetJson = fs.readFileSync('src/abi/TicketBrokerTarget.json');
   TicketBrokerTargetAbi = JSON.parse(TicketBrokerTargetJson);
   TicketBrokerTargetAddr = "0xa8bB618B1520E284046F3dFc448851A1Ff26e41B";
-  ticketBrokerContract = new ethers.Contract(TicketBrokerTargetAddr, TicketBrokerTargetAbi.abi, l2provider);
+  ticketBrokerContract = new deprWeb3.eth.Contract(TicketBrokerTargetAbi.abi, TicketBrokerTargetAddr);
   // Listen for events on the rounds manager contract
   RoundsManagerTargetJson = fs.readFileSync('src/abi/RoundsManagerTarget.json');
   RoundsManagerTargetAbi = JSON.parse(RoundsManagerTargetJson);
   RoundsManagerTargetAddr = "0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f";
-  roundsManagerContract = new ethers.Contract(RoundsManagerTargetAddr, RoundsManagerTargetAbi.abi, l2provider);
+  roundsManagerContract = new deprWeb3.eth.Contract(RoundsManagerTargetAbi.abi, RoundsManagerTargetAddr);
 }
 
 /*
@@ -1625,7 +1622,7 @@ const syncEvents = function (toBlock) {
   isEventSyncing = true;
   let lastTxSynced = 0;
   // Then do a sync from last found until latest known
-  web3layer2.core.getLogs({ address: "0x35Bcf3c30594191d53231E4FF333E8A770453e40", fromBlock: lastBlockEvents + 1, toBlock: toBlock }, async (error, events) => {
+  bondingManagerContract.getPastEvents("allEvents", { fromBlock: lastBlockEvents + 1, toBlock: toBlock }, async (error, events) => {
     try {
       if (error) {
         throw error
@@ -1686,7 +1683,7 @@ const syncTickets = function (toBlock) {
   console.log("Starting sync process for Ticket Broker events for blocks " + lastBlockTickets + "->" + toBlock);
   isTicketSyncing = true;
   // Then do a sync from last found until latest known
-  web3layer2.core.getLogs({ address: "0xa8bB618B1520E284046F3dFc448851A1Ff26e41B", fromBlock: lastBlockTickets + 1, toBlock: toBlock }, async (error, events) => {
+  ticketBrokerContract.getPastEvents("allEvents", { fromBlock: lastBlockTickets + 1, toBlock: toBlock }, async (error, events) => {
     try {
       if (error) {
         throw error
@@ -1737,7 +1734,7 @@ const syncRounds = function (toBlock) {
   console.log("Starting sync process for Rounds Manager events for blocks " + lastBlockRounds + "->" + toBlock);
   isRoundSyncing = true;
   // Then do a sync from last found until latest known
-  web3layer2.core.getLogs({ address: "0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f", fromBlock: lastBlockRounds + 1, toBlock: toBlock }, async (error, events) => {
+  roundsManagerContract.getPastEvents("allEvents", { fromBlock: lastBlockRounds + 1, toBlock: toBlock }, async (error, events) => {
     try {
       if (error) {
         throw error
@@ -2314,7 +2311,7 @@ const parseL2Blockchain = async function () {
 }
 const parseEthBlockchain = async function () {
   console.log("Getting new blockchain data");
-   const l1Promise = parseL1Blockchain();
+  const l1Promise = parseL1Blockchain();
   const l2Promise = parseL2Blockchain();
   await Promise.all([l1Promise, l2Promise]);
   console.log("done getting blockchain data");
