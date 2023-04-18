@@ -175,7 +175,9 @@ const Stats = (obj) => {
           <button className="homeButton" onClick={() => {
             setRedirectToHome(true);
           }}>
-            <h1>🏠</h1>
+            <div className="row">
+              <img alt="" src="apple-touch-icon.png" width="40em" height="40em" />
+            </div>
           </button>
           <h4 className="rowAlignLeft withWrap showNeverOnMobile">Statistics</h4>
         </div>

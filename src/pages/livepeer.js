@@ -61,9 +61,8 @@ const Livepeer = (obj) => {
             setRedirectToHome(true);
           }}>
             <div className="row">
-              <img alt="" src={thisChad} width="40em" height="40em" />
+              <img alt="" src="apple-touch-icon.png" width="40em" height="40em" />
             </div>
-            <h1>🏠</h1>
           </button>
           <h4 className="rowAlignLeft withWrap showNeverOnMobile">{headerString}</h4>
         </div>

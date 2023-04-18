@@ -47,7 +47,7 @@ const Home = (obj) => {
     <div className="stroke">
       <div className="verticalDivider" />
       <div className="row">
-        <img alt="" src="logo.png" width="100em" style={{ zIndex: 10 }} />
+        <img alt="" src="android-chrome-512x512.png" width="100em" style={{ zIndex: 10 }} />
       </div>
       <div className="verticalDivider" />
       <div className="stroke roundedOpaque" style={{ maxWidth: '400px' }}>
