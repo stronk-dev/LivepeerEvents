@@ -132,26 +132,6 @@ const Home = (obj) => {
         </a>
         <div className="verticalDivider" />
         <div className="row">
-          <p>Contact me on:</p>
-        </div>
-        <a href="https://discordapp.com/users/303504235927044097">
-          <button className="waveButton">
-            <div className="row">
-              <img alt="" src="discord.svg" width="20em" height="20em" style={{ margin: 0 }} />
-              <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Discord</p>
-            </div>
-          </button>
-        </a>
-        <a href="mailto:marco@livepeer.org">
-          <button className="waveButton">
-            <div className="row">
-              <img alt="" src="email.png" width="20em" height="20em" style={{ margin: 0 }} />
-              <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Email</p>
-            </div>
-          </button>
-        </a>
-        <div className="verticalDivider" />
-        <div className="row">
           <ContractPrices quotes={livepeer.quotes} blockchains={livepeer.blockchains} />
         </div>
         {/* <div className="verticalDivider" />
