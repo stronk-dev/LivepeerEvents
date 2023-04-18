@@ -39,7 +39,7 @@ const Home = (obj) => {
 
   if (thisChad == ""){
     const randomChad = performance.now();
-    const chadSource = "https://nframe.nl/avatar.png?" + randomChad;
+    const chadSource = "https://stronk.rocks/avatar.png?" + randomChad;
     setChad(chadSource);
   }
 
@@ -90,6 +90,14 @@ const Home = (obj) => {
         <div className="row">
           <p>External Links:</p>
         </div>
+        <a href="https://forum.livepeer.org/t/transcoder-campaign-captain-stronk">
+          <button className="waveButton">
+            <div className="row">
+              <img alt="" src="livepeer.png" width="20em" height="20em" style={{ margin: 0 }} />
+              <p style={{ padding: '0.3em', flex: 1, flexGrow: 3 }}>Transcoder Campaign</p>
+            </div>
+          </button>
+        </a>
         <a href="https://github.com/stronk-dev/LivepeerEvents">
           <button className="waveButton">
             <div className="row">
