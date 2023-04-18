@@ -47,7 +47,7 @@ const Home = (obj) => {
     <div className="stroke">
       <div className="verticalDivider" />
       <div className="row">
-        <img alt="" src="livepeer.png" width="100em" height="100em" style={{ zIndex: 10 }} />
+        <img alt="" src="logo.png" width="100em" style={{ zIndex: 10 }} />
       </div>
       <div className="verticalDivider" />
       <div className="stroke roundedOpaque" style={{ maxWidth: '400px' }}>

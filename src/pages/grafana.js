@@ -30,7 +30,7 @@ const Grafana = (obj) => {
         <button className="homeButton" onClick={() => {
           setRedirectToHome(true);
         }}>
-           <div style={{fontSize: '4em'}}>🏠</div>
+           <img alt="" src="logo.png" width="100em" style={{ zIndex: 10 }} />
         </button>
       </div>
       <div className="verticalDivider" />
