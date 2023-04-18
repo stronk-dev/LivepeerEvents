@@ -57,7 +57,7 @@ const Grafana = (obj) => {
                 <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
                   <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
                     <img alt="" src="livepeer.png" width="20em" height="20em" />
-                    <span className="lightTextAlt">Stake with captain-chad.eth</span>
+                    <span className="lightTextAlt">Stake with captain-stronk.eth</span>
                   </a>
                 </div>
                 <div className="flexContainer stretchAndPad">
@@ -75,7 +75,7 @@ const Grafana = (obj) => {
                 <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
                   <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
                     <img alt="" src="livepeer.png" width="20em" height="20em" />
-                    <span className="lightTextAlt">Stake with captain-chad.eth</span>
+                    <span className="lightTextAlt">Stake with captain-stronk.eth</span>
                   </a>
                 </div>
                 <div className="flexContainer stretchAndPad">
@@ -84,7 +84,7 @@ const Grafana = (obj) => {
                 <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
                   <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
                     <img alt="" src="livepeer.png" width="20em" height="20em" />
-                    <span className="lightTextAlt">Stake with captain-chad.eth</span>
+                    <span className="lightTextAlt">Stake with captain-stronk.eth</span>
                   </a>
                 </div>
                 <div className="flexContainer stretchAndPad">
@@ -96,7 +96,7 @@ const Grafana = (obj) => {
                 <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
                   <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
                     <img alt="" src="livepeer.png" width="20em" height="20em" />
-                    <span className="lightTextAlt">Stake with captain-chad.eth</span>
+                    <span className="lightTextAlt">Stake with captain-stronk.eth</span>
                   </a>
                 </div>
                 <div className="flexContainer stretchAndPad">
@@ -108,7 +108,7 @@ const Grafana = (obj) => {
                 <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
                   <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
                     <img alt="" src="livepeer.png" width="20em" height="20em" />
-                    <span className="lightTextAlt">Stake with captain-chad.eth</span>
+                    <span className="lightTextAlt">Stake with captain-stronk.eth</span>
                   </a>
                 </div>
                 <div className="flexContainer stretchAndPad">
@@ -120,7 +120,7 @@ const Grafana = (obj) => {
                 <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
                   <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
                     <img alt="" src="livepeer.png" width="20em" height="20em" />
-                    <span className="lightTextAlt">Stake with captain-chad.eth</span>
+                    <span className="lightTextAlt">Stake with captain-stronk.eth</span>
                   </a>
                 </div>
                 <div className="flexContainer stretchAndPad">
@@ -132,7 +132,7 @@ const Grafana = (obj) => {
                 <div className="row" style={{ width: 'unset', marginTop: '1em', marginBottom: '1em' }}>
                   <a className="selectOrch" style={{ padding: '0.2em', cursor: 'alias' }} target="_blank" rel="noopener noreferrer" href={"https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"} >
                     <img alt="" src="livepeer.png" width="20em" height="20em" />
-                    <span className="lightTextAlt">Stake with captain-chad.eth</span>
+                    <span className="lightTextAlt">Stake with captain-stronk.eth</span>
                   </a>
                 </div>
               </div>
