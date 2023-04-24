@@ -163,7 +163,7 @@ const Home = (obj) => {
           />
         </div>
         <h6 className="lightText">
-          nframe.nl
+          stronk.rocks
         </h6>
       </div>
     </div>

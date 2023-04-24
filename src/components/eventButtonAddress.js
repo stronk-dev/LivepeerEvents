@@ -107,8 +107,8 @@ const EventButtonAddress = (obj) => {
     // Hardcoded Chad substitution
     if (thisAvatar == "" && orchInfo.avatar){
       let thisUrl = orchInfo.avatar.url;
-      if (thisUrl == "https://nframe.nl/avatar.png"){
-        thisUrl = "https://nframe.nl/avatar.png?" + performance.now();
+      if (thisUrl == "https://stronk.rocks/avatar.png"){
+        thisUrl = "https://stronk.rocks/avatar.png?" + performance.now();
       }
       setAvatar(thisUrl);
     }

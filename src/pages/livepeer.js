@@ -49,7 +49,7 @@ const Livepeer = (obj) => {
 
   if (thisChad == ""){
     const randomChad = performance.now();
-    const chadSource = "https://nframe.nl/avatar.png?" + randomChad;
+    const chadSource = "https://stronk.rocks/avatar.png?" + randomChad;
     setChad(chadSource);
   }
 
