@@ -34,25 +34,25 @@ const ScoreView = (obj) => {
           <h4>Success</h4>
         </div>
         <div className="row">
-          {(obj.score["FRA"].success_rate * 10).toFixed(1)}
+          {(obj.score["FRA"]?.success_rate * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["LAX"].success_rate * 10).toFixed(1)}
+          {(obj.score["LAX"]?.success_rate * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["LON"].success_rate * 10).toFixed(1)}
+          {(obj.score["LON"]?.success_rate * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["MDW"].success_rate * 10).toFixed(1)}
+          {(obj.score["MDW"]?.success_rate * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["NYC"].success_rate * 10).toFixed(1)}
+          {(obj.score["NYC"]?.success_rate * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["PRG"].success_rate * 10).toFixed(1)}
+          {(obj.score["PRG"]?.success_rate * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["SIN"].success_rate * 10).toFixed(1)}
+          {(obj.score["SIN"]?.success_rate * 10).toFixed(1)}
         </div>
       </div>
       <div className="stroke">
@@ -60,25 +60,25 @@ const ScoreView = (obj) => {
           <h4>Speed</h4>
         </div>
         <div className="row">
-          {(obj.score["FRA"].round_trip_score * 10).toFixed(1)}
+          {(obj.score["FRA"]?.round_trip_score * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["LAX"].round_trip_score * 10).toFixed(1)}
+          {(obj.score["LAX"]?.round_trip_score * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["LON"].round_trip_score * 10).toFixed(1)}
+          {(obj.score["LON"]?.round_trip_score * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["MDW"].round_trip_score * 10).toFixed(1)}
+          {(obj.score["MDW"]?.round_trip_score * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["NYC"].round_trip_score * 10).toFixed(1)}
+          {(obj.score["NYC"]?.round_trip_score * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["PRG"].round_trip_score * 10).toFixed(1)}
+          {(obj.score["PRG"]?.round_trip_score * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["SIN"].round_trip_score * 10).toFixed(1)}
+          {(obj.score["SIN"]?.round_trip_score * 10).toFixed(1)}
         </div>
       </div>
       <div className="stroke">
@@ -86,25 +86,25 @@ const ScoreView = (obj) => {
           <h4>Score</h4>
         </div>
         <div className="row">
-          {(obj.score["FRA"].score * 10).toFixed(1)}
+          {(obj.score["FRA"]?.score * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["LAX"].score * 10).toFixed(1)}
+          {(obj.score["LAX"]?.score * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["LON"].score * 10).toFixed(1)}
+          {(obj.score["LON"]?.score * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["MDW"].score * 10).toFixed(1)}
+          {(obj.score["MDW"]?.score * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["NYC"].score * 10).toFixed(1)}
+          {(obj.score["NYC"]?.score * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["PRG"].score * 10).toFixed(1)}
+          {(obj.score["PRG"]?.score * 10).toFixed(1)}
         </div>
         <div className="row">
-          {(obj.score["SIN"].score * 10).toFixed(1)}
+          {(obj.score["SIN"]?.score * 10).toFixed(1)}
         </div>
       </div>
     </div>

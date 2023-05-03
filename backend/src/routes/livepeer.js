@@ -255,11 +255,11 @@ apiRouter.post("/getAllUpdateEvents", async (req, res) => {
         return;
       }
     }
-    res.send(updateEventCache);
     if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasUpdateRefresh[req.session.user.ip] = true;
     }
+    res.send(updateEventCache);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -274,11 +274,11 @@ apiRouter.post("/getAllRewardEvents", async (req, res) => {
         return;
       }
     }
-    res.send(rewardEventCache);
     if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasRewardRefresh[req.session.user.ip] = true;
     }
+    res.send(rewardEventCache);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -293,11 +293,11 @@ apiRouter.post("/getAllClaimEvents", async (req, res) => {
         return;
       }
     }
-    res.send(claimEventCache);
     if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasClaimRefresh[req.session.user.ip] = true;
     }
+    res.send(claimEventCache);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -312,11 +312,11 @@ apiRouter.post("/getAllWithdrawStakeEvents", async (req, res) => {
         return;
       }
     }
-    res.send(withdrawStakeEventCache);
     if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasWithdrawStakeRefresh[req.session.user.ip] = true;
     }
+    res.send(withdrawStakeEventCache);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -331,11 +331,11 @@ apiRouter.post("/getAllWithdrawFeesEvents", async (req, res) => {
         return;
       }
     }
-    res.send(withdrawFeesEventCache);
     if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasWithdrawFeesRefresh[req.session.user.ip] = true;
     }
+    res.send(withdrawFeesEventCache);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -350,11 +350,11 @@ apiRouter.post("/getAllTransferTicketEvents", async (req, res) => {
         return;
       }
     }
-    res.send(transferTicketEventCache);
     if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasTransferTicketRefresh[req.session.user.ip] = true;
     }
+    res.send(transferTicketEventCache);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -369,11 +369,11 @@ apiRouter.post("/getAllRedeemTicketEvents", async (req, res) => {
         return;
       }
     }
-    res.send(redeemTicketEventCache);
     if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasRedeemTicketRefresh[req.session.user.ip] = true;
     }
+    res.send(redeemTicketEventCache);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -396,11 +396,11 @@ apiRouter.post("/getAllActivateEvents", async (req, res) => {
         return;
       }
     }
-    res.send(activateEventCache);
     if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasActivateRefresh[req.session.user.ip] = true;
     }
+    res.send(activateEventCache);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -415,11 +415,11 @@ apiRouter.post("/getAllUnbondEvents", async (req, res) => {
         return;
       }
     }
-    res.send(unbondEventCache);
     if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasUnbondRefresh[req.session.user.ip] = true;
     }
+    res.send(unbondEventCache);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -434,11 +434,11 @@ apiRouter.post("/getAllStakeEvents", async (req, res) => {
         return;
       }
     }
-    res.send(stakeEventCache);
     if (req.session.user && req.session.user.ip) {
       alreadyHasAnyRefresh[req.session.user.ip] = true;
       alreadyHasStakeRefresh[req.session.user.ip] = true;
     }
+    res.send(stakeEventCache);
   } catch (err) {
     res.status(400).send(err);
   }
