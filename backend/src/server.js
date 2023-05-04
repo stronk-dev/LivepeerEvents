@@ -55,8 +55,8 @@ const { NODE_ENV: mode } = process.env;
         resave: false,
         //cookie to send to users
         cookie: {
-          sameSite: true,
-          secure: NODE_ENV === 'production',
+          sameSite: false,
+          secure: false,
           maxAge: parseInt(SESS_LIFETIME)
         }
       }));
