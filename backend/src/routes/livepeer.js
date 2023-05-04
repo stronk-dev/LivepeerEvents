@@ -60,7 +60,12 @@ if (!CONF_DISABLE_CMC) {
 }
 
 // Gets blockchain data
+
+// ENS stuff TODO: CONF_DISABLE_ENS
 const { ethers } = require("ethers");
+const l1provider = new ethers.providers.JsonRpcProvider(API_L1_HTTP + API_L1_KEY);
+// const l1provider = new ethers.providers.AlchemyProvider("mainnet", API_L1_KEY);
+
 import { Network, Alchemy } from 'alchemy-sdk';
 console.log("Connecting to HTTP RPC's");
 const web3layer1 = new Alchemy({apiKey: API_L1_KEY, network: Network.ETH_MAINNET});
