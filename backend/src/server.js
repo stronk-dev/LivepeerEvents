@@ -77,7 +77,10 @@ const { NODE_ENV: mode } = process.env;
       console.log(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
       // Render the error page
       res.status(err.status || 500);
-      res.render('error');
+      res.json({
+        message: err.message,
+        error: err
+      });
     });
 
     // Start listening on the defined port
