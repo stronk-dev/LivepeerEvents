@@ -124,6 +124,116 @@ const Home = (obj) => {
         </div>
 
         <div className="row">
+          <h3>Stronk Broadcaster</h3>
+        </div>
+
+        <a
+          href="https://video.stronk.rocks/"
+          style={{ cursor: "alias" }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button className="waveButton" style={{ cursor: "alias" }}>
+            <div className="row">
+              <img
+                alt=""
+                src="android-chrome-512x512.png"
+                width="20em"
+                height="20em"
+                style={{ margin: 0 }}
+              />
+              <p style={{ padding: "0.3em", flex: 1, flexGrow: 3 }}>
+                StreamCrafter demo
+              </p>
+            </div>
+          </button>
+        </a>
+
+        <a
+          href="https://grafana.stronk.tech/d/lp-global-orch-instances/livepeer-global-overview"
+          style={{ cursor: "alias" }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button className="waveButton" style={{ cursor: "alias" }}>
+            <div className="row">
+              <img
+                alt=""
+                src="grafana.png"
+                width="20em"
+                height="20em"
+                style={{ margin: 0 }}
+              />
+              <p style={{ padding: "0.3em", flex: 1, flexGrow: 3 }}>
+                Global Orchestrator tracker
+              </p>
+            </div>
+          </button>
+        </a>
+
+        <a
+          href="https://grafana.stronk.tech/d/lp-orchestrator/livepeer-orchestrator-overview"
+          style={{ cursor: "alias" }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button className="waveButton" style={{ cursor: "alias" }}>
+            <div className="row">
+              <img
+                alt=""
+                src="grafana.png"
+                width="20em"
+                height="20em"
+                style={{ margin: 0 }}
+              />
+              <p style={{ padding: "0.3em", flex: 1, flexGrow: 3 }}>
+                Regional health tracker
+              </p>
+            </div>
+          </button>
+        </a>
+
+        <a
+          href="https://grafana.stronk.tech/d/lp-regional-orchestrator/livepeer-regional-overview"
+          style={{ cursor: "alias" }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button className="waveButton" style={{ cursor: "alias" }}>
+            <div className="row">
+              <img
+                alt=""
+                src="grafana.png"
+                width="20em"
+                height="20em"
+                style={{ margin: 0 }}
+              />
+              <p style={{ padding: "0.3em", flex: 1, flexGrow: 3 }}>
+                Orchestrator health tracker
+              </p>
+            </div>
+          </button>
+        </a>
+
+        <div
+          className="row"
+          style={{ width: "unset", marginTop: "1em", marginBottom: "1em" }}
+        >
+          <a
+            className="selectOrch"
+            style={{ padding: "0.2em", cursor: "alias" }}
+            target="_blank"
+            rel="noopener noreferrer"
+            href={
+              "https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"
+            }
+          >
+            <img alt="" src="livepeer.png" width="20em" height="20em" />
+            <span>Stake with captain-stronk.eth</span>
+          </a>
+        </div>
+
+        <div className="row">
           <h3>Stronk Utilities</h3>
         </div>
 
@@ -310,116 +420,6 @@ const Home = (obj) => {
           >
             <img alt="" src="livepeer.png" width="20em" height="20em" />
             <span>Stake with captain-stronk.et9h</span>
-          </a>
-        </div>
-
-        <div className="row">
-          <h3>Stronk Broadcaster</h3>
-        </div>
-
-        <a
-          href="https://video.stronk.rocks/"
-          style={{ cursor: "alias" }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <button className="waveButton" style={{ cursor: "alias" }}>
-            <div className="row">
-              <img
-                alt=""
-                src="android-chrome-512x512.png"
-                width="20em"
-                height="20em"
-                style={{ margin: 0 }}
-              />
-              <p style={{ padding: "0.3em", flex: 1, flexGrow: 3 }}>
-                StreamCrafter demo
-              </p>
-            </div>
-          </button>
-        </a>
-
-        <a
-          href="https://grafana.stronk.tech/d/lp-global-orch-instances/livepeer-global-overview"
-          style={{ cursor: "alias" }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <button className="waveButton" style={{ cursor: "alias" }}>
-            <div className="row">
-              <img
-                alt=""
-                src="grafana.png"
-                width="20em"
-                height="20em"
-                style={{ margin: 0 }}
-              />
-              <p style={{ padding: "0.3em", flex: 1, flexGrow: 3 }}>
-                Global Orchestrator tracker
-              </p>
-            </div>
-          </button>
-        </a>
-
-        <a
-          href="https://grafana.stronk.tech/d/lp-orchestrator/livepeer-orchestrator-overview"
-          style={{ cursor: "alias" }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <button className="waveButton" style={{ cursor: "alias" }}>
-            <div className="row">
-              <img
-                alt=""
-                src="grafana.png"
-                width="20em"
-                height="20em"
-                style={{ margin: 0 }}
-              />
-              <p style={{ padding: "0.3em", flex: 1, flexGrow: 3 }}>
-                Regional health tracker
-              </p>
-            </div>
-          </button>
-        </a>
-
-        <a
-          href="https://grafana.stronk.tech/d/lp-regional-orchestrator/livepeer-regional-overview"
-          style={{ cursor: "alias" }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <button className="waveButton" style={{ cursor: "alias" }}>
-            <div className="row">
-              <img
-                alt=""
-                src="grafana.png"
-                width="20em"
-                height="20em"
-                style={{ margin: 0 }}
-              />
-              <p style={{ padding: "0.3em", flex: 1, flexGrow: 3 }}>
-                Orchestrator health tracker
-              </p>
-            </div>
-          </button>
-        </a>
-
-        <div
-          className="row"
-          style={{ width: "unset", marginTop: "1em", marginBottom: "1em" }}
-        >
-          <a
-            className="selectOrch"
-            style={{ padding: "0.2em", cursor: "alias" }}
-            target="_blank"
-            rel="noopener noreferrer"
-            href={
-              "https://explorer.livepeer.org/accounts/0x847791cbf03be716a7fe9dc8c9affe17bd49ae5e/delegating"
-            }
-          >
-            <img alt="" src="livepeer.png" width="20em" height="20em" />
-            <span>Stake with captain-stronk.eth</span>
           </a>
         </div>
 
