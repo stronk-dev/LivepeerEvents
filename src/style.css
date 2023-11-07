@@ -292,6 +292,7 @@ svg {
 
 .verticalDivider {
   height: 20px;
+  width: 100%;
   display: flex;
   align-items: stretch;
 }
@@ -438,7 +439,9 @@ svg {
 }
 
 .waveButton {
-  min-width: 200px;
+  min-width: 400px;
+  max-width: 400px;
+  width: 400px;
   cursor: pointer;
   margin-left: 12px;
   margin-right: 12px;
