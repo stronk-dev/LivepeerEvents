@@ -172,7 +172,7 @@ const Home = (obj) => {
         </a>
 
         <a
-          href="https://grafana.stronk.tech/d/lp-orchestrator/livepeer-orchestrator-overview"
+          href="https://grafana.stronk.tech/d/lp-regional-orchestrator/livepeer-regional-overview"
           style={{ cursor: "alias" }}
           target="_blank"
           rel="noopener noreferrer"
@@ -194,7 +194,7 @@ const Home = (obj) => {
         </a>
 
         <a
-          href="https://grafana.stronk.tech/d/lp-regional-orchestrator/livepeer-regional-overview"
+          href="https://grafana.stronk.tech/d/lp-orchestrator/livepeer-orchestrator-overview"
           style={{ cursor: "alias" }}
           target="_blank"
           rel="noopener noreferrer"

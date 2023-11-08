@@ -188,7 +188,6 @@ const OrchInfoViewer = (obj) => {
             </button>
           </div>
         </div>
-        <div className="verticalDivider" />
       </div>
     )
   }
