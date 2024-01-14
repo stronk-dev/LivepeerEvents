@@ -61,6 +61,29 @@ const Home = (obj) => {
         <div className="row">
           <h3>Stronk Orchestrator</h3>
         </div>
+
+        <a
+          href="https://www.stronk.tech/"
+          style={{ cursor: "alias" }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button className="waveButton" style={{ cursor: "alias" }}>
+            <div className="row">
+              <img
+                alt=""
+                src="android-chrome-512x512.png"
+                width="20em"
+                height="20em"
+                style={{ margin: 0 }}
+              />
+              <p style={{ padding: "0.3em", flex: 1, flexGrow: 3 }}>
+                Official Website
+              </p>
+            </div>
+          </button>
+        </a>
+
         <a
           href="https://grafana.stronk.tech/d/71b6OZ0Gz/orchestrator-overview"
           style={{ cursor: "alias" }}
