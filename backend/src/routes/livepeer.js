@@ -1,21 +1,21 @@
 import express from "express";
-import Event from '../models/event';
-import Block from '../models/block';
-import Ticket from '../models/ticketEvent';
+import Event from '../models/event.js';
+import Block from '../models/block.js';
+import Ticket from '../models/ticketEvent.js';
 
-import ActivateEvent from "../models/ActivateEvent";
-import ClaimEvent from "../models/ClaimEvent";
-import RedeemEvent from "../models/RedeemEvent";
-import RewardEvent from "../models/RewardEvent";
-import StakeEvent from "../models/StakeEvent";
-import TransferEvent from "../models/TransferEvent";
-import UnbondEvent from "../models/UnbondEvent";
-import UpdateEvent from "../models/UpdateEvent";
-import WithdrawFeesEvent from "../models/WithdrawFeesEvent";
-import WithdrawStakeEvent from "../models/WithdrawStakeEvent";
-import MonthlyStat from "../models/monthlyStat";
-import CommissionDataPoint from "../models/CommissionDataPoint";
-import TotalStakeDataPoint from "../models/TotalStakeDataPoint";
+import ActivateEvent from "../models/ActivateEvent.js";
+import ClaimEvent from "../models/ClaimEvent.js";
+import RedeemEvent from "../models/RedeemEvent.js";
+import RewardEvent from "../models/RewardEvent.js";
+import StakeEvent from "../models/StakeEvent.js";
+import TransferEvent from "../models/TransferEvent.js";
+import UnbondEvent from "../models/UnbondEvent.js";
+import UpdateEvent from "../models/UpdateEvent.js";
+import WithdrawFeesEvent from "../models/WithdrawFeesEvent.js";
+import WithdrawStakeEvent from "../models/WithdrawStakeEvent.js";
+import MonthlyStat from "../models/monthlyStat.js";
+import CommissionDataPoint from "../models/CommissionDataPoint.js";
+import TotalStakeDataPoint from "../models/TotalStakeDataPoint.js";
 
 const apiRouter = express.Router();
 import {
@@ -24,7 +24,9 @@ import {
   CONF_TIMEOUT_ALCHEMY, CONF_TIMEOUT_LIVEPEER,
   CONF_DISABLE_DB, CONF_DISABLE_CMC, CONF_TIMEOUT_ENS_DOMAIN,
   CONF_TIMEOUT_ENS_INFO
-} from "../config";
+} from "../config.js";
+
+const graphUri = "FILL THIS IN"
 
 /*
 
@@ -33,25 +35,26 @@ imported modules
 
 */
 
+const maxCacheEntries = 10000;
+
 // Do API requests to other API's
-const https = require('https');
+import https from "https";
 
 // Read ABI files
-const fs = require('fs');
+import fs from "fs";
 
 // Used for the livepeer thegraph API
 import { request, gql } from 'graphql-request';
-import Round from "../models/Round";
+import Round from "../models/Round.js";
 
 // Gets ETH, LPT and other coin info
-let CoinMarketCap = require('coinmarketcap-api');
-let cmcClient = new CoinMarketCap(API_CMC);
+import CoinMarketCap from 'coinmarketcap-api';
+let cmcClient;
 let cmcEnabled = false;
 if (!CONF_DISABLE_CMC) {
   if (API_CMC == "") {
     console.log("Please provide a CMC api key");
   } else {
-    CoinMarketCap = require('coinmarketcap-api');
     cmcClient = new CoinMarketCap(API_CMC);
     cmcEnabled = true;
   }
@@ -62,17 +65,17 @@ if (!CONF_DISABLE_CMC) {
 // Gets blockchain data
 
 // ENS stuff TODO: CONF_DISABLE_ENS
-const { ethers } = require("ethers");
+import { ethers } from 'ethers';
 const l1provider = new ethers.providers.JsonRpcProvider(API_L1_HTTP + API_L1_KEY);
 // const l1provider = new ethers.providers.AlchemyProvider("mainnet", API_L1_KEY);
 
 import { Network, Alchemy } from 'alchemy-sdk';
 console.log("Connecting to HTTP RPC's");
-const web3layer1 = new Alchemy({apiKey: API_L1_KEY, network: Network.ETH_MAINNET});
-const web3layer2 = new Alchemy({apiKey: API_L2_KEY, network: Network.ARB_MAINNET});
+const web3layer1 = new Alchemy({ apiKey: API_L1_KEY, network: Network.ETH_MAINNET });
+const web3layer2 = new Alchemy({ apiKey: API_L2_KEY, network: Network.ARB_MAINNET });
 
 // Smart contract event stuff
-const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
+import { createAlchemyWeb3 } from '@alch/alchemy-web3';
 const deprWeb3main = createAlchemyWeb3(API_L1_HTTP + API_L1_KEY);
 const deprWeb3 = createAlchemyWeb3(API_L2_HTTP + API_L2_KEY);
 let BondingManagerTargetJson;
@@ -273,7 +276,7 @@ apiRouter.post("/getAllUpdateEvents", async (req, res) => {
 apiRouter.post("/getAllRewardEvents", async (req, res) => {
   try {
     const { smartUpdate } = req.body;
-    if (smartUpdate && req.session.user &&req.session.user.ip) {
+    if (smartUpdate && req.session.user && req.session.user.ip) {
       if (alreadyHasRewardRefresh[req.session.user.ip]) {
         res.send({ noop: true });
         return;
@@ -1490,7 +1493,7 @@ const getRoundInfo = async function (roundNumber) {
     }
   }
   `;
-  const roundObj = await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", roundQuery);
+  const roundObj = await request(graphUri, roundQuery);
   // Not found
   if (!roundObj || !roundObj.rounds || !roundObj.rounds.length) {
     console.log("No round found with number " + roundNumber);
@@ -1500,7 +1503,7 @@ const getRoundInfo = async function (roundNumber) {
   // Update cache
   var wasCached = false;
   for (var idx = 0; idx < roundCache.length; idx++) {
-    if (roundCache[idx].number == roundNumber){
+    if (roundCache[idx].number == roundNumber) {
       wasCached = true;
       roundCache[idx].startBlock = thisRoundObj.startBlock;
       roundCache[idx].endBlock = thisRoundObj.endBlock;
@@ -1533,7 +1536,7 @@ const getRoundInfo = async function (roundNumber) {
     }, {
       new: true
     });
-    if (!wasCached){
+    if (!wasCached) {
       roundCache.push({
         number: doc.number,
         transactionHash: doc.transactionHash,
@@ -1551,19 +1554,19 @@ const getRoundInfo = async function (roundNumber) {
       });
     }
     return ({
-        number: doc.number,
-        transactionHash: doc.transactionHash,
-        blockNumber: doc.blockNumber,
-        startBlock: doc.startBlock,
-        endBlock: doc.endBlock,
-        mintableTokens: doc.mintableTokens,
-        volumeETH: doc.volumeETH,
-        volumeUSD: doc.volumeUSD,
-        totalActiveStake: doc.totalActiveStake,
-        totalSupply: doc.totalSupply,
-        participationRate: doc.participationRate,
-        movedStake: doc.movedStake,
-        newStake: doc.newStake
+      number: doc.number,
+      transactionHash: doc.transactionHash,
+      blockNumber: doc.blockNumber,
+      startBlock: doc.startBlock,
+      endBlock: doc.endBlock,
+      mintableTokens: doc.mintableTokens,
+      volumeETH: doc.volumeETH,
+      volumeUSD: doc.volumeUSD,
+      totalActiveStake: doc.totalActiveStake,
+      totalSupply: doc.totalSupply,
+      participationRate: doc.participationRate,
+      movedStake: doc.movedStake,
+      newStake: doc.newStake
     });
   }
 }
@@ -1791,12 +1794,12 @@ const syncRounds = function (toBlock) {
 // Retrieves stuff from DB on first boot
 const initSync = async function () {
   startedInitSync = true;
+  console.log("Start initial sync...");
   // First collection -> cache
+  const count = await Block.countDocuments();
+  console.log(`Documents in Block collection: ${count}`);
   // Get all parsed blocks
-  blockCache = await Block.find({}, {
-    blockNumber: 1,
-    blockTime: 1
-  });
+  const blockCache = await Block.find().sort({ _id: -1 }).limit(maxCacheEntries);
   console.log("Retrieved existing Blocks of size " + blockCache.length);
   // Get all parsed Events
   eventsCache = await Event.find({}, {
@@ -1808,7 +1811,7 @@ const initSync = async function () {
     blockNumber: 1,
     blockTime: 1,
     _id: 0
-  });
+  }).sort({ _id: -1 }).limit(maxCacheEntries);
   console.log("Retrieved existing raw Events of size " + eventsCache.length);
   // Get all parsedTickets
   ticketsCache = await Ticket.find({}, {
@@ -1820,7 +1823,7 @@ const initSync = async function () {
     blockNumber: 1,
     blockTime: 1,
     _id: 0
-  });
+  }).sort({ _id: -1 }).limit(maxCacheEntries);
   console.log("Retrieved existing raw Tickets of size " + ticketsCache.length);
   // Then determine latest block number parsed based on collection
   for (var idx = 0; idx < eventsCache.length; idx++) {
@@ -1848,7 +1851,7 @@ const initSync = async function () {
     blockTime: 1,
     blockRound: 1,
     _id: 0
-  });
+  }).sort({ _id: -1 }).limit(maxCacheEntries);
   // Get all parsed reward events and cache them
   rewardEventCache = await RewardEvent.find({}, {
     address: 1,
@@ -1858,7 +1861,7 @@ const initSync = async function () {
     blockTime: 1,
     blockRound: 1,
     _id: 0
-  });
+  }).sort({ _id: -1 }).limit(maxCacheEntries);
   // Get all parsed claim events and cache them
   claimEventCache = await ClaimEvent.find({}, {
     address: 1,
@@ -1871,7 +1874,7 @@ const initSync = async function () {
     blockTime: 1,
     blockRound: 1,
     _id: 0
-  });
+  }).sort({ _id: -1 }).limit(maxCacheEntries);
   // Get all parsed withdraw fees events and cache them
   withdrawFeesEventCache = await WithdrawFeesEvent.find({}, {
     address: 1,
@@ -1881,7 +1884,7 @@ const initSync = async function () {
     blockTime: 1,
     blockRound: 1,
     _id: 0
-  });
+  }).sort({ _id: -1 }).limit(maxCacheEntries);
   // Get all parsed withdraw stake events and cache them
   withdrawStakeEventCache = await WithdrawStakeEvent.find({}, {
     address: 1,
@@ -1892,7 +1895,7 @@ const initSync = async function () {
     blockTime: 1,
     blockRound: 1,
     _id: 0
-  });
+  }).sort({ _id: -1 }).limit(maxCacheEntries);
   // Get all parsed transfer winning ticket events and cache them
   transferTicketEventCache = await TransferEvent.find({}, {
     address: 1,
@@ -1903,7 +1906,7 @@ const initSync = async function () {
     blockTime: 1,
     blockRound: 1,
     _id: 0
-  });
+  }).sort({ _id: -1 }).limit(maxCacheEntries);
   // Get all parsed redeem winning ticket events and cache them
   redeemTicketEventCache = await RedeemEvent.find({}, {
     address: 1,
@@ -1913,7 +1916,7 @@ const initSync = async function () {
     blockTime: 1,
     blockRound: 1,
     _id: 0
-  });
+  }).sort({ _id: -1 }).limit(maxCacheEntries);
   for (const winner of redeemTicketEventCache) {
     winningTicketCache.push({
       address: winner.address,
@@ -1933,7 +1936,7 @@ const initSync = async function () {
     blockTime: 1,
     blockRound: 1,
     _id: 0
-  });
+  }).sort({ _id: -1 }).limit(maxCacheEntries);
   // Get all parsed unbond events and cache them
   unbondEventCache = await UnbondEvent.find({}, {
     address: 1,
@@ -1945,7 +1948,7 @@ const initSync = async function () {
     blockTime: 1,
     blockRound: 1,
     _id: 0
-  });
+  }).sort({ _id: -1 }).limit(maxCacheEntries);
   // Get all parsed stake events and cache them
   stakeEventCache = await StakeEvent.find({}, {
     address: 1,
@@ -1957,7 +1960,7 @@ const initSync = async function () {
     blockTime: 1,
     blockRound: 1,
     _id: 0
-  });
+  }).sort({ _id: -1 }).limit(maxCacheEntries);
   // Get all parsed monthly stats and cache them
   monthlyStatCache = await MonthlyStat.find({}, {
     year: 1,
@@ -2024,7 +2027,7 @@ const initSync = async function () {
     movedStake: 1,
     newStake: 1,
     _id: 0
-  })
+  }).sort({ _id: -1 }).limit(maxCacheEntries)
   console.log("Retrieved existing rounds of size " + roundCache.length);
   // Then determine latest block number parsed based on collection
   for (var idx = 0; idx < roundCache.length; idx++) {
@@ -2286,31 +2289,31 @@ let serviceUriFeeCostL2 = 0;
 // Queries Alchemy for block info and gas fees
 const parseL1Blockchain = async function () {
   try {
-  const l1Wei = await deprWeb3main.eth.getGasPrice();
-  l1block = await deprWeb3main.eth.getBlockNumber();
-  l1Gwei = l1Wei / 1000000000;
-  redeemRewardCostL1 = (redeemRewardGwei * l1Gwei) / 1000000000;
-  claimTicketCostL1 = (claimTicketGwei * l1Gwei) / 1000000000;
-  withdrawFeeCostL1 = (withdrawFeeGwei * l1Gwei) / 1000000000;
-  stakeFeeCostL1 = (stakeFeeGwei * l1Gwei) / 1000000000;
-  commissionFeeCostL1 = (commissionFeeGwei * l1Gwei) / 1000000000;
-  serviceUriFeeCostL1 = (serviceUriFee * l1Gwei) / 1000000000;
- } catch (err) {
+    const l1Wei = await deprWeb3main.eth.getGasPrice();
+    l1block = await deprWeb3main.eth.getBlockNumber();
+    l1Gwei = l1Wei / 1000000000;
+    redeemRewardCostL1 = (redeemRewardGwei * l1Gwei) / 1000000000;
+    claimTicketCostL1 = (claimTicketGwei * l1Gwei) / 1000000000;
+    withdrawFeeCostL1 = (withdrawFeeGwei * l1Gwei) / 1000000000;
+    stakeFeeCostL1 = (stakeFeeGwei * l1Gwei) / 1000000000;
+    commissionFeeCostL1 = (commissionFeeGwei * l1Gwei) / 1000000000;
+    serviceUriFeeCostL1 = (serviceUriFee * l1Gwei) / 1000000000;
+  } catch (err) {
     console.log(err);
   }
 }
 const parseL2Blockchain = async function () {
   try {
-  const l2Wei = await deprWeb3.eth.getGasPrice();
-  l2block = await deprWeb3.eth.getBlockNumber();
-  l2Gwei = l2Wei / 1000000000;
-  redeemRewardCostL2 = (redeemRewardGwei * l2Gwei) / 1000000000;
-  claimTicketCostL2 = (claimTicketGwei * l2Gwei) / 1000000000;
-  withdrawFeeCostL2 = (withdrawFeeGwei * l2Gwei) / 1000000000;
-  stakeFeeCostL2 = (stakeFeeGwei * l2Gwei) / 1000000000;
-  commissionFeeCostL2 = (commissionFeeGwei * l2Gwei) / 1000000000;
-  serviceUriFeeCostL2 = (serviceUriFee * l2Gwei) / 1000000000;
- } catch (err) {
+    const l2Wei = await deprWeb3.eth.getGasPrice();
+    l2block = await deprWeb3.eth.getBlockNumber();
+    l2Gwei = l2Wei / 1000000000;
+    redeemRewardCostL2 = (redeemRewardGwei * l2Gwei) / 1000000000;
+    claimTicketCostL2 = (claimTicketGwei * l2Gwei) / 1000000000;
+    withdrawFeeCostL2 = (withdrawFeeGwei * l2Gwei) / 1000000000;
+    stakeFeeCostL2 = (stakeFeeGwei * l2Gwei) / 1000000000;
+    commissionFeeCostL2 = (commissionFeeGwei * l2Gwei) / 1000000000;
+    serviceUriFeeCostL2 = (serviceUriFee * l2Gwei) / 1000000000;
+  } catch (err) {
     console.log(err);
   }
 
@@ -2615,7 +2618,7 @@ const parseOrchestrator = async function (reqAddr) {
       }
     }
   `;
-      orchestratorObj = await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", orchQuery);
+      orchestratorObj = await request(graphUri, orchQuery);
       orchestratorObj = orchestratorObj.transcoder;
       // Not found
       if (!orchestratorObj) {
@@ -2682,7 +2685,7 @@ apiRouter.get("/getOrchestratorENS", async (req, res) => {
     for (var idx = 0; idx < orchestratorObj.delegators.length; idx++) {
       for (var idx2 = 0; idx2 < ensDomainCache.length; idx2++) {
         if (ensDomainCache[idx2].address == orchestratorObj.delegators[idx].id) {
-          if (ensDomainCache[idx2].domain){
+          if (ensDomainCache[idx2].domain) {
             orchestratorObj.delegators[idx].id = ensDomainCache[idx2].domain;
           }
           break;
@@ -2766,7 +2769,7 @@ const parseDelegator = async function (reqAddr) {
       }
     }
   `;
-    delegatorObj = await request("https://api.thegraph.com/subgraphs/name/livepeer/arbitrum-one", delegatorQuery);
+    delegatorObj = await request(graphUri, delegatorQuery);
     delegatorObj = delegatorObj.delegators[0];
     // Not found
     if (!delegatorObj) {
@@ -2857,8 +2860,8 @@ apiRouter.get("/grafana", async (req, res) => {
     const now = new Date().getTime();
     // Update blockchain data if the cached data has expired
     if (now - arbGet > CONF_TIMEOUT_ALCHEMY) {
-arbGet = now;      
-await parseEthBlockchain();
+      arbGet = now;
+      await parseEthBlockchain();
     }
     // Update coin prices once their data has expired
     if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
@@ -2900,9 +2903,9 @@ apiRouter.get("/prometheus/:orchAddr", async (req, res) => {
     const now = new Date().getTime();
     // Update blockchain data if the cached data has expired
     if (now - arbGet > CONF_TIMEOUT_ALCHEMY) {
-arbGet = now;      
-await parseEthBlockchain();
-          }
+      arbGet = now;
+      await parseEthBlockchain();
+    }
     // Update coin prices once their data has expired
     if (now - cmcPriceGet > CONF_TIMEOUT_CMC) {
       await parseCmc();

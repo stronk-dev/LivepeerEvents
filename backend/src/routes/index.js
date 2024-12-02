@@ -1,4 +1,4 @@
-import userRouter from './user';
-import sessionRouter from './session';
-import livepeerRouter from './livepeer';
+import userRouter from './user.js';
+import sessionRouter from './session.js';
+import livepeerRouter from './livepeer.js';
 export { userRouter, sessionRouter, livepeerRouter };

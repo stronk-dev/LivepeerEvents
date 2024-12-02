@@ -1,5 +1,5 @@
 import express from 'express';
-import User from '../models/user';
+import User from '../models/user.js';
 const userRouter = express.Router();
 
 userRouter.post("/getVisitorStats", async (req, res) => {

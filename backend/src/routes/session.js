@@ -1,6 +1,6 @@
 import express from "express";
-import User from "../models/user";
-import { SESS_NAME } from "../config";
+import User from "../models/user.js";
+import { SESS_NAME } from "../config.js";
 const sessionRouter = express.Router();
 
 sessionRouter.post("", async (req, res) => {
