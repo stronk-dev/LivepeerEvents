@@ -1,3 +1,5 @@
+> [!WARNING]
+> This repository is no longer maintained - see [StronkBuffer](https://github.com/Stronk-Tech/StronkBuffer) for the new backend, [LivepeerExplorer](LivepeerExplorer) for the new contract explorer, [LivepeerStats](https://github.com/Stronk-Tech/LivepeerStats) for the new monthly stats dashboard and [StronkLanding](https://github.com/Stronk-Tech/StronkLanding) for the new landing page
 
 # What
 This project shows a live feed of events happening on the Livepeer BondingManager smart contract. This way it is able to track:
